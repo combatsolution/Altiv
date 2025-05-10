@@ -2,19 +2,18 @@ import React, { useState } from "react";
 import {
   AppBar,
   Toolbar,
-  Typography,
   IconButton,
+  Typography,
   Button,
+  Box,
   Drawer,
   List,
   ListItem,
   ListItemText,
-  Box,
   Divider,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -30,80 +29,177 @@ const Header = () => {
   ];
 
   return (
-    <>
-      <AppBar position="static" color="default" elevation={1}>
-        <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
-            <span style={{ color: "#000" }}>ALTIV.</span>
-            <span style={{ color: "#555" }}>AI</span>
+    <AppBar position="static" color="default" elevation={1} sx={{ bgcolor: "white" }}>
+      <Toolbar
+        sx={{
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          px: { xs: 2, sm: 3 },
+          pt: 8,
+          
+        }}
+      >
+
+        {/* Logo */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexGrow: 1, // allows the logo to push nav to the right
+            // pl: { xs: 0, sm: 6 },
+            pl: 10,
+            
+          }}
+        >
+          <Typography
+            variant="h4"
+            component="span"
+            sx={{
+              fontFamily: "Arial",
+              fontWeight: "bold",
+              fontSize: { xs: "30px", sm: "30px" },
+              lineHeight: "50px",
+              letterSpacing: "0.15px",
+              
+
+            }}
+          >
+            ALTIV.
           </Typography>
+          <Typography
+            component="span"
+            sx={{
+              fontFamily: "Arial",
+              fontWeight: "semibold",
+              fontSize: { xs: "20px", sm: "30px" },
+              lineHeight: "60px",
+              letterSpacing: "0.15px",
+              ml: 0.5,  
+            }}
+          >
+            AI
+          </Typography>
+        </Box>
 
-          {/* Desktop Navigation */}
-          <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2, alignItems: "center" }}>
-            {navLinks.map((item) => (
-              <Button key={item.label} href={item.href} color="inherit">
-                {item.label}
-              </Button>
-            ))}
-            <Button href="https://www.google.com/" color="primary ">Login</Button>
+
+        {/* Desktop Navigation */}
+        <Box
+          sx={{
+            display: { xs: "none", md: "flex" },
+            alignItems: "center",
+            gap: 2,
+            mr: 4,
+          }}
+        >
+          {navLinks.map((link) => (
             <Button
-              variant="contained"
-              color="primary"
-              sx={{ borderRadius: "999px", textTransform: "none" }}
+              key={link.label}
+              href={link.href}
+              sx={{
+                fontFamily: "Poppins",
+                fontWeight: 500,
+                fontSize: "16px",
+                lineHeight: "26px",
+                color: "grey.700",
+                minWidth: 0,
+                px: 1,
+                "&:hover": { color: "black" },
+              }}
             >
-              Sign Up
+              {link.label}
             </Button>
-          </Box>
+          ))}
 
-          {/* Mobile Menu Button */}
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton edge="end" color="inherit" onClick={toggleDrawer(true)}>
-              <MenuIcon />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
+          <Button
+            href="https://www.google.com/"
+            sx={{
+              fontFamily: "Poppins",
+              fontWeight: 700,
+              fontSize: "16px",
+              lineHeight: "26px",
+              color: "#1976d2",
+              textTransform: "none",
+              "&:hover": { textDecoration: "underline" },
+            }}
+          >
+            Login
+          </Button>
+
+          <Divider orientation="vertical" flexItem sx={{ mx: 1, bgcolor: "rgba(0,0,0,0.1)" }} />
+
+          <Button
+            variant="contained"
+            sx={{
+              fontFamily: "Roboto",
+              fontWeight: 500,
+              fontSize: "15px",
+              lineHeight: "21px",
+              borderRadius: "999px",
+              px: 2,
+              height: "32px",
+              textTransform: "none",
+              minWidth: "70px",
+              mr: "50px",
+              backgroundColor: "#1976d2",
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "#1565c0",
+              },
+            }}
+          >
+            Sign Up
+          </Button>
+
+        </Box>
+
+        {/* Mobile Menu Toggle */}
+        <Box sx={{ display: { xs: "flex", md: "none" } }}>
+          <IconButton onClick={toggleDrawer(true)} edge="end">
+            <MenuIcon />
+          </IconButton>
+        </Box>
+      </Toolbar>
 
       {/* Mobile Drawer */}
-      <Drawer anchor="left" open={isMobileMenuOpen} onClose={toggleDrawer(false)}>
-        <Box
-          sx={{ width: 250 }}
-          role="presentation"
-          onClick={toggleDrawer(false)}
-          onKeyDown={toggleDrawer(false)}
-        >
-          <Box display="flex" justifyContent="space-between" alignItems="center" p={2}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              ALTIV.AI
-            </Typography>
+      <Drawer
+        anchor="top"
+        open={isMobileMenuOpen}
+        onClose={toggleDrawer(false)}
+        sx={{ display: { md: "none" } }}
+      >
+        <Box sx={{ p: 3, width: "100%" }}>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
             <IconButton onClick={toggleDrawer(false)}>
               <CloseIcon />
             </IconButton>
           </Box>
-          <Divider />
           <List>
             {navLinks.map((item) => (
-              <ListItem component="a" href={item.href} key={item.label}>
+              <ListItem button component="a" href={item.href} key={item.label}>
                 <ListItemText primary={item.label} />
               </ListItem>
             ))}
-            <ListItem  component="a" href="https://www.google.com/">
-              <ListItemText primary="Login" primaryTypographyProps={{ color: "primary" }} />
+            <ListItem button component="a" href="https://www.google.com/">
+              <ListItemText
+                primary="Login"
+                primaryTypographyProps={{ color: "primary", fontWeight: "medium" }}
+              />
             </ListItem>
-            <Box px={2} pt={1}>
+            <ListItem>
               <Button
                 variant="contained"
-                color="primary"
                 fullWidth
+                color="primary"
                 sx={{ borderRadius: "999px", textTransform: "none" }}
               >
                 Sign Up
               </Button>
-            </Box>
+            </ListItem>
           </List>
         </Box>
       </Drawer>
-    </>
+    </AppBar>
   );
 };
 

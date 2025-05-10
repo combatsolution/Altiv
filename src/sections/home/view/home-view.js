@@ -5,9 +5,11 @@ import Box from '@mui/material/Box';
 // components
 import ScrollProgress from 'src/components/scroll-progress';
 //
-// import Header from '../Header';
-import FeatureSection from '../FeatureSection';
+import Header from '../Header';
 import HomeHero from '../home-hero';
+import FeatureSection from '../FeatureSection';
+import CareerToolkitHero from '../CareerToolkitHero';
+
 import HomeMinimal from '../home-minimal';
 import HomePricing from '../home-pricing';
 import HomeDarkMode from '../home-dark-mode';
@@ -51,9 +53,10 @@ export default function HomeView() {
     <>
       <ScrollProgress scrollYProgress={scrollYProgress} />
       
-      {/* <Header /> */}
+      <Header />
       <HomeHero />
       <FeatureSection />
+      <CareerToolkitHero/>
 
       <Box
         sx={{
