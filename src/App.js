@@ -22,6 +22,7 @@ import 'slick-carousel/slick/slick-theme.css';
 // lazy image
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
+
 // ----------------------------------------------------------------------
 
 // @mui
@@ -45,6 +46,11 @@ import { AuthProvider, AuthConsumer } from 'src/auth/context/jwt';
 // import { AuthProvider, AuthConsumer } from 'src/auth/context/auth0';
 // import { AuthProvider, AuthConsumer } from 'src/auth/context/amplify';
 // import { AuthProvider, AuthConsumer } from 'src/auth/context/firebase';
+
+
+// public/fonts/Inter-Regular.woff2
+// public/fonts/Inter-Bold.woff2
+
 
 // ----------------------------------------------------------------------
 

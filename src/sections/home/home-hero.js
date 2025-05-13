@@ -37,7 +37,7 @@ function HomeHero() {
                 variant="contained"
                 size="large"
                 sx={{
-                  bgcolor: blue[600],
+                  bgcolor:"#0040D8",
                   "&:hover": { bgcolor: blue[700] },
                   width: { xs: "100%", sm: "auto" },
                 }}
@@ -49,14 +49,15 @@ function HomeHero() {
                 size="large"
                 sx={{
                   textTransform: "none",
-                  color: blue[600],
-                  borderColor: blue[600],
+                  color: "#0040D8",
+                  borderColor: "#0040D8",
                   "&:hover": {
                     backgroundColor: "transparent",
                     borderColor: blue[700],
                     color: blue[700],
                   },
-                  width: { xs: "100%", sm: "auto" },
+                  width: { xs: "90%", sm: "auto" },
+                  borderRadius:"20px  ",
                 }}
               >
                 Know How it Works
@@ -76,6 +77,7 @@ function HomeHero() {
               width: "100%",
               maxHeight: { xs: "auto", md: "500px" },
               objectFit: "cover",
+              marginTop:"80px"
             }}
           />
         </Grid>

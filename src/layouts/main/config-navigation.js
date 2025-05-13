@@ -9,17 +9,17 @@ import Iconify from 'src/components/iconify';
 
 export const navConfig = [
   {
-    title: 'Home',
+    title: 'AI Career Coach',
     icon: <Iconify icon="solar:home-2-bold-duotone" />,
     path: '/',
   },
-  {
-    title: 'Components',
+  { 
+    title: 'Jobs',
     icon: <Iconify icon="solar:atom-bold-duotone" />,
     path: paths.components,
   },
   {
-    title: 'Docs',
+    title: 'Analyse your Resume',
     icon: <Iconify icon="solar:notebook-bold-duotone" />,
     path: paths.docs,
   },
