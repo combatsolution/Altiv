@@ -27,6 +27,7 @@ import NavDesktop from './nav/desktop';
 
 //
 import { SettingsButton, HeaderShadow, LoginButton } from '../_common';
+// import { JwtRegisterView } from 'src/sections/auth/jwt';
 
 // ----------------------------------------------------------------------
 
@@ -84,7 +85,7 @@ export default function Header() {
               variant="contained"
               target="_blank"
               rel="noopener"
-              href={paths.minimalUI}
+              href={paths.auth.jwt.register}
               sx={{
                 bgcolor: '#0040D8', 
                 

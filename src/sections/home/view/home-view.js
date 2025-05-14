@@ -14,7 +14,7 @@ import SmartJobFeed from '../SmartJobFeed';
 import JobMatchBooster from '../JobMatchBooster';
 import JobBoard from '../JobBoard';
 import Footer from '../Footer';
-import LoginPage from './LoginPage';
+
 
  
 
@@ -72,7 +72,7 @@ export default function HomeView() {
       <JobMatchBooster/>
       <JobBoard/>
       <Footer />
-      <LoginPage/>
+      
 
 
       {/* <Box

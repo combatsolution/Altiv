@@ -3,10 +3,6 @@ import { Grid, Box, Typography, TextField, Button, useTheme } from "@mui/materia
 import { FaXTwitter, FaLinkedinIn } from "react-icons/fa6";
 
 
-
-
-
-
 const Footer = () => {
   const theme = useTheme();
 
@@ -78,10 +74,10 @@ const Footer = () => {
         {/* Column 5: ALTIV.AI & newsletter */}
         <Grid item xs={12} md={2.4}>
           <Typography
-            fontFamily="Arial, sans-serif"
+            fontFamily="Arial, sans-serif"  
             fontWeight={700}
             fontSize={32}
-            lineHeight="150%"
+            lineHeight="50%"
             letterSpacing="0.15px"
             mb={1}
           >
@@ -97,7 +93,7 @@ const Footer = () => {
               placeholder="Email Address"
               variant="outlined"
               size="small"
-              width="1000px"
+              width="100px"
               sx={{
                 fontSize: 14,
                 borderRadius: "10px 0 0 10px",
@@ -108,11 +104,11 @@ const Footer = () => {
             <Button
               variant="contained"
               sx={{
-                marginLeft:"5px",
+                marginLeft:"1px",
                 bgcolor: '#ffffff', // white background
                 borderRadius: '0 4px 4px 0',
                 fontSize: 14,
-                paddingX: 8,
+                paddingX: 2,
                 color: '#0040D8', // text color
                 border: '1px solid #0040D8', // optional: add border for definition
                 '&:hover': {

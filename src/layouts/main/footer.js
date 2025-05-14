@@ -24,9 +24,11 @@ const LINKS = [
   {
     headline: 'Jobseekers',
     children: [
-      { name: 'About us', href: paths.about },
+      { name: 'About us', href: paths.auth.jwt.registeryy },
       { name: 'Contact us', href: paths.contact },
       { name: 'FAQs', href: paths.faqs },
+      
+      
     ],
   },
   {

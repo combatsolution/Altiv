@@ -1,42 +1,54 @@
+
+
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
+
+import {
+  Box,
+  Link,
+  Alert,
+  Stack,
+  Typography,
+  IconButton,
+  InputAdornment,
+  Divider,
+  Button,
+  AppBar,
+  Toolbar,
+  Container,
+} from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Link from '@mui/material/Link';
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputAdornment from '@mui/material/InputAdornment';
+import HomeIcon from '@mui/icons-material/Home';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+
+import altiv from 'src/images/altiv.svg';
+
 // routes
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 import { useSearchParams, useRouter } from 'src/routes/hook';
+
 // config
 import { PATH_AFTER_LOGIN } from 'src/config-global';
+
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
+
 // auth
 import { useAuthContext } from 'src/auth/hooks';
+
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 
-// ----------------------------------------------------------------------
-
 export default function JwtLoginView() {
   const { login } = useAuthContext();
-
   const router = useRouter();
-
   const [errorMsg, setErrorMsg] = useState('');
-
   const searchParams = useSearchParams();
-
   const returnTo = searchParams.get('returnTo');
-
   const password = useBoolean();
 
   const LoginSchema = Yup.object().shape({
@@ -45,8 +57,8 @@ export default function JwtLoginView() {
   });
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
+    email: '',
+    password: '',
   };
 
   const methods = useForm({
@@ -63,76 +75,113 @@ export default function JwtLoginView() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       await login?.(data.email, data.password);
-
       router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
       reset();
       setErrorMsg(typeof error === 'string' ? error : error.message);
-    }
+    } 
   });
 
-  const renderHead = (
-    <Stack spacing={2} sx={{ mb: 5 }}>
-      <Typography variant="h4">Sign in to Minimal</Typography>
-
-      <Stack direction="row" spacing={0.5}>
-        <Typography variant="body2">New user?</Typography>
-
-        <Link component={RouterLink} href={paths.auth.jwt.register} variant="subtitle2">
-          Create an account
-        </Link>
-      </Stack>
-    </Stack>
-  );
-
-  const renderForm = (
-    <Stack spacing={2.5}>
-      {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
-
-      <RHFTextField name="email" label="Email address" />
-
-      <RHFTextField
-        name="password"
-        label="Password"
-        type={password.value ? 'text' : 'password'}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton onClick={password.onToggle} edge="end">
-                <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
-
-      <Link variant="body2" color="inherit" underline="always" sx={{ alignSelf: 'flex-end' }}>
-        Forgot password?
-      </Link>
-
-      <LoadingButton
-        fullWidth
-        color="inherit"
-        size="large"
-        type="submit"
-        variant="contained"
-        loading={isSubmitting}
-      >
-        Login
-      </LoadingButton>
-    </Stack>
-  );
-
   return (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
-      {renderHead}
+    <>
 
-      <Alert severity="info" sx={{ mb: 3 }}>
-        Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
-      </Alert>
+      {/* Login Form */}
+      <Box
+        sx={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          px: 2,
+        }}
+      >
+        <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center' }}>
+          <img src={altiv} alt="ALTIV Logo" style={{ marginBottom: 8 }} />
 
-      {renderForm}
-    </FormProvider>
+          <Typography variant="h6" mb={1}>Login</Typography>
+          <Typography variant="body2" color="text.secondary" mb={3}>
+            Enter your username and password to login
+          </Typography>
+
+          <FormProvider methods={methods} onSubmit={onSubmit}>
+            <Stack spacing={2.5}>
+              {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
+
+              <RHFTextField name="email" label="User Name" />
+
+              <Box sx={{ position: 'relative' }}>
+                <RHFTextField
+                  name="password"
+                  label="Password"
+                  type={password.value ? 'text' : 'password'}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={password.onToggle} edge="end">
+                          <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Box>
+
+              <LoadingButton
+                fullWidth
+                size="large"
+                type="submit"
+                variant="contained"
+                loading={isSubmitting}
+                sx={{
+                  textTransform: 'none',
+                  backgroundColor: '#0040D8',
+                  color: '#fff',
+                  '&:hover': { backgroundColor: '#0033b3' },
+                }}
+              >
+                Login
+              </LoadingButton>
+
+              <Divider>Or</Divider>
+
+              <Button
+                fullWidth
+                variant="outlined"
+                startIcon={<Iconify icon="logos:google-icon" />}
+                sx={{ textTransform: 'none' }}
+              >
+                Sign in with Google
+              </Button>
+
+              <Button
+                fullWidth
+                variant="outlined"
+                startIcon={<Iconify icon="logos:linkedin-icon" />}
+                sx={{ textTransform: 'none' }}
+              >
+                Sign in with LinkedIn
+              </Button>
+            </Stack>
+
+            <Stack direction="row" spacing={1} justifyContent="center" mt={3}>
+              <Typography variant="body2">Dont have an account?</Typography>
+              <Link component={RouterLink} href={paths.auth.jwt.register} variant="subtitle2">
+                Register
+              </Link>
+            </Stack>
+
+            <Typography variant="body2" color="text.secondary" mt={1}>
+              Need help? Visit our{' '}
+              <Link underline="hover">help center</Link>
+            </Typography>
+          </FormProvider>
+        </Box>
+
+      </Box>
+      
+    </>
   );
 }
+
+
