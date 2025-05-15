@@ -13,32 +13,42 @@ const jobData = [
   {
     title: "Senior Product Manager, Growth",
     tags: ["Full-time", "Hybrid"],
-    description:
-      "Leading fintech unicorn seeks experienced PM to drive user acquisition and retention. Own core metrics, lead cross-functional teams, and shape product strategy in a high-stakes environment.",
+    description: [
+      "Leading fintech unicorn seeks experienced PM to drive user acquisition and retention.own core metrics, lead",
+      "cross-functional teams, and shape product strategy in a high-stakes environment.",
+    ],
   },
   {
     title: "Data Scientist, Consumer Analytics",
     tags: ["Full-time", "Remote"],
-    description:
-      "Fast-growing D2C brand needs a data scientist to unlock customer insights. Build predictive models, optimize user segments, and drive personalization initiatives.",
+    description: [
+      "Fast-growing D2C brand needs a data scientist to unlock customer insights. Build predictive models, optimize",
+      "user segments, and drive personalization initiatives.",
+    ],
   },
   {
     title: "Associate Product Manager",
     tags: ["Full-time", "Hybrid", "Remote"],
-    description:
-      "Global edutech company seeking APM to own student experience features. Perfect for analytical minds ready to launch their product career with mentorship.",
+    description: [
+      "Global edutech company seeking APM to own student experience features. Perfect for analytical minds ready to ",
+      " launch their product career with mentorship.",
+    ],
   },
   {
     title: "Lead Data Science Engineer",
     tags: ["Full-time", "Hybrid", "Remote"],
-    description:
-      "Scale-up seeking senior data scientist to build ML infrastructure. Lead a team of engineers, architect solutions, and implement production-grade ML systems.",
+    description: [
+      "Scale-up seeking senior data scientist to build ML infrastructure.Lead a team of engineers, architect solutions", 
+      "and implement production-grade ML systems.",
+    ],
   },
   {
     title: "Principal Product Manager",
     tags: ["Full-time", "Hybrid", "Remote"],
-    description:
-      "Series C startup needs veteran product leader to own core product strategy. Define vision, mentor team members, and drive executive alignment.",
+    description: [
+      "Series C startup needs veteran product leader to own core product strategy. Define vision, mentor team members", 
+      "and drive executive alignment.",
+    ],
   },
 ];
 
@@ -46,11 +56,11 @@ const JobBoard = () => (
   <Box bgcolor="#f9fafb" py={8} px={{ xs: 3, md: 8 }}>
     {/* Header */}
     <Box textAlign="center" mb={10}>
-      <Typography variant="h4" fontWeight={600} gutterBottom>
+      <Typography variant="h2" fontWeight={200} sx={{ fontSize: '160px' }} gutterBottom>
         Your Next Career-Defining Move
       </Typography>
       <Typography
-        variant="body2"
+        variant="body4"
         color="textSecondary"
         maxWidth="600px"
         mx="auto"
@@ -71,7 +81,7 @@ const JobBoard = () => (
             </Typography>
           </Box>
           <Stack spacing={1} pl={2}>
-            <Typography color="primary" sx={{ cursor: "pointer",color:"#0040D8" }}>
+            <Typography sx={{ cursor: "pointer", color: "#0040D8" }}>
               Data Science (150)
             </Typography>
             <Typography color="text.secondary">Product (105)</Typography>
@@ -86,7 +96,7 @@ const JobBoard = () => (
             Upload your resume to get better job recommendations, accurate job matches, and access to AI-powered features.
           </Typography>
           <Box mt={2} textAlign="center">
-            <Button variant="outlined"  sx={{ borderRadius: 999, px: 4,border:"1px solid #0040D8", color:"#0040D8" }}>
+            <Button variant="outlined" sx={{ borderRadius: 999, px: 4, border: "1px solid #0040D8", color: "#0040D8" }}>
               Upload your resume
             </Button>
           </Box>
@@ -94,23 +104,25 @@ const JobBoard = () => (
       </Grid>
 
       {/* Job Listings */}
-      <Grid item xs={12} md={9}>
+      <Grid item xs={12} md={9} px={10}>
         <Stack spacing={3}>
           {jobData.map((job, index) => (
             <Paper key={index} variant="outlined" sx={{ p: 3 }}>
               <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
                 {job.title}
               </Typography>
-              <Stack direction="row" spacing={1} mb={2} flexWrap="wrap">
+              <Stack direction="row" spacing={1} mb={1} flexWrap="wrap">
                 {job.tags.map((tag, i) => (
-                  <Chip key={i} label={tag} size="small" color="primary" variant="outlined" />
+                  <Chip key={i} label={tag} size="small" sx={{ color: "#0040D8" }} variant="outlined" />
                 ))}
               </Stack>
-              <Typography variant="body2" color="text.secondary" paragraph>
-                {job.description}
-              </Typography> 
+              {job.description.map((line, i) => (
+                <Typography key={i} variant="body2" color="text.secondary" spacing={-10} paragraph>
+                  {line}
+                </Typography>
+              ))}
               <Box textAlign="right">
-                <Button variant="contained"  sx={{ borderRadius: 999, px: 4, bgcolor:"#0040D8" }}>
+                <Button variant="contained" sx={{ borderRadius: 999, px: 4, bgcolor: "#0040D8" }}>
                   Apply →
                 </Button>
               </Box>
@@ -118,7 +130,7 @@ const JobBoard = () => (
           ))}
 
           <Box textAlign="center" pt={3}>
-            <Button variant="outlined"  sx={{ borderRadius: 999, px: 4 ,color:"#0040D8"}}>
+            <Button variant="outlined" sx={{ borderRadius: 999, px: 4, color: "#0040D8" }}>
               Show More..
             </Button>
           </Box>

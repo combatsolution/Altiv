@@ -292,13 +292,14 @@ export default function JwtRegisterView() {
               label="Confirm Password"
               type="password"
             />
-
+ 
             <FormControlLabel
-              control={<Checkbox defaultChecked color="primary" />}
+              control={< Checkbox defaultChecked  style={{color:"#0040d8", mb:"2"}} />}
               label={
                 <Typography variant="body2">
                   I agree with the{' '}
-                  <Link underline="always" color="primary">
+                  <Link underline="always" style={{color:"#0040d8"}}> 
+                  
                     terms and conditions
                   </Link>
                 </Typography>
@@ -312,7 +313,7 @@ export default function JwtRegisterView() {
               type="submit"
               variant="contained"
               loading={isSubmitting}
-              sx={{ textTransform: 'none', fontWeight: 'bold' }}
+              sx={{ textTransform: 'none', fontWeight: 'bold', color: '#fff', backgroundColor:"#0040D8" }}
             >
               Next
             </LoadingButton>
@@ -321,7 +322,8 @@ export default function JwtRegisterView() {
 
         <Typography variant="body2" color="text.secondary" mt={3}>
           Need help? Visit our{' '}
-          <Link underline="hover" color="primary">
+          <Link underline="hover"  style={{color:"#0040d8"}}>
+                  
             help center
           </Link>
         </Typography>

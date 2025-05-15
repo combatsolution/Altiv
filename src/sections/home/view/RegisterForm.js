@@ -10,6 +10,7 @@ import {
   Link,
   Grid,
 } from '@mui/material';
+import { red } from '@mui/material/colors';
 
 function RegisterForm() {
   return (
@@ -54,7 +55,7 @@ function RegisterForm() {
         control={<Checkbox />}
         label={
           <Typography variant="body2">
-            I agree with the <Link href="#">terms and conditions</Link>
+            I agree with the <Link href="#" color={red}>terms and conditionssss</Link>
           </Typography>
         }
         sx={{ mt: 2 }}
