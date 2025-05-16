@@ -146,138 +146,138 @@ function HomeHero() {
                     </ToggleButtonGroup>
 
                     {uploadType === 'resume' ? (
-  <>
-    <Box
-      border="2px dashed #cbd5e0"
-      borderRadius={2}
-      bgcolor="#f8faff"
-      width="100%"
-      py={4}
-      px={2}
-      textAlign="center"
-      mb={2}
-      sx={{ cursor: "pointer" }}
-      onClick={() => fileInputRef.current.click()}
-    >
-      <CloudUploadIcon fontSize="large" style={{ color: "#0040D8" }} />
-      <Typography variant="body1" fontWeight={500} mt={1}>
-        Drag & drop files or <Box component="span" color="#3f51b5" fontWeight="bold">Browse</Box>
-      </Typography>
-      <Typography variant="caption" display="block" color="textSecondary" mt={1}>
-        Supported formats: JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT
-      </Typography>
-      <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: "none" }}
-        onChange={handleFileChange}
-      />
-    </Box>
+                      <>
+                        <Box
+                          border="2px dashed #cbd5e0"
+                          borderRadius={2}
+                          bgcolor="#f8faff"
+                          width="100%"
+                          py={4}
+                          px={2}
+                          textAlign="center"
+                          mb={2}
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => fileInputRef.current.click()}
+                        >
+                          <CloudUploadIcon fontSize="large" style={{ color: "#0040D8" }} />
+                          <Typography variant="body1" fontWeight={500} mt={1}>
+                            Drag & drop files or <Box component="span" color="#3f51b5" fontWeight="bold">Browse</Box>
+                          </Typography>
+                          <Typography variant="caption" display="block" color="textSecondary" mt={1}>
+                            Supported formats: JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT
+                          </Typography>
+                          <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{ display: "none" }}
+                            onChange={handleFileChange}
+                          />
+                        </Box>
 
-    {selectedFile && (
-      <Box
-        border="1px solid #ccc"
-        borderRadius={1}
-        px={2}
-        py={1.5}
-        textAlign="left"
-        fontSize="0.9rem"
-        mb={2}
-      >
-        Selected file: <strong>{selectedFile}</strong>
-      </Box>
-    )}
+                        {selectedFile && (
+                          <Box
+                            border="1px solid #ccc"
+                            borderRadius={1}
+                            px={2}
+                            py={1.5}
+                            textAlign="left"
+                            fontSize="0.9rem"
+                            mb={2}
+                          >
+                            Selected file: <strong>{selectedFile}</strong>
+                          </Box>
+                        )}
 
-    <Button
-      variant="contained"
-      fullWidth
-      onClick={() => {
-        if (!selectedFile) {
-          fileInputRef.current.click();
-        } else {
-          // Add your "continue" logic here (e.g., navigate or submit)
-          console.log("Continue with file:", selectedFile);
-        }
-      }}
-      sx={{
-        backgroundColor: "#3f51b5",
-        borderRadius: 999,
-        py: 1.5,
-        textTransform: "none",
-        fontWeight: 500,
-        '&:hover': { backgroundColor: "#2f3da3" },
-      }}
-    >
-      {selectedFile ? "Continue" : "Upload Resume"}
-    </Button>
-  </>
-) : (
-  // Job title section remains unchanged
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          onClick={() => {
+                            if (!selectedFile) {
+                              fileInputRef.current.click();
+                            } else {
+                              // Add your "continue" logic here (e.g., navigate or submit)
+                              navigate(paths.jobDetails)
+                            }
+                          }}
+                          sx={{
+                            backgroundColor: "#3f51b5",
+                            borderRadius: 999,
+                            py: 1.5,
+                            textTransform: "none",
+                            fontWeight: 500,
+                            '&:hover': { backgroundColor: "#2f3da3" },
+                          }}
+                        >
+                          {selectedFile ? "Continue" : "Upload Resume"}
+                        </Button>
+                      </>
+                    ) : (
 
 
-                    // {uploadType === 'resume' ? (
-                       
 
-                    //     <>
-                    //       <Box
-                    //         border="2px dashed #cbd5e0"
-                    //         borderRadius={2}
-                    //         bgcolor="#f8faff"
-                    //         width="100%"
-                    //         py={4}
-                    //         px={2}
-                    //         textAlign="center"
-                    //         mb={2}
-                    //         sx={{ cursor: "pointer" }}
-                    //         onClick={() => fileInputRef.current.click()}
-                    //       >
-                    //         <CloudUploadIcon fontSize="large" style={{ color: "#0040D8" }} />
-                    //         <Typography variant="body1" fontWeight={500} mt={1}>
-                    //           Drag & drop files or <Box component="span" color="#3f51b5" fontWeight="bold">Browse</Box>
-                    //         </Typography>
-                    //         <Typography variant="caption" display="block" color="textSecondary" mt={1}>
-                    //           Supported formats: JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT
-                    //         </Typography>
-                    //         <input
-                    //           type="file"
-                    //           ref={fileInputRef}
-                    //           style={{ display: "none" }}
-                    //           onChange={handleFileChange}
-                    //         />
-                    //       </Box>
+                      // {uploadType === 'resume' ? (
 
-                    //       {selectedFile && (
-                    //         <Box
-                    //           border="1px solid #ccc"
-                    //           borderRadius={1}
-                    //           px={2}
-                    //           py={1.5}
-                    //           textAlign="left"
-                    //           fontSize="0.9rem"
-                    //           mb={2}
-                    //         >
-                    //           Selected file: <strong>{selectedFile}</strong>
-                    //         </Box>
-                    //       )}
 
-                    //       <Button
-                    //         variant="contained"
-                    //         fullWidth
-                    //         sx={{
-                    //           backgroundColor: "#3f51b5",
-                    //           borderRadius: 999,
-                    //           py: 1.5,
-                    //           textTransform: "none",
-                    //           fontWeight: 500,
-                    //           '&:hover': { backgroundColor: "#2f3da3" },
-                    //         }}  
-                    //       >
-                    //         Upload Resume
-                    //       </Button>
-                    //     </>
+                      //     <>
+                      //       <Box
+                      //         border="2px dashed #cbd5e0"
+                      //         borderRadius={2}
+                      //         bgcolor="#f8faff"
+                      //         width="100%"
+                      //         py={4}
+                      //         px={2}
+                      //         textAlign="center"
+                      //         mb={2}
+                      //         sx={{ cursor: "pointer" }}
+                      //         onClick={() => fileInputRef.current.click()}
+                      //       >
+                      //         <CloudUploadIcon fontSize="large" style={{ color: "#0040D8" }} />
+                      //         <Typography variant="body1" fontWeight={500} mt={1}>
+                      //           Drag & drop files or <Box component="span" color="#3f51b5" fontWeight="bold">Browse</Box>
+                      //         </Typography>
+                      //         <Typography variant="caption" display="block" color="textSecondary" mt={1}>
+                      //           Supported formats: JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT
+                      //         </Typography>
+                      //         <input
+                      //           type="file"
+                      //           ref={fileInputRef}
+                      //           style={{ display: "none" }}
+                      //           onChange={handleFileChange}
+                      //         />
+                      //       </Box>
 
-                      
-                    
+                      //       {selectedFile && (
+                      //         <Box
+                      //           border="1px solid #ccc"
+                      //           borderRadius={1}
+                      //           px={2}
+                      //           py={1.5}
+                      //           textAlign="left"
+                      //           fontSize="0.9rem"
+                      //           mb={2}
+                      //         >
+                      //           Selected file: <strong>{selectedFile}</strong>
+                      //         </Box>
+                      //       )}
+
+                      //       <Button
+                      //         variant="contained"
+                      //         fullWidth
+                      //         sx={{
+                      //           backgroundColor: "#3f51b5",
+                      //           borderRadius: 999,
+                      //           py: 1.5,
+                      //           textTransform: "none",
+                      //           fontWeight: 500,
+                      //           '&:hover': { backgroundColor: "#2f3da3" },
+                      //         }}  
+                      //       >
+                      //         Upload Resume
+                      //       </Button>
+                      //     </>
+
+
+
                       <>
                         <Box mb={3} width="100%" textAlign="left">
                           <Typography variant="caption" sx={{ color: "#0040D8" }} ml={1}>Designation</Typography>
@@ -292,6 +292,9 @@ function HomeHero() {
                               border: '1px solid #3f51b5',
                               borderRadius: 1,
                               fontSize: '0.9rem'
+
+
+
                             }}
                           />
                         </Box>
@@ -330,6 +333,9 @@ function HomeHero() {
                             fontWeight: 500,
                             '&:hover': { backgroundColor: "#2f3da3" },
                           }}
+                          onClick={()=>navigate(paths.jobDetails)}
+
+                
                         >
                           Continue
                         </Button>

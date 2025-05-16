@@ -13,9 +13,11 @@ import CareerCompass from '../CareerCompass';
 import SmartJobFeed from '../SmartJobFeed';
 import JobMatchBooster from '../JobMatchBooster';
 import JobBoard from '../JobBoard';
+
+// import CareerCompassResume from './CareerCompassResume';
 // import Footer from '../Footer';
 
- 
+
 
 
 // import HomeMinimal from '../home-minimal';
@@ -70,6 +72,8 @@ export default function HomeView() {
       <SmartJobFeed/>
       <JobMatchBooster/>
       <JobBoard/>
+    
+      {/* <CareerCompassResume/> */}
       {/* <Footer /> */}
       
 
