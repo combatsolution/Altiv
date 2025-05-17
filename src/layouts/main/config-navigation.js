@@ -11,16 +11,19 @@ export const navConfig = [
   {
     title: 'AI Career Coach',
     icon: <Iconify icon="solar:home-2-bold-duotone" />,
-    path: '/',
+    path: '#',
   },
   { 
     title: 'Jobs',
     icon: <Iconify icon="solar:atom-bold-duotone" />,
-    path: paths.components,
+    path: '#',
+    // paths.components
   },
   {
     title: 'Analyse your Resume',
     icon: <Iconify icon="solar:notebook-bold-duotone" />,
-    path: paths.docs,
+    path: '#',
+    // paths.docs
+
   },
 ];

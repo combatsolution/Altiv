@@ -18,6 +18,7 @@ const ROOTS = {
 
 export const paths = {
   jobDetails: '/job-details',
+  careerResume: '/career-resume',
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',
   pricing: '/pricing',

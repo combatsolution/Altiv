@@ -4,6 +4,7 @@ import mainImage from "src/images/testimonial-main.png";
 import person1 from "src/images/person1.png";
 import person2 from "src/images/person2.png";
 import person3 from "src/images/person3.png";
+import Carousel, { CarouselArrowIndex, useCarousel } from 'src/components/carousel';
 
 const testimonials = [
   {
@@ -43,6 +44,10 @@ const testimonials = [
 function TestimonialSection() {
   const [index, setIndex] = useState(0);
   const t = testimonials[index];
+    const carousel = useCarousel({
+      autoplay: false,
+      slidesToShow: 3
+    });
 
   const handleNext = () => {
     setIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
@@ -133,33 +138,27 @@ function TestimonialSection() {
         </Grid>
 
         {/* Right images */}
-        <Grid
-          item
-          xs={12}
-          md={3}
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "row", md: "column" },
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 2,
-            p: 2,
-          }}
-        >
-          {[person1, person2, person3].map((img, i) => (
-            <Box
-              key={i}
-              component="img"
-              src={img}
-              alt={`Person ${i + 1}`}
-              sx={{
-                width: { xs: 80, md: 100 },
-                height: { xs: 80, md: 100 },
-                objectFit: "cover",
-                borderRadius: 1,
-              }}
-            />
-          ))}
+        <Grid item xs={12} md={3}>
+         
+
+          <Carousel ref={carousel.carouselRef} {...carousel.carouselSettings}>
+            {testimonials.map((item, i) => (
+              <Box
+                  component="img"
+                  src={item.image}
+                  onClick={() => setIndex(i)}
+                  alt={`Person ${i + 1}`}
+                  sx={{
+                    // width: { xs: 80, md: 100 },
+                    // height: { xs: 80, md: 100 },
+                    width:'100%',
+                    height: '393px',
+                    // objectFit: "contain",
+                    cursor: 'pointer'
+                  }}
+                />
+            ))}
+          </Carousel>
         </Grid>
       </Grid>
 
@@ -178,7 +177,7 @@ function TestimonialSection() {
           {index + 1}/{testimonials.length} Articles
         </Typography>
         <Button onClick={handleNext} variant="text" sx={{ textTransform: "none" }}>
-          Next →
+          {/* Next → */}
         </Button>
       </Stack>
     </Box>

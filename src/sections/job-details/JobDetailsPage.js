@@ -43,17 +43,7 @@ export default function JobDetailPage() {
     <Box>
       {/* Breadcrumbs & Search */}
       <Container sx={{ py: 2 }}>
-        <Box>
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link color="inherit" href="/">
-              <HomeIcon fontSize="small" />
-            </Link>
-            <Link color="inherit" href="/jobs-feed">
-              Job Feed
-            </Link>
-            <Typography color="textPrimary">Job Details</Typography>
-          </Breadcrumbs>
-        </Box>
+
         <Box my={2}>
           <TextField
             fullWidth
@@ -79,7 +69,7 @@ export default function JobDetailPage() {
               <CardHeader
                 avatar={
                   <Avatar sx={{ bgcolor: 'primary.main' }}>PT</Avatar>
-                  
+
                 }
                 action={<BookmarkBorderIcon />}
 
@@ -89,33 +79,41 @@ export default function JobDetailPage() {
               />
               <CardContent>
                 <Box display="flex" alignItems="center" mb={1}>
-                  <Typography variant="body2" color="textSecondary">
-                    Match Score
-                  </Typography>
+
+
                   <Box
-                    ml={1}
-                    px={1.5}
-                    py={0.5}
-                    borderRadius={1}
+                    width={80}
+                    height={60}
+                    borderRadius="50%"
                     bgcolor="success.light"
-                  >
-                    <Typography variant="subtitle1" color="success.main">
-                      75%
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                     sx={{ ml:70, mb:10}}
+                    >
+                  
+                    <Typography
+                      variant="subtitle2"
+                      color="success.main"
+                      align="center"
+                      sx={{ lineHeight: 1.2 }}
+                    >
+                      Match Score <br /> 75%
                     </Typography>
                   </Box>
                   <Tooltip title="How this matching score?\n\nLorem ipsum..." placement="right">
                     <Typography
                       variant="caption"
-                      color="primary"
+                      color="primary" 
                       sx={{ ml: 2, cursor: 'pointer' }}
                     >
-                      Why this score?
+                      {/* Why this score? */}
                     </Typography>
                   </Tooltip>
                 </Box>
                 <Divider />
                 {/* Job Description Paragraphs */}
-                {[...Array(3)].map((_, i) => (
+                {[...Array(5)].map((_, i) => (
                   <Typography key={i} paragraph>
                     Mollit in laborum tempor Lorem incididunt irure. Aute eu ex ad
                     sunt. Pariatur sint culpa do incididunt eiusmod culpa. Mollit
@@ -123,10 +121,7 @@ export default function JobDetailPage() {
                   </Typography>
                 ))}
               </CardContent>
-              <CardActions sx={{ justifyContent: 'center', mb: 2 }}>
-                <Button variant="contained" size="large" sx={{ mx: 1 }}>Apply now</Button>
-                <Button variant="outlined" size="large" sx={{ mx: 1 }}>Boost my application</Button>
-              </CardActions>
+
             </Card>
           </Grid>
 
@@ -157,6 +152,10 @@ export default function JobDetailPage() {
               </Box>
             </Box>
           </Grid>
+          <CardActions sx={{ display: "flex", alignItems: 'center', justifyContent: 'center', mb: 2, ml: 45 }}>
+            <Button variant="contained" size="large" sx={{ mx: 1, color: "#ffff", backgroundColor: "#0040D8", borderRadius: "100px", width: "200px" }}>Apply now</Button>
+            <Button variant="outlined" size="large" sx={{ mx: 1, color: "#0040D8", backgroundColor: "#fff", borderRadius: "100px" }}>Boost my application</Button>
+          </CardActions>
         </Grid>
       </Container>
     </Box>

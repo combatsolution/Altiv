@@ -48,37 +48,54 @@ function HomeHero() {
         <Grid xs={12} md={6}>
           <Stack spacing={3}>
             <Typography
-              variant="h4"
+              variant="h2"
               component="h1"
               fontWeight="bold"
-              sx={{ fontSize: { xs: "2rem", sm: "2.5rem", md: "2rem" } }}
+              sx={{
+                fontSize: {
+                  xs: '54px',     // Mobile: 54px
+                  sm: '2.5rem',   // Small and up
+                  md: '2rem'      // Medium and up
+                },
+                fontWeight: 600,
+                lineHeight: 1.2,
+                marginTop: 4
+              }}
             >
-              Your career’s secret weapon
+              Your career’s secret<br /> weapon
             </Typography>
 
             <Typography
               variant="body1"
               color="text.secondary"
-              sx={{ fontSize: { xs: "1rem", sm: "1.1rem" } }}
+              sx={{
+                fontSize: {
+                  xs: '20px',     // Mobile: 20px
+                  sm: '1.1rem'    // Small and up
+                }
+              }}
             >
               Tired of career uncertainty and endless job searches? <br />
-              Our AI coach guides your next move with data-driven insights <br />
-              while matching you to roles you’re truly qualified for — all in one place.
+              Our AI coach guides your next move with data-driven <br />
+              insights while matching you to roles you’re truly <br />
+              qualified for — all in one place.
             </Typography>
 
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
               <Button
-                variant="contained"
-                size="large"
+                variant="contained" size="large"
                 sx={{
                   bgcolor: "#0040D8",
                   "&:hover": { bgcolor: blue[700] },
-                  width: { xs: "100%", sm: "auto" },
+                  width: { xs: "100%", sm: "100%", md:"40%" },
+                  borderRadius: "29px",
+                  marginRight:"-70px"
+                  
                 }}
                 onClick={() => setOpen(true)}
               >
                 Start Free
-              </Button>
+              </Button> 
 
               <Modal open={open} onClose={handleClose}>
                 <Box
@@ -146,7 +163,7 @@ function HomeHero() {
                     </ToggleButtonGroup>
 
                     {uploadType === 'resume' ? (
-                      <>
+                      <> {/* Resume Upload UI */}
                         <Box
                           border="2px dashed #cbd5e0"
                           borderRadius={2}
@@ -195,8 +212,7 @@ function HomeHero() {
                             if (!selectedFile) {
                               fileInputRef.current.click();
                             } else {
-                              // Add your "continue" logic here (e.g., navigate or submit)
-                              navigate(paths.jobDetails)
+                              navigate(paths.jobDetails);
                             }
                           }}
                           sx={{
@@ -212,73 +228,7 @@ function HomeHero() {
                         </Button>
                       </>
                     ) : (
-
-
-
-                      // {uploadType === 'resume' ? (
-
-
-                      //     <>
-                      //       <Box
-                      //         border="2px dashed #cbd5e0"
-                      //         borderRadius={2}
-                      //         bgcolor="#f8faff"
-                      //         width="100%"
-                      //         py={4}
-                      //         px={2}
-                      //         textAlign="center"
-                      //         mb={2}
-                      //         sx={{ cursor: "pointer" }}
-                      //         onClick={() => fileInputRef.current.click()}
-                      //       >
-                      //         <CloudUploadIcon fontSize="large" style={{ color: "#0040D8" }} />
-                      //         <Typography variant="body1" fontWeight={500} mt={1}>
-                      //           Drag & drop files or <Box component="span" color="#3f51b5" fontWeight="bold">Browse</Box>
-                      //         </Typography>
-                      //         <Typography variant="caption" display="block" color="textSecondary" mt={1}>
-                      //           Supported formats: JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT
-                      //         </Typography>
-                      //         <input
-                      //           type="file"
-                      //           ref={fileInputRef}
-                      //           style={{ display: "none" }}
-                      //           onChange={handleFileChange}
-                      //         />
-                      //       </Box>
-
-                      //       {selectedFile && (
-                      //         <Box
-                      //           border="1px solid #ccc"
-                      //           borderRadius={1}
-                      //           px={2}
-                      //           py={1.5}
-                      //           textAlign="left"
-                      //           fontSize="0.9rem"
-                      //           mb={2}
-                      //         >
-                      //           Selected file: <strong>{selectedFile}</strong>
-                      //         </Box>
-                      //       )}
-
-                      //       <Button
-                      //         variant="contained"
-                      //         fullWidth
-                      //         sx={{
-                      //           backgroundColor: "#3f51b5",
-                      //           borderRadius: 999,
-                      //           py: 1.5,
-                      //           textTransform: "none",
-                      //           fontWeight: 500,
-                      //           '&:hover': { backgroundColor: "#2f3da3" },
-                      //         }}  
-                      //       >
-                      //         Upload Resume
-                      //       </Button>
-                      //     </>
-
-
-
-                      <>
+                      <> {/* Job Title UI */}
                         <Box mb={3} width="100%" textAlign="left">
                           <Typography variant="caption" sx={{ color: "#0040D8" }} ml={1}>Designation</Typography>
                           <Box
@@ -292,9 +242,6 @@ function HomeHero() {
                               border: '1px solid #3f51b5',
                               borderRadius: 1,
                               fontSize: '0.9rem'
-
-
-
                             }}
                           />
                         </Box>
@@ -333,9 +280,7 @@ function HomeHero() {
                             fontWeight: 500,
                             '&:hover': { backgroundColor: "#2f3da3" },
                           }}
-                          onClick={()=>navigate(paths.jobDetails)}
-
-                
+                          onClick={() => navigate(paths.jobDetails)}
                         >
                           Continue
                         </Button>
@@ -348,22 +293,35 @@ function HomeHero() {
               <Button
                 variant="outlined"
                 size="large"
+                onClick={() => navigate(paths.auth.jwt.register)}
                 sx={{
                   textTransform: "none",
                   color: "#0040D8",
-                  borderColor: "#0040D8",
+                  // borderColor is implied by the border below
+
+
+                  // sizing
+                  width: { xs: "100%", sm: "218px" },
+                  height: "48px",
+
+                  // border + radius
+                  border: "1px solid #0040D8",
+                  borderRadius: "29px",
+
+                  // hover
                   "&:hover": {
                     backgroundColor: "transparent",
                     borderColor: blue[700],
                     color: blue[700],
                   },
-                  width: { xs: "90%", sm: "auto" },
-                  borderRadius: "20px  ",
+
+                  // positional shift on desktop
+                  ml: { xs: 0, sm: "100px", md:"-80" },
                 }}
-                onClick={() => navigate(paths.auth.jwt.register)}
               >
                 Know How it Works
               </Button>
+
             </Stack>
           </Stack>
         </Grid>
@@ -387,4 +345,3 @@ function HomeHero() {
 }
 
 export default HomeHero;
-

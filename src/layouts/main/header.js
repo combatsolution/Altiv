@@ -66,12 +66,11 @@ export default function Header() {
             sx={{
               [`& .${badgeClasses.badge}`]: {
                 top: 8,
-                right: -16,
+                right: -20,
               },
             }}
-
           >
-            {/* <Logo /> */}
+           
             <img src={Altivlogo} alt="BigCo Inc. logo" />
 
           </Badge>
@@ -80,10 +79,11 @@ export default function Header() {
 
           {mdUp && <NavDesktop offsetTop={offsetTop} data={navConfig} />}
 
-          <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse', color: "#0040D8", }}>
+          <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse', color: "#0040D8",mr:5 }}>
             <Button
               variant="contained"
-              target="_blank"
+             
+              target="_self" 
               rel="noopener"
               href={paths.auth.jwt.register}
               sx={{
@@ -93,6 +93,7 @@ export default function Header() {
                 '&:hover': {
                   bgcolor: '#0030aa', // optional: slightly darker shade on hover
                    width: { xs: "100%", sm: "auto" },
+                  
                 },
               }}
             >

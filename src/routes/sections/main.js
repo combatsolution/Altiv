@@ -30,6 +30,7 @@ const PostListPage = lazy(() => import('src/pages/post/list'));
 const PostDetailsPage = lazy(() => import('src/pages/post/details'));
 // JOB DETAILS
 const JobDetailsPage = lazy(() => import('src/pages/job-details/jobDetails'));
+const CareerPathResumePage = lazy(() => import('src/pages/career/CareerCompassResume'));
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +48,7 @@ export const mainRoutes = [
       { path: 'contact-us', element: <ContactPage /> },
       { path: 'faqs', element: <FaqsPage /> },
       { path: 'job-details', element: <JobDetailsPage />},
+      { path: 'career-resume', element: <CareerPathResumePage />},
       {
         path: 'product',
         children: [

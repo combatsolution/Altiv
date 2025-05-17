@@ -1,6 +1,8 @@
 import { useScroll } from 'framer-motion';
 // @mui
 import { styled } from '@mui/material/styles';
+import { Box } from '@mui/material';
+
 
 // components
 import ScrollProgress from 'src/components/scroll-progress';
@@ -68,12 +70,14 @@ export default function HomeView() {
       <FeatureSection />
       <TestimonialSection/>
       <CareerToolkitHero/>
-      <CareerCompass/>
-      <SmartJobFeed/>
-      <JobMatchBooster/>
+      {/* <Box component='div' sx={{backgroundImage : 'url(/assets/line.svg)', zIndex: 10}}> */}
+        <CareerCompass/>
+        <SmartJobFeed/>
+        <JobMatchBooster/>
+      {/* </Box> */}
       <JobBoard/>
-    
-      {/* <CareerCompassResume/> */}
+{/*     
+      <CareerCompassResume/> */}
       {/* <Footer /> */}
       
 
