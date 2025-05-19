@@ -31,14 +31,15 @@ function JobMatchBooster() {
         <Grid item xs={12} md={6}>
           <Stack spacing={2} textAlign={{ xs: "center", md: "left" }}>
             <Typography
-              variant="h5"
+              fontSize="32px"
               fontWeight="bold"
               display="flex"
               alignItems="center"
               gap={1}
               justifyContent={{ xs: "center", md: "flex-start" }}
               style={{
-                color: "#0040D8"
+                color: "#2A4DD0"
+
               }}
             >
               <Box component="span" sx={{ fontSize: "2rem", color: "orange" }}>
@@ -47,19 +48,32 @@ function JobMatchBooster() {
               Job Match Booster
             </Typography>
 
-            <Typography variant="h6" fontWeight={500} color="text.primary">
+            <Typography fontWeight={500} color="text.primary" fontSize="32px">
               Boost Your Application Success
             </Typography>
 
-            <Typography variant="body1" color="text.secondary">
-              Stand out in every application. Get actionable tips and strategic insights to enhance your chances.
-              Know exactly what to improve and how to present yourself.
+            <Typography
+              variant="body1"
+              sx={{
+                width: '538px',
+                height: '96px',
+                fontFamily: 'Roboto',
+                fontWeight: 400,
+                fontSize: '20px',
+                lineHeight: '160%',
+                letterSpacing: '0%',
+                color: 'rgba(9, 8, 8, 0.5)', // #090808 with 50% opacity
+              }}
+            >
+              Stand out in every application. Get actionable tips and <br />
+              strategic insights to enhance your chances. Know exactly <br />
+              what to improve and how to present yourself.
             </Typography>
 
             <Box pt={2}>
               <Button
                 variant="contained"
-                style={{  
+                style={{
                   backgroundColor: '#0040D8',
                   color: '#fff', // white text
 

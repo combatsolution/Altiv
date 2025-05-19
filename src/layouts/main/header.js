@@ -70,7 +70,7 @@ export default function Header() {
               },
             }}
           >
-           
+
             <img src={Altivlogo} alt="BigCo Inc. logo" />
 
           </Badge>
@@ -79,26 +79,25 @@ export default function Header() {
 
           {mdUp && <NavDesktop offsetTop={offsetTop} data={navConfig} />}
 
-          <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse', color: "#0040D8",mr:5 }}>
+          <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse', color: "#0040D8", mr: 5 }}>
             <Button
               variant="contained"
-             
-              target="_self" 
+              target="_self"
               rel="noopener"
               href={paths.auth.jwt.register}
               sx={{
-                bgcolor: '#0040D8', 
-                
-                textTransform: 'none', // optional: keeps the text as-is (no uppercase)
+                bgcolor: '#2A4DD0',
+                textTransform: 'none', // prevents uppercase
+                borderRadius: '100px', // apply 39% border radius
                 '&:hover': {
-                  bgcolor: '#0030aa', // optional: slightly darker shade on hover
-                   width: { xs: "100%", sm: "auto" },
-                  
+                  bgcolor: '#0030aa', // darker on hover
+                  width: { xs: '50%', sm: 'auto' },
                 },
               }}
             >
               Sign up
             </Button>
+
 
             {mdUp && <LoginButton />}
 

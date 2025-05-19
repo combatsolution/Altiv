@@ -14,7 +14,7 @@ function SmartJobFeed() {
       >
         {/* Text Section */}
         <Grid item xs={12} md={6}>
-          <Stack spacing={2} textAlign={{ xs: "center", md: "left" }}>
+          <Stack spacing={2} marginLeft="30px" textAlign={{ xs: "center", md: "left" }}>
             <Typography
               variant="h5"
               fontWeight="bold"
@@ -35,8 +35,9 @@ function SmartJobFeed() {
             </Typography>
 
             <Typography variant="body1" color="text.secondary">
-              Say goodbye to endless scrolling. Meet your job match with AI-powered precision.
-              Each opportunity comes with a match score, showing exactly how you fit before you apply.
+              Say goodbye to endless scrolling. Meet your job match with<br/>
+               AI-powered precision. Each opportunity comes with a match <br/>
+                score, showing exactly how you fit before you apply.
             </Typography>
 
             <Box pt={2}>

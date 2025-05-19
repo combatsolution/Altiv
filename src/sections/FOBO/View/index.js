@@ -1,0 +1,1 @@
+export {default as FoboView} from './Fobo-view';

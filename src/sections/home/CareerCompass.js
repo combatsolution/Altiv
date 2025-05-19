@@ -33,8 +33,8 @@ function CareerCompass() {
             </Typography>
 
             <Typography color="text.secondary">
-              Discover where you stand and where you could go next. Get personalized career predictions, explore
-              alternative paths, and build a roadmap to your dream role. Powered by AI, tailored to you.
+              Discover where you stand and where you could go next. Get <br/>personalized career predictions, explore
+              alternative paths, <br/>and build a roadmap to your dream role. Powered by AI,<br/> tailored to you.
             </Typography>
 
             <Stack direction="row" justifyContent={{ xs: "center", md: "flex-start" }} spacing={2} pt={1}>

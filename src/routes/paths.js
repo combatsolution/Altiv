@@ -19,6 +19,7 @@ const ROOTS = {
 export const paths = {
   jobDetails: '/job-details',
   careerResume: '/career-resume',
+  fobo:'/fobo',
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',
   pricing: '/pricing',

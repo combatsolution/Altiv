@@ -9,6 +9,11 @@ import Iconify from 'src/components/iconify';
 
 export const navConfig = [
   {
+    title: 'FOBO',
+    icon: <Iconify icon="solar:home-2-bold-duotone" />,
+    path: paths.fobo,
+  },
+  {
     title: 'AI Career Coach',
     icon: <Iconify icon="solar:home-2-bold-duotone" />,
     path: '#',
