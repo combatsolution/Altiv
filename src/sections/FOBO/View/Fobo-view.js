@@ -10,7 +10,7 @@ import ScrollProgress from 'src/components/scroll-progress';
 import FoboHeroPage from '../FoboHeroPage';
 import FoboDefinepage from '../FoboDefinepage';
 import FoboImpactPage from '../FoboImpactPage';
-// import WorkingProcessSection from '../WorkingProcessSection';
+import WorkingProcessSection from '../WorkingProcessSection';
 
 // ----------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ export default function FoboView() {
       <FoboHeroPage />
       <FoboDefinepage/>
       <FoboImpactPage/>
-      {/* <WorkingProcessSection/> */}
+      <WorkingProcessSection/>
 
 
     </>
