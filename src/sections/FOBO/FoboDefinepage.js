@@ -1,6 +1,6 @@
 import React from "react";
 import { Grid, Box, Typography, Stack } from "@mui/material";
-import brainImage from "src/Fogoimages/brainimage.png";
+import brainImage from "src/Fogoimages/brainimage.jpg";
 
 function FoboDefineSection() {
   return (
