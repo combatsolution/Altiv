@@ -1,4 +1,4 @@
-@font-face {
+/* @font-face {
   font-family: 'CircularStd';
   font-weight: 400;
   font-style: normal;
@@ -16,7 +16,45 @@
   font-family: 'CircularStd';
   font-weight: 700;
   font-style: normal;
-  src: local('CircularStd'), url('CircularStd-Bold.otf') format('opentype');
+  src: local('CircularStd'), url('CircularStd-Bold.otf') format('opentype'); */
+/* } */
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Inter Regular'), url('InterRegular-400.otf') format('opentype');
 }
 
- 
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Inter Bold'), url('InterBold-700.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Arial';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('arial Bold'), url('arial.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Roboto-Bold';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Roboto-Bold'), url('Roboto-Bold.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Roboto-Bold';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Roboto-Bold'), url('Roboto-Bold.ttf') format('opentype');
+}

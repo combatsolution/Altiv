@@ -19,12 +19,15 @@ import { paths } from 'src/routes/paths';
 import Logo from 'src/components/logo';
 import Label from 'src/components/label';
 //
+import Altivlogo from 'src/images/Altivlogo.svg';
 import { HEADER } from '../config-layout';
 import { navConfig } from './config-navigation';
 import NavMobile from './nav/mobile';
 import NavDesktop from './nav/desktop';
+
 //
 import { SettingsButton, HeaderShadow, LoginButton } from '../_common';
+// import { JwtRegisterView } from 'src/sections/auth/jwt';
 
 // ----------------------------------------------------------------------
 
@@ -63,43 +66,47 @@ export default function Header() {
             sx={{
               [`& .${badgeClasses.badge}`]: {
                 top: 8,
-                right: -16,
+                right: -20,
               },
             }}
-            badgeContent={
-              <Link
-                href={paths.changelog}
-                target="_blank"
-                rel="noopener"
-                underline="none"
-                sx={{ ml: 1 }}
-              >
-                <Label color="info" sx={{ textTransform: 'unset', height: 22, px: 0.5 }}>
-                  v5.1.0
-                </Label>
-              </Link>
-            }
           >
-            <Logo />
+
+            <img src={Altivlogo} alt="BigCo Inc. logo" />
+
           </Badge>
 
           <Box sx={{ flexGrow: 1 }} />
 
           {mdUp && <NavDesktop offsetTop={offsetTop} data={navConfig} />}
 
-          <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse' }}>
-            <Button variant="contained" target="_blank" rel="noopener" href={paths.minimalUI}>
-              Purchase Now
+          <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse', color: "#0040D8", mr: 5 }}>
+            <Button
+              variant="contained"
+              target="_self"
+              rel="noopener"
+              href={paths.auth.jwt.register}
+              sx={{
+                bgcolor: '#2A4DD0',
+                textTransform: 'none', // prevents uppercase
+                borderRadius: '100px', // apply 39% border radius
+                '&:hover': {
+                  bgcolor: '#0030aa', // darker on hover
+                  width: { xs: '50%', sm: 'auto' },
+                },
+              }}
+            >
+              Sign up
             </Button>
+
 
             {mdUp && <LoginButton />}
 
-            <SettingsButton
+            {/* <SettingsButton
               sx={{
                 ml: { xs: 1, md: 0 },
                 mr: { md: 2 },
               }}
-            />
+            /> */}
 
             {!mdUp && <NavMobile offsetTop={offsetTop} data={navConfig} />}
           </Stack>

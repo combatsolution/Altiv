@@ -70,8 +70,8 @@ export default function Auth0LoginView() {
   return (
     <>
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Sign in to Minimal
-      </Typography>
+        Sign in to Minimals
+      </Typography> 
 
       <Stack spacing={2}>
         <Button

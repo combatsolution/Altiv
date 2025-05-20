@@ -6,6 +6,7 @@ import SimpleLayout from 'src/layouts/simple';
 import CompactLayout from 'src/layouts/compact';
 // components
 import { SplashScreen } from 'src/components/loading-screen';
+import { element } from 'prop-types';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +28,11 @@ const ProductCheckoutPage = lazy(() => import('src/pages/product/checkout'));
 // BLOG
 const PostListPage = lazy(() => import('src/pages/post/list'));
 const PostDetailsPage = lazy(() => import('src/pages/post/details'));
-
+// JOB DETAILS
+const JobDetailsPage = lazy(() => import('src/pages/job-details/jobDetails'));
+const CareerPathResumePage = lazy(() => import('src/pages/career/CareerCompassResume'));
+// FOBO
+const FoboPage = lazy(() => import('src/pages/Fobo/fobo-view'));
 // ----------------------------------------------------------------------
 
 export const mainRoutes = [
@@ -43,6 +48,9 @@ export const mainRoutes = [
       { path: 'about-us', element: <AboutPage /> },
       { path: 'contact-us', element: <ContactPage /> },
       { path: 'faqs', element: <FaqsPage /> },
+      { path: 'job-details', element: <JobDetailsPage />},
+      { path: 'career-resume', element: <CareerPathResumePage />},
+      { path: 'fobo', element: <FoboPage />},
       {
         path: 'product',
         children: [

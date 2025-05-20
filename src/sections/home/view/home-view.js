@@ -1,23 +1,37 @@
 import { useScroll } from 'framer-motion';
 // @mui
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+import { Box } from '@mui/material';
+
+
 // components
 import ScrollProgress from 'src/components/scroll-progress';
 //
-// import Header from '../Header';
-import FeatureSection from '../FeatureSection';
 import HomeHero from '../home-hero';
-import HomeMinimal from '../home-minimal';
-import HomePricing from '../home-pricing';
-import HomeDarkMode from '../home-dark-mode';
-import HomeLookingFor from '../home-looking-for';
-import HomeForDesigner from '../home-for-designer';
-import HomeColorPresets from '../home-color-presets';
-import HomeAdvertisement from '../home-advertisement';
-import HomeCleanInterfaces from '../home-clean-interfaces';
-import HomeHugePackElements from '../home-hugepack-elements';
+import FeatureSection from '../FeatureSection';
+import CareerToolkitHero from '../CareerToolkitHero';
+import TestimonialSection from '../TestimonialSection';
+import CareerCompass from '../CareerCompass';
+import SmartJobFeed from '../SmartJobFeed';
+import JobMatchBooster from '../JobMatchBooster';
+import JobBoard from '../JobBoard';
 
+// import CareerCompassResume from './CareerCompassResume';
+// import Footer from '../Footer';
+
+
+
+
+// import HomeMinimal from '../home-minimal';
+// import HomePricing from '../home-pricing';
+// import HomeDarkMode from '../home-dark-mode';
+// import HomeLookingFor from '../home-looking-for';
+// import HomeForDesigner from '../home-for-designer';
+// import HomeColorPresets from '../home-color-presets';
+// import HomeAdvertisement from '../home-advertisement';
+// import HomeCleanInterfaces from '../home-clean-interfaces';
+// import HomeHugePackElements from '../home-hugepack-elements';
+  
 
 
 // ----------------------------------------------------------------------
@@ -51,11 +65,24 @@ export default function HomeView() {
     <>
       <ScrollProgress scrollYProgress={scrollYProgress} />
       
-      {/* <Header /> */}
+      
       <HomeHero />
       <FeatureSection />
+      <TestimonialSection/>
+      <CareerToolkitHero/>
+      {/* <Box component='div' sx={{backgroundImage : 'url(/assets/line.svg)', zIndex: 10}}> */}
+        <CareerCompass/>
+        <SmartJobFeed/>
+        <JobMatchBooster/>
+      {/* </Box> */}
+      <JobBoard/>
+{/*     
+      <CareerCompassResume/> */}
+      {/* <Footer /> */}
+      
 
-      <Box
+
+      {/* <Box
         sx={{
           overflow: 'hidden',
           position: 'relative',
@@ -83,7 +110,8 @@ export default function HomeView() {
         <HomeLookingFor />
 
         <HomeAdvertisement />
-      </Box>
+      </Box> */}
     </>
   );
 }
+ 
