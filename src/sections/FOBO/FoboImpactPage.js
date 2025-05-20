@@ -17,6 +17,7 @@ import { useState, useRef } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { paths } from 'src/routes/paths';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { position } from 'stylis';
 
 function FoboImpactPage() {
   const [open, setOpen] = useState(false);
@@ -50,6 +51,7 @@ function FoboImpactPage() {
           <Stack spacing={3}>
            
        {/* Main header: “Beat FOBO (Fear of Being Obsolete)” */}
+          <Box component='div' sx={{position: 'relative'}}>
             <Typography
               component="h1"
               sx={{
@@ -62,9 +64,11 @@ function FoboImpactPage() {
                 mt: 0,
               }}
             >
-              How FOBO <br/>Impacts You
+              How FOBO <br/>Impacts You 
               
             </Typography>
+            <img style={{position: 'absolute', width:'250px', bottom: '15px', right: '150px', zIndex: -10}} src='/assets/images/impact.svg' alt='impact' />
+          </Box>
 
             <Typography
               component="p"

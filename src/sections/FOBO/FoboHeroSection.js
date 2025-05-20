@@ -71,7 +71,7 @@ const FoboHeroSection = () => {
         }}
       >
         Stand out in every application. Get actionable tips and strategic insights to enhance your
-        chances. Know exactly what to improve and how to present yourself.
+        chances. Know exactly what to improve<br/> and how to present yourself.
       </Typography>
 
       {/* Call-to-action button */}
