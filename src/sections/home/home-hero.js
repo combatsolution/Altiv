@@ -15,7 +15,10 @@ import {
 } from "@mui/material";
 import { useState, useRef } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CloseIcon from '@mui/icons-material/Close';
 import { paths } from 'src/routes/paths';
+import { IconButton } from 'yet-another-react-lightbox';
+
 
 function HomeHero() {
   const [open, setOpen] = useState(false);
@@ -45,19 +48,20 @@ function HomeHero() {
   return (
     <Box sx={{ px: { xs: 2, sm: 4, md: 12 }, py: { xs: 4, sm: 6, md: 6 } }}>
       <Grid container spacing={4} alignItems="center">
-        <Grid xs={12} md={6}>
+        <Grid xs={12} md={6}  order={{ xs: 2, md: 1 }}>
           <Stack spacing={3}>
             <Typography
-              variant="h2"
+              variant="body2"
               component="h1"
               fontWeight="bold"
               sx={{
                 fontSize: {
-                  xs: '54px',     // Mobile: 54px
-                  sm: '2.5rem',   // Small and up
-                  md: '2rem'      // Medium and up
+                  xs: '44px',     
+                  sm: '40px',     
+                  md: '32px',    
+                  lg: '54px',
                 },
-                fontWeight: 600,
+                fontWeight: 400,
                 lineHeight: 1.2,
                 marginTop: 4
               }}
@@ -67,10 +71,10 @@ function HomeHero() {
 
             <Typography
               variant="body1"
-              color="text.secondary"
+              color="#090808"
               sx={{
                 fontSize: {
-                  xs: '20px',     // Mobile: 20px
+                  xs: 'px',     // Mobile: 20px
                   sm: '1.1rem'    // Small and up
                 }
               }}
@@ -87,15 +91,15 @@ function HomeHero() {
                 sx={{
                   bgcolor: "#0040D8",
                   "&:hover": { bgcolor: blue[700] },
-                  width: { xs: "100%", sm: "100%", md:"40%" },
+                  width: { xs: "100%", sm: "100%", md: "40%" },
                   borderRadius: "29px",
-                  marginRight:"-70px"
-                  
+                  marginRight: "-70px"
+
                 }}
                 onClick={() => setOpen(true)}
               >
                 Start Free
-              </Button> 
+              </Button>
 
               <Modal open={open} onClose={handleClose}>
                 <Box
@@ -117,6 +121,7 @@ function HomeHero() {
                       textAlign: 'center'
                     }}
                   >
+
                     <Typography variant="h5" fontWeight="bold" mb={1}>
                       Magic happens either ways
                     </Typography>
@@ -130,36 +135,53 @@ function HomeHero() {
                       onChange={handleChange}
                       sx={{ mb: 2, borderRadius: 50, border: "1px solid #0040D8" }}
                     >
-                      <ToggleButton
-                        value="resume"
+                      <ToggleButtonGroup
+                        value={uploadType}
+                        exclusive
+                        onChange={(event, newValue) => {
+                          if (newValue !== null) setUploadType(newValue);
+                        }}
                         sx={{
-                          borderRadius: 50,
-                          textTransform: "none",
-                          px: 5,
-                          color: uploadType === "resume" ? "black" : "#3f51b5",
-                          backgroundColor: uploadType === "resume" ? "#0040D8" : "transparent",
-                          '&:hover': {
-                            backgroundColor: uploadType === "resume" ? "#2f3da3" : "#f0f0f0",
-                          },
+                          borderRadius: '50px',
+                          border: '1px solid #2A4DD0',
+                          overflow: 'hidden',
                         }}
                       >
-                        Resume
-                      </ToggleButton>
-                      <ToggleButton
-                        value="job"
-                        sx={{
-                          borderRadius: 50,
-                          textTransform: "none",
-                          px: 3,
-                          color: uploadType === "job" ? "white" : "#3f51b5",
-                          backgroundColor: uploadType === "job" ? "#3f51b5" : "transparent",
-                          '&:hover': {
-                            backgroundColor: uploadType === "job" ? "#2f3da3" : "#f0f0f0",
-                          },
-                        }}
-                      >
-                        Job title
-                      </ToggleButton>
+                        <ToggleButton
+                          value="resume"
+                          sx={{
+                            textTransform: "none",
+                            px: 4,
+                            py: 0.5,
+                            borderRadius: 0,
+                            color: uploadType === "resume" ? "#ffffff" : "#2A4DD0",
+                            backgroundColor: uploadType === "resume" ? "#2A4DD0" : "#ffffff",
+                            '&:hover': {
+                              backgroundColor: uploadType === "resume" ? "#2f3da3" : "#f0f0f0",
+                            },
+                          }}
+                        >
+                          Resume
+                        </ToggleButton>
+
+                        <ToggleButton
+                          value="job"
+                          sx={{
+                            textTransform: "none",
+                            px: 4,
+                            py: 0.5,
+                            borderRadius: 0,
+                            color: uploadType === "job" ? "#ffffff" : "#2A4DD0",
+                            backgroundColor: uploadType === "job" ? "#2A4DD0" : "#ffffff",
+                            '&:hover': {
+                              backgroundColor: uploadType === "job" ? "#2f3da3" : "#f0f0f0",
+                            },
+                          }}
+                        >
+                          Job title
+                        </ToggleButton>
+                      </ToggleButtonGroup>
+
                     </ToggleButtonGroup>
 
                     {uploadType === 'resume' ? (
@@ -288,6 +310,8 @@ function HomeHero() {
                     )}
                   </Box>
                 </Box>
+
+
               </Modal>
 
               <Button
@@ -316,7 +340,7 @@ function HomeHero() {
                   },
 
                   // positional shift on desktop
-                  ml: { xs: 0, sm: "100px", md:"-80" },
+                  ml: { xs: 0, sm: "100px", md: "-80" },
                 }}
               >
                 Know How it Works
@@ -326,7 +350,7 @@ function HomeHero() {
           </Stack>
         </Grid>
 
-        <Grid xs={12} md={6} sx={{ mt: { xs: 4, md: 0 } }}>
+         <Grid  xs={12} md={6}  order={{ xs: 1, md: 2 }} sx={{ mt: { xs: 4, md: 0 } }} >
           <Box
             component="img"
             src={heroImg}
