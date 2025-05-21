@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
 import { blue } from "@mui/material/colors";
-import heroImg from "src/Fogoimages/foboheroimage.png";
+import heroImg from "src/Fogoimages/beatfobo.png";
 import {
   Modal,
   ToggleButton,
@@ -81,7 +81,7 @@ function FoboHeroPage() {
 
             <Typography
               component="p"
-              sx={{
+              sx={{ 
                 fontFamily: 'Inter, sans-serif',  
                 fontWeight: 400,
                 fontSize: '17px',
@@ -107,7 +107,7 @@ function FoboHeroPage() {
 
 
                 }}
-              // onClick={() => setOpen(true)}
+              onClick={() => setOpen(true)}
               > 
                 Check Your Score  <ArrowForwardIcon/>
               </Button>
@@ -123,23 +123,24 @@ function FoboHeroPage() {
                 >
                   <Box
                     sx={{
-                      width: '100%',
-                      maxWidth: 450,
+                      
+                      Width: '550.12px',
+                      height:'550.22px',
                       bgcolor: 'white',
-                      p: 6,
+                      pt: 1,
                       px: 4,
                       boxShadow: 3,
                       textAlign: 'center'
-                    }}
+                    }}  
                   >
-                    <Typography variant="h5" fontWeight="bold" mb={1}>
-                      Magic happens either ways
+                    <Typography variant="body2"   fontSize="36px" fontWeight="400" spacing="2px">
+                      Magic happens many ways
                     </Typography>
-                    <Typography variant="body2" color="textSecondary" mb={3}>
-                      You can choose to go with your updated resume or job title
+                    <Typography variant="body2" color="textSecondary" mb={6} fontSize="20px" >
+                      You can choose to go with your updated resume
                     </Typography>
 
-                    <ToggleButtonGroup
+                    {/* <ToggleButtonGroup
                       value={uploadType}
                       exclusive
                       onChange={handleChange}
@@ -175,19 +176,21 @@ function FoboHeroPage() {
                       >
                         Job title
                       </ToggleButton>
-                    </ToggleButtonGroup>
+                    </ToggleButtonGroup> */}
 
                     {uploadType === 'resume' ? (
                       <> {/* Resume Upload UI */}
                         <Box
+                        
                           border="2px dashed #cbd5e0"
-                          borderRadius={2}
+                          borderRadius={0}
                           bgcolor="#f8faff"
                           width="100%"
                           py={4}
                           px={2}
                           textAlign="center"
-                          mb={2}
+                           mt={8}
+                          mb={20}
                           sx={{ cursor: "pointer" }}
                           onClick={() => fileInputRef.current.click()}
                         >
@@ -221,6 +224,7 @@ function FoboHeroPage() {
                         )}
 
                         <Button
+                       
                           variant="contained"
                           fullWidth
                           onClick={() => {

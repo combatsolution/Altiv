@@ -6,7 +6,6 @@ function FoboDefineSection() {
   return (
     <Box
       sx={{
-        width: "1349px",
         mx: "auto",
         bgcolor: "#fff",
         px: 2,

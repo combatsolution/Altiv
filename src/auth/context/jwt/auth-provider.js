@@ -124,7 +124,7 @@ export function AuthProvider({ children }) {
       lastName,
     };
 
-    const response = await axios.post(endpoints.auth.register, data);
+    const response = await axios.post(endpoints.auth.register, {...data, permissions: ["customer"], isActive: true, isDeleted: false});
 
     const { accessToken, user } = response.data;
 

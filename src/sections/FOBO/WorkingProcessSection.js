@@ -92,7 +92,7 @@ const WorkingProcessSection = () => {
                     bgcolor: cardBgColor,
                     color: cardTextColor,
                     borderRadius: '12px',
-                    mt: isSecond ? '20px' : 0, // Top spacing only for second card
+                    mt: 0, // Top spacing only for second card
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',

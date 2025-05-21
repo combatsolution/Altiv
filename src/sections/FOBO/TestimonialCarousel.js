@@ -26,7 +26,7 @@ const testimonials = [
       "Zach felt stuck reviewing 50+ UX jobs. He used Altiv’s Clarity Compass, picked his top 5, and applied. 3 interviews later, he accepted his dream Product Designer role!",
     rating: 5,
     icon: avt1,
-    company:"xxxxxxxxxx", 
+    company: "xxxxxxxxxx",
   },
   {
     name: 'Raj',
@@ -34,7 +34,7 @@ const testimonials = [
       "After weeks of saving jobs and applying to none, Raj used Altiv’s Decision Confidence Score. He shortlisted 4 companies and finally hit submit. Within a month, he landed a UX Researcher role at a top tech startup!",
     rating: 5,
     icon: avt2,
-    company:"xxxxxxxxxx",
+    company: "xxxxxxxxxx",
   },
   {
     name: 'Ethan',
@@ -42,7 +42,7 @@ const testimonials = [
       "Ethan delayed applying for months, waiting for the ‘perfect’ job. With Altiv’s Better Option Tracker, he focused on roles that matched his values. Two interviews later, he’s now a Lead UI Designer at a growing SaaS company.",
     rating: 5,
     icon: avt3,
-    company:"xxxxxxxxxx",
+    company: "xxxxxxxxxx",
   }
 ];
 
@@ -59,84 +59,84 @@ StarRating.propTypes = {
 
 function TestimonialCard({ testimonial, isHighlighted }) {
   return (
-  
-   <Card
-  sx={{
-    width: '437.67px',
-    height: '510px',
-    mt: '30px',
-    backgroundColor: isHighlighted ? '#fff' : '#4F9CF9',
-    color: isHighlighted ? '#000' : '#fff',
-    boxShadow: isHighlighted ? 6 : 3,
-    borderRadius: '10px',
-  }}
->
-  <CardContent
-    sx={{
-  pt: '60px',
-  pr: '40px',
-  pb: '60px',
-  pl: '40px',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '30px',
-  width: '437.67px',      // Set fixed width
-  minHeight: '510px',     // Let content hug but not shrink below 510px
-  alignItems: 'flex-start',
-}}
-  >
-    <Avatar
-      src={testimonial.icon}
-      sx={{ width: '70px', height: '70px' }}
-    />
 
-    <Typography
-  variant="body2"
-  sx={{
-    textAlign: 'left',
-    width: '100%',
-    fontFamily: 'Inter, sans-serif',
-    fontWeight: 400,
-    fontSize: '18px',
-    lineHeight: '30px',
-    letterSpacing: '-0.02em',
-    color: 'text.primary',
-  }}
->
-  “{testimonial.content}”
-</Typography>
-
-
-    <Box
+    <Card
       sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%', // Key: ensures spacing between name and rating
+        width: '437.67px',
+        height: '510px',
+        mt: '30px',
+        backgroundColor: isHighlighted ? '#fff' : '#4F9CF9',
+        color: isHighlighted ? '#000' : '#fff',
+        boxShadow: isHighlighted ? 6 : 3,
+        borderRadius: '10px',
       }}
     >
-      <Typography
-  variant="body1"
-  sx={{
-    fontFamily: 'Inter, sans-serif',
-    fontWeight: 400,
-    fontSize: '18px',
-    lineHeight: '30px',
-    letterSpacing: '-0.02em', // assuming you meant -2%
-    textAlign: 'left',
-  }}
->
-  {testimonial.name}  
-  <br />
-  {testimonial.company}
-</Typography>
+      <CardContent
+        sx={{
+          pt: '60px',
+          pr: '40px',
+          pb: '60px',
+          pl: '40px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '30px',
+          width: '437.67px',      // Set fixed width
+          minHeight: '510px',     // Let content hug but not shrink below 510px
+          alignItems: 'flex-start',
+        }}
+      >
+        <Avatar
+          src={testimonial.icon}
+          sx={{ width: '70px', height: '70px' }}
+        />
 
-      <Box>
-        <StarRating count={testimonial.rating} />
-      </Box>
-    </Box>
-  </CardContent>
-</Card>
+        <Typography
+          variant="body2"
+          sx={{
+            textAlign: 'left',
+            width: '100%',
+            fontFamily: 'Inter, sans-serif',
+            fontWeight: 400,
+            fontSize: '18px',
+            lineHeight: '30px',
+            letterSpacing: '-0.02em',
+            color: 'text.primary',
+          }}
+        >
+          “{testimonial.content}”
+        </Typography>
+
+
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: '100%', // Key: ensures spacing between name and rating
+          }}
+        >
+          <Typography
+            variant="body1"
+            sx={{
+              fontFamily: 'Inter, sans-serif',
+              fontWeight: 400,
+              fontSize: '18px',
+              lineHeight: '30px',
+              letterSpacing: '-0.02em', // assuming you meant -2%
+              textAlign: 'left',
+            }}
+          >
+            {testimonial.name}
+            <br />
+            {testimonial.company}
+          </Typography>
+
+          <Box>
+            <StarRating count={testimonial.rating} />
+          </Box>
+        </Box>
+      </CardContent>
+    </Card>
 
 
   );

@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography, Button, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import zIndex from '@mui/material/styles/zIndex';
 
 const FoboHeroSection = () => {
   const theme = useTheme();
@@ -26,40 +27,28 @@ const FoboHeroSection = () => {
         You don’t need the perfect job.
       </Typography>
 
+      <box>
+
+
+   
       {/* Main headline */}
       <Typography
+
         variant={isMobile ? 'h4' : 'h2'}
         component="h1"
         fontWeight="bold"
         sx={{
-          position: 'relative',
           display: 'inline-block',
           lineHeight: 1.2,
+          zIndex:2
         }}
       >
-        You need the right next{' '}
-        <Box
-          component="span"
-          sx={{
-            position: 'relative',
-            display: 'inline-block',
-            '&::after': {
-              content: "''",
-              position: 'absolute',
-              width: '100%',
-              height: '0.35em',
-              bottom: 0,
-              left: 0,
-              bgcolor: 'secondary.main',
-              transform: 'rotate(-2deg)',
-              zIndex: -1,
-            },
-          }}
-        >
-          step.
-        </Box>
+        You need the right next step.
+        
       </Typography>
-
+      <img style={{ position: 'absolute', width: '250px', 
+          bottom: '15px', right: '150px', zIndex: 3 }} src='/assets/images/impact.svg' alt='impact' />
+   </box>
       {/* Subheading */}
       <Typography
         variant="body1"
