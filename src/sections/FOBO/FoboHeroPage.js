@@ -1,335 +1,256 @@
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Unstable_Grid2";
-import { blue } from "@mui/material/colors";
-import heroImg from "src/Fogoimages/beatfobo.png";
 import {
+  Box,
+  Stack,
+  Button,
+  Typography,
+  Grid,
   Modal,
   ToggleButton,
   ToggleButtonGroup,
   useMediaQuery,
   useTheme,
-} from "@mui/material";
-import { useState, useRef } from "react";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { paths } from 'src/routes/paths';
+  TextField,
+  List,
+  ListItem,
+  ListItemText,
+  Divider
+} from '@mui/material';
+import { blue } from '@mui/material/colors';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import heroImg from 'src/Fogoimages/beatfobo.png';
+import { paths } from 'src/routes/paths';
 
-function FoboHeroPage() {
+export default function FoboHeroPage() {
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
-  const [uploadType, setUploadType] = useState("resume");
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-  const handleChange = (event, newType) => {
-    if (newType !== null) {
-      setUploadType(newType);
-    }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const [uploadType, setUploadType] = useState('resume');
+  const [existingResumes, setExistingResumes] = useState([]);
+  const [selectedResumeId, setSelectedResumeId] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [linkedInUrl, setLinkedInUrl] = useState('');
   const fileInputRef = useRef();
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file.name);
+  useEffect(() => {
+    // fetch existing resumes
+    setExistingResumes([
+      { id: 1, name: 'Resume_May2025.pdf', uploadedAt: '2025-05-10' },
+      { id: 2, name: 'Resume_Apr2025.docx', uploadedAt: '2025-04-02' }
+    ]);
+  }, []);
+
+  const handleChangeType = (_, newType) => {
+    if (newType) {
+      setUploadType(newType);
+      setSelectedResumeId(null);
+      setSelectedFile(null);
+      setLinkedInUrl('');
     }
   };
+
+  const handleFileChange = e => {
+    const file = e.target.files[0];
+    if (file) setSelectedFile(file.name);
+  };
+
+  const handleSelectResume = id => {
+    setSelectedResumeId(id);
+    setSelectedFile(null);
+    setLinkedInUrl('');
+  };
+
+  const handleContinue = () => {
+    if (selectedResumeId || selectedFile || linkedInUrl) {
+      if (linkedInUrl) {
+        window.open(linkedInUrl, '_blank'); // Open LinkedIn URL in a new tab
+      } else {
+        // submit data or navigate
+        // navigate(paths.jobDetails);
+      }
+    } else if (uploadType === 'resume') {
+      fileInputRef.current?.click(); // Ensure file input reference exists
+    }
+  };
+
   return (
-    <Box sx={{ px: { xs: 2, sm: 4, md: 3 }, py: { xs: 4, sm: 6, md: 6 } }}>
+    <Box sx={{ px: { xs: 2, sm: 4, md: 6, lg:9 }, py: { xs: 4, sm: 6, md: 8 } }}>
       <Grid container spacing={4} alignItems="center">
-        <Grid xs={12} md={6}>
+        <Grid xs={12} md={6} order={{ xs: 2, md: 1 }}>
           <Stack spacing={3}>
-            {/* Small tag line: “From AI Anxiety to AI Advantage” */}
-            <Typography
-              component="div"
-              sx={{
-                fontFamily: 'Inter, sans-serif',
-                fontWeight: 700, fontSize: '24px',
-                lineHeight: '100%',
-                letterSpacing: '-2%',
-                color: '#212529',
-                mb: 1,
-              }}
-            >
+            <Typography sx={{ fontWeight: 700, fontSize: '24px', color: '#212529' }}>
               From AI Anxiety to AI Advantage
             </Typography>
-
-            {/* Main header: “Beat FOBO (Fear of Being Obsolete)” */}
-            <Typography
-              component="h1"
-              sx={{
-                fontFamily: 'Inter, sans-serif',
-                fontWeight: 700,
-                fontSize: '64px',
-                lineHeight: '100%',
-                letterSpacing: '-2%',
-                color: '#212529',
-                mt: 0,
-              }}
-            >
+            <Typography component="h1" sx={{ fontWeight: 700, fontSize: '64px', color: '#212529', lineHeight: 1 }}>
               Beat FOBO (Fear of Being Obsolete)
             </Typography>
-
-            <Typography
-              component="p"
-              sx={{ 
-                fontFamily: 'Inter, sans-serif',  
-                fontWeight: 400,
-                fontSize: '17px',
-                lineHeight: '30px',
-                letterSpacing: '-2%',
-                color: '#212529',
-                mt: 0,
-              }}
-            >
-              At Altiv, we help you beat decision paralysis with smarter tools and human-first <br/> design.
+            <Typography sx={{ fontSize: '17px', lineHeight: 2, color: '#212529' }}>
+              At Altiv, we help you beat decision paralysis with smarter tools and human-first design.
             </Typography>
-
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+            <Stack direction={isMobile ? 'column' : 'row'} spacing={2}>
               <Button
-                variant="contained" size="large"
+                variant="contained"
+                size="large"
                 sx={{
-                  bgcolor: "#4F9CF9",
-                  "&:hover": { bgcolor: blue[700] },
-                  width: { xs: "100%", sm: "100%", md: "252px" },
-                  borderRadius: "8px",
-                  marginRight: "-70px",
-                  height: "63px"
-
-
+                  bgcolor: '#4F9CF9',
+                  '&:hover': { bgcolor: blue[700] },
+                  width: isMobile ? '100%' : '252px',
+                  borderRadius: '8px',
+                  height: '63px'
                 }}
-              onClick={() => setOpen(true)}
-              > 
-                Check Your Score  <ArrowForwardIcon/>
+                onClick={() => setOpen(true)}
+              >
+                Check Your Score <ArrowForwardIcon />
               </Button>
-
-              <Modal open={open} onClose={handleClose}>
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="center"
-                  justifyContent="center"
-                  minHeight="100vh"
-                  px={2}
-                >
-                  <Box
-                    sx={{
-                      
-                      Width: '550.12px',
-                      height:'550.22px',
-                      bgcolor: 'white',
-                      pt: 1,
-                      px: 4,
-                      boxShadow: 3,
-                      textAlign: 'center'
-                    }}  
-                  >
-                    <Typography variant="body2"   fontSize="36px" fontWeight="400" spacing="2px">
-                      Magic happens many ways
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" mb={6} fontSize="20px" >
-                      You can choose to go with your updated resume
-                    </Typography>
-
-                    {/* <ToggleButtonGroup
-                      value={uploadType}
-                      exclusive
-                      onChange={handleChange}
-                      sx={{ mb: 2, borderRadius: 50, border: "1px solid #0040D8" }}
-                    >
-                      <ToggleButton
-                        value="resume"
-                        sx={{
-                          borderRadius: 50,
-                          textTransform: "none",
-                          px: 5,
-                          color: uploadType === "resume" ? "black" : "#3f51b5",
-                          backgroundColor: uploadType === "resume" ? "#0040D8" : "transparent",
-                          '&:hover': {
-                            backgroundColor: uploadType === "resume" ? "#2f3da3" : "#f0f0f0",
-                          },
-                        }}
-                      >
-                        Resume
-                      </ToggleButton>
-                      <ToggleButton
-                        value="job"
-                        sx={{
-                          borderRadius: 50,
-                          textTransform: "none",
-                          px: 3,
-                          color: uploadType === "job" ? "white" : "#3f51b5",
-                          backgroundColor: uploadType === "job" ? "#3f51b5" : "transparent",
-                          '&:hover': {
-                            backgroundColor: uploadType === "job" ? "#2f3da3" : "#f0f0f0",
-                          },
-                        }}
-                      >
-                        Job title
-                      </ToggleButton>
-                    </ToggleButtonGroup> */}
-
-                    {uploadType === 'resume' ? (
-                      <> {/* Resume Upload UI */}
-                        <Box
-                        
-                          border="2px dashed #cbd5e0"
-                          borderRadius={0}
-                          bgcolor="#f8faff"
-                          width="100%"
-                          py={4}
-                          px={2}
-                          textAlign="center"
-                           mt={8}
-                          mb={20}
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => fileInputRef.current.click()}
-                        >
-                          <CloudUploadIcon fontSize="large" style={{ color: "#0040D8" }} />
-                          <Typography variant="body1" fontWeight={500} mt={1}>
-                            Drag & drop files or <Box component="span" color="#3f51b5" fontWeight="bold">Browse</Box>
-                          </Typography>
-                          <Typography variant="caption" display="block" color="textSecondary" mt={1}>
-                            Supported formats: JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT
-                          </Typography>
-                          <input
-                            type="file"
-                            ref={fileInputRef}
-                            style={{ display: "none" }}
-                            onChange={handleFileChange}
-                          />
-                        </Box>
-
-                        {selectedFile && (
-                          <Box
-                            border="1px solid #ccc"
-                            borderRadius={1}
-                            px={2}
-                            py={1.5}
-                            textAlign="left"
-                            fontSize="0.9rem"
-                            mb={2}
-                          >
-                            Selected file: <strong>{selectedFile}</strong>
-                          </Box>
-                        )}
-
-                        <Button
-                       
-                          variant="contained"
-                          fullWidth
-                          onClick={() => {
-                            if (!selectedFile) {
-                              fileInputRef.current.click();
-                            } else {
-                              navigate(paths.jobDetails);
-                            }
-                          }}
-                          sx={{
-                            backgroundColor: "#3f51b5",
-                            borderRadius: 999,
-                            py: 1.5,
-                            textTransform: "none",
-                            fontWeight: 500,
-                            '&:hover': { backgroundColor: "#2f3da3" },
-                          }}
-                        >
-                          {selectedFile ? "Continue" : "Upload Resume"}
-                        </Button>
-                      </>
-                    ) : (
-                      <> {/* Job Title UI */}
-                        <Box mb={3} width="100%" textAlign="left">
-                          <Typography variant="caption" sx={{ color: "#0040D8" }} ml={1}>Designation</Typography>
-                          <Box
-                            component="input"
-                            placeholder="Enter Designation"
-                            sx={{
-                              width: '100%',
-                              mt: 1,
-                              px: 2,
-                              py: 1.5,
-                              border: '1px solid #3f51b5',
-                              borderRadius: 1,
-                              fontSize: '0.9rem'
-                            }}
-                          />
-                        </Box>
-
-                        <Box width="100%" textAlign="left" mb={4}>
-                          <Typography variant="caption" sx={{ color: "#0040D8" }} ml={1}>Experience</Typography>
-                          <Box display="flex" alignItems="center" mt={1}>
-                            <input
-                              type="range"
-                              min={0}
-                              max={30}
-                              defaultValue={0}
-                              style={{ flex: 1 }}
-                            />
-                            <Box
-                              ml={2}
-                              px={2}
-                              py={1}
-                              border="1px solid #ccc"
-                              borderRadius={1}
-                              fontSize="0.9rem"
-                            >
-                              0
-                            </Box>
-                          </Box>
-                        </Box>
-
-                        <Button
-                          fullWidth
-                          variant="contained"
-                          sx={{
-                            backgroundColor: "#3f51b5",
-                            borderRadius: 999,
-                            py: 1.5,
-                            textTransform: "none",
-                            fontWeight: 500,
-                            '&:hover': { backgroundColor: "#2f3da3" },
-                          }}
-                          onClick={() => navigate(paths.jobDetails)}
-                        >
-                          Continue
-                        </Button>
-                      </>
-                    )}
-                  </Box>
-                </Box>
-              </Modal>
             </Stack>
           </Stack>
         </Grid>
 
-        <Grid xs={12} md={6} sx={{ mt: { xs: 4, md: 0 } }}>
+        <Grid xs={12} md={6} order={{ xs: 1, md: 2 }}>
           <Box
             component="img"
             src={heroImg}
             alt="AI Coach"
-            sx={{
-              width: "685px",
-              Height : "456.39px",
-              maxHeight: { xs: "auto" },
-              objectFit: "cover",
-              marginTop: "25px",
-             
-            }}
+            sx={{ width: '100%', maxWidth: '685px', height: 'auto', mt: { xs: 2, md: 0 } }}
           />
         </Grid>
       </Grid>
+
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          minHeight="100vh"
+          px={2}
+        >
+          <Box
+            sx={{
+              width: isMobile ? '90%' : 550,
+              height: isMobile ? '90%' : 500,
+              bgcolor: 'white',
+              pt: 1,
+              px: 3,
+              boxShadow: 5,
+              textAlign: 'center'
+            }}
+          >
+            <Typography variant="h5" fontWeight={400} mb={1}>
+              Magic happens many ways
+            </Typography>
+            <Typography variant="body2" color="textSecondary" mb={4}>
+              You can choose an existing resume, upload new one, or paste your LinkedIn URL
+            </Typography>
+
+            <ToggleButtonGroup
+              value={uploadType}
+              exclusive
+              onChange={handleChangeType}
+              sx={{ mb: 3, borderRadius: 50, border: '1px solid #0040D8' }}
+            >
+              <ToggleButton
+                value="resume"
+                sx={{
+                  textTransform: 'none',
+                  px: 6,
+                  '&.Mui-selected': {
+                    backgroundColor: '#0040D8',
+                    color: '#fff',
+                    '&:hover': {
+                      backgroundColor: '#0036b3', // optional: slightly darker on hover
+                    },
+                  },
+                }}
+              >
+                Resume
+              </ToggleButton>
+              <ToggleButton
+                value="linkedin"
+                sx={{
+                  textTransform: 'none',
+                  px: 4,
+                  '&.Mui-selected': {
+                    backgroundColor: '#0040D8',
+                    color: '#fff',
+                    '&:hover': {
+                      backgroundColor: '#0036b3',
+                    },
+                  },
+                }}
+              >
+                LinkedIn URL
+              </ToggleButton>
+            </ToggleButtonGroup>
+
+            {uploadType === 'resume' ? (
+              <>
+                <List sx={{ maxHeight: 160, overflow: 'auto', textAlign: 'left', mb: 2 }}>
+                  {existingResumes.map(r => (
+                    <React.Fragment key={r.id}>
+                      <ListItem
+                        button
+                        selected={selectedResumeId === r.id}
+                        onClick={() => handleSelectResume(r.id)}
+                      >
+                        <ListItemText primary={r.name} secondary={r.uploadedAt} />
+                      </ListItem>
+                      <Divider />
+                    </React.Fragment>
+                  ))}
+                  <ListItem button onClick={() => fileInputRef.current.click()} >
+                    <CloudUploadIcon sx={{ mr: 1 }} />
+                    <ListItemText primary="Add New Resume" />
+                  </ListItem>
+                </List>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: 'none' }}
+                  onChange={handleFileChange}
+                />
+                {selectedFile && (
+                  <Typography variant="body2" textAlign="left" my={1}>
+                    Selected file: <strong>{selectedFile}</strong>
+                  </Typography>
+                )}
+              </>
+            ) : (
+              <Box mb={4}>
+                <TextField
+                  label="LinkedIn Profile URL"
+                  placeholder="https://www.linkedin.com/in/yourprofile"
+                  fullWidth
+                  value={linkedInUrl}
+                  onChange={e => setLinkedInUrl(e.target.value)}
+                />
+              </Box>
+            )}
+
+            <Button
+              variant="contained"
+              halfWidth
+              onClick={handleContinue}
+              sx={{
+                backgroundColor: '#3f51b5',
+                borderRadius: 50,
+                py: 1,
+                px: 2,
+                m: 'auto',
+                textTransform: 'none',
+                fontWeight: 500,
+                '&:hover': { backgroundColor: '#2f3da3' }
+              }}
+            >
+              {selectedResumeId || selectedFile || linkedInUrl ? 'Continue' : 'Upload Resume'}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </Box>
   );
 }
 
-export default FoboHeroPage;

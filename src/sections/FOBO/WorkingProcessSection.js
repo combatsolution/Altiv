@@ -11,6 +11,7 @@ const steps = [
     description: 'Learn which tasks in your role can be AI-augmented vs automated',
     icon: humanimg,
   },
+
   {
     title: 'AI-vantage Score',
     description: 'Track your AI readiness against industry benchmarks',
@@ -81,39 +82,52 @@ const WorkingProcessSection = () => {
 
           return (
             <Grid item xs={12} sm={6} md={3} key={index}>
-              <Box display="flex" flexDirection="column" alignItems="center">
+              <Box display="flex" flexDirection="column" alignItems="center" position="relative">
+                {/* Background SVG Arrow */}
+                {isSecond && (
+                  <Box
+                    component="img"
+                    src="/assets/images/arrow.svg"
+                    alt="impact"
+                    sx={{
+                      position: 'absolute',
+                      bottom: 180,
+                      left: -160,
+                      width: '215.75px',
+                      height:'39.81px',
+                      
+                    }}
+                  />
+                )}
 
                 <Paper
                   elevation={step.highlight ? 6 : 0}
                   sx={{
                     width: '312px',
                     height: '224px',
-                    p: 3, // 24px padding
+                    p: 3,
                     bgcolor: cardBgColor,
                     color: cardTextColor,
                     borderRadius: '12px',
-                    mt: 0, // Top spacing only for second card
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    gap: '10px', // Space between icon, title, and description
+                    gap: '10px',
+                    position: 'relative', // ensure inner absolute content is positioned correctly
+                    zIndex: 1,             // keep card content above the SVG
                   }}
                 >
-
-                  {/* Icon inside card now */}
                   <Box
                     sx={{
                       bgcolor: isSecond ? '#0A65CC' : '#fff',
                       color: isSecond ? '#fff' : '#767F8C',
-                      width: "72px",
-                      height: "72px",
-                      borderRadius: '80px',
+                      width: 72,
+                      height: 72,
+                      borderRadius: '50%',
                       display: 'flex',
-                      padding: "20px",
                       alignItems: 'center',
                       justifyContent: 'center',
-
-                      gap: "2px"
+                      p: '20px',
                     }}
                   >
                     <img src={step.icon} alt={`${step.title} Icon`} style={{ width: 28, height: 28 }} />
@@ -127,7 +141,6 @@ const WorkingProcessSection = () => {
                       lineHeight: isSecond ? '28px' : undefined,
                       letterSpacing: '0%',
                       textAlign: 'center',
-                      gap: "12px"
                     }}
                   >
                     {step.title}
@@ -149,6 +162,7 @@ const WorkingProcessSection = () => {
                 </Paper>
               </Box>
             </Grid>
+
           );
 
         })}
