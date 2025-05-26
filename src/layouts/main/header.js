@@ -38,7 +38,7 @@ import { SettingsButton, HeaderShadow, LoginButton } from '../_common';
 export default function Header() {
   const {user} = useAuthContext(); 
   console.log(user)
-  const theme = useTheme(); 
+  const theme = useTheme();   
 
   const mdUp = useResponsive('up', 'md');
 
@@ -67,12 +67,12 @@ export default function Header() {
           }), 
         }}
       >
-        <Container sx={{ height: 1, display: 'flex', alignItems: 'center', marginLeft:"30px"}}>
+        <Container sx={{ height: 1, display: 'flex', alignItems: 'center', marginLeft:"auto"}}>
           <Badge
             sx={{
               [`& .${badgeClasses.badge}`]: {
                 top:10,
-                left:20,
+                left:30,
 
               },
             }}
