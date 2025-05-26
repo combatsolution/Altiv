@@ -6,25 +6,12 @@ import { Box } from '@mui/material';
 
 // components
 import ScrollProgress from 'src/components/scroll-progress';
-//
-import FoboHeroPage from '../FoboHeroPage';
-import FoboDefinepage from '../FoboDefinepage';
-import FoboImpactPage from '../FoboImpactPage';
-import WorkingProcessSection from '../WorkingProcessSection';
-// import Design from '../Design'
-import TestimonialCarousel from '../TestimonialCarousel'
-import FoboHeroSection from '../FoboHeroSection'
-import Datasecuritypage from '../Datasecuritypage'
-import CareerCompass from '../CareerCompass'
-import Dashboard from '../Dashboard'
-
-
-// import Profile from '../profile'
+import MyProfile from '../MyProfile'
 
 // ----------------------------------------------------------------------
 
 const StyledPolygon = styled('div')(({ anchor = 'top', theme }) => ({
-  left: 0,
+  left: 0,  
   zIndex: 9,
   height: 80,
   width: '100%',
@@ -45,7 +32,7 @@ const StyledPolygon = styled('div')(({ anchor = 'top', theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function FoboView() {
+export default function ProfileView() {
   const { scrollYProgress } = useScroll();
 
   return (
@@ -53,17 +40,8 @@ export default function FoboView() {
       <ScrollProgress scrollYProgress={scrollYProgress} />
       
       
-      <FoboHeroPage />
-      <FoboDefinepage/>
-      <FoboImpactPage/>
-      <WorkingProcessSection/>
-      {/* <Design/> */}
-      <TestimonialCarousel/>
-      <FoboHeroSection/>
-      <Datasecuritypage/>
-      <CareerCompass/>
-      <Dashboard/>
-      {/* <Profile/> */}
+      
+      <MyProfile/>
      
 
     </>

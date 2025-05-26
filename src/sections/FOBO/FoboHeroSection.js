@@ -12,6 +12,7 @@ const FoboHeroSection = () => {
     <Box
       component="section"
       sx={{
+        position: "relative",
         bgcolor: '#043873',
         color: 'common.white',
         py: { xs: 6, md: 12 },
@@ -19,36 +20,59 @@ const FoboHeroSection = () => {
         textAlign: 'center',
       }}
     >
+      <img
+        src="/assets/images/impacts2.svg"
+        alt="impact"
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: 0,
+          transform: 'translateY(-50%)',
+          zIndex: 0,
+        }}
+      />
       {/* Small intro text */}
       <Typography
-        variant={isMobile ? 'h6' : 'subtitle1'}
+        fontsize="36px"
+        variant={isMobile ? 'h6' : 'h3'}
         sx={{ mb: 1 }}
+
       >
         You don’t need the perfect job.
       </Typography>
 
-      <box>
 
 
-   
       {/* Main headline */}
-      <Typography
+      <Box sx={{ position: 'relative', width: '100%' }}>
+        <img
+          src="/assets/images/impact1.svg"
+          alt="impact"
+          style={{
+            position: 'absolute',
+            width: '312.23px',  
+            height: '31.38px',
+            bottom: '-15px',
+            right: '170px',
+            zIndex: 0,
+          }}
+        />
 
-        variant={isMobile ? 'h4' : 'h2'}
-        component="h1"
-        fontWeight="bold"
-        sx={{
-          display: 'inline-block',
-          lineHeight: 1.2,
-          zIndex:2
-        }}
-      >
-        You need the right next step.
-        
-      </Typography>
-      <img style={{ position: 'absolute', width: '250px', 
-          bottom: '15px', right: '150px', zIndex: 3 }} src='/assets/images/impact.svg' alt='impact' />
-   </box>
+        <Typography
+          variant={isMobile ? 'h4' : 'h1'}
+          fontWeight="bold"
+          sx={{
+            position: 'relative',
+            display: 'inline-block',
+            lineHeight: 1.2,
+            zIndex: 1,
+          }}
+        >
+          You need the right next step.
+        </Typography>
+      </Box>
+
+
       {/* Subheading */}
       <Typography
         variant="body1"
@@ -60,7 +84,7 @@ const FoboHeroSection = () => {
         }}
       >
         Stand out in every application. Get actionable tips and strategic insights to enhance your
-        chances. Know exactly what to improve<br/> and how to present yourself.
+        chances. Know exactly what to improve<br /> and how to present yourself.
       </Typography>
 
       {/* Call-to-action button */}
@@ -68,7 +92,7 @@ const FoboHeroSection = () => {
         variant="contained"
         size="large"
         endIcon={<ArrowForwardIcon />}
-        sx={{ mt: 4, px: 4, bgcolor:'#4F9CF9' }}
+        sx={{ mt: 4, px: 4, bgcolor: '#4F9CF9' }}
       >
         Boost My Application
       </Button>

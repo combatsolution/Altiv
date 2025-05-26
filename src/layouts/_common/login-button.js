@@ -4,13 +4,13 @@ import Button from '@mui/material/Button';
 // routes
 import { RouterLink } from 'src/routes/components';
 // config
-import { PATH_AFTER_LOGIN } from 'src/config-global';
+import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
 export default function LoginButton({ sx }) {
   return (
-    <Button component={RouterLink} href={PATH_AFTER_LOGIN} variant="none" sx={{ mr: 1, ...sx,  color: "#0040D8", }}>
+    <Button component={RouterLink} href={paths.auth.jwt.login} variant="none" sx={{ mr: 1, ...sx,  color: "#0040D8", }}>
       Login
     </Button>
   );

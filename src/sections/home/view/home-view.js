@@ -68,7 +68,7 @@ export default function HomeView() {
       
       <HomeHero />
       <FeatureSection />
-      <TestimonialSection/>
+      <TestimonialSection/>4 
       <CareerToolkitHero/>
       {/* <Box component='div' sx={{backgroundImage : 'url(/assets/line.svg)', zIndex: 10}}> */}
         <CareerCompass/>
@@ -77,7 +77,7 @@ export default function HomeView() {
       {/* </Box> */}
       <JobBoard/>
 {/*     
-      <CareerCompassResume/> */}
+     <CareerCompassResume/> 
       {/* <Footer /> */}
       
 

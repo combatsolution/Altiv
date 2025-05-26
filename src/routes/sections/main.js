@@ -33,6 +33,10 @@ const JobDetailsPage = lazy(() => import('src/pages/job-details/jobDetails'));
 const CareerPathResumePage = lazy(() => import('src/pages/career/CareerCompassResume'));
 // FOBO
 const FoboPage = lazy(() => import('src/pages/Fobo/fobo-view'));
+const ProfilePage = lazy(() => import('src/pages/profile/Profile-view'));
+
+const DashboardPage = lazy(() => import('src/pages/dashboard/dashboard-view'));
+
 // ----------------------------------------------------------------------
 
 export const mainRoutes = [
@@ -51,6 +55,9 @@ export const mainRoutes = [
       { path: 'job-details', element: <JobDetailsPage />},
       { path: 'career-resume', element: <CareerPathResumePage />},
       { path: 'fobo', element: <FoboPage />},
+      { path: 'Profile', element: <ProfilePage />},
+      { path: 'Dashboard', element: < DashboardPage/>},
+    
       {
         path: 'product',
         children: [

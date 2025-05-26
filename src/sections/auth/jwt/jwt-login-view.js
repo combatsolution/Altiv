@@ -1,8 +1,6 @@
-
-
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import {
@@ -15,13 +13,8 @@ import {
   InputAdornment,
   Divider,
   Button,
-  AppBar,
-  Toolbar,
-  Container,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import HomeIcon from '@mui/icons-material/Home';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import altiv from 'src/images/altiv.svg';
 
@@ -50,6 +43,11 @@ export default function JwtLoginView() {
   const searchParams = useSearchParams();
   const returnTo = searchParams.get('returnTo');
   const password = useBoolean();
+
+  // Redirect helper for social buttons
+  const handleRedirect = useCallback((url) => {
+    window.location.href = url;
+  }, []);
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
@@ -80,108 +78,118 @@ export default function JwtLoginView() {
       console.error(error);
       reset();
       setErrorMsg(typeof error === 'string' ? error : error.message);
-    } 
+    }
   });
 
   return (
-    <>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        px: 2,
+      }}
+    >
+      <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center' }}>
+        <img src={altiv} alt="ALTIV Logo" style={{ marginBottom: 8 }} />
 
-      {/* Login Form */}
-      <Box
-        sx={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          px: 2,
-        }}
-      >
-        <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center' }}>
-          <img src={altiv} alt="ALTIV Logo" style={{ marginBottom: 8 }} />
+        <Typography variant="h6" mb={1}>
+          Login
+        </Typography>
+        <Typography variant="body2" color="text.secondary" mb={3}>
+          Enter your username and password to login
+        </Typography>
 
-          <Typography variant="h6" mb={1}>Login</Typography>
-          <Typography variant="body2" color="text.secondary" mb={3}>
-            Enter your username and password to login
-          </Typography>
+        <FormProvider methods={methods} onSubmit={onSubmit}>
+          <Stack spacing={2.5}>
+            {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
 
-          <FormProvider methods={methods} onSubmit={onSubmit}>
-            <Stack spacing={2.5}>
-              {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
+            <RHFTextField name="email" label="User Name" />
 
-              <RHFTextField name="email" label="User Name" />
-
-              <Box sx={{ position: 'relative' }}>
-                <RHFTextField
-                  name="password"
-                  label="Password"
-                  type={password.value ? 'text' : 'password'}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton onClick={password.onToggle} edge="end">
-                          <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Box>
-
-              <LoadingButton
-                fullWidth
-                size="large"
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-                sx={{
-                  textTransform: 'none',
-                  backgroundColor: '#0040D8',
-                  color: '#fff',
-                  '&:hover': { backgroundColor: '#0033b3' },
+            <Box sx={{ position: 'relative' }}>
+              <RHFTextField
+                name="password"
+                label="Password"
+                type={password.value ? 'text' : 'password'}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={password.onToggle} edge="end">
+                        <Iconify
+                          icon={
+                            password.value
+                              ? 'solar:eye-bold'
+                              : 'solar:eye-closed-bold'
+                          }
+                        />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
                 }}
-              >
-                Login
-              </LoadingButton>
+              />
+            </Box>
 
-              <Divider>Or</Divider>
+            <LoadingButton
+              fullWidth
+              size="large"
+              type="submit"
+              variant="contained"
+              loading={isSubmitting}
+              sx={{
+                textTransform: 'none',
+                backgroundColor: '#0040D8',
+                color: '#fff',
+                '&:hover': { backgroundColor: '#0033b3' },
+              }}
+            >
+              Login
+            </LoadingButton>
 
-              <Button
-                fullWidth
-                variant="outlined"
-                startIcon={<Iconify icon="logos:google-icon" />}
-                sx={{ textTransform: 'none' }}
-              >
-                Sign in with Google
-              </Button>
+            <Divider>Or</Divider>
 
-              <Button
-                fullWidth
-                variant="outlined"
-                startIcon={<Iconify icon="logos:linkedin-icon" />}
-                sx={{ textTransform: 'none' }}
-              >
-                Sign in with LinkedIn
-              </Button>
-            </Stack>
+            <Button
+              fullWidth
+              variant="outlined"  
+              startIcon={<Iconify icon="logos:google-icon" />}
+              onClick={() => handleRedirect('https://www.google.com')}
+              sx={{ textTransform: 'none' }}
+            >
+              Sign in with Google
+            </Button>
 
-            <Stack direction="row" spacing={1} justifyContent="center" mt={3}>
-              <Typography variant="body2">Dont have an account?</Typography>
-              <Link component={RouterLink} href={paths.auth.jwt.register} variant="subtitle2">
-                Register
-              </Link>
-            </Stack>
+            <Button
+              fullWidth
+              variant="outlined"
+              startIcon={<Iconify icon="logos:linkedin-icon" />}
+              onClick={() =>
+                handleRedirect('https://www.linkedin.com')
+              }
+              sx={{ textTransform: 'none', mt: 2 }}
+            >
+              Sign in with LinkedIn
+            </Button>
+          </Stack>
 
-            <Typography variant="body2" color="text.secondary" mt={1}>
-              Need help? Visit our{' '}
-              <Link underline="hover">help center</Link>
+          <Stack direction="row" spacing={1} justifyContent="center" mt={3}>
+            <Typography variant="body2">
+              Dont have an account?
             </Typography>
-          </FormProvider>
-        </Box>
+            <Link
+              component={RouterLink}
+              href={paths.auth.jwt.register}
+              variant="subtitle2"
+            >
+              Register
+            </Link>
+          </Stack>
 
+          <Typography variant="body2" color="text.secondary" mt={1}>
+            Need help? Visit our{' '}
+            <Link underline="hover">help center</Link>
+          </Typography>
+        </FormProvider>
       </Box>
-      
-    </>
+    </Box>
   );
 }
-
-

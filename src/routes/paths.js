@@ -20,6 +20,8 @@ export const paths = {
   jobDetails: '/job-details',
   careerResume: '/career-resume',
   fobo:'/fobo',
+  Dashboard: '/Dashboard',
+  // Profile:'/Profile',
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',
   pricing: '/pricing',

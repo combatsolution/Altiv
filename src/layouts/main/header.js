@@ -1,5 +1,6 @@
+import { m } from 'framer-motion';
 // @mui
-import { useTheme } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
@@ -8,6 +9,7 @@ import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import Badge, { badgeClasses } from '@mui/material/Badge';
+import { Avatar, IconButton } from '@mui/material';
 // hooks
 import { useOffSetTop } from 'src/hooks/use-off-set-top';
 import { useResponsive } from 'src/hooks/use-responsive';
@@ -18,6 +20,8 @@ import { paths } from 'src/routes/paths';
 // components
 import Logo from 'src/components/logo';
 import Label from 'src/components/label';
+import { useAuthContext } from 'src/auth/hooks';
+import { varHover } from 'src/components/animate';
 //
 import Altivlogo from 'src/images/Altivlogo.svg';
 import { HEADER } from '../config-layout';
@@ -32,7 +36,9 @@ import { SettingsButton, HeaderShadow, LoginButton } from '../_common';
 // ----------------------------------------------------------------------
 
 export default function Header() {
-  const theme = useTheme();
+  const {user} = useAuthContext(); 
+  console.log(user)
+  const theme = useTheme();   
 
   const mdUp = useResponsive('up', 'md');
 
@@ -58,15 +64,16 @@ export default function Header() {
             height: {
               md: HEADER.H_DESKTOP_OFFSET,
             },
-          }),
+          }), 
         }}
       >
-        <Container sx={{ height: 1, display: 'flex', alignItems: 'center' }}>
+        <Container sx={{ height: 1, display: 'flex', alignItems: 'center', marginLeft:"auto"}}>
           <Badge
             sx={{
               [`& .${badgeClasses.badge}`]: {
-                top: 8,
-                right: -20,
+                top:10,
+                left:30,
+
               },
             }}
           >
@@ -77,9 +84,10 @@ export default function Header() {
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {mdUp && <NavDesktop offsetTop={offsetTop} data={navConfig} />}
+          {mdUp && <NavDesktop offsetTop={offsetTop} sx={{marginleft:"20px"}}data={navConfig} />}
 
-          <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse', color: "#0040D8", mr: 5 }}>
+          <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse', color: "#0040D8",  }}>
+            {!user && 
             <Button
               variant="contained"
               target="_self"
@@ -92,14 +100,44 @@ export default function Header() {
                 '&:hover': {
                   bgcolor: '#0030aa', // darker on hover
                   width: { xs: '50%', sm: 'auto' },
+                  
                 },
               }}
             >
-              Sign up
-            </Button>
+              Sign up 
+            </Button>}
+
+           {user && <IconButton
+            component={m.button}
+            whileTap="tap"
+            whileHover="hover"
+            variants={varHover(1.05)}
+            // onClick={popover.onOpen}
+            sx={{
+              width: 40,
+              height: 40,
+              // eslint-disable-next-line no-shadow
+              background: (theme) => alpha(theme.palette.grey[500], 0.08),
+              // ...(popover.open && {
+              //   background: (theme) =>
+              //     `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`,
+              // }),
+            }}
+          >
+            <Avatar
+              src={user?.photoURL}
+              alt={user?.displayName}
+              sx={{
+                width: 36,
+                height: 36,
+                // eslint-disable-next-line no-shadow
+                border: (theme) => `solid 2px ${theme.palette.background.default}`,
+              }}
+            />
+          </IconButton>}
 
 
-            {mdUp && <LoginButton />}
+            {mdUp && !user && <LoginButton />}
 
             {/* <SettingsButton
               sx={{
@@ -108,7 +146,7 @@ export default function Header() {
               }}
             /> */}
 
-            {!mdUp && <NavMobile offsetTop={offsetTop} data={navConfig} />}
+            {!mdUp && <NavMobile  offsetTop={offsetTop} data={navConfig} />}
           </Stack>
         </Container>
       </Toolbar>
