@@ -1,8 +1,167 @@
+// import { m } from 'framer-motion';
+// // @mui
+// import { alpha, useTheme } from '@mui/material/styles';
+// import Box from '@mui/material/Box';
+// import Link from '@mui/material/Link';
+// import Stack from '@mui/material/Stack';
+// import AppBar from '@mui/material/AppBar';
+// import Button from '@mui/material/Button';
+// import Toolbar from '@mui/material/Toolbar';
+// import Container from '@mui/material/Container';
+// import Badge, { badgeClasses } from '@mui/material/Badge';
+// import { Avatar, IconButton } from '@mui/material';
+// // hooks
+// import { useOffSetTop } from 'src/hooks/use-off-set-top';
+// import { useResponsive } from 'src/hooks/use-responsive';
+// // theme
+// import { bgBlur } from 'src/theme/css';
+// // routes
+// import { paths } from 'src/routes/paths';
+// // components
+// import Logo from 'src/components/logo';
+// import Label from 'src/components/label';
+// import { useAuthContext } from 'src/auth/hooks';
+// import { varHover } from 'src/components/animate';
+// //
+// import Altivlogo from 'src/images/Altivlogo.svg';
+// import { HEADER } from '../config-layout';
+// import { navConfig } from './config-navigation';
+// import NavMobile from './nav/mobile';
+// import NavDesktop from './nav/desktop';
+
+// //
+// import { SettingsButton, HeaderShadow, LoginButton } from '../_common';
+// // import { JwtRegisterView } from 'src/sections/auth/jwt';
+
+// // ----------------------------------------------------------------------
+
+// export default function Header() {
+//   const { user } = useAuthContext();
+//   console.log(user)
+//   const theme = useTheme();
+
+//   const mdUp = useResponsive('up', 'md');
+
+//   const offsetTop = useOffSetTop(HEADER.H_DESKTOP);
+
+//   return (
+//     <AppBar>
+//       <Toolbar
+//         disableGutters
+//         sx={{
+//           height: {
+//             xs: HEADER.H_MOBILE,
+//             md: HEADER.H_DESKTOP,
+//           },
+//           transition: theme.transitions.create(['height'], {
+//             easing: theme.transitions.easing.easeInOut,
+//             duration: theme.transitions.duration.shorter,
+//           }),
+//           ...(offsetTop && {
+//             ...bgBlur({
+//               color: theme.palette.background.default,
+//             }),
+//             height: {
+//               md: HEADER.H_DESKTOP_OFFSET,
+//             },
+//           }),
+//         }}
+//       >
+//         <Container sx={{ height: 1, display: 'flex', alignItems: 'center', marginLeft: "auto" }}>
+//           <Badge
+//             sx={{
+//               [`& .${badgeClasses.badge}`]: {
+//                 top: 10,
+//                 left: 30,
+
+//               },
+//             }}
+//           >
+
+//             <img src={Altivlogo} alt="BigCo Inc. logo" />
+
+//           </Badge>
+
+//           <Box sx={{ flexGrow: 1 }} />
+
+//           {mdUp && <NavDesktop offsetTop={offsetTop} sx={{ marginleft: "20px" }} data={navConfig} />}
+
+//           <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse', color: "#0040D8", }}>
+//             {!user &&
+//               <Button
+//                 variant="contained"
+//                 target="_self"
+//                 rel="noopener"
+//                 href={paths.auth.jwt.register}
+//                 sx={{
+//                   bgcolor: '#2A4DD0',
+//                   textTransform: 'none',
+//                   borderRadius: '100px',
+//                   display: { xs: 'none', sm: 'inline-flex' }, 
+//                   '&:hover': {
+//                     bgcolor: '#0030aa',
+//                   },
+//                 }}
+//               >
+//                 Sign up
+//               </Button>}
+
+//             {user && <IconButton
+//               component={m.button}
+//               whileTap="tap"
+//               whileHover="hover"
+//               variants={varHover(1.05)}
+//               // onClick={popover.onOpen}
+//               sx={{
+//                 width: 40,
+//                 height: 40,
+//                 // eslint-disable-next-line no-shadow
+//                 background: (theme) => alpha(theme.palette.grey[500], 0.08),
+//                 // ...(popover.open && {
+//                 //   background: (theme) =>
+//                 //     `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`,
+//                 // }),
+//               }}
+//             >
+//               <Avatar
+//                 src={user?.photoURL}
+//                 alt={user?.displayName}
+//                 sx={{
+//                   width: 36,
+//                   height: 36,
+//                   // eslint-disable-next-line no-shadow
+//                   border: (theme) => `solid 2px ${theme.palette.background.default}`,
+//                 }}
+//               />
+//             </IconButton>}
+
+
+//             {mdUp && !user && <LoginButton />}
+
+//             {/* <SettingsButton
+//               sx={{
+//                 ml: { xs: 1, md: 0 },
+//                 mr: { md: 2 },
+//               }}
+//             /> */}
+
+//             {!mdUp && <NavMobile offsetTop={offsetTop} data={navConfig} />}
+//           </Stack>
+//         </Container>
+//       </Toolbar>
+
+//       {offsetTop && <HeaderShadow />}
+//     </AppBar>
+//   );
+// }
+// C:\Users\Admin\Downloads\public (3)\src\layouts\main\header.js
+
+
+
+
 import { m } from 'framer-motion';
-// @mui
 import { alpha, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
@@ -10,39 +169,31 @@ import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import Badge, { badgeClasses } from '@mui/material/Badge';
 import { Avatar, IconButton } from '@mui/material';
-// hooks
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { useOffSetTop } from 'src/hooks/use-off-set-top';
 import { useResponsive } from 'src/hooks/use-responsive';
-// theme
 import { bgBlur } from 'src/theme/css';
-// routes
 import { paths } from 'src/routes/paths';
-// components
-import Logo from 'src/components/logo';
-import Label from 'src/components/label';
 import { useAuthContext } from 'src/auth/hooks';
 import { varHover } from 'src/components/animate';
-//
 import Altivlogo from 'src/images/Altivlogo.svg';
 import { HEADER } from '../config-layout';
 import { navConfig } from './config-navigation';
 import NavMobile from './nav/mobile';
 import NavDesktop from './nav/desktop';
-
-//
 import { SettingsButton, HeaderShadow, LoginButton } from '../_common';
-// import { JwtRegisterView } from 'src/sections/auth/jwt';
-
-// ----------------------------------------------------------------------
 
 export default function Header() {
-  const {user} = useAuthContext(); 
-  console.log(user)
-  const theme = useTheme();   
-
+  const { user, loading } = useAuthContext();
+  console.log('Header user:', user, 'Loading:', loading);
+  const theme = useTheme();
   const mdUp = useResponsive('up', 'md');
-
   const offsetTop = useOffSetTop(HEADER.H_DESKTOP);
+  const navigate = useNavigate(); // Initialize navigate hook
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <AppBar>
@@ -64,89 +215,79 @@ export default function Header() {
             height: {
               md: HEADER.H_DESKTOP_OFFSET,
             },
-          }), 
+          }),
         }}
       >
-        <Container sx={{ height: 1, display: 'flex', alignItems: 'center', marginLeft:"auto"}}>
+        <Container sx={{ height: 1, display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
           <Badge
             sx={{
               [`& .${badgeClasses.badge}`]: {
-                top:10,
-                left:30,
-
+                top: 10,
+                left: 30,
               },
             }}
           >
-
             <img src={Altivlogo} alt="BigCo Inc. logo" />
-
           </Badge>
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {mdUp && <NavDesktop offsetTop={offsetTop} sx={{marginleft:"20px"}}data={navConfig} />}
+          {mdUp && <NavDesktop offsetTop={offsetTop} sx={{ marginLeft: '20px' }} data={navConfig} />}
 
-          <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse', color: "#0040D8",  }}>
-            {!user && 
-            <Button
-              variant="contained"
-              target="_self"
-              rel="noopener"
-              href={paths.auth.jwt.register}
-              sx={{
-                bgcolor: '#2A4DD0',
-                textTransform: 'none', // prevents uppercase
-                borderRadius: '100px', // apply 39% border radius
-                '&:hover': {
-                  bgcolor: '#0030aa', // darker on hover
-                  width: { xs: '50%', sm: 'auto' },
-                  
-                },
-              }}
-            >
-              Sign up 
-            </Button>}
+          <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse' }} sx={{ color: '#0040D8' }}>
+            {!user && (
+              <Button
+                variant="contained"
+                target="_self"
+                rel="noopener"
+                href={paths.auth.jwt.register}
+                sx={{
+                  bgcolor: '#2A4DD0',
+                  textTransform: 'none',
+                  borderRadius: '100px',
+                  display: { xs: 'none', sm: 'inline-flex' },
+                  '&:hover': {
+                    bgcolor: '#0030aa',
+                  },
+                }}
+              >
+                Sign up
+              </Button>
+            )}
 
-           {user && <IconButton
-            component={m.button}
-            whileTap="tap"
-            whileHover="hover"
-            variants={varHover(1.05)}
-            // onClick={popover.onOpen}
-            sx={{
-              width: 40,
-              height: 40,
-              // eslint-disable-next-line no-shadow
-              background: (theme) => alpha(theme.palette.grey[500], 0.08),
-              // ...(popover.open && {
-              //   background: (theme) =>
-              //     `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`,
-              // }),
-            }}
-          >
-            <Avatar
-              src={user?.photoURL}
-              alt={user?.displayName}
-              sx={{
-                width: 36,
-                height: 36,
-                // eslint-disable-next-line no-shadow
-                border: (theme) => `solid 2px ${theme.palette.background.default}`,
-              }}
-            />
-          </IconButton>}
-
+            {user && (
+              <IconButton
+                component={m.button}
+                whileTap="tap"
+                whileHover="hover"
+                variants={varHover(1.05)}
+                onClick={() => navigate(paths.Profile)} // Navigate to /Profile
+                sx={{
+                  width: 40,
+                  height: 40,
+                  background: (_theme) => alpha(theme.palette.grey[500], 0.08),
+                  '&:hover': {
+                    background: (_theme) => alpha(theme.palette.grey[500], 0.16),
+                  },
+                }}
+              >
+                <Avatar
+                  src={user?.photoURL || ''}
+                  alt={user?.displayName || `${user?.firstName} ${user?.lastName}`}
+                  sx={{
+                    width: 36,
+                    height: 36,
+                    border: (_theme) => `solid 2px ${theme.palette.background.default}`,
+                    backgroundColor: theme.palette.grey[500],
+                    color: theme.palette.common.white,
+                  }}
+                />
+              </IconButton>
+            )}
 
             {mdUp && !user && <LoginButton />}
 
-            {/* <SettingsButton
-              sx={{
-                ml: { xs: 1, md: 0 },
-                mr: { md: 2 },
-              }}
-            /> */}
-
-            {!mdUp && <NavMobile  offsetTop={offsetTop} data={navConfig} />}
+            {!mdUp && <NavMobile offsetTop={offsetTop} data={navConfig} />}
           </Stack>
         </Container>
       </Toolbar>
@@ -155,3 +296,9 @@ export default function Header() {
     </AppBar>
   );
 }
+
+
+
+
+
+

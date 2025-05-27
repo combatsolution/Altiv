@@ -12,15 +12,16 @@ const FeatureSection = () => (
         }}
     >
         <Box sx={{ px: { xs: 2, md: 6 }, py: { xs: 4, md: 8 }, maxWidth: "1440px", mx: "auto" }}>
-            <Grid container spacing={6} alignItems="center">
+            <Grid container spacing={4} alignItems="center">
                 {/* Video Thumbnail Section */}
-                <Grid item xs={12} md={6}>
+                {/* <Grid item xs={12} md={6}>
                     <Box
                         sx={{
                             position: "relative",
                             overflow: "hidden",
-                            width: "100%",
-                            height: { xs: 250, sm: 350, md: 400 },
+                            width: {xs:'331.93px', md: '100%'},
+                            height: { xs: '470.89px', sm: 350, md: 400 },
+                            Border: '1.07px'
                         }}
                     >
                         <Box
@@ -28,8 +29,14 @@ const FeatureSection = () => (
                             src={videoThumb}
                             alt="Video thumbnail"
                             sx={{
-                                width: "100%",
-                                height: "100%",
+                                width: { 
+                                    xs: '290px',
+                                    md: '100%' 
+                                },
+                                height: {
+                                    xs: '427px',
+                                    md: '100%',
+                                },
                                 objectFit: "cover",
                             }}
                         />
@@ -52,42 +59,148 @@ const FeatureSection = () => (
                             ▶
                         </Box>
                     </Box>
+                </Grid> */}
+
+
+
+
+                <Grid item xs={12} md={6}>
+                    <Box
+                        sx={{
+                            position: "relative",
+                            overflow: "hidden",
+                            width: { xs: '100%', sm: '331.93px', md: '100%' }, // mobile-friendly width
+                            height: { xs: 'auto', sm: '470.89px', md: 400 },
+                            maxWidth: '100%',
+                            mx: 'auto', // centers it horizontally on small screens
+                        }}
+                    >
+                        <Box
+                            component="img"
+                            src={videoThumb}
+                            alt="Video thumbnail"
+                            sx={{
+                                width: '100%',
+                                height: { xs: 'auto', sm: '100%' },
+                                maxHeight: { xs: '427px', sm: '100%' },
+                                objectFit: "cover",
+                                display: 'block',
+                            }}
+                        />
+
+                        {/* Play button overlay */}
+                        <Box
+                            sx={{
+                                position: "absolute",
+                                inset: 0,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                color: "white",
+                                fontSize: 50,
+                                cursor: "pointer",
+                                backgroundColor: "rgba(0, 0, 0, 0.3)",
+                                "&:hover": {
+                                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                                },
+                            }}
+                        >
+                            ▶
+                        </Box>
+                    </Box>
                 </Grid>
 
+
+
+
+
                 {/* Text Content Section */}
+
+
+
+
+
                 <Grid item xs={12} md={6}>
-                    <Box display="flex" flexDirection="column" gap={4}>
+                    <Box display="flex" flexDirection="column" gap={0}>
                         {[
-                            {
+                            {   
                                 title: "Future-Proof Your Career",
                                 body: `See around corners with AI-powered career predictions.
-                               Understand upcoming trends, identify growth opportunities,
-                              and plan your next moves with precision.`,
+                                Understand upcoming trends, identify growth opportunities,
+                                and plan your next moves with precision.`,
                             },
                             {
                                 title: "Apply Smarter, Not Harder",
                                 body: `Focus on opportunities that matter. Get matched to roles that
-                                       fit your profile with insights on your match strength and
-                                        tips to improve your chances.`,
-                            },  
+                                 fit your profile with insights on your match strength and
+                                  tips to improve your chances.`,
+                            },
                             {
                                 title: "Master Your Career Journey",
                                 body: `Transform uncertainty into opportunity with your AI career
-                                        partner. Get personalized guidance for everything from skill
-                                        development to salary negotiations.`,
+                                partner. Get personalized guidance for everything from skill
+                                development to salary negotiations.`,
                             },
                         ].map((item, index) => (
                             <Box key={index}>
-                                <Typography variant="h5" fontWeight="bold" gutterBottom>
+                                <Typography
+                                    variant="h5"
+                                    gutterBottom
+                                    sx={{
+                                        fontFamily: 'Roboto',
+                                        fontWeight: 400,
+                                        fontSize: '24px',
+                                        lineHeight: '160%',
+                                        letterSpacing: '0%',
+                                        color: '#090808',
+
+                                    }}
+                                >
                                     {item.title}
                                 </Typography>
-                                <Typography variant="body1" color="text.secondary" sx={{ whiteSpace: "pre-line" }}>
+                                <Typography
+                                    variant="body1"
+                                    color="text.secondary"
+                                    // sx={{
+                                    //     fontFamily: 'Roboto',
+                                    //     fontWeight: 400,
+                                    //     fontSize: '16px',
+                                    //     lineHeight: '160%',
+                                    //     letterSpacing: '0%',
+                                    //     whiteSpace: 'pre-line',
+                                    //      color: '#090808',
+
+                                    // }}
+
+                                    sx={{
+                                        fontWeight: 400,
+                                        fontSize: {
+                                            xs: '16px',
+                                            sm: '1.1rem',
+                                            lg: '16px',
+                                        },
+                                        lineHeight: '160%',
+                                        width: {
+                                            xs: '100%',       // Responsive on mobile
+                                            sm: '100%',
+                                            md: '489px',       // Fixed from tablet upward
+                                        },
+                                        height: {
+                                            xs: 'auto',        // Auto height on mobile
+                                            sm: 'auto',
+                                            md: '116px',       // Fixed from tablet upward
+                                        },
+
+
+                                    }}
+                                >
                                     {item.body}
                                 </Typography>
                             </Box>
                         ))}
                     </Box>
                 </Grid>
+
             </Grid>
         </Box>
     </Box>

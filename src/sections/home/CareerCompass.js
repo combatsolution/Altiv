@@ -70,12 +70,15 @@ function CareerCompass() {
                 sx={{
                   fontFamily: 'Inter, sans-serif',
                   fontWeight: 600,
-                  fontSize: '54px',
+                  fontSize: {
+                    xs:'34px',
+                    lg:'54px'
+                   },
                   lineHeight: 'normal',
                   letterSpacing: '1.08px',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: { xs: 'center', md: 'flex-start' },
+                  justifyContent: { xs: 'left', md: 'flex-start' },
                   gap: 1,
                   color: '#0040D8',
                   mb: '2px',

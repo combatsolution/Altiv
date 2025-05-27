@@ -25,10 +25,10 @@ function JobMatchBooster() {
             src={boosterImage}
             alt="Job Match Booster Illustration"
             sx={{
+              display: { xs: "none", sm: "block" },
               width: "100%",
               height: "auto",
-              maxWidth: { xs: "100%", sm: "90%", md: "100%" },
-              display: "block",
+              maxWidth: { xs: "0", sm: "90%", md: "100%" },
               mx: "auto",
             }}
           />
@@ -44,7 +44,10 @@ function JobMatchBooster() {
                sx={{
                 fontFamily: 'Inter, sans-serif',
                 fontWeight: 600,
-                fontSize: '54px',
+                fontSize: {
+                    xs:'34px',
+                    lg:'54px'
+                   },
                 lineHeight: 'normal', // or '64px' if specific line-height is needed
                 letterSpacing: '2%',
                 display: 'flex',

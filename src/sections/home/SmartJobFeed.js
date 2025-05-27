@@ -20,7 +20,10 @@ function SmartJobFeed() {
               sx={{
                 fontFamily: 'Inter, sans-serif',
                 fontWeight: 600,
-                fontSize: '54px',
+                fontSize: {
+                    xs:'34px',
+                    lg:'54px'
+                   },
                 lineHeight: 'normal', // or '64px' if specific line-height is needed
                 letterSpacing: '2%',
                 display: 'flex',
@@ -93,11 +96,14 @@ function SmartJobFeed() {
             src={jobFeedImage}
             alt="Smart Job Feed illustration"
             sx={{
+              display: { xs: "none", sm: "block" },
               width: "100%",
               height: "auto",
               maxWidth: { xs: "100%", md: "90%" },
               mx: { xs: "auto", md: "initial" },
             }}
+
+            
           />
         </Grid>
       </Grid>
