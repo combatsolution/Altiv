@@ -168,7 +168,7 @@ function TestimonialSection() {
         justifyContent="space-between"
         alignItems="center"
         mt={4}
-        maxWidth="1200px"
+        maxWidth="600px"
         mx="auto"
         px={2}
         fontFamily="Roboto, sans-serif"
@@ -176,8 +176,8 @@ function TestimonialSection() {
         <Typography variant="body2" color="text.secondary">
           {index + 1}/{testimonials.length} Articles
         </Typography>
-        <Button onClick={handleNext} variant="text" sx={{ textTransform: "none" }}>
-          {/* Next → */}
+        <Button onClick={handleNext} variant="text" sx={{ textTransform: "none" , ml:'-10px'}}>
+          Next →
         </Button>
       </Stack>
     </Box>

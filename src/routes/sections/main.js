@@ -36,6 +36,7 @@ const FoboPage = lazy(() => import('src/pages/Fobo/fobo-view'));
 const ProfilePage = lazy(() => import('src/pages/profile/Profile-view'));
 
 const DashboardPage = lazy(() => import('src/pages/dashboard/dashboard-view'));
+const ComingViewPage= lazy(() => import ('src/pages/Coming-soon/coming-view'));
 
 // ----------------------------------------------------------------------
 
@@ -57,6 +58,7 @@ export const mainRoutes = [
       { path: 'fobo', element: <FoboPage />},
       { path: 'Profile', element: <ProfilePage />},
       { path: 'Dashboardpage', element: < DashboardPage/>},
+       { path: 'comingsoon', element: < ComingViewPage/>},
     
       {
         path: 'product',

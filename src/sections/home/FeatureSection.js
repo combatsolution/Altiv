@@ -1,6 +1,7 @@
 import React from "react";
 import { Grid, Box, Typography } from "@mui/material";
 import videoThumb from "src/images/video-thumb.jpg";
+import { fontFamily } from "@mui/system";
 
 const FeatureSection = () => (
     <Box
@@ -11,58 +12,20 @@ const FeatureSection = () => (
 
         }}
     >
-        <Box sx={{ px: { xs: 2, md: 6 }, py: { xs: 4, md: 8 }, maxWidth: "1440px", mx: "auto" }}>
-            <Grid container spacing={4} alignItems="center">
+        <Box sx={{ px: { xs: 2, md: 6 }, py: { xs: 4, md: 8 }, maxWidth: "1197px", mx: "auto" }}>
+            <Grid
+                container
+                spacing={4}
+                alignItems="center"
+                sx={{
+                    height: {
+                        xs: '937px',     // Auto height for mobile
+                        md: '446px',    // Fixed height for tablets and larger
+                    },
+                    
+                }}
+            >
                 {/* Video Thumbnail Section */}
-                {/* <Grid item xs={12} md={6}>
-                    <Box
-                        sx={{
-                            position: "relative",
-                            overflow: "hidden",
-                            width: {xs:'331.93px', md: '100%'},
-                            height: { xs: '470.89px', sm: 350, md: 400 },
-                            Border: '1.07px'
-                        }}
-                    >
-                        <Box
-                            component="img"
-                            src={videoThumb}
-                            alt="Video thumbnail"
-                            sx={{
-                                width: { 
-                                    xs: '290px',
-                                    md: '100%' 
-                                },
-                                height: {
-                                    xs: '427px',
-                                    md: '100%',
-                                },
-                                objectFit: "cover",
-                            }}
-                        />
-                        <Box
-                            sx={{
-                                position: "absolute",
-                                inset: 0,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                color: "white",
-                                fontSize: 50,
-                                cursor: "pointer",
-                                backgroundColor: "rgba(0, 0, 0, 0.3)",
-                                "&:hover": {
-                                    backgroundColor: "rgba(0, 0, 0, 0.5)",
-                                },
-                            }}
-                        >
-                            ▶
-                        </Box>
-                    </Box>
-                </Grid> */}
-
-
-
 
                 <Grid item xs={12} md={6}>
                     <Box
@@ -103,6 +66,7 @@ const FeatureSection = () => (
                                 "&:hover": {
                                     backgroundColor: "rgba(0, 0, 0, 0.5)",
                                 },
+                                
                             }}
                         >
                             ▶
@@ -116,14 +80,10 @@ const FeatureSection = () => (
 
                 {/* Text Content Section */}
 
-
-
-
-
-                <Grid item xs={12} md={6}>
-                    <Box display="flex" flexDirection="column" gap={0}>
+                <Grid item xs={12} md={6} >
+                    <Box display="flex" flexDirection="column" gap={1} height="446px"   >
                         {[
-                            {   
+                            {
                                 title: "Future-Proof Your Career",
                                 body: `See around corners with AI-powered career predictions.
                                 Understand upcoming trends, identify growth opportunities,
@@ -142,42 +102,39 @@ const FeatureSection = () => (
                                 development to salary negotiations.`,
                             },
                         ].map((item, index) => (
-                            <Box key={index}>
+                            <Box key={index} marginTop={1} >
                                 <Typography
                                     variant="h5"
+                                    
                                     gutterBottom
                                     sx={{
                                         fontFamily: 'Roboto',
                                         fontWeight: 400,
-                                        fontSize: '24px',
-                                        lineHeight: '160%',
+                                        fontSize: {
+                                            xs: '24px',
+                                            lg: '32px'
+                                        },
+                                        lineHeight: '150%',
                                         letterSpacing: '0%',
                                         color: '#090808',
 
-                                    }}
+                                        
+                                       
+                                    }}  
                                 >
                                     {item.title}
                                 </Typography>
                                 <Typography
                                     variant="body1"
                                     color="text.secondary"
-                                    // sx={{
-                                    //     fontFamily: 'Roboto',
-                                    //     fontWeight: 400,
-                                    //     fontSize: '16px',
-                                    //     lineHeight: '160%',
-                                    //     letterSpacing: '0%',
-                                    //     whiteSpace: 'pre-line',
-                                    //      color: '#090808',
-
-                                    // }}
+                                    
 
                                     sx={{
+                                        fontFamily:'roboto',
                                         fontWeight: 400,
                                         fontSize: {
                                             xs: '16px',
-                                            sm: '1.1rem',
-                                            lg: '16px',
+                                            lg: '19px'
                                         },
                                         lineHeight: '160%',
                                         width: {
@@ -188,8 +145,9 @@ const FeatureSection = () => (
                                         height: {
                                             xs: 'auto',        // Auto height on mobile
                                             sm: 'auto',
-                                            md: '116px',       // Fixed from tablet upward
+                                            md: '100',       // Fixed from tablet upward
                                         },
+                                        mt:'-3px'
 
 
                                     }}

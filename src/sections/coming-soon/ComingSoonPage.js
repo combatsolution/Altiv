@@ -5,18 +5,14 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
+
 import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 // hooks
 import { useCountdownDate } from 'src/hooks/use-countdown';
-// _mock
-import { _socials } from 'src/_mock';
-// assets
 import { ComingSoonIllustration } from 'src/assets/illustrations';
-// components
-import Iconify from 'src/components/iconify';
+
 
 // ----------------------------------------------------------------------
 
@@ -25,15 +21,41 @@ export default function ComingSoonView() {
 
   return (
     <>
-      <Typography variant="h3" paragraph>
-        Coming Soon!
-      </Typography>
+      <Box
+  sx={{
+    minHeight: '20vh',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
+    px: 2, // padding for small screens
+  }}
+>
+  <Typography
+    variant="h3"
+    component="h1"
+    sx={{
+      fontWeight: 'bold',
+      fontSize: { xs: '2rem', sm: '3rem', md: '3.5rem' },
+     
+    }}
+  >
+    Coming Soon!
+  </Typography>
 
-      <Typography sx={{ color: 'text.secondary' }}>
-        We are currently working hard on this page!
-      </Typography>
+  <Typography
+    sx={{
+      color: 'text.secondary',
+      fontSize: { xs: '1rem', sm: '1.25rem' },
+      maxWidth: 600,
+    }}
+  >
+    We are currently working hard on this page!
+  </Typography>
+</Box>
 
-      <ComingSoonIllustration sx={{ my: 10, height: 240 }} />
+      <ComingSoonIllustration sx={{ my:3, height: 240 }} />
 
       <Stack
         direction="row"
@@ -50,35 +72,34 @@ export default function ComingSoonView() {
         <TimeBlock label="Seconds" value={seconds} />
       </Stack>
 
-      <TextField
-        fullWidth
-        placeholder="Enter your email"
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <Button variant="contained" size="large">
-                Notify Me
-              </Button>
-            </InputAdornment>
-          ),
-          sx: {
-            pr: 0.5,
-            [`&.${outlinedInputClasses.focused}`]: {
-              boxShadow: (theme) => theme.customShadows.z20,
-              transition: (theme) =>
-                theme.transitions.create(['box-shadow'], {
-                  duration: theme.transitions.duration.shorter,
-                }),
-              [`& .${outlinedInputClasses.notchedOutline}`]: {
-                border: (theme) => `solid 1px ${alpha(theme.palette.grey[500], 0.32)}`,
-              },
-            },
+       <TextField
+    placeholder="Enter your email"
+    sx={{ my: 5, width: 400 , mx:"75vh"}} 
+    InputProps={{
+      endAdornment: (
+        <InputAdornment position="center">
+          <Button variant="contained" size="large">
+            Notify Me
+          </Button>
+        </InputAdornment>
+      ),
+      sx: {
+        pr: 0.5,
+        [`&.${outlinedInputClasses.focused}`]: {
+          boxShadow: (theme) => theme.customShadows.z20,
+          transition: (theme) =>
+            theme.transitions.create(['box-shadow'], {
+              duration: theme.transitions.duration.shorter,
+            }),
+          [`& .${outlinedInputClasses.notchedOutline}`]: {
+            border: (theme) => `solid 1px ${alpha(theme.palette.grey[500], 0.32)}`,
           },
-        }}
-        sx={{ my: 5 }}
-      />
+        },
+      },
+    }}
+  />
 
-      <Stack spacing={1} alignItems="center" justifyContent="center" direction="row">
+      {/* <Stack spacing={1} alignItems="center" justifyContent="center" direction="row">
         {_socials.map((social) => (
           <IconButton
             key={social.name}
@@ -92,7 +113,7 @@ export default function ComingSoonView() {
             <Iconify icon={social.icon} />
           </IconButton>
         ))}
-      </Stack>
+      </Stack> */}
     </>
   );
 }

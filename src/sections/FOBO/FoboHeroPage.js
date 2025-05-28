@@ -150,19 +150,21 @@ export default function FoboHeroPage() {
               value={uploadType}
               exclusive
               onChange={handleChangeType}
-              sx={{ mb: 3, borderRadius: 50, border: '1px solid #0040D8' }}
+              sx={{ mb: 3, border: '1px solid #0040D8' }}
             >
               <ToggleButton
                 value="resume"
                 sx={{
                   textTransform: 'none',
+                  borderradius:'25px',
                   px: 6,
                   '&.Mui-selected': {
-                    backgroundColor: '#0040D8',
+                    backgroundColor: '#0040D8', 
                     color: '#fff',
                     '&:hover': {
                       backgroundColor: '#0036b3', // optional: slightly darker on hover
                     },
+
                   },
                 }}
               >
