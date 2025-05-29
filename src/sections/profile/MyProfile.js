@@ -1,3 +1,4 @@
+
 // import {
 //   Box,
 //   Avatar,
@@ -8,8 +9,9 @@
 //   Divider,
 //   Link,
 //   Grid,
-//   Stack, 
+//   Stack,
 // } from '@mui/material';
+// import EditIcon from '@mui/icons-material/Edit'; // Add this import
 // import { useAuthContext } from 'src/auth/hooks';
 
 // const jobMatches = [
@@ -64,8 +66,8 @@
 //     );
 //   }
 
-//   const bannerImage = 'https://storage.googleapis.com/a1aa/image/3cd90142-808b-468d-8f84-8f8dae057d2d.jpg'; // Keep hardcoded or fetch from API if available
-//   const profileImage = user.avatar?.fileUrl || ''; // Use avatar URL from API
+//   const bannerImage = 'https://storage.googleapis.com/a1aa/image/3cd90142-808b-468d-8f84-8f8dae057d2d.jpg';
+//   const profileImage = user.avatar?.fileUrl || '';
 //   const fullName = user.displayName || `${user.firstName} ${user.lastName}`;
 //   const email = user.email || 'Not provided';
 //   const phoneNumber = user.phoneNumber || 'Not provided';
@@ -116,7 +118,7 @@
 //                 {fullName}
 //               </Typography>
 //               <Typography fontSize="0.75rem" color="text.secondary">
-//                 {user.jobTitle || 'Not specified'} {/* Assume jobTitle might be added in API later */}
+//                 {user.jobTitle || 'Not specified'}
 //               </Typography>
 //             </Box>
 //           </Paper>
@@ -199,10 +201,10 @@
 //     </Box>
 //   );
 // }
-// C:\Users\Admin\Downloads\public (3)\src\sections\profile\MyProfile.js
 
 
 
+import React, { useState } from 'react';
 import {
   Box,
   Avatar,
@@ -210,21 +212,24 @@ import {
   Typography,
   IconButton,
   Paper,
-  Divider,
   Link,
   Grid,
   Stack,
+  Modal,
+  TextField,
+  Button,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit'; // Add this import
 import { useAuthContext } from 'src/auth/hooks';
+import CloseIcon from '@mui/icons-material/Close';
+import bgImage from 'src/images/image.png';
 
+import Writelogo from 'src/images/write.svg';
+
+// Sample job matches data
 const jobMatches = [
-  {
-    company: 'Google',
-    logo: 'https://storage.googleapis.com/a1aa/image/b34fb2e9-b9cb-4fc2-144f-63f7040062d2.jpg',
-    title: 'Sr. Director AI | Data scientist',
-    snippet: 'HE I need more information...',
-  },
   {
     company: 'Netflix',
     logo: 'https://storage.googleapis.com/a1aa/image/4ccd54d6-b484-449a-82cb-c851fae2c976.jpg',
@@ -243,70 +248,63 @@ const jobMatches = [
     title: 'Sr. Director AI | Data scientist',
     snippet: 'Have a great afternoon...',
   },
+
   {
     company: 'Netflix',
     logo: 'https://storage.googleapis.com/a1aa/image/4ccd54d6-b484-449a-82cb-c851fae2c976.jpg',
     title: 'Sr. Director AI | Data scientist',
     snippet: 'HE I need more information...',
-  },
+  }
+
+
 ];
 
 export default function MyProfile() {
   const { user, loading } = useAuthContext();
+  const [open, setOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  if (loading) {
-    return (
-      <Box sx={{ backgroundColor: '#F5F9FF', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Typography>Loading...</Typography>
-      </Box>
-    );
-  }
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  if (!user) {
-    return (
-      <Box sx={{ backgroundColor: '#F5F9FF', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Typography>Please log in to view your profile.</Typography>
-      </Box>
-    );
-  }
+  if (loading) return <Box>Loading...</Box>;
+  if (!user) return <Box>Please log in to view your profile.</Box>;
 
-  const bannerImage = 'https://storage.googleapis.com/a1aa/image/3cd90142-808b-468d-8f84-8f8dae057d2d.jpg';
   const profileImage = user.avatar?.fileUrl || '';
   const fullName = user.displayName || `${user.firstName} ${user.lastName}`;
   const email = user.email || 'Not provided';
   const phoneNumber = user.phoneNumber || 'Not provided';
-  const resume = user.resumeUrl ? (
-    <>
+  const address = user.fullAddress || user.city || user.state
+    ? `${user.fullAddress || ''} ${user.city || ''} ${user.state || ''}`.trim()
+    : 'Not provided';
+  const resume = user.resumeUrl
+    ? <>
       {user.resumeUrl.split('/').pop()}{' '}
-      <Link href={user.resumeUrl} underline="hover">
-        View
-      </Link>
+      <Link href={user.resumeUrl} underline="hover">View</Link>
     </>
-  ) : (
-    'Not uploaded'
-  );
-  const address = user.fullAddress || user.city || user.state ? 
-    `${user.fullAddress || ''} ${user.city || ''} ${user.state || ''}`.trim() : 
-    'Not provided';
+    : 'Not uploaded';
+
+  const handleChangePassword = () => {
+    console.log({ currentPassword, newPassword, confirmPassword });
+  };
 
   return (
     <Box sx={{ backgroundColor: '#F5F9FF', minHeight: '100vh' }}>
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        {/* Banner Section */}
-        <Box sx={{ borderRadius: 2, overflow: 'hidden', position: 'relative', border: '1px solid #3B82F6' }}>
+        {/* Banner & Avatar */}
+        <Box sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid transparent' }}>
           <Box
             component="img"
-            src={bannerImage}
+            src={bgImage}
             alt="Banner"
             sx={{ width: '100%', height: 300, objectFit: 'cover' }}
           />
           <Paper
             elevation={3}
             sx={{
-              position: 'absolute',
-              bottom: 16,
-              left: 16,
-              right: 16,
+              position: 'relative',
               p: 2,
               display: 'flex',
               gap: 2,
@@ -314,13 +312,13 @@ export default function MyProfile() {
               bgcolor: 'rgba(255,255,255,0.9)',
               backdropFilter: 'blur(6px)',
               borderRadius: 2,
+              mt: -6,
+              mx: 2
             }}
           >
             <Avatar src={profileImage} sx={{ width: 48, height: 48 }} />
             <Box>
-              <Typography fontWeight="600" fontSize="0.9rem">
-                {fullName}
-              </Typography>
+              <Typography fontWeight="600">{fullName}</Typography>
               <Typography fontSize="0.75rem" color="text.secondary">
                 {user.jobTitle || 'Not specified'}
               </Typography>
@@ -328,37 +326,75 @@ export default function MyProfile() {
           </Paper>
         </Box>
 
-        {/* Content Section */}
         <Grid container spacing={3} mt={3}>
-          {/* Profile Info */}
+          {/* Profile Information */}
           <Grid item xs={12} lg={8}>
             <Paper sx={{ p: 3 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography fontWeight="600" fontSize="0.9rem">
-                  Profile Information
+              {/* <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+               <Box>
+  <Typography fontWeight="600" fontSize="16px" mb={1}>
+    Profile Information
+  </Typography>
+
+  <Typography
+    sx={{
+      fontFamily: 'Open Sans',
+      fontWeight: 400,
+      fontSize: '14px',
+      lineHeight: '21px',
+      letterSpacing: '-0.39px',
+      color: '#67748E',
+    }}
+  >
+    Directors are responsible for overseeing the development of an organizations business goals and objectives.
+    They typically work to increase business revenue, identify and develop business opportunities, and expand the
+    companys presence and its brands.
+  </Typography>
+</Box>
+
+
+
+                <IconButton size="small"><EditIcon fontSize="small" /></IconButton>
+              </Box> */}
+
+              <Box sx={{ maxWidth: '641.44px' }}>
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                  <Typography fontWeight="600" fontSize="16px">
+                    Profile Information
+                  </Typography>
+                  <Box component="img" src={Writelogo} alt="Write Logo" sx={{ height: 20 }} />
+                </Box>
+
+                <Typography
+                  sx={{
+                    // fontFamily: 'Open Sans',
+                    fontWeight: 400,
+                    fontSize: '14px',
+                    lineHeight: '21px',
+                    letterSpacing: '-0.39px',
+                    color: '#67748E',
+                    mb: 2
+                  }}
+                >
+                  Directors are responsible for overseeing the development of an organizations business goals <br />
+                  and objectives. They typically work to increase business revenue, identify and develop business<br />
+                  opportunities, and expand the companys presence and its brands.
+
                 </Typography>
-                <IconButton size="small">
-                  <EditIcon fontSize="small" sx={{ color: '#6B7280' }} />
-                </IconButton>
               </Box>
-              <Typography fontSize="0.75rem" color="text.secondary" mb={2}>
-                {user.description || 'Directors are responsible for overseeing the development of an organizations business goals and objectives...'}
-              </Typography>
+
               <Stack spacing={1}>
                 {[
                   ['Full Name:', fullName],
                   ['Mobile:', phoneNumber],
                   ['Email:', email],
                   ['Resume:', resume],
-                  [
-                    'Password:',
-                    <>
-                      ***********{' '}
-                      <Link href="#" underline="hover">
-                        Change password
-                      </Link>
-                    </>,
-                  ],
+                  ['Password:', <>
+                    ***********{' '}
+                    <Link href="#" underline="hover" onClick={() => setOpen(true)}>
+                      Change password
+                    </Link>
+                  </>],
                   ['Address:', address],
                 ].map(([label, value]) => (
                   <Box key={label} display="flex" gap={1.5}>
@@ -374,7 +410,39 @@ export default function MyProfile() {
             </Paper>
           </Grid>
 
-          {/* Job Matches */}
+          {/* Top Job Matches */}
+          {/* <Grid item xs={12} lg={4}>
+            <Paper sx={{ p: 3 }}>
+              <Typography fontWeight="600" fontSize="0.9rem" mb={2}>
+                Top Job Matches
+              </Typography>
+              <Stack spacing={2}>
+                {jobMatches.length > 0 ? (
+                  jobMatches.map((job, idx) => (
+                    <Box key={idx} display="flex" gap={1.5} alignItems="center">
+                      <Avatar src={job.logo} sx={{ width: 24, height: 24 }} />
+                      <Box flexGrow={1}>
+                        <Typography fontSize="0.75rem" fontWeight="600" noWrap>
+                          {job.title}
+                        </Typography>
+                        <Typography fontSize="0.75rem" color="text.secondary" noWrap>
+                          {job.snippet}
+                        </Typography>
+                      </Box>
+                      <Link href="#" underline="hover" sx={{ fontSize: '0.75rem', color: '#2563EB' }}>
+                        Status
+                      </Link>
+                    </Box>
+                  ))
+                ) : (
+                  <Typography fontSize="0.75rem" color="text.secondary">
+                    No job matches at the moment.
+                  </Typography>
+                )}
+              </Stack>
+            </Paper>
+          </Grid> */}
+
           <Grid item xs={12} lg={4}>
             <Paper sx={{ p: 3 }}>
               <Typography fontWeight="600" fontSize="0.9rem" mb={2}>
@@ -400,8 +468,74 @@ export default function MyProfile() {
               </Stack>
             </Paper>
           </Grid>
+
         </Grid>
       </Container>
+
+      {/* Password Change Modal */}
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          minHeight="100vh"
+          px={2}
+        >
+          <Box
+            sx={{
+              width: isMobile ? '90%' : 400,
+              position: 'relative',
+              bgcolor: 'background.paper',
+              p: 3,
+              boxShadow: 5,
+              borderRadius: 2
+            }}
+          >
+            <IconButton
+              aria-label="close"
+              onClick={() => setOpen(false)}
+              sx={{ position: 'absolute', top: 8, right: 8 }}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+            <Typography variant="h6" mb={2}>Change Password</Typography>
+            <TextField
+              label="Current Password"
+              type="password"
+              fullWidth
+              margin="normal"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+            />
+            <TextField
+              label="New Password"
+              type="password"
+              fullWidth
+              margin="normal"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <TextField
+              label="Confirm New Password"
+              type="password"
+              fullWidth
+              margin="normal"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              sx={{ mb: 3 }}
+            />
+            <Box display="flex" gap={2}>
+              <Button variant="contained" fullWidth onClick={handleChangePassword}>
+                Change Password
+              </Button>
+              <Button variant="outlined" fullWidth onClick={() => setOpen(false)}>
+                Cancel
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </Modal>
     </Box>
   );
 }

@@ -2,9 +2,13 @@ import React from "react";
 import { Grid, Box, Typography, Button, Stack } from "@mui/material";
 import jobFeedImage from "src/images/smartjob.png"; 
 import SmartJoblogo from 'src/images/smartjoblogo.png';
+import {useNavigate} from 'react-router-dom';
+import { paths } from "src/routes/paths";
 
 function SmartJobFeed() {
+    const navigate =useNavigate();
   return (
+    
     <Box sx={{ bgcolor: "#fff", px: { xs: 3, md: 6 }, py: { xs: 4, md: 8 } }}>
       <Grid
         container
@@ -98,9 +102,8 @@ function SmartJobFeed() {
 
             <Box pt={1}>
               <Button
-              
                 variant="contained"
-
+               onClick={()=>navigate(paths.comingsoon)}
                 
                 sx={{
                   width:{

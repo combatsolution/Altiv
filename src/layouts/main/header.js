@@ -158,7 +158,6 @@
 
 
 
-
 import { m } from 'framer-motion';
 import { alpha, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -168,8 +167,10 @@ import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import Badge, { badgeClasses } from '@mui/material/Badge';
-import { Avatar, IconButton } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Avatar, IconButton, InputBase, Typography } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import { useNavigate, useLocation } from 'react-router-dom'; // Import useLocation
 import { useOffSetTop } from 'src/hooks/use-off-set-top';
 import { useResponsive } from 'src/hooks/use-responsive';
 import { bgBlur } from 'src/theme/css';
@@ -185,17 +186,21 @@ import { SettingsButton, HeaderShadow, LoginButton } from '../_common';
 
 export default function Header() {
   const { user, loading } = useAuthContext();
-  console.log('Header user:', user, 'Loading:', loading);
   const theme = useTheme();
   const mdUp = useResponsive('up', 'md');
   const offsetTop = useOffSetTop(HEADER.H_DESKTOP);
-  const navigate = useNavigate(); // Initialize navigate hook
+  const navigate = useNavigate();
+  const location = useLocation(); // Initialize useLocation to get current path
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
+  // Check if the current path is paths.profile
+  const isProfilePage = location.pathname === paths.Profile;
+
   return (
+
     <AppBar>
       <Toolbar
         disableGutters
@@ -232,63 +237,122 @@ export default function Header() {
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {mdUp && <NavDesktop offsetTop={offsetTop} sx={{ marginLeft: '20px' }} data={navConfig} />}
-
-          <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse' }} sx={{ color: '#0040D8' }}>
-            {!user && (
-              <Button
-                variant="contained"
-                target="_self"
-                rel="noopener"
-                href={paths.auth.jwt.register}
+          {isProfilePage ? (
+            // Render this Box when on paths.profile
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                p: 2,
+                gap: 4,
+                backgroundColor: '#fff',
+              }}
+            >
+              {/* Search Input */}
+              <Box
                 sx={{
-                  bgcolor: '#2A4DD0',
-                  textTransform: 'none',
-                  borderRadius: '100px',
-                  display: { xs: 'none', sm: 'inline-flex' },
-                  '&:hover': {
-                    bgcolor: '#0030aa',
-                  },
+                  display: 'flex',
+                  alignItems: 'center',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '8px',
+                  px: 1.5,
+                  py: 0.5,
+                  width: 230,
                 }}
               >
-                Sign up
-              </Button>
-            )}
-
-            {user && (
-              <IconButton
-                component={m.button}
-                whileTap="tap"
-                whileHover="hover"
-                variants={varHover(1.05)}
-                onClick={() => navigate(paths.Profile)} // Navigate to /Profile
-                sx={{
-                  width: 40,
-                  height: 40,
-                  background: (_theme) => alpha(theme.palette.grey[500], 0.08),
-                  '&:hover': {
-                    background: (_theme) => alpha(theme.palette.grey[500], 0.16),
-                  },
-                }}
-              >
-                <Avatar
-                  src={user?.photoURL || ''}
-                  alt={user?.displayName || `${user?.firstName} ${user?.lastName}`}
-                  sx={{
-                    width: 36,
-                    height: 36,
-                    border: (_theme) => `solid 2px ${theme.palette.background.default}`,
-                    backgroundColor: theme.palette.grey[500],
-                    color: theme.palette.common.white,
-                  }}
+                <SearchIcon sx={{ fontSize: 18, color: 'text.secondary', mr: 1 }} />
+                <InputBase
+                  placeholder="Type here…"
+                  sx={{ fontSize: 14, flex: 1 }}
                 />
+              </Box>
+
+              {/* Nav Links */}
+              <Typography variant="body2" sx={{ cursor: 'pointer', fontSize: 15 }}>
+                My Jobs
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ cursor: 'pointer', fontSize: 15 }}
+                onClick={() => {
+                  // Clear local storage, session, or auth context if needed
+                  localStorage.clear();  // Or your auth clear logic
+                  navigate('/login'); // Or '/' to redirect to home page
+                }}
+              >
+                Signout
+              </Typography>
+
+              {/* Notification Icon */}
+              <IconButton>
+                <Badge badgeContent={4} color="error">
+                  <NotificationsIcon sx={{ color: 'black' }} />
+                </Badge>
               </IconButton>
-            )}
+            </Box>
+          ) : (
+            // Render the default header content for other pages
+            <>
+              {mdUp && <NavDesktop offsetTop={offsetTop} sx={{ marginLeft: '20px' }} data={navConfig} />}
 
-            {mdUp && !user && <LoginButton />}
+              <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse' }} sx={{ color: '#0040D8' }}>
+                {!user && (
+                  <Button
+                    variant="contained"
+                    target="_self"
+                    rel="noopener"
+                    href={paths.auth.jwt.register}
+                    sx={{
+                      bgcolor: '#2A4DD0',
+                      textTransform: 'none',
+                      borderRadius: '100px',
+                      display: { xs: 'none', sm: 'inline-flex' },
+                      '&:hover': {
+                        bgcolor: '#0030aa',
+                      },
+                    }}
+                  >
+                    Sign up
+                  </Button>
+                )}
 
-            {!mdUp && <NavMobile offsetTop={offsetTop} data={navConfig} />}
-          </Stack>
+                {user && (
+                  <IconButton
+                    component={m.button}
+                    whileTap="tap"
+                    whileHover="hover"
+                    variants={varHover(1.05)}
+                    onClick={() => navigate(paths.Profile)} // Navigate to /profile
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      background: (_theme) => alpha(theme.palette.grey[500], 0.08),
+                      '&:hover': {
+                        background: (_theme) => alpha(theme.palette.grey[500], 0.16),
+                      },
+                    }}
+                  >
+                    <Avatar
+                      src={user?.photoURL || ''}
+                      alt={user?.displayName || `${user?.firstName} ${user?.lastName}`}
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        border: (_theme) => `solid 2px ${theme.palette.background.default}`,
+                        backgroundColor: theme.palette.grey[500],
+                        color: theme.palette.common.white,
+                      }}
+                    />
+                  </IconButton>
+                )}
+
+                {mdUp && !user && <LoginButton />}
+
+                {!mdUp && <NavMobile offsetTop={offsetTop} data={navConfig} />}
+              </Stack>
+            </>
+          )}
         </Container>
       </Toolbar>
 
@@ -296,9 +360,3 @@ export default function Header() {
     </AppBar>
   );
 }
-
-
-
-
-
-

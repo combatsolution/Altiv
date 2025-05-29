@@ -16,7 +16,7 @@ import TestimonialCarousel from '../TestimonialCarousel'
 import FoboHeroSection from '../FoboHeroSection'
 import Datasecuritypage from '../Datasecuritypage'
 import CareerCompass from '../CareerCompass'
-import Dashboard from '../Dashboard'
+// import Dashboard from '../Dashboard'
 
 
 // import Profile from '../profile'
@@ -62,7 +62,7 @@ export default function FoboView() {
       <FoboHeroSection/>
       <Datasecuritypage/>
       <CareerCompass/>
-      <Dashboard/>
+      {/* <Dashboard/> */}
       {/* <Profile/> */}
      
 

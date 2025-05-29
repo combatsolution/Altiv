@@ -2,8 +2,11 @@ import React from "react";
 import { Box, Grid, Typography, Button, Paper, Stack } from "@mui/material";
 import TimerImage from "src/Fogoimages/timerlogo.png";
 import demoImage from "src/images/human.png";
+import { useNavigate } from 'react-router-dom';
+import { paths } from "src/routes/paths";
 
 function CareerCompass() {
+  const navigate = useNavigate();
   return (
     <Paper
       elevation={3}
@@ -56,11 +59,12 @@ function CareerCompass() {
             }}
           >
             {/* Title with Icon */}
+            
             <Box
               display="flex"
               alignItems="center"
               justifyContent={{ xs: "center", md: "flex-start" }}
-              gap={1}            >
+              gap={1} >
               <Box
                 component="img"
                 src={TimerImage}
@@ -90,10 +94,12 @@ function CareerCompass() {
                   ml: { xs: -6, lg: 0 },
                   mb:{xs: -1}
                 }}
+                
               >
                 Career Compass
               </Typography>
             </Box>
+            
 
             {/* Subtitle */}
             <Typography
@@ -147,6 +153,7 @@ function CareerCompass() {
             >
               <Button
                 variant="contained"
+                onClick={() => navigate(paths.comingsoon)}
                 sx={{
                   minWidth: { xs: 140, sm: 180 },
                   height: { xs: 40, sm: 48 },
@@ -156,11 +163,13 @@ function CareerCompass() {
                   textTransform: "none",
                   '&:hover': { bgcolor: "#0033b3" },
                 }}
+                
               >
                 Analyze my resume
               </Button>
               <Button
                 variant="outlined"
+                onClick={() => navigate(paths.comingsoon)}
                 sx={{
                   minWidth: { xs: 140, sm: 180 },
                   height: { xs: 40, sm: 48 },

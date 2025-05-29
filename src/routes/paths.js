@@ -21,7 +21,7 @@ export const paths = {
   careerResume: '/career-resume',
   fobo:'/fobo',
   ComingSoonPage:'/ComingSoonPage',
-  Dashboardpage: '/Dashboardpage',
+  Dashboardpage: '/Dashboardpage',  
   Profile:'/Profile',
   comingsoon: '/comingsoon',
   maintenance: '/maintenance',

@@ -358,7 +358,7 @@ function HomeHero() {
 
               <Button
                 variant="outlined"
-                onClick={() => navigate(paths.auth.jwt.register)}
+                onClick={() => navigate(paths.comingsoon)}
                 sx={{
                   textTransform: "none",
                   color: "#0040D8",
@@ -388,6 +388,7 @@ function HomeHero() {
                   // Optional: position shift on breakpoints
                   ml: { xs: 0, sm: "100px", md: "42px" },
                 }}
+
               >
                 Know How it Works
               </Button>

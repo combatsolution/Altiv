@@ -1,13 +1,16 @@
 import React from "react";
 import { Grid, Box, Typography, Button, Stack } from "@mui/material";
 import boosterImage from "src/images/jobmatch.png";
-import Jobmatchlogo from "src/images/jobmatchlogo.png"
+import Jobmatchlogo from "src/images/jobmatchlogo.png";
+import {useNavigate} from 'react-router-dom';
+import { paths } from "src/routes/paths";
 
 function JobMatchBooster() {
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
-        bgcolor: "#fff",
+        bgcolor: "#fff",  
         px: { xs: 2, sm: 3, md: 6 },
         py: { xs: 3, sm: 4, md: 8 },
       }}
@@ -146,6 +149,7 @@ function JobMatchBooster() {
                   py: { xs: 1, sm: 1.5 },
                   textTransform: "none",
                 }}
+                onClick={()=>navigate(paths.comingsoon)}
               >
                 Boost My Application
               </Button>
