@@ -17,7 +17,9 @@ import { useState, useRef } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CloseIcon from '@mui/icons-material/Close';
 import { paths } from 'src/routes/paths';
-import { IconButton } from 'yet-another-react-lightbox';
+// import { IconButton } from 'yet-another-react-lightbox';
+import IconButton from '@mui/material/IconButton';
+
 import { height } from '@mui/system';
 
 
@@ -140,7 +142,6 @@ function HomeHero() {
                 Start Free
               </Button>
 
-
               <Modal open={open} onClose={handleClose}>
                 <Box
                   display="flex"
@@ -150,6 +151,7 @@ function HomeHero() {
                   minHeight="100vh"
                   px={2}
                 >
+
                   <Box
                     sx={{
                       width: '100%',
@@ -158,9 +160,23 @@ function HomeHero() {
                       p: 6,
                       px: 4,
                       boxShadow: 3,
-                      textAlign: 'center'
+                      textAlign: 'center',
+                      position: 'relative',
                     }}
                   >
+
+                    <IconButton
+                      onClick={handleClose}
+                      size="small"
+                      sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        color: 'grey.500',
+                      }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
 
                     <Typography variant="h5" fontWeight="bold" mb={1}>
                       Magic happens either ways
@@ -172,60 +188,69 @@ function HomeHero() {
                     <ToggleButtonGroup
                       value={uploadType}
                       exclusive
-                      onChange={handleChange}
-                      sx={{ mb: 2, borderRadius: 50, border: "1px solid #0040D8" }}
+                      onChange={(event, newValue) => {
+                        if (newValue !== null) setUploadType(newValue);
+                      }}
+                      sx={{
+                        mb: 2,
+                        borderRadius: '26px',
+                        border: "1px solid #0040D8",
+                        overflow: 'hidden', // Ensures rounded effect applies
+                      }}
                     >
-                      <ToggleButtonGroup
-                        value={uploadType}
-                        exclusive
-                        onChange={(event, newValue) => {
-                          if (newValue !== null) setUploadType(newValue);
-                        }}
+                      <ToggleButton
+                        value="resume"
+                        disableRipple
                         sx={{
-                          borderRadius: '50px',
-                          border: '1px solid #2A4DD0',
-                          overflow: 'hidden',
+                          textTransform: "none",
+                          px: 4,
+                          py: 0.5,
+                          borderRadius: '26px !important', // Force override
+                          backgroundColor: uploadType === "resume" ? "#2A4DD0" : "#ffffff",
+                          color: uploadType === "resume" ? "#ffffff" : "#2A4DD0",
+                          '&:hover': {
+                            backgroundColor: uploadType === "resume" ? "#2f3da3" : "#f0f0f0",
+                          },
+                          '&.Mui-selected': {
+                            backgroundColor: "#2A4DD0",
+                            color: "#ffffff",
+                          },
+                          '&.Mui-selected:hover': {
+                            backgroundColor: "#2f3da3",
+                          },
                         }}
                       >
-                        <ToggleButton
-                          value="resume"
-                          sx={{
-                            textTransform: "none",
-                            px: 4,
-                            py: 0.5,
-                            borderRadius: 0,
-                            color: uploadType === "resume" ? "#ffffff" : "#2A4DD0",
-                            backgroundColor: uploadType === "resume" ? "#2A4DD0" : "#ffffff",
-                            '&:hover': {
-                              backgroundColor: uploadType === "resume" ? "#2f3da3" : "#f0f0f0",
-                            },
-                          }}
-                        >
-                          Resume
-                        </ToggleButton>
+                        Resume
+                      </ToggleButton>
 
-                        <ToggleButton
-                          value="job"
-                          sx={{
-                            textTransform: "none",
-                            px: 4,
-                            py: 0.5,
-                            borderRadius: 0,
-                            color: uploadType === "job" ? "#ffffff" : "#2A4DD0",
-                            backgroundColor: uploadType === "job" ? "#2A4DD0" : "#ffffff",
-                            '&:hover': {
-                              backgroundColor: uploadType === "job" ? "#2f3da3" : "#f0f0f0",
-                            },
-                          }}
-                        >
-                          Job title
-                        </ToggleButton>
-                      </ToggleButtonGroup>
-
+                      <ToggleButton
+                        value="job"
+                        disableRipple
+                        sx={{
+                          textTransform: "none",
+                          px: 4,
+                          py: 0.5,
+                          borderRadius: '26px !important', // Force override
+                          backgroundColor: uploadType === "job" ? "#2A4DD0" : "#ffffff",
+                          color: uploadType === "job" ? "#ffffff" : "#2A4DD0",
+                          '&:hover': {
+                            backgroundColor: uploadType === "job" ? "#2f3da3" : "#f0f0f0",
+                          },
+                          '&.Mui-selected': {
+                            backgroundColor: "#2A4DD0",
+                            color: "#ffffff",
+                          },
+                          '&.Mui-selected:hover': {
+                            backgroundColor: "#2f3da3",
+                          },
+                        }}
+                      >
+                        Job title
+                      </ToggleButton>
                     </ToggleButtonGroup>
 
                     {uploadType === 'resume' ? (
-                      <> {/* Resume Upload UI */}
+                      <>
                         <Box
                           border="2px dashed #cbd5e0"
                           borderRadius={2}
@@ -290,7 +315,7 @@ function HomeHero() {
                         </Button>
                       </>
                     ) : (
-                      <> {/* Job Title UI */}
+                      <>
                         <Box mb={3} width="100%" textAlign="left">
                           <Typography variant="caption" sx={{ color: "#0040D8" }} ml={1}>Designation</Typography>
                           <Box
@@ -356,6 +381,7 @@ function HomeHero() {
 
 
 
+
               <Button
                 variant="outlined"
                 onClick={() => navigate(paths.comingsoon)}
@@ -377,14 +403,14 @@ function HomeHero() {
 
                   // Margin left
                   marginLeft: "12px",
-                  
+
                   // Hover effect
                   "&:hover": {
                     backgroundColor: "transparent",
                     borderColor: blue[700],
                     color: blue[700],
                   },
-                   
+
                   // Optional: position shift on breakpoints
                   ml: { xs: 0, sm: "100px", md: "42px" },
                 }}

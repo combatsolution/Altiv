@@ -278,7 +278,7 @@ export default function Header() {
                 onClick={() => {
                   // Clear local storage, session, or auth context if needed
                   localStorage.clear();  // Or your auth clear logic
-                  navigate('/login'); // Or '/' to redirect to home page
+                  navigate(paths.auth.jwt.login); // Or '/' to redirect to home page
                 }}
               >
                 Signout
