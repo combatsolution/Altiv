@@ -14,10 +14,8 @@ import CareerCompass from '../CareerCompass';
 import SmartJobFeed from '../SmartJobFeed';
 import JobMatchBooster from '../JobMatchBooster';
 import JobBoard from '../JobBoard';
+import WorkingProcessSection1 from '../WorkingProcessSection1';
 // import ComingSoon from '../ComingSoon';
-
-// import CareerCompassResume from './CareerCompassResume';
-// import Footer from '../Footer';
 
 
 
@@ -73,11 +71,11 @@ export default function HomeView() {
       <CareerCompass /> 
       <SmartJobFeed />
       <JobMatchBooster />
+      <WorkingProcessSection1/>
       <JobBoard />
+      
       {/* <ComingSoon /> */}
-      {/*     
-     <CareerCompassResume/> 
-      {/* <Footer /> */}
+     
 
 
 

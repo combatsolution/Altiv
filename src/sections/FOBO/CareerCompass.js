@@ -21,7 +21,7 @@ function CareerCompass() {
             sx={{
               Width:'551.97px',
               Height:'397px',
-              borderRadius: 2,
+              borderRadius: 0,
               display: "block",
             }}
           />
