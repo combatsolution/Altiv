@@ -1,10 +1,14 @@
 import React from 'react';
 import { Box, Typography, Button, useMediaQuery } from '@mui/material';
+import { useNavigate } from "react-router-dom"; 
+import { paths } from "src/routes/paths";
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import zIndex from '@mui/material/styles/zIndex';
 
+
 const FoboHeroSection = () => {
+  const navigate= useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -93,6 +97,7 @@ const FoboHeroSection = () => {
         size="large"
         endIcon={<ArrowForwardIcon />}
         sx={{ mt: 4, px: 4, bgcolor: '#4F9CF9' }}
+        onClick={()=>navigate(paths.comingsoon)}
       >
         Boost My Application
       </Button>

@@ -2,9 +2,15 @@ import React from "react";
 import { Box, Grid, Typography, Button, Paper, Stack } from "@mui/material";
 import TimerImage from 'src/Fogoimages/timerlogo.png';
 import demoImage from "src/images/human.png";
+import { useNavigate } from "react-router-dom"; 
+import { paths } from "src/routes/paths";
+import ComingSoon from "../home/ComingSoon";
+
 
 function CareerCompass() {
+  const navigate = useNavigate();
   return (
+    
     <Paper elevation={3} sx={{ p: 4, borderRadius: 2, bgcolor: "#fff", marginTop: "60px", marginBottom: "60px" }}>
       <Grid container spacing={4} alignItems="center">
         <Grid item xs={12} md={6}>
@@ -111,6 +117,7 @@ function CareerCompass() {
                   textTransform: 'none',
                   '&:hover': { bgcolor: '#0033b3' },
                 }}
+                 onClick={() => navigate(paths.comingsoon)}
               >
                 Beat FOBO Now
               </Button>

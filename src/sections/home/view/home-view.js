@@ -6,7 +6,6 @@ import { Box } from '@mui/material';
 
 // components
 import ScrollProgress from 'src/components/scroll-progress';
-//
 import HomeHero from '../home-hero';
 import FeatureSection from '../FeatureSection';
 import CareerToolkitHero from '../CareerToolkitHero';
@@ -15,6 +14,7 @@ import CareerCompass from '../CareerCompass';
 import SmartJobFeed from '../SmartJobFeed';
 import JobMatchBooster from '../JobMatchBooster';
 import JobBoard from '../JobBoard';
+// import ComingSoon from '../ComingSoon';
 
 // import CareerCompassResume from './CareerCompassResume';
 // import Footer from '../Footer';
@@ -31,7 +31,7 @@ import JobBoard from '../JobBoard';
 // import HomeAdvertisement from '../home-advertisement';
 // import HomeCleanInterfaces from '../home-clean-interfaces';
 // import HomeHugePackElements from '../home-hugepack-elements';
-  
+
 
 
 // ----------------------------------------------------------------------
@@ -64,22 +64,21 @@ export default function HomeView() {
   return (
     <>
       <ScrollProgress scrollYProgress={scrollYProgress} />
-      
-      
+
+
       <HomeHero />
       <FeatureSection />
-      <TestimonialSection/>4 
-      <CareerToolkitHero/>
-      {/* <Box component='div' sx={{backgroundImage : 'url(/assets/line.svg)', zIndex: 10}}> */}
-        <CareerCompass/>
-        <SmartJobFeed/>
-        <JobMatchBooster/>
-      {/* </Box> */}
-      <JobBoard/>
-{/*     
+      <TestimonialSection />
+      <CareerToolkitHero />
+      <CareerCompass /> 
+      <SmartJobFeed />
+      <JobMatchBooster />
+      <JobBoard />
+      {/* <ComingSoon /> */}
+      {/*     
      <CareerCompassResume/> 
       {/* <Footer /> */}
-      
+
 
 
       {/* <Box
@@ -114,4 +113,3 @@ export default function HomeView() {
     </>
   );
 }
- 

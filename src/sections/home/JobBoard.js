@@ -53,7 +53,9 @@ const jobData = [
 ];
 
 const JobBoard = () => (
-  <Box bgcolor="#f9fafb" py={8} px={{ xs: 3, md: 8 }}>
+  <Box bgcolor="#f9fafb" py={8} px={{ xs: 3, md: 8 }}
+  
+  >
     {/* Header */}
    <Box textAlign="center" mb={{ xs: 6, md: 10 }} px={2}>
   <Typography
@@ -68,7 +70,12 @@ const JobBoard = () => (
         lg: '2.70rem',    // large screens
       },
       lineHeight: 1.1,
+     display: {
+      xs: 'none',    // hide on mobile
+      sm: 'block',   // show on tablets and above
+    },
     }}
+    
   >
     Your Next Career-Defining Move
   </Typography>
@@ -85,7 +92,11 @@ const JobBoard = () => (
         sm: "1.05rem",
         md: "1.15rem",
         lg: '0.95rem'
-      }
+      },
+      display: {
+      xs: 'none',    // hide on mobile
+      sm: 'block',   // show on tablets and above
+    },
     }}
   >
     Discover precisely matched roles at premier companies, filtered for your growth trajectory
@@ -94,9 +105,17 @@ const JobBoard = () => (
 
 <Grid container spacing={4}>
   {/* Sidebar */}
+ 
   <Grid item xs={12} md={3}>
-    <Paper variant="outlined" sx={{ p: { xs: 2, sm: 3 } }}>
-      <Box display="flex" alignItems="center" mb={2}>
+  <Paper variant="outlined" sx={{ p: { xs: 2, sm: 3 } }}>
+    <Box
+      // bgcolor="common.white"
+      p={1.5}
+      borderRadius={1}
+      boxShadow={1}
+      mb={2}
+    >
+      <Box display="flex" alignItems="center">
         <Box
           width={4}
           height={50}
@@ -104,48 +123,59 @@ const JobBoard = () => (
           borderRadius={1}
           mr={1}
         />
-        <Typography variant="subtitle1" fontWeight="bold" fontSize={{ xs: 16, md: 18 }}>
+        <Typography
+          variant="subtitle1"
+          fontWeight="bold"
+          fontSize={{ xs: 16, md: 18 }}
+        >
           All positions (255)
         </Typography>
       </Box>
+    </Box>
 
-      <Stack spacing={1} pl={1}>
-        <Typography sx={{ cursor: "pointer", color: "#0040D8", fontSize: { xs: 14, md: 16 } }}>
-          Data Science (150)
-        </Typography>
-        <Typography color="text.secondary" fontSize={{ xs: 14, md: 16 }}>
-          Product (105)
-        </Typography>
-      </Stack>
-
+    <Stack spacing={1} pl={1}>
       <Typography
-        variant="caption"
-        color="text.secondary"
-        mt={4}
-        ml={1}
-        display="block"
-        fontSize={{ xs: 12, md: 13 }}
+        sx={{
+          cursor: "pointer",
+          color: "#0040D8",
+          fontSize: { xs: 14, md: 16 },
+        }}
       >
-        Upload your resume to get better job recommendations, accurate job matches, and access to AI-powered features.
+        Data Science (150)
       </Typography>
+      <Typography color="text.secondary" fontSize={{ xs: 14, md: 16 }}>
+        Product (105)
+      </Typography>
+    </Stack>
 
-      <Box mt={2} textAlign="center">
-        <Button
-          variant="outlined"
-          sx={{
-            borderRadius: 999,
-            px: 4,
-            border: "1px solid #0040D8",
-            color: "#0040D8",
-            fontSize: { xs: 14, md: 15 },
-            textTransform: 'none',
-          }}
-        >
-          Upload your resume
-        </Button>
-      </Box>
-    </Paper>
-  </Grid>
+    <Typography
+      variant="caption"
+      color="text.secondary"
+      mt={4}
+      ml={1}
+      display="block"
+      fontSize={{ xs: 12, md: 13 }}
+    >
+      Upload your resume to get better job recommendations, accurate job matches, and access to AI-powered features.
+    </Typography>
+
+    <Box mt={2} textAlign="center">
+      <Button
+        variant="outlined"
+        sx={{
+          borderRadius: 999,
+          px: 4,
+          border: "1px solid #0040D8",
+          color: "#0040D8",
+          fontSize: { xs: 14, md: 15 },
+          textTransform: "none",
+        }}
+      >
+        Upload your resume
+      </Button>
+    </Box>
+  </Paper>
+</Grid>
 
   {/* Job Listings */}
   <Grid item xs={12} md={9} px={{ xs: 2, sm: 4, md: 6 }}>

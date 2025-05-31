@@ -11,7 +11,7 @@ const MOCK_TITLE = _postTitles[2];
 const ROOTS = {
   AUTH: '/auth',
   AUTH_DEMO: '/auth-demo',
-  DASHBOARD: '/dashboard',
+  // DASHBOARD: '/dashboard',
 };
 
 // ----------------------------------------------------------------------
@@ -20,9 +20,10 @@ export const paths = {
   jobDetails: '/job-details',
   careerResume: '/career-resume',
   fobo:'/fobo',
-  Dashboard: '/Dashboard',
-  // Profile:'/Profile',
-  comingSoon: '/coming-soon',
+  ComingSoonPage:'/ComingSoonPage',
+  Dashboardpage: '/Dashboardpage',  
+  Profile:'/Profile',
+  comingsoon: '/comingsoon',
   maintenance: '/maintenance',
   pricing: '/pricing',
   payment: '/payment',

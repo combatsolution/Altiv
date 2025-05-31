@@ -8,6 +8,7 @@ import { useTheme, useMediaQuery } from "@mui/material";
 import { useState, useRef } from "react";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { paths } from 'src/routes/paths';
 
 import security from "src/Fogoimages/flowstructure.png";
 
@@ -95,6 +96,9 @@ function Datasecuritypage() {
                                     backgroundColor: '#3f8de0',
                                 },
                             }}
+                            onClick={()=> navigate(paths.comingsoon)}
+
+                            
                         >
                             Read more <ArrowForwardIcon />
                         </Button>
