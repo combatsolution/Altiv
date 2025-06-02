@@ -44,7 +44,7 @@ function FoboDefineSection() {
               sx={{
                 fontFamily: "Inter, sans-serif",
                 fontWeight: 700,
-                fontSize: { xs: "36px", sm: "48px", md: "64px" },
+                fontSize: { xs: "36px", sm: "48px", md: "64px", lg:'72px' },
                 lineHeight: "110%",
                 letterSpacing: "-0.02em",
                 color: "#212529",
@@ -58,7 +58,7 @@ function FoboDefineSection() {
               sx={{
                 fontFamily: "Inter, sans-serif",
                 fontWeight: 400,
-                fontSize: "18px",
+                fontSize: {xs:'18px', lg:'18px'},
                 lineHeight: "30px",
                 letterSpacing: "-0.02em",
                 color: "#000000",

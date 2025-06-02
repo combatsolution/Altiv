@@ -106,14 +106,14 @@ function SmartJobFeed() {
                onClick={()=>navigate(paths.comingsoon)}
                 
                 sx={{
-                  width:{
-                  xs:'360px'},
+                  width:{ xs:'360px'},
                   bgcolor: "#0040D8",
                   color: "#fff",
                   borderRadius: "999px",
-                  px: { xs: 1, sm: 4 },
+                  px: { xs: 0, sm: 4 },
                   py: { xs: 1, sm: 1.5 },
                   textTransform: "none",
+                  ml:{xs: -2, sm: 2 },
                 }}
               >
                 Access Personal Matches

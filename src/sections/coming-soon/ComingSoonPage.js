@@ -16,7 +16,7 @@ import { ComingSoonIllustration } from 'src/assets/illustrations';
 
 // ----------------------------------------------------------------------
 
-export default function ComingSoonView() {
+export default function ComingSoonPage() {
   const { days, hours, minutes, seconds } = useCountdownDate(new Date('07/07/2024 21:30'));
 
   return (
@@ -99,21 +99,7 @@ export default function ComingSoonView() {
     }}
   />
 
-      {/* <Stack spacing={1} alignItems="center" justifyContent="center" direction="row">
-        {_socials.map((social) => (
-          <IconButton
-            key={social.name}
-            sx={{
-              color: social.color,
-              '&:hover': {
-                bgcolor: alpha(social.color, 0.08),
-              },
-            }}
-          >
-            <Iconify icon={social.icon} />
-          </IconButton>
-        ))}
-      </Stack> */}
+     
     </>
   );
 }

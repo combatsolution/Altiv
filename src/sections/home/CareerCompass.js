@@ -41,7 +41,7 @@ function CareerCompass() {
                     xs: '187.08px',
                     lg: '397px',
                   },
-              borderRadius: 2,
+              borderRadius: 0,
               display: "block",
               mx: { xs: "auto", md: 0 },
             }}

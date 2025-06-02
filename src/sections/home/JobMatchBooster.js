@@ -148,6 +148,7 @@ function JobMatchBooster() {
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1, sm: 1.5 },
                   textTransform: "none",
+                   ml:{xs: -1, sm: 2 },
                 }}
                 onClick={()=>navigate(paths.comingsoon)}
               >
