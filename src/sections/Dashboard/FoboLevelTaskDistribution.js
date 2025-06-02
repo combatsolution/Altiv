@@ -1,286 +1,47 @@
-// import React, { useState } from "react";
-// import {
-//   Box,
-//   Typography,
-//   Grid,
-//   Card,
-//   Button,
-// } from "@mui/material";
-// import {
-//   PieChart,
-//   Pie,
-//   Sector,
-//   Cell,
-//   ResponsiveContainer,
-//   Legend,
-//   Tooltip,
-// } from "recharts";
-// import GaugeChart from "react-gauge-chart";
-
-// const pieData = [
-//   {
-//     name: "Augmentation",
-//     value: 30,
-//     color: "#FF8A00",
-//     detail:
-//       "AI assists you, so time is available helping you do better work.",
-//   },
-//   {
-//     name: "Automation",
-//     value: 40,
-//     color: "#E63946",
-//     detail:
-//       "Tasks at risk from full AI takeover, replacing human work.",
-//   },
-//   {
-//     name: "Human",
-//     value: 30,
-//     color: "#2A9D8F",
-//     detail: "Tasks that AI can't easily replace.",
-//   },
-// ];
-
-// const renderActiveShape = (props) => {
-//   const {
-//     cx,
-//     cy,
-//     innerRadius,
-//     outerRadius,
-//     startAngle,
-//     endAngle,
-//     fill,
-//   } = props;
-//   return (
-//     <g>
-//       <Sector
-//         cx={cx}
-//         cy={cy}
-//         innerRadius={innerRadius}
-//         outerRadius={outerRadius + 10}
-//         startAngle={startAngle}
-//         endAngle={endAngle}
-//         fill={fill}
-//       />
-//     </g>
-//   );
-// };
-
-// export default function FoboLevelTaskDistribution() {
-//   const [activeIndex, setActiveIndex] = useState(null);
-//   const [selectedSection, setSelectedSection] = useState(null);
-
-//   const handlePieClick = (_, index) => {
-//     setActiveIndex(index);
-//     setSelectedSection(pieData[index]);
-//   };
-
-//   const handleMouseLeave = () => {
-//     setActiveIndex(null);
-//     setSelectedSection(null);
-//   };
-
-//   return (
-//     <Box px={{ xs: 2, md: 6 }} py={4}>
-//       <Grid container spacing={4}>
-//         {/* FOBO Level */}
-//         <Grid item xs={12} md={6}>
-//           <Typography variant="h6" fontWeight="bold" gutterBottom>
-//             FOBO Level
-//           </Typography>
-//           <Box sx={{ maxWidth: 280, mx: "auto" }}>
-//             <GaugeChart
-//               id="fobo-gauge"
-//               nrOfLevels={3}
-//               arcsLength={[0.3, 0.4, 0.3]}
-//               colors={["#00C853", "#FFEB3B", "#E53935"]}
-//               percent={0.24}
-//               arcPadding={0.02}
-//               textColor="#000"
-//               formatTextValue={() => "24"}
-//             />
-//           </Box>
-//         </Grid>
-
-//         {/* Task Distribution */}
-//         <Grid item xs={12} md={6}>
-//           <Typography variant="h6" fontWeight="bold" gutterBottom>
-//             Task Distribution
-//           </Typography>
-//           <ResponsiveContainer width="100%" height={250}>
-//             <PieChart>
-//               <Pie
-//                 data={pieData}
-//                 dataKey="value"
-//                 nameKey="name"
-//                 cx="50%"
-//                 cy="50%"
-//                 innerRadius={60}
-//                 outerRadius={80}
-//                 activeIndex={activeIndex}
-//                 activeShape={renderActiveShape}
-//                 onClick={handlePieClick}
-//                 onMouseLeave={handleMouseLeave}
-//               >
-//                 {pieData.map((entry, idx) => (
-//                   <Cell key={`cell-${idx}`} fill={entry.color} />
-//                 ))}
-//               </Pie>
-//               <Tooltip />
-//               <Legend
-//                 verticalAlign="bottom"
-//                 layout="horizontal"
-//                 align="center"
-//               />
-//             </PieChart>
-//           </ResponsiveContainer>
-//         </Grid>
-
-//         {/* Selected Section Detail */}
-//         {selectedSection && (
-//           <Grid item xs={12}>
-//             <Card sx={{ p: 2, backgroundColor: "#F5FAFF" }}>
-//               <Typography
-//                 variant="h6"
-//                 color="primary"
-//                 gutterBottom
-//               >
-//                 {selectedSection.name} Details
-//               </Typography>
-//               <Typography variant="body2">
-//                 {selectedSection.detail}
-//               </Typography>
-//             </Card>
-//           </Grid>
-//         )}
-
-//         {/* Summary Text Placeholder */}
-//         <Grid item xs={12}>
-//           <Typography variant="h6" fontWeight="bold" gutterBottom>
-//             Lorem Ipsum
-//           </Typography>
-//           <Typography variant="body2">• Lorem Ipsum</Typography>
-//           <Typography variant="body2">• Lorem Ipsum</Typography>
-//           <Typography variant="body2">• Lorem Ipsum</Typography>
-//         </Grid>
-
-//         {/* Recommendations */}
-//         <Grid item xs={12}>
-//           <Typography variant="h6" fontWeight="bold" gutterBottom>
-//             Recommended Growth Strategies For &lt;First Name&gt;
-//           </Typography>
-//           <Box
-//             mt={2}
-//             sx={{ backgroundColor: "#F5FAFF", borderRadius: 2, p: 2 }}
-//           >
-//             {[
-//               {
-//                 title: "Master AI-Powered Product Strategies",
-//                 benefit:
-//                   "Lead AI integration in EdTech products, staying ahead of industry changes",
-//               },
-//               {
-//                 title:
-//                   "Develop Advanced Learning Experience Design Skills",
-//                 benefit:
-//                   "Create unique human-centered solutions that AI cannot easily replicate",
-//               },
-//               {
-//                 title: "Focus on Complex Partnership Development",
-//                 benefit:
-//                   "Build relationships and strategies that require human judgement and leadership",
-//               },
-//               {
-//                 title: "Strengthen Data-Driven Decision Making",
-//                 benefit:
-//                   "Use AI tools to enhance strategic planning and product innovation",
-//               },
-//             ].map((rec, i) => (
-//               <Box key={i} mb={2}>
-//                 <Typography fontWeight="bold" gutterBottom>
-//                   {i + 1}. {rec.title}
-//                 </Typography>
-//                 <Typography variant="body2">
-//                   Benefit: {rec.benefit}
-//                 </Typography>
-//               </Box>
-//             ))}
-//           </Box>
-//         </Grid>
-
-//         {/* CTA Button */}
-//         <Grid item xs={12} textAlign="center">
-//           <Button
-//             variant="contained"
-//             sx={{
-//               backgroundColor: "#2C47D3",
-//               borderRadius: 10,
-//               px: 4,
-//               textTransform: "none",
-//               fontWeight: "bold",
-//             }}
-//           >
-//             Beat FOBO Now
-//           </Button>
-//         </Grid>
-//       </Grid>
-//     </Box>
-//   );
-// }
 
 
-import React, { useState } from "react"; 
+
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
   Grid,
   Card,
-  Button,
-} from "@mui/material";
+  Button
+} from '@mui/material';
 import {
   PieChart,
   Pie,
   Sector,
   Cell,
   ResponsiveContainer,
-  Legend,
-  Tooltip,
-  Customized,
-} from "recharts";
-import GaugeChart from "react-gauge-chart";
+  Tooltip
+} from 'recharts';
+import GaugeChart from 'react-gauge-chart';
 
 const pieData = [
   {
-    name: "Augmentation",
+    name: 'Augmentation',
     value: 30,
-    color: "#FFB95A",
-    detail:
-      "AI assists you, so time is available helping you do better work.",
+    color: '#FFB95A',
+    detail: 'AI assists you, so time is available helping you do better work.',
   },
   {
-    name: "Automation",
+    name: 'Automation',
     value: 40,
-    color: "#EF4444",
-    detail:
-      "Tasks at risk from full AI takeover, replacing human work.",
+    color: '#EF4444',
+    detail: 'Tasks at risk from full AI takeover, replacing human work.',
   },
   {
-    name: "Human",
+    name: 'Human',
     value: 30,
-    color: "#84CC16",
+    color: '#84CC16',
     detail: "Tasks that AI can't easily replace.",
   },
 ];
 
 const renderActiveShape = (props) => {
-  const {
-    cx,
-    cy,
-    innerRadius,
-    outerRadius,
-    startAngle,
-    endAngle,
-    fill,
-  } = props;
+  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
   return (
     <g>
       <Sector
@@ -310,34 +71,74 @@ export default function FoboLevelTaskDistribution() {
     setSelectedSection(null);
   };
 
+  // --- FOBO Level Logic ---
+  // You can replace this constant with a prop or state later if needed
+  const foboValue = 24;
+  const value = Math.max(0, Math.min(foboValue, 100));
+  const percent = value / 100;
+
+  // Choose numeric color based on ranges: 0-39 green, 40-69 yellow, 70-100 red
+  const getLevelColor = () => {
+    if (value <= 39) return '#00C853';
+    if (value <= 69) return '#FFEB3B';
+    return '#E53935';
+  };
+  // --- end FOBO Level Logic ---
+
   return (
-    <Box px={{ xs: 2, md: 6 }} py={4} sx={{ position: "relative" }}>
+    <Box px={{ xs: 2, md: 6, lg: -6 }} py={2} sx={{ position: 'relative' }}>
       <Grid container spacing={4}>
         {/* FOBO Level */}
         <Grid item xs={12} md={6}>
-          <Typography variant="h6" fontWeight="bold" gutterBottom>
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            sx={{ textAlign: 'left' }}
+            gutterBottom
+          >
             FOBO Level
           </Typography>
-          <Box sx={{ maxWidth: 280, mx: "auto" }}>
+
+          <Box sx={{ width: '100%', maxWidth: 330, mx: 'auto', mt: 2 }}>
             <GaugeChart
               id="fobo-gauge"
-              nrOfLevels={3}
-              arcsLength={[0.3, 0.4, 0.3]}
-              colors={["#00C853", "#FFEB3B", "#E53935"]}
-              percent={0.24}
+              nrOfLevels={5}
+              // Roughly 0–39 = 39%, 40–69 = 30%, 70–100 = 31%
+              arcsLength={[0.39, 0.30, 0.31]}
+              colors={['#00C853', '#FFEB3B', '#E53935']}
+              percent={percent}
+               innerRadius={90}
               arcPadding={0.02}
               textColor="#000"
-              formatTextValue={() => "24"}
+              needleColor="#424242"
+              formatTextValue={() => `${value}`}
             />
+
+            {/* Large numeric display below the gauge */}
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              textAlign="center"
+              mt={1}
+              color={getLevelColor()}
+            >
+              {value}
+            </Typography>
           </Box>
         </Grid>
 
         {/* Task Distribution */}
         <Grid item xs={12} md={6}>
-          <Typography variant="h6" fontWeight="bold" gutterBottom>
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            gutterBottom
+            sx={{ textAlign: { xs: 'center', md: 'left' } }}
+          >
             Task Distribution
           </Typography>
-          {/* <ResponsiveContainer width="100%" height={250}>
+
+          <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie
                 data={pieData}
@@ -345,8 +146,10 @@ export default function FoboLevelTaskDistribution() {
                 nameKey="name"
                 cx="50%"
                 cy="50%"
-                innerRadius={60}
+                innerRadius={40}
                 outerRadius={80}
+                paddingAngle={2}
+                cornerRadius={8}
                 activeIndex={activeIndex}
                 activeShape={renderActiveShape}
                 onClick={handlePieClick}
@@ -356,100 +159,70 @@ export default function FoboLevelTaskDistribution() {
                   <Cell key={`cell-${idx}`} fill={entry.color} />
                 ))}
               </Pie>
+
               <Tooltip />
-              <Legend
-                verticalAlign="bottom"
-                layout="horizontal"
-                align="center"
-              />
             </PieChart>
-          </ResponsiveContainer> */}
+          </ResponsiveContainer>
 
-          <ResponsiveContainer width="100%" height={250}>
-  <PieChart>
-    <Pie
-      data={pieData}
-      dataKey="value"
-      nameKey="name"
-      cx="50%"
-      cy="50%"
-      innerRadius={60}
-      outerRadius={80}
-      activeIndex={activeIndex}
-      activeShape={renderActiveShape}
-      onClick={handlePieClick}
-      onMouseLeave={handleMouseLeave}
-    >
-      {pieData.map((entry, idx) => (
-        <Cell key={`cell-${idx}`} fill={entry.color} />
-      ))}
-    </Pie>
+          {/* Legend Below the Chart */}
+          <Box
+            sx={{
+              mt: { xs: 2, md: 3 },
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: { xs: 'center', md: 'flex-start' },
+              gap: 1,
+            }}
+          >
+            {/* Automation */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box sx={{ width: 20, height: 20, bgcolor: '#EF4444' }} />
+              <Typography
+                sx={{
+                  fontFamily: 'Roboto',
+                  fontSize: { xs: '12px', md: '12px', lg: '12px' },
+                  color: '#090808',
+                }}
+              >
+                <strong>Automation:</strong> AI can do these tasks itself, replacing human work
+              </Typography>
+            </Box>
 
-    {/* Colored boxes inside the chart */}
-    <Customized
-      component={({ width, height }) => (
-        <g>
-          {/* Automation - Red */}
-          <rect
-            x={width - 160}
-            y={60}
-            width={40}
-            height={20}
-            rx={4}
-            ry={4}
-            fill="#EF4444"
-          />
-          <text x={width - 110} y={75} fontSize="12" alignmentBaseline="middle">
-            Automation
-          </text>
+            {/* Augmentation */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box sx={{ width: 20, height: 20, bgcolor: '#FFB95A' }} />
+              <Typography
+                sx={{
+                  fontFamily: 'Roboto',
+                  fontSize: { xs: '12px', md: '12px' },
+                  color: '#090808',
+                }}
+              >
+                <strong>Augmentation:</strong> AI works with you, like a smart assistant helping you do better work
+              </Typography>
+            </Box>
 
-          {/* Augmentation - Orange */}
-          <rect
-            x={width - 160}
-            y={90}
-            width={40}
-            height={20}
-            rx={4}
-            ry={4}
-            fill="#FFB95A"
-          />
-          <text x={width - 110} y={105} fontSize="12" alignmentBaseline="middle">
-            Augmentation
-          </text>
-
-          {/* Human - Green */}
-          <rect
-            x={width - 160}
-            y={120}
-            width={40}
-            height={20}
-            rx={4}
-            ry={4}
-            fill="#84CC16"
-          />
-          <text x={width - 110} y={135} fontSize="12" alignmentBaseline="middle">
-            Human
-          </text>
-        </g>
-      )}
-    />
-
-    <Tooltip />
-    <Legend verticalAlign="bottom" layout="horizontal" align="center" />
-  </PieChart>
-</ResponsiveContainer>
-
+            {/* Human */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box sx={{ width: 20, height: 20, bgcolor: '#84CC16' }} />
+              <Typography
+                sx={{
+                  fontFamily: 'Roboto',
+                  fontSize: { xs: '12px', md: '12px' },
+                  color: '#090808',
+                }}
+              >
+                <strong>Human:</strong> Tasks that AI can’t likely replace
+              </Typography>
+            </Box>
+          </Box>
         </Grid>
 
         {/* Selected Section Detail */}
         {selectedSection && (
           <Grid item xs={12}>
-            <Card sx={{ p: 2, backgroundColor: "#F5FAFF" }}>
-              <Typography
-                variant="h6"
-                color="primary"
-                gutterBottom
-              >
+            <Card sx={{ p: 2, backgroundColor: '#F5FAFF' }}>
+              <Typography variant="h6" color="primary" gutterBottom>
                 {selectedSection.name} Details
               </Typography>
               <Typography variant="body2">
@@ -474,31 +247,23 @@ export default function FoboLevelTaskDistribution() {
           <Typography variant="h6" fontWeight="bold" gutterBottom>
             Recommended Growth Strategies For &lt;First Name&gt;
           </Typography>
-          <Box
-            mt={2}
-            sx={{ backgroundColor: "#F5FAFF", borderRadius: 2, p: 2 }}
-          >
+          <Box mt={2} sx={{ backgroundColor: '#F5FAFF', borderRadius: 2, p: 2 }}>
             {[
               {
-                title: "Master AI-Powered Product Strategies",
-                benefit:
-                  "Lead AI integration in EdTech products, staying ahead of industry changes",
+                title: 'Master AI-Powered Product Strategies',
+                benefit: 'Lead AI integration in EdTech products, staying ahead of industry changes',
               },
               {
-                title:
-                  "Develop Advanced Learning Experience Design Skills",
-                benefit:
-                  "Create unique human-centered solutions that AI cannot easily replicate",
+                title: 'Develop Advanced Learning Experience Design Skills',
+                benefit: 'Create unique human-centered solutions that AI cannot easily replicate',
               },
               {
-                title: "Focus on Complex Partnership Development",
-                benefit:
-                  "Build relationships and strategies that require human judgement and leadership",
+                title: 'Focus on Complex Partnership Development',
+                benefit: 'Build relationships and strategies that require human judgement and leadership',
               },
               {
-                title: "Strengthen Data-Driven Decision Making",
-                benefit:
-                  "Use AI tools to enhance strategic planning and product innovation",
+                title: 'Strengthen Data-Driven Decision Making',
+                benefit: 'Use AI tools to enhance strategic planning and product innovation',
               },
             ].map((rec, i) => (
               <Box key={i} mb={2}>
@@ -514,60 +279,23 @@ export default function FoboLevelTaskDistribution() {
         </Grid>
 
         {/* CTA Button */}
-        <Grid item xs={12} textAlign="center">
+        <Grid item xs={12} textAlign="left">
           <Button
             variant="contained"
             sx={{
-              backgroundColor: "#2C47D3",
+              backgroundColor: '#2C47D3',
               borderRadius: 10,
               px: 4,
-              textTransform: "none",
-              fontWeight: "bold",
+              textTransform: 'none',
+              fontWeight: 'bold',
             }}
           >
             Beat FOBO Now
           </Button>
         </Grid>
       </Grid>
-
-      Absolute Positioned Color Labels
-      {/* <Box
-        sx={{
-          position: "absolute",
-          width: "192.87px",
-          height: "97.8px",
-          top: "419.65px",
-          left: "1002.43px",
-          backgroundColor: "#EF4444",
-          borderRadius: 2,
-          zIndex: 10,
-        }}
-      /> */}
-      {/* <Box
-        sx={{
-          position: "absolute",
-          width: "118.8px",
-          height: "138.45px",
-          top: "315px",
-          left: "985.78px",
-          backgroundColor: "#FFB95A",
-          borderRadius: 2,
-          zIndex: 10,
-        }}
-      /> */}
-      {/* <Box
-        sx={{
-          position: "absolute",
-          width: "90px",
-          height: "93.14px",
-          top: "319.66px",
-          left: "1105.31px",
-          backgroundColor: "#84CC16",
-          borderRadius: 2,
-          zIndex: 10,
-        }}
-      /> */}
     </Box>
   );
 }
+
 

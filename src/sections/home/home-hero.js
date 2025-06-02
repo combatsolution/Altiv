@@ -84,14 +84,14 @@ function HomeHero() {
                 },
                 lineHeight: '160%',
                 width: {
-                  xs: '100%',       // Responsive on mobile
+                  xs: '100%',       
                   sm: '100%',
-                  md: '489px',       // Fixed from tablet upward
+                  md: '489px',       
                 },
                 height: {
-                  xs: 'auto',        // Auto height on mobile
+                  xs: 'auto',       
                   sm: 'auto',
-                  md: '116px',       // Fixed from tablet upward
+                  md: '116px',       
                 },
               }}
             >
@@ -103,21 +103,7 @@ function HomeHero() {
 
 
             <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
-              {/* <Button
-                variant="contained" size="large"
-                sx={{
-                  bgcolor: "#0040D8",
-                  "&:hover": { bgcolor: blue[700] },
-                  width: { xs: "100%", sm: "100%", md: "40%" },
-                  borderRadius: "29px",
-                  marginRight: "-70px",
-                  mb:{ xs:'20px', sm:'0'},
-                  mt:{ xs:'50px', sm:'0'},
-                }}
-                onClick={() => setOpen(true)}
-              >
-                Start Free
-              </Button> */}
+              
 
               <Button
                 variant="contained"
