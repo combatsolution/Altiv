@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { FoboView } from 'src/sections/FOBO/View';
 // sections
 import { HomeView } from 'src/sections/home/view';
 
@@ -8,10 +9,11 @@ export default function HomePage() {
   return (
     <>
       <Helmet>
-        <title> Minimal: The starting point for your next project </title>
+        <title> Altiv:FOBO View </title>
       </Helmet>
 
-      <HomeView />
+      {/* <HomeView /> */}
+         <FoboView/>
     </>
   );
 }

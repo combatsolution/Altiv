@@ -15,7 +15,7 @@ import SmartJobFeed from '../SmartJobFeed';
 import JobMatchBooster from '../JobMatchBooster';
 import JobBoard from '../JobBoard';
 import WorkingProcessSection1 from '../WorkingProcessSection1';
-// import ComingSoon from '../ComingSoon';
+//  import ComingSoon from '../ComingSoon';
 
 
 
@@ -73,7 +73,7 @@ export default function HomeView() {
       <JobMatchBooster />
       <WorkingProcessSection1/>
       <JobBoard />
-      
+      {/* <ComingSoon/> */}
       {/* <ComingSoon /> */}
      
 

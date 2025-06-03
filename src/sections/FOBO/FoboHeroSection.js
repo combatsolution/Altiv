@@ -97,7 +97,7 @@ const FoboHeroSection = () => {
         size="large"
         endIcon={<ArrowForwardIcon />}
         sx={{ mt: 4, px: 4, bgcolor: '#4F9CF9' }}
-        onClick={()=>navigate(paths.comingsoon)}
+        onClick={()=>navigate(paths.comingSoon)}
       >
         Boost My Application
       </Button>

@@ -96,7 +96,7 @@ function Datasecuritypage() {
                                     backgroundColor: '#3f8de0',
                                 },
                             }}
-                            onClick={()=> navigate(paths.comingsoon)}
+                            onClick={()=> navigate(paths.comingSoon)}
 
                             
                         >

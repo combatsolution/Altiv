@@ -370,7 +370,7 @@ function HomeHero() {
 
               <Button
                 variant="outlined"
-                onClick={() => navigate(paths.comingsoon)}
+                onClick={() => navigate(paths.comingSoon)}
                 sx={{
                   textTransform: "none",
                   color: "#0040D8",

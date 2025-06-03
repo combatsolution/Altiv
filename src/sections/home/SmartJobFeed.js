@@ -103,7 +103,7 @@ function SmartJobFeed() {
             <Box pt={1}>
               <Button
                 variant="contained"
-               onClick={()=>navigate(paths.comingsoon)}
+               onClick={()=>navigate(paths.comingSoon)}
                 
                 sx={{
                   width:{ xs:'360px'},
