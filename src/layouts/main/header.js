@@ -1,3 +1,5 @@
+
+
 // import { m } from 'framer-motion';
 // import { alpha, useTheme } from '@mui/material/styles';
 // import Box from '@mui/material/Box';
@@ -10,7 +12,7 @@
 // import { Avatar, IconButton, InputBase, Typography } from '@mui/material';
 // import SearchIcon from '@mui/icons-material/Search';
 // import NotificationsIcon from '@mui/icons-material/Notifications';
-// import { useNavigate, useLocation } from 'react-router-dom'; // Import useLocation
+// import { useNavigate, useLocation } from 'react-router-dom';
 // import { useOffSetTop } from 'src/hooks/use-off-set-top';
 // import { useResponsive } from 'src/hooks/use-responsive';
 // import { bgBlur } from 'src/theme/css';
@@ -25,22 +27,31 @@
 // import { SettingsButton, HeaderShadow, LoginButton } from '../_common';
 
 // export default function Header() {
-//   const { user, loading } = useAuthContext();
+//   const { user, loading, logout } = useAuthContext();
 //   const theme = useTheme();
 //   const mdUp = useResponsive('up', 'md');
 //   const offsetTop = useOffSetTop(HEADER.H_DESKTOP);
 //   const navigate = useNavigate();
-//   const location = useLocation(); // Initialize useLocation to get current path
+//   const location = useLocation();
 
 //   if (loading) {
 //     return <div>Loading...</div>;
 //   }
 
-//   // Check if the current path is paths.profile
 //   const isProfilePage = location.pathname === paths.Profile;
+//   const isLoginPage = location.pathname === paths.auth.jwt.login;
+
+//   const handleSignout = () => {
+//     logout();
+//     localStorage.removeItem('token');
+//     navigate(paths.auth.jwt.login);
+//   };
+
+//   const handleprofile = () => {
+//     navigate(paths.Profile);
+//   };
 
 //   return (
-
 //     <AppBar>
 //       <Toolbar
 //         disableGutters
@@ -63,7 +74,17 @@
 //           }),
 //         }}
 //       >
-//         <Container sx={{ height: 1, display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
+//         <Container
+//           sx={{
+//             height: 1,
+//             display: 'flex',
+//             alignItems: 'center',
+//             marginLeft: {xs:'12px', lg:'80px'},
+//             maxWidth: { xs: '600px', sm: 600, md: 960 },
+//             px: { xs: 1, sm: 2, md: 3 },
+//             overflow: 'hidden',
+//           }}
+//         >
 //           <Badge
 //             sx={{
 //               [`& .${badgeClasses.badge}`]: {
@@ -72,24 +93,48 @@
 //               },
 //             }}
 //           >
-//             <img src={Altivlogo} alt="BigCo Inc. logo" />
+//             <Box
+//               role="button"
+//               tabIndex={0}
+//               onClick={() => navigate('/')}
+//               onKeyDown={(e) => {
+//                 if (e.key === 'Enter' || e.key === ' ') {
+//                   navigate('/');
+//                 }
+//               }}
+//               sx={{
+//                 cursor: 'pointer',
+//                 display: 'inline-block',
+//                 maxWidth: { xs: 120, sm: 150, md: 180 },
+                
+//                 flexShrink: 0,
+//                 img: {
+//                   width: '100%',
+//                   height: 'auto',
+//                   objectFit: 'contain',
+//                 },
+//               }}
+//               aria-label="Go to home"
+//             >
+//               <img src={Altivlogo} alt="BigCo Inc. logo" />
+//             </Box>
 //           </Badge>
 
-//           <Box sx={{ flexGrow: 1 }} />
+//           <Box sx={{ flexGrow: 1, minWidth: 0 }} />
 
 //           {isProfilePage ? (
-//             // Render this Box when on paths.profile
 //             <Box
 //               sx={{
 //                 display: 'flex',
 //                 alignItems: 'center',
 //                 justifyContent: 'flex-end',
 //                 p: 2,
-//                 gap: 4,
+//                 gap: 2,
+//                 flexWrap: { xs: 'wrap', lg: 'nowrap' },
 //                 backgroundColor: '#fff',
+//                 width: '100%',
 //               }}
 //             >
-//               {/* Search Input */}
 //               <Box
 //                 sx={{
 //                   display: 'flex',
@@ -98,33 +143,35 @@
 //                   borderRadius: '8px',
 //                   px: 1.5,
 //                   py: 0.5,
-//                   width: 230,
+//                   width: { xs: '100%', sm: 300, lg: 'auto' },
+//                   minWidth: 0,
+//                   flexShrink: 1,
 //                 }}
 //               >
 //                 <SearchIcon sx={{ fontSize: 18, color: 'text.secondary', mr: 1 }} />
-//                 <InputBase
-//                   placeholder="Type here…"
-//                   sx={{ fontSize: 14, flex: 1 }}
-//                 />
+//                 <InputBase placeholder="Type here…" sx={{ fontSize: 14, flex: 1, minWidth: 0 }} />
 //               </Box>
 
-//               {/* Nav Links */}
-//               <Typography variant="body2" sx={{ cursor: 'pointer', fontSize: 15 }}>
-//                 My Jobs
-//               </Typography>
 //               <Typography
 //                 variant="body2"
-//                 sx={{ cursor: 'pointer', fontSize: 15 }}
-//                 onClick={() => {
-//                   // Clear local storage, session, or auth context if needed
-//                   localStorage.clear();  // Or your auth clear logic
-//                   navigate(paths.auth.jwt.login); // Or '/' to redirect to home page
-//                 }}
+//                 sx={{ cursor: 'pointer', fontSize: 15, whiteSpace: 'nowrap' }}
+//                 onClick={handleprofile}
+//               >
+//                 My Resumes
+//               </Typography>
+
+//               <Typography variant="body2" sx={{ cursor: 'pointer', fontSize: 15, whiteSpace: 'nowrap' }}>
+//                 My Jobs
+//               </Typography>
+
+//               <Typography
+//                 variant="body2"
+//                 sx={{ cursor: 'pointer', fontSize: 15, whiteSpace: 'nowrap' }}
+//                 onClick={handleSignout}
 //               >
 //                 Signout
 //               </Typography>
 
-//               {/* Notification Icon */}
 //               <IconButton>
 //                 <Badge badgeContent={0} color="error">
 //                   <NotificationsIcon sx={{ color: 'black' }} />
@@ -132,11 +179,16 @@
 //               </IconButton>
 //             </Box>
 //           ) : (
-//             // Render the default header content for other pages
 //             <>
-//               {mdUp && <NavDesktop offsetTop={offsetTop} sx={{ marginLeft: '20px' }} data={navConfig} />}
+//               {mdUp && (
+//                 <NavDesktop offsetTop={offsetTop} sx={{ marginLeft: '2px' }} data={navConfig} />
+//               )}
 
-//               <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse' }} sx={{ color: '#0040D8' }}>
+//               <Stack
+//                 alignItems="center"
+//                 direction={{ xs: 'row', md: 'row-reverse' }}
+//                 sx={{ color: '#0040D8' }}
+//               >
 //                 {!user && (
 //                   <Button
 //                     variant="contained"
@@ -157,39 +209,40 @@
 //                   </Button>
 //                 )}
 
-//                 {user && (
-//                   <IconButton
-//                     component={m.button}
-//                     whileTap="tap"
-//                     whileHover="hover"
-//                     variants={varHover(1.05)}
-//                     onClick={() => navigate(paths.Profile)} // Navigate to /profile
-//                     sx={{
-//                       width: 40,
-//                       height: 40,
-//                       background: (_theme) => alpha(theme.palette.grey[500], 0.08),
-//                       '&:hover': {
-//                         background: (_theme) => alpha(theme.palette.grey[500], 0.16),
-//                       },
-//                     }}
-//                   >
-//                     <Avatar
-//                       src={user?.photoURL || ''}
-//                       alt={user?.displayName || `${user?.firstName} ${user?.lastName}`}
+//                 {user &&
+//                   !isLoginPage && (
+//                     <IconButton
+//                       component={m.button}
+//                       whileTap="tap"
+//                       whileHover="hover"
+//                       variants={varHover(1.05)}
+//                       onClick={() => navigate(paths.Profile)}
 //                       sx={{
-//                         width: 36,
-//                         height: 36,
-//                         border: (_theme) => `solid 2px ${theme.palette.background.default}`,
-//                         backgroundColor: theme.palette.grey[500],
-//                         color: theme.palette.common.white,
+//                         width: 40,
+//                         height: 40,
+//                         background: (_theme) => alpha(theme.palette.grey[500], 0.08),
+//                         '&:hover': {
+//                           background: (_theme) => alpha(theme.palette.grey[500], 0.16),
+//                         },
 //                       }}
-//                     />
-//                   </IconButton>
-//                 )}
+//                     >
+//                       <Avatar
+//                         src={user?.photoURL || ''}
+//                         alt={user?.displayName || `${user?.firstName} ${user?.lastName}`}
+//                         sx={{
+//                           width: 20,  
+//                           height: 36,
+//                           border: (_theme) => `solid 2px ${theme.palette.background.default}`,
+//                           backgroundColor: theme.palette.grey[500],
+//                           color: theme.palette.common.white,
+//                         }}
+//                       />
+//                     </IconButton>
+//                   )}
 
 //                 {mdUp && !user && <LoginButton />}
 
-//                 {!mdUp && <NavMobile offsetTop={offsetTop} data={navConfig} />}
+//                 {!mdUp && <NavMobile offsetTop={offsetTop} data={navConfig} mr='10px'/>}
 //               </Stack>
 //             </>
 //           )}
@@ -200,6 +253,7 @@
 //     </AppBar>
 //   );
 // }
+
 
 
 import { m } from 'framer-motion';
@@ -251,6 +305,9 @@ export default function Header() {
     navigate(paths.auth.jwt.login); // Navigate to login page
   };
 
+   const handleprofile = () => {
+    navigate(); // Navigate to profile page
+  }
   return (
     <AppBar>
       <Toolbar
@@ -283,7 +340,20 @@ export default function Header() {
               },
             }}
           >
-            <img src={Altivlogo} alt="BigCo Inc. logo" />
+            <Box
+              role="button"
+              tabIndex={0}
+              onClick={() => navigate('/')}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  navigate('/');
+                }
+              }}
+              sx={{ cursor: 'pointer', display: 'inline-block' }}
+              aria-label="Go to home"
+            >
+              <img src={Altivlogo} alt="BigCo Inc. lo go" />
+            </Box>
           </Badge>
 
           <Box sx={{ flexGrow: 1 }} />
@@ -301,21 +371,23 @@ export default function Header() {
             >
               <Box
                 sx={{
-                  display: 'flex',
+                  display:{xs:'fit-content', lg:'flex'} ,
                   alignItems: 'center',
                   border: '1px solid #d1d5db',
                   borderRadius: '8px',
                   px: 1.5,
                   py: 0.5,
-                  width: 230,
+                  width: { xs: 'auto', sm: 'auto', lg:'auto' },
+                
                 }}
               >
                 <SearchIcon sx={{ fontSize: 18, color: 'text.secondary', mr: 1 }} />
-                <InputBase
-                  placeholder="Type here…"
-                  sx={{ fontSize: 14, flex: 1 }}
-                />
+                <InputBase placeholder="Type here…" sx={{ fontSize: 14, flex: 1 }} />
               </Box>
+              <Typography variant="body2" sx={{ cursor: 'pointer', fontSize: 15 }}
+              onClick={handleprofile}>
+                My Resumes
+              </Typography>
 
               <Typography variant="body2" sx={{ cursor: 'pointer', fontSize: 15 }}>
                 My Jobs
@@ -336,9 +408,15 @@ export default function Header() {
             </Box>
           ) : (
             <>
-              {mdUp && <NavDesktop offsetTop={offsetTop} sx={{ marginLeft: '20px' }} data={navConfig} />}
+              {mdUp && (
+                <NavDesktop offsetTop={offsetTop} sx={{ marginLeft: '20px' }} data={navConfig} />
+              )}
 
-              <Stack alignItems="center" direction={{ xs: 'row', md: 'row-reverse' }} sx={{ color: '#0040D8' }}>
+              <Stack
+                alignItems="center"
+                direction={{ xs: 'row', md: 'row-reverse' }}
+                sx={{ color: '#0040D8' }}
+              >
                 {!user && (
                   <Button
                     variant="contained"
@@ -359,35 +437,36 @@ export default function Header() {
                   </Button>
                 )}
 
-                {user && !isLoginPage && ( // Hide avatar on login page
-                  <IconButton
-                    component={m.button}
-                    whileTap="tap"
-                    whileHover="hover"
-                    variants={varHover(1.05)}
-                    onClick={() => navigate(paths.Profile)}
-                    sx={{
-                      width: 40,
-                      height: 40,
-                      background: (_theme) => alpha(theme.palette.grey[500], 0.08),
-                      '&:hover': {
-                        background: (_theme) => alpha(theme.palette.grey[500], 0.16),
-                      },
-                    }}
-                  >
-                    <Avatar
-                      src={user?.photoURL || ''}
-                      alt={user?.displayName || `${user?.firstName} ${user?.lastName}`}
+                {user &&
+                  !isLoginPage && ( // Hide avatar on login page
+                    <IconButton
+                      component={m.button}
+                      whileTap="tap"
+                      whileHover="hover"
+                      variants={varHover(1.05)}
+                      onClick={() => navigate(paths.Profile)}
                       sx={{
-                        width: 36,
-                        height: 36,
-                        border: (_theme) => `solid 2px ${theme.palette.background.default}`,
-                        backgroundColor: theme.palette.grey[500],
-                        color: theme.palette.common.white,
+                        width: 40,
+                        height: 40,
+                        background: (_theme) => alpha(theme.palette.grey[500], 0.08),
+                        '&:hover': {
+                          background: (_theme) => alpha(theme.palette.grey[500], 0.16),
+                        },
                       }}
-                    />
-                  </IconButton>
-                )}
+                    >
+                      <Avatar
+                        src={user?.photoURL || ''}
+                        alt={user?.displayName || `${user?.firstName} ${user?.lastName}`}
+                        sx={{
+                          width: 36,
+                          height: 36,
+                          border: (_theme) => `solid 2px ${theme.palette.background.default}`,
+                          backgroundColor: theme.palette.grey[500],
+                          color: theme.palette.common.white,
+                        }}
+                      />
+                    </IconButton>
+                  )}
 
                 {mdUp && !user && <LoginButton />}
 
@@ -402,3 +481,4 @@ export default function Header() {
     </AppBar>
   );
 }
+

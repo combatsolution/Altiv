@@ -16,10 +16,12 @@ import TestimonialCarousel from '../TestimonialCarousel'
 import FoboHeroSection from '../FoboHeroSection'
 import Datasecuritypage from '../Datasecuritypage'
 import CareerCompass from '../CareerCompass'
+import ComingSoon from '../ComingSoon'; 
+
 // import Dashboard from '../Dashboard'
 
 
-// import Profile from '../profile'
+// import Profile from '../profile' 
 
 // ----------------------------------------------------------------------
 
@@ -62,6 +64,7 @@ export default function FoboView() {
       <FoboHeroSection/>
       <Datasecuritypage/>
       <CareerCompass/>
+      <ComingSoon/>
       {/* <Dashboard/> */}
       {/* <Profile/> */}
      

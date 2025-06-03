@@ -20,6 +20,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useAuthContext } from 'src/auth/hooks';
 import bgImage from 'src/images/image.png';
 import Writelogo from 'src/images/write.svg';
+import axiosInstance from 'src/utils/axios';
 
 // Sample job matches data
 const jobMatches = [
@@ -85,10 +86,16 @@ export default function MyProfile() {
     'Not uploaded'
   );
 
-  const handleChangePassword = () => {
-    console.log({ currentPassword, newPassword, confirmPassword });
-    // Implement actual password change logic here
-  };
+
+
+  const handleChangePassword = async() => {
+    // console.log({ currentPassword, newPassword, confirmPassword });
+    const  response = await axiosInstance.post('/setPassword', {
+      oldPassword:currentPassword,
+      newPassword,
+    });
+    console.log(response.data);
+  }
 
   return (
     <Box sx={{ backgroundColor: '#F5F9FF', minHeight: '100vh' }}>
@@ -267,7 +274,7 @@ export default function MyProfile() {
               sx={{ mb: 3 }}
             />
             <Box display="flex" gap={2}>
-              <Button variant="contained" fullWidth onClick={handleChangePassword}>
+              <Button variant="contained" fullWidth onClick={handleChangePassword} color="primary">
                 Change Password
               </Button>
               <Button variant="outlined" fullWidth onClick={() => setOpen(false)}>

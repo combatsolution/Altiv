@@ -153,7 +153,7 @@ function CareerCompass() {
             >
               <Button
                 variant="contained"
-                onClick={() => navigate(paths.comingsoon)}
+                onClick={() => navigate(paths.comingSoon)}
                 sx={{
                   minWidth: { xs: 140, sm: 180 },
                   height: { xs: 40, sm: 48 },
@@ -169,7 +169,7 @@ function CareerCompass() {
               </Button>
               <Button
                 variant="outlined"
-                onClick={() => navigate(paths.comingsoon)}
+                onClick={() => navigate(paths.comingSoon)}
                 sx={{
                   minWidth: { xs: 140, sm: 180 },
                   height: { xs: 40, sm: 48 },

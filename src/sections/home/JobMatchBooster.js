@@ -150,7 +150,7 @@ function JobMatchBooster() {
                   textTransform: "none",
                    ml:{xs: -1, sm: 2 },
                 }}
-                onClick={()=>navigate(paths.comingsoon)}
+                onClick={()=>navigate(paths.comingSoon)}
               >
                 Boost My Application
               </Button>

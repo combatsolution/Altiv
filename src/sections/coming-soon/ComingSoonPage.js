@@ -57,7 +57,7 @@ export default function ComingSoonPage() {
 
       <ComingSoonIllustration sx={{ my:3, height: 240 }} />
 
-      <Stack
+      {/* <Stack
         direction="row"
         justifyContent="center"
         divider={<Box sx={{ mx: { xs: 1, sm: 2.5 } }}>:</Box>}
@@ -70,7 +70,7 @@ export default function ComingSoonPage() {
         <TimeBlock label="Minutes" value={minutes} />
 
         <TimeBlock label="Seconds" value={seconds} />
-      </Stack>
+      </Stack> */}
 
        <TextField
     placeholder="Enter your email"

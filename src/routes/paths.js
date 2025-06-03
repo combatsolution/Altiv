@@ -1,6 +1,7 @@
 // utils
 import { paramCase } from 'src/utils/change-case';
 import { _id, _postTitles } from 'src/_mock/assets';
+import { ResumeView } from 'src/sections/resume/View';
 
 // ----------------------------------------------------------------------
 
@@ -20,10 +21,11 @@ export const paths = {
   jobDetails: '/job-details',
   careerResume: '/career-resume',
   fobo:'/fobo',
-  ComingSoonPage:'/ComingSoonPage',
-  dashboardPage: '/Dashboardpage',  
+  // comingsoonPage:'/comingsoon-Page',
+  dashboardPage: '/dashboard-page', 
+  ResumeView: '/resume-view', 
   Profile:'/Profile',
-  comingsoon: '/comingsoon',  
+  comingSoon: '/coming-soon',  
   maintenance: '/maintenance',
   pricing: '/pricing',
   payment: '/payment',

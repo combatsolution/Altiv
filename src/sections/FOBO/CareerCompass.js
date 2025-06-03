@@ -266,7 +266,7 @@ function CareerCompass() {
                   fontSize: { xs: '14px', md: '16px' },
                   '&:hover': { bgcolor: '#0033b3' },
                 }}
-                onClick={() => navigate(paths.comingsoon)}
+                onClick={() => navigate(paths.comingSoon)}
               >
                 Beat FOBO Now
               </Button>

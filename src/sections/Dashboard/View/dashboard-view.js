@@ -8,7 +8,7 @@ import { Box } from '@mui/material';
 import ScrollProgress from 'src/components/scroll-progress';
 //
 
-import FoboLevelTaskDistribution from '../FoboLevelTaskDistribution'
+import Analysis from '../Analysis'
 
 
 // import Profile from '../profile'
@@ -45,7 +45,7 @@ export default function DashboardView() {
       <ScrollProgress scrollYProgress={scrollYProgress} />
       
       
-     <FoboLevelTaskDistribution/>
+     <Analysis/>
      
 
     </>

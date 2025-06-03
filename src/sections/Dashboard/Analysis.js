@@ -1,47 +1,47 @@
-
-
-
 import React, { useState } from 'react';
-import {
-  Box,
-  Typography,
-  Grid,
-  Card,
-  Button
-} from '@mui/material';
-import {
-  PieChart,
-  Pie,
-  Sector,
-  Cell,
-  ResponsiveContainer,
-  Tooltip
-} from 'recharts';
+import { Box, Typography, Grid, Card, Button } from '@mui/material';
+import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import GaugeChart from 'react-gauge-chart';
+import { width } from '@mui/system';
 
 const pieData = [
   {
     name: 'Augmentation',
     value: 30,
     color: '#FFB95A',
-    detail: 'AI assists you, so time is available helping you do better work.',
   },
   {
     name: 'Automation',
     value: 40,
     color: '#EF4444',
-    detail: 'Tasks at risk from full AI takeover, replacing human work.',
   },
   {
     name: 'Human',
     value: 30,
     color: '#84CC16',
-    detail: "Tasks that AI can't easily replace.",
   },
 ];
 
+// Four “sub‐tasks” (or categories) for each section. Adjust these strings as needed.
+const tasksMap = {
+  Automation: ['Basic content creation', 'Data reporting', 'Market research', 'Simple assessments'],
+  Augmentation: [
+    'Assistive drafting',
+    'Insight summarization',
+    'Design suggestions',
+    'Quality checks',
+  ],
+  Human: [
+    'Creative brainstorming',
+    'Complex negotiations',
+    'Emotional support',
+    'High-level strategy',
+  ],
+};
+
 const renderActiveShape = (props) => {
   const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
+
   return (
     <g>
       <Sector
@@ -63,7 +63,7 @@ export default function FoboLevelTaskDistribution() {
 
   const handlePieClick = (_, index) => {
     setActiveIndex(index);
-    setSelectedSection(pieData[index]);
+    setSelectedSection(pieData[index].name);
   };
 
   const handleMouseLeave = () => {
@@ -72,12 +72,9 @@ export default function FoboLevelTaskDistribution() {
   };
 
   // --- FOBO Level Logic ---
-  // You can replace this constant with a prop or state later if needed
   const foboValue = 24;
   const value = Math.max(0, Math.min(foboValue, 100));
   const percent = value / 100;
-
-  // Choose numeric color based on ranges: 0-39 green, 40-69 yellow, 70-100 red
   const getLevelColor = () => {
     if (value <= 39) return '#00C853';
     if (value <= 69) return '#FFEB3B';
@@ -86,16 +83,11 @@ export default function FoboLevelTaskDistribution() {
   // --- end FOBO Level Logic ---
 
   return (
-    <Box px={{ xs: 2, md: 6, lg: -6 }} py={2} sx={{ position: 'relative' }}>
+    <Box px={{ xs: 2, md: 6 }} py={2} sx={{ position: 'relative' }}>
       <Grid container spacing={4}>
         {/* FOBO Level */}
         <Grid item xs={12} md={6}>
-          <Typography
-            variant="h6"
-            fontWeight="bold"
-            sx={{ textAlign: 'left' }}
-            gutterBottom
-          >
+          <Typography variant="h6" fontWeight="bold" sx={{ textAlign: 'left' }} gutterBottom>
             FOBO Level
           </Typography>
 
@@ -103,18 +95,16 @@ export default function FoboLevelTaskDistribution() {
             <GaugeChart
               id="fobo-gauge"
               nrOfLevels={5}
-              // Roughly 0–39 = 39%, 40–69 = 30%, 70–100 = 31%
-              arcsLength={[0.39, 0.30, 0.31]}
+              arcsLength={[0.39, 0.3, 0.31]}
               colors={['#00C853', '#FFEB3B', '#E53935']}
               percent={percent}
-               innerRadius={90}
+              innerRadius={90}
               arcPadding={0.02}
               textColor="#000"
               needleColor="#424242"
               formatTextValue={() => `${value}`}
             />
 
-            {/* Large numeric display below the gauge */}
             <Typography
               variant="h4"
               fontWeight="bold"
@@ -127,7 +117,7 @@ export default function FoboLevelTaskDistribution() {
           </Box>
         </Grid>
 
-        {/* Task Distribution */}
+        {/* Task Distribution Pie */}
         <Grid item xs={12} md={6}>
           <Typography
             variant="h6"
@@ -154,81 +144,113 @@ export default function FoboLevelTaskDistribution() {
                 activeShape={renderActiveShape}
                 onClick={handlePieClick}
                 onMouseLeave={handleMouseLeave}
+                labelLine={false}
+                label={({ percent: slicePercent }) => `${(slicePercent * 100).toFixed(0)}%`}
               >
-                {pieData.map((entry, idx) => (
-                  <Cell key={`cell-${idx}`} fill={entry.color} />
+                {pieData.map((entry, id) => (
+                  <Cell key={`cell-${id}`} fill={entry.color} />
                 ))}
               </Pie>
-
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
-
-          {/* Legend Below the Chart */}
-          <Box
-            sx={{
-              mt: { xs: 2, md: 3 },
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: { xs: 'center', md: 'flex-start' },
-              gap: 1,
-            }}
-          >
-            {/* Automation */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ width: 20, height: 20, bgcolor: '#EF4444' }} />
-              <Typography
-                sx={{
-                  fontFamily: 'Roboto',
-                  fontSize: { xs: '12px', md: '12px', lg: '12px' },
-                  color: '#090808',
-                }}
-              >
-                <strong>Automation:</strong> AI can do these tasks itself, replacing human work
-              </Typography>
-            </Box>
-
-            {/* Augmentation */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ width: 20, height: 20, bgcolor: '#FFB95A' }} />
-              <Typography
-                sx={{
-                  fontFamily: 'Roboto',
-                  fontSize: { xs: '12px', md: '12px' },
-                  color: '#090808',
-                }}
-              >
-                <strong>Augmentation:</strong> AI works with you, like a smart assistant helping you do better work
-              </Typography>
-            </Box>
-
-            {/* Human */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ width: 20, height: 20, bgcolor: '#84CC16' }} />
-              <Typography
-                sx={{
-                  fontFamily: 'Roboto',
-                  fontSize: { xs: '12px', md: '12px' },
-                  color: '#090808',
-                }}
-              >
-                <strong>Human:</strong> Tasks that AI can’t likely replace
-              </Typography>
-            </Box>
-          </Box>
         </Grid>
+        <Box
+          sx={{
+            mt: { xs: 2, md: 3 },
+            marginLeft: { xs: 'auto', md: 2, lg: '750px' },
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: { xs: 'center', md: 'flex-start' },
+            gap: 0,
+          }}
+        >
+          {/* Automation */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{ width: 20, height: 20, bgcolor: '#EF4444' }} />
+            <Typography
+              sx={{
+                fontFamily: 'Roboto',
+                fontSize: { xs: '12px', md: '12px', lg: '12px' },
+                color: '#090808',
+              }}
+            >
+              <strong>Automation:</strong> AI can do these tasks itself, replacing human work
+            </Typography>
+          </Box>
 
-        {/* Selected Section Detail */}
+          {/* Augmentation */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
+            <Box sx={{ width: 20, height: 20, bgcolor: '#FFB95A' }} />
+            <Typography
+              sx={{
+                fontFamily: 'Roboto',
+                fontSize: { xs: '12px', md: '12px' },
+                color: '#090808',
+              }}
+            >
+              <strong>Augmentation:</strong> AI works with you, like a smart assistant helping you
+              do better work
+            </Typography>
+          </Box>
+
+          {/* Human */}
+          <Box sx={{ display: 'flex', alignItems: 'left', gap: 1, mt: 1 }}>
+            <Box sx={{ width: 20, height: 20, bgcolor: '#84CC16' }} />
+            <Typography
+              sx={{
+                fontFamily: 'Roboto',
+                fontSize: { xs: '12px', md: '12px' },
+                color: '#090808',
+              }}
+            >
+              <strong>Human:</strong> Tasks that AI can’t likely replace
+            </Typography>
+          </Box>
+        </Box>
+        {/* “Tasks distribution for <Section>” + Horizontal Bar + Category Labels */}
         {selectedSection && (
           <Grid item xs={12}>
-            <Card sx={{ p: 2, backgroundColor: '#F5FAFF' }}>
-              <Typography variant="h6" color="primary" gutterBottom>
-                {selectedSection.name} Details
-              </Typography>
-              <Typography variant="body2">
-                {selectedSection.detail}
-              </Typography>
-            </Card>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              Tasks distribution for {selectedSection}
+            </Typography>
+
+            {/* Horizontal bar whose color matches the selected slice */}
+            <Box
+              sx={{
+                width: '100%',
+                height: 2,
+                bgcolor: pieData.find((d) => d.name === selectedSection)?.color,
+                borderRadius: 1,
+              }}
+            />
+
+            {/* Four labels spaced evenly under the bar */}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                mt: 1,
+                px: { xs: 1, md: 2 },
+              }}
+            >
+              {tasksMap[selectedSection].map((taskName, i) => (
+                <Typography
+                  key={i}
+                  variant="caption"
+                  sx={{
+                    width: '25%',
+                    fontSize: { xs: '10px', md: '12px' },
+                    color: '#090808',
+                    textAlign: 'center',
+                    whiteSpace: 'pre-wrap',
+                    // flexBasis: '10%',
+                  }}
+                >
+                  {taskName}
+                </Typography>
+              ))}
+            </Box>
           </Grid>
         )}
 
@@ -251,7 +273,8 @@ export default function FoboLevelTaskDistribution() {
             {[
               {
                 title: 'Master AI-Powered Product Strategies',
-                benefit: 'Lead AI integration in EdTech products, staying ahead of industry changes',
+                benefit:
+                  'Lead AI integration in EdTech products, staying ahead of industry changes',
               },
               {
                 title: 'Develop Advanced Learning Experience Design Skills',
@@ -259,7 +282,8 @@ export default function FoboLevelTaskDistribution() {
               },
               {
                 title: 'Focus on Complex Partnership Development',
-                benefit: 'Build relationships and strategies that require human judgement and leadership',
+                benefit:
+                  'Build relationships and strategies that require human judgement and leadership',
               },
               {
                 title: 'Strengthen Data-Driven Decision Making',
@@ -270,9 +294,7 @@ export default function FoboLevelTaskDistribution() {
                 <Typography fontWeight="bold" gutterBottom>
                   {i + 1}. {rec.title}
                 </Typography>
-                <Typography variant="body2">
-                  Benefit: {rec.benefit}
-                </Typography>
+                <Typography variant="body2">Benefit: {rec.benefit}</Typography>
               </Box>
             ))}
           </Box>
@@ -297,5 +319,3 @@ export default function FoboLevelTaskDistribution() {
     </Box>
   );
 }
-
-

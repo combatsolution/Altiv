@@ -6,8 +6,7 @@ import { Box } from '@mui/material';
 
 // components
 import ScrollProgress from 'src/components/scroll-progress';
-import MyProfile from '../MyProfile'
-
+import ResumeTable from '../ResumeTable';
 
 // ----------------------------------------------------------------------
 
@@ -33,7 +32,7 @@ const StyledPolygon = styled('div')(({ anchor = 'top', theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function ProfileView() {
+export default function ResumeView() {
   const { scrollYProgress } = useScroll();
 
   return (
@@ -42,8 +41,8 @@ export default function ProfileView() {
       
       
       
-      <MyProfile/>
-    
+      
+      <ResumeTable/>
      
 
     </>
