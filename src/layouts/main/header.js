@@ -305,9 +305,7 @@ export default function Header() {
     navigate(paths.auth.jwt.login); // Navigate to login page
   };
 
-   const handleprofile = () => {
-    navigate(); // Navigate to profile page
-  }
+ 
   return (
     <AppBar>
       <Toolbar
@@ -384,10 +382,7 @@ export default function Header() {
                 <SearchIcon sx={{ fontSize: 18, color: 'text.secondary', mr: 1 }} />
                 <InputBase placeholder="Type here…" sx={{ fontSize: 14, flex: 1 }} />
               </Box>
-              <Typography variant="body2" sx={{ cursor: 'pointer', fontSize: 15 }}
-              onClick={handleprofile}>
-                My Resumes
-              </Typography>
+            
 
               <Typography variant="body2" sx={{ cursor: 'pointer', fontSize: 15 }}>
                 My Jobs
