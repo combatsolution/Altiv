@@ -58,7 +58,7 @@ export const mainRoutes = [
       { path: 'career-resume', element: <CareerPathResumePage />},
       { path: 'fobo', element: <FoboPage />},
       { path: 'Profile', element: <ProfilePage />},
-      { path: 'dashboard-page', element: < DashboardPage/>},
+      { path: 'dashboard-page/:resumeId', element: < DashboardPage/>},
        {path: 'coming-soon', element: < Comingsoon/>},
       //  {path: 'resume-view', element: < ResumeViewPage/>},
     

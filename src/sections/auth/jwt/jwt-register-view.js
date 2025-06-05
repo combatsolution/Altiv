@@ -199,8 +199,11 @@ import { useAuthContext } from 'src/auth/hooks';
 
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import altiv from 'src/images/altiv.svg';
+import { useSnackbar } from 'notistack';
 
 export default function JwtRegisterView() {
+  const {enqueueSnackbar} = useSnackbar();
   const { register } = useAuthContext();
   const router = useRouter();
   const [errorMsg, setErrorMsg] = useState('');
@@ -247,38 +250,20 @@ export default function JwtRegisterView() {
     formState: { isSubmitting, errors },
   } = methods;
 
-  console.log('Form errors:', errors);
-
   const onSubmit = handleSubmit(async (data) => {
-    console.log('Form submitted with data:', data);
     try {
-      if (!register) {
-        throw new Error('Register function is not defined in AuthContext');
-      }
-      // Split name into firstName and lastName
+       // Split name into firstName and lastName
       const nameParts = data.name.trim().split(/\s+/);
       const firstName = nameParts[0];
       const lastName = nameParts.slice(1).join(' ');
 
-      console.log('Parsed name:', { firstName, lastName });
-
-      await register(data.email, data.password, firstName, lastName, data.phone);
-      console.log('Registration successful, redirecting to login');
+      await register?.(data.email, data.password, firstName, lastName, data.phone);
+      enqueueSnackbar('Register success', {variant: 'success'});
       router.push(paths.auth.jwt.login);
     } catch (error) {
-      console.error('Registration error in JwtRegisterView:', {
-        message: error.message || 'No error message provided',
-        response: error.response?.data || 'No response data',
-        status: error.response?.status || 'No status code',
-        stack: error.stack || 'No stack trace',
-      });
-      const errorMessage =
-        error.response?.data?.message ||
-        error.response?.data?.error ||
-        error.message ||
-        'Registration failed. Please try again.';
-      setErrorMsg(errorMessage);
+      console.error(error);
       reset();
+      setErrorMsg(typeof error === 'string' ? error : error.error.message);
     }
   });
 
@@ -300,12 +285,7 @@ export default function JwtRegisterView() {
           textAlign: 'center',
         }}
       >
-        <Typography variant="h4" color="primary" fontWeight="bold" mb={1}>
-          ALTIV.
-          <Box component="span" sx={{ color: '#0070f3' }}>
-            AI
-          </Box>
-        </Typography>
+        <img src={altiv} alt="ALTIV Logo" style={{ marginBottom: 8 }} />
 
         <Typography variant="h5" fontWeight="bold" gutterBottom>
           Register
@@ -350,7 +330,7 @@ export default function JwtRegisterView() {
                   </Link>
                 </Typography>
               }
-              sx={{ alignItems: 'flex-start', textAlign: 'left' }}
+              sx={{ alignItems: 'flex-center', textAlign: 'left' }}
             />
 
             <LoadingButton
