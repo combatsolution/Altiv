@@ -251,7 +251,7 @@ export default function TestimonialCarousel() {
               borderRadius: '50%',
               backgroundColor: idx === currentIndex ? '#4F9CF9' : '#1E3A8A',
               cursor: 'pointer',
-              transition: 'background-color 0.1s',
+              transition: 'background-color 0s',
             }}
           />
         ))}
