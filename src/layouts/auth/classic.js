@@ -78,7 +78,7 @@
           mx: 'auto',
           maxWidth: 480,
           px: { xs: 2, md: 8 },
-          py: { xs: 2, md: 2 },
+          py: { xs: 10, md: 10 },
         }}
       >
         {children}

@@ -257,7 +257,7 @@ export default function JwtRegisterView() {
       const firstName = nameParts[0];
       const lastName = nameParts.slice(1).join(' ');
 
-      await register?.(data.email, data.password, firstName, lastName, data.phone);
+      await register?.(data.email, data.password, data.name, data.phone);
       enqueueSnackbar('Register success', {variant: 'success'});
       router.push(paths.auth.jwt.login);
     } catch (error) {
@@ -275,7 +275,7 @@ export default function JwtRegisterView() {
         alignItems: 'center',
         justifyContent: 'center',
         px: 2,
-        mt: '-100px',
+        // mt: '',
       }}
     >
       <Box

@@ -37,6 +37,7 @@ import { useAuthContext } from 'src/auth/hooks';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import { useSnackbar } from 'notistack';
 
 export default function JwtLoginView() {
   const { enqueueSnackbar } = useSnackbar();
