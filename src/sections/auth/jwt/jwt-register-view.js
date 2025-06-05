@@ -1,5 +1,3 @@
-
-
 // import * as Yup from 'yup';
 // import { useForm } from 'react-hook-form';
 // import { useState } from 'react';
@@ -133,14 +131,14 @@
 //               label="Confirm Password"
 //               type="password"
 //             />
- 
+
 //             <FormControlLabel
 //               control={< Checkbox defaultChecked  style={{color:"#0040d8", mb:"2"}} />}
 //               label={
 //                 <Typography variant="body2">
 //                   I agree with the{' '}
-//                   <Link underline="always" style={{color:"#0040d8"}}> 
-                  
+//                   <Link underline="always" style={{color:"#0040d8"}}>
+
 //                     terms and conditions
 //                   </Link>
 //                 </Typography>
@@ -164,7 +162,7 @@
 //         <Typography variant="body2" color="text.secondary" mt={3}>
 //           Need help? Visit our{' '}
 //           <Link underline="hover"  style={{color:"#0040d8"}}>
-                  
+
 //             help center
 //           </Link>
 //         </Typography>
@@ -172,10 +170,6 @@
 //     </Box>
 //   );
 // }
-
-
-
-
 
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
@@ -226,7 +220,9 @@ export default function JwtRegisterView() {
       }),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     phone: Yup.string().required('Mobile number is required'),
-    password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(6, 'Password must be at least 6 characters'),
     confirmPassword: Yup.string()
       .required('Confirm password is required')
       .oneOf([Yup.ref('password')], 'Passwords must match'),
@@ -248,7 +244,7 @@ export default function JwtRegisterView() {
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting, errors },  
+    formState: { isSubmitting, errors },
   } = methods;
 
   console.log('Form errors:', errors);
@@ -294,6 +290,7 @@ export default function JwtRegisterView() {
         alignItems: 'center',
         justifyContent: 'center',
         px: 2,
+        mt: '-100px',
       }}
     >
       <Box
@@ -304,7 +301,10 @@ export default function JwtRegisterView() {
         }}
       >
         <Typography variant="h4" color="primary" fontWeight="bold" mb={1}>
-          ALTIV.<Box component="span" sx={{ color: '#0070f3' }}>AI</Box>
+          ALTIV.
+          <Box component="span" sx={{ color: '#0070f3' }}>
+            AI
+          </Box>
         </Typography>
 
         <Typography variant="h5" fontWeight="bold" gutterBottom>
@@ -338,12 +338,8 @@ export default function JwtRegisterView() {
               }}
             />
 
-            <RHFTextField
-              name="confirmPassword"
-              label="Confirm Password"
-              type="password"
-            />
- 
+            <RHFTextField name="confirmPassword" label="Confirm Password" type="password" />
+
             <FormControlLabel
               control={<Checkbox defaultChecked style={{ color: '#0040d8', mb: '2' }} />}
               label={
@@ -363,7 +359,15 @@ export default function JwtRegisterView() {
               type="submit"
               variant="contained"
               loading={isSubmitting}
-              sx={{ textTransform: 'none', fontWeight: 'bold', color: '#fff', backgroundColor: '#0040d8' }}
+              sx={{
+                textTransform: 'none',
+                fontWeight: 'bold',
+                color: '#fff',
+                backgroundColor: '#0040d8',
+                '&:hover': {
+                  backgroundColor: '#002fb3', // darker blue on hover
+                },
+              }}
             >
               Next
             </LoadingButton>

@@ -37,11 +37,7 @@ export default function ResumeView() {
 
   return (
     <>
-      <ScrollProgress scrollYProgress={scrollYProgress} />
-      
-      
-      
-      
+      <ScrollProgress scrollYProgress={scrollYProgress} />    
       <ResumeTable/>
      
 

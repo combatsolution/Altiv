@@ -1,5 +1,3 @@
-
-
 // import { m } from 'framer-motion';
 // import { alpha, useTheme } from '@mui/material/styles';
 // import Box from '@mui/material/Box';
@@ -106,7 +104,7 @@
 //                 cursor: 'pointer',
 //                 display: 'inline-block',
 //                 maxWidth: { xs: 120, sm: 150, md: 180 },
-                
+
 //                 flexShrink: 0,
 //                 img: {
 //                   width: '100%',
@@ -230,7 +228,7 @@
 //                         src={user?.photoURL || ''}
 //                         alt={user?.displayName || `${user?.firstName} ${user?.lastName}`}
 //                         sx={{
-//                           width: 20,  
+//                           width: 20,
 //                           height: 36,
 //                           border: (_theme) => `solid 2px ${theme.palette.background.default}`,
 //                           backgroundColor: theme.palette.grey[500],
@@ -253,8 +251,6 @@
 //     </AppBar>
 //   );
 // }
-
-
 
 import { m } from 'framer-motion';
 import { alpha, useTheme } from '@mui/material/styles';
@@ -305,9 +301,6 @@ export default function Header() {
     navigate(paths.auth.jwt.login); // Navigate to login page
   };
 
-   const handleprofile = () => {
-    navigate(); // Navigate to profile page
-  }
   return (
     <AppBar>
       <Toolbar
@@ -371,25 +364,24 @@ export default function Header() {
             >
               <Box
                 sx={{
-                  display:{xs:'fit-content', lg:'flex'} ,
+                  display: { xs: 'fit-content', lg: 'flex' },
                   alignItems: 'center',
                   border: '1px solid #d1d5db',
                   borderRadius: '8px',
                   px: 1.5,
                   py: 0.5,
-                  width: { xs: 'auto', sm: 'auto', lg:'auto' },
-                
+                  width: { xs: 'auto', sm: 'auto', lg: 'auto' },
                 }}
               >
                 <SearchIcon sx={{ fontSize: 18, color: 'text.secondary', mr: 1 }} />
                 <InputBase placeholder="Type here…" sx={{ fontSize: 14, flex: 1 }} />
               </Box>
-              <Typography variant="body2" sx={{ cursor: 'pointer', fontSize: 15 }}
-              onClick={handleprofile}>
-                My Resumes
-              </Typography>
 
-              <Typography variant="body2" sx={{ cursor: 'pointer', fontSize: 15 }}>
+              <Typography
+                variant="body2"
+                sx={{ cursor: 'pointer', fontSize: 15 }}
+                onClick={() => navigate(paths.comingSoon)}
+              >
                 My Jobs
               </Typography>
               <Typography
@@ -481,4 +473,3 @@ export default function Header() {
     </AppBar>
   );
 }
-

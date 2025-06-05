@@ -1,9 +1,9 @@
 import { Helmet } from "react-helmet-async";
-    import SubHeader from "src/components/subheader/subheader";
+import SubHeader from "src/components/subheader/subheader";
 import { ProfileView } from "src/sections/profile/View";
 
 
-export default function ProileViewPage(){
+export default function ProfileViewPage(){
     return(
         <>
             <Helmet>
