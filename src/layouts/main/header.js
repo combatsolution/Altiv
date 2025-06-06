@@ -99,55 +99,8 @@ export default function Header() {
 
           <Box sx={{ flexGrow: 1 }} />
 
+         
           {/* {isProfilePage ? (
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'flex-end',
-                  p: 2,
-                  gap: 4,
-                  backgroundColor: '#fff',
-                }}
-              >
-                <Box
-                  sx={{
-                    display: { xs: 'fit-content', lg: 'flex' },
-                    alignItems: 'center',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '8px',
-                    px: 1.5,
-                    py: 0.5,
-                    width: { xs: 'auto', sm: 'auto', lg: 'auto' },
-                  }}
-                >
-                  <SearchIcon sx={{ fontSize: 18, color: 'text.secondary', mr: 1 }} />
-                  <InputBase placeholder="Type here…" sx={{ fontSize: 14, flex: 1 }} />
-                </Box>
-
-                <Typography
-                  variant="body2"
-                  sx={{ cursor: 'pointer', fontSize: 15 }}
-                  onClick={() => navigate(paths.comingSoon)}
-                >
-                  My Jobs
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{ cursor: 'pointer', fontSize: 15 }}
-                  onClick={handleSignout} // Use handleSignout function
-                >
-                  Signout
-                </Typography>
-
-                <IconButton>
-                  <Badge badgeContent={0} color="error">
-                    <NotificationsIcon sx={{ color: 'black' }} />
-                  </Badge>
-                </IconButton>
-              </Box>
-            ) : ( */}
-          {isProfilePage ? (
             <m.div
               initial={{ x: '-100%', opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -219,7 +172,7 @@ export default function Header() {
                 </IconButton>
               </Box>
             </m.div>
-          ) : (
+          ) : ( */}
             <>
               {mdUp && (
                 <NavDesktop offsetTop={offsetTop} sx={{ marginLeft: '20px' }} data={navConfig} />
@@ -281,12 +234,12 @@ export default function Header() {
                     </IconButton>
                   )}
 
-                {mdUp && !user && <LoginButton />}
+                {!user && <LoginButton />}
 
                 {!mdUp && <NavMobile offsetTop={offsetTop} data={navConfig} />}
               </Stack>
             </>
-          )}
+          {/* )} */}
         </Container>
       </Toolbar>
 

@@ -8,21 +8,7 @@ import { useParams } from 'react-router';
 import axiosInstance from 'src/utils/axios';
 import { SplashScreen } from 'src/components/loading-screen';
 
-// const tasksMap = {
-//   Automation: ['Basic content creation', 'Data reporting', 'Market research', 'Simple assessments'],
-//   Augmentation: [
-//     'Assistive drafting',
-//     'Insight summarization',
-//     'Design suggestions',
-//     'Quality checks',
-//   ],
-//   Human: [
-//     'Creative brainstorming',
-//     'Complex negotiations',
-//     'Emotional support',
-//     'High-level strategy',
-//   ],
-// };
+
 
 export default function FoboLevelTaskDistribution() {
   const params = useParams();
@@ -41,7 +27,7 @@ export default function FoboLevelTaskDistribution() {
       });
       if (response?.data.success) {
         console.log('data', response?.data?.data);
-        setData(response?.data.data);
+        setData(response?.data?.data);
         const newPieData = [
           {
             name: 'Augmentation',
@@ -88,8 +74,8 @@ export default function FoboLevelTaskDistribution() {
   };
 
   const getLevelColor = () => {
-    if (data.FOBO_Score <= 39) return '#00C853';
-    if (data.FOBO_Score <= 69) return '#FFEB3B';
+    if (data?.FOBO_Score <= 39) return '#00C853';
+    if (data?.FOBO_Score <= 69) return '#FFEB3B';
     return '#E53935';
   };
 
@@ -243,14 +229,14 @@ export default function FoboLevelTaskDistribution() {
             </Typography>
 
             <Box sx={{ width: { md: '85%', xs: '100%' }, mx: 'auto', mt: 2 }}>
-              <MemoizedGaugeChart score={data.FOBO_Score} />
+              <MemoizedGaugeChart score={data?.FOBO_Score} />
 
               <Box textAlign="center" mt={3}>
                 <Typography variant="h6" fontWeight="bold" color="#000">
                   FOBO Score
                 </Typography>
                 <Typography variant="h4" fontWeight="bold" color={getLevelColor()}>
-                  {data.FOBO_Score}
+                  {data?.FOBO_Score}
                 </Typography>
               </Box>
             </Box>
@@ -327,7 +313,7 @@ export default function FoboLevelTaskDistribution() {
                       color: '#090808',
                     }}
                   >
-                    <strong>Automation:</strong> {data.Automated_Comment}
+                    <strong>Automation:</strong> {data?.Automated_Comment}
                   </Typography>
                 </Box>
 
@@ -341,7 +327,7 @@ export default function FoboLevelTaskDistribution() {
                       color: '#090808',
                     }}
                   >
-                    <strong>Augmentation:</strong> {data.Augmentation_Comment}
+                    <strong>Augmentation:</strong> {data?.Augmentation_Comment}
                   </Typography>
                 </Box>
 
@@ -355,7 +341,7 @@ export default function FoboLevelTaskDistribution() {
                       color: '#090808',
                     }}
                   >
-                    <strong>Human:</strong> {data.Human_Comment}
+                    <strong>Human:</strong> {data?.Human_Comment}
                   </Typography>
                 </Box>
               </Stack>
@@ -370,7 +356,7 @@ export default function FoboLevelTaskDistribution() {
                   sx={{
                     width: '100%',
                     height: 2,
-                    bgcolor: pieData.find((d) => d.name === selectedSection?.name)?.color,
+                    bgcolor: pieData?.find((d) => d.name === selectedSection?.name)?.color,
                     borderRadius: 1,
                   }}
                 />
@@ -404,19 +390,19 @@ export default function FoboLevelTaskDistribution() {
         {/* Summary Text Placeholder */}
         <Grid item xs={12}>
           <Typography variant="h6" fontWeight="bold" gutterBottom>
-            {data.Comment.Heading}
+            {data?.Comment.Heading}
           </Typography>
-          <Typography variant="body2">{data.Comment.Description}</Typography>
+          <Typography variant="body2">{data?.Comment.Description}</Typography>
         </Grid>
 
         {/* Recommendations */}
         <Grid item xs={12}>
           <Typography variant="h6" fontWeight="bold" gutterBottom>
-            Recommended Growth Strategies {`${data.user ? `For ${data.user.fullName}` : ''}`}
+            Recommended Growth Strategies {`${data?.user ? `For ${data?.user.fullName}` : ''}`}
           </Typography>
           <Box mt={2} sx={{ backgroundColor: '#F5FAFF', borderRadius: 2, p: 2 }}>
-            {data.Strategy.length > 0 &&
-              data.Strategy.map((rec, i) => (
+            {data?.Strategy.length > 0 &&
+              data?.Strategy.map((rec, i) => (
                 <Box key={i} mb={2}>
                   <Typography fontWeight="bold" gutterBottom>
                     {i + 1}. {rec.Heading}

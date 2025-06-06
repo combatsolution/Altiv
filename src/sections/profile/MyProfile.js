@@ -1,5 +1,3 @@
-
-
 import React, { useState, useRef, useEffect } from 'react';
 import {
   Box,
@@ -167,17 +165,17 @@ export default function MyProfile() {
     }
   };
 
-   useEffect(() => {
+  useEffect(() => {
     if (error || success) {
       const timer = setTimeout(() => {
-      setError(null);
-       setSuccess(null);   
+        setError(null);
+        setSuccess(null);
       }, 5000);
 
-     return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
     }
     return undefined;
-     }, [error, success]);
+  }, [error, success]);
 
   if (loading || !user) {
     return (
@@ -200,169 +198,169 @@ export default function MyProfile() {
         </Alert>
       )}
 
-     <Container maxWidth="lg" sx={{ py: 4 }}>
-  {/* Profile Banner */}
-  <Box sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid transparent' }}>
-    <Box
-      component="img"
-      src={bgImage}
-      alt="Banner"
-      sx={{ width: '100%', height: 300, objectFit: 'cover' }}
-    />
-    <Paper
-      elevation={3}
-      sx={{
-        position: 'relative',
-        p: 2,
-        display: 'flex',
-        gap: 2,
-        alignItems: 'center',
-        bgcolor: 'rgba(255,255,255,0.9)',
-        backdropFilter: 'blur(6px)',
-        borderRadius: 2,
-        mt: -6,
-        mx: 2,
-      }}
-    >
-      <Avatar src={user?.avatar?.fileUrl || ''} sx={{ width: 48, height: 48 }} />
-      <Box>
-        <Typography fontWeight="600">{profileData?.fullName || 'No Name'}</Typography>
-        <Typography fontSize="0.75rem" color="text.secondary">
-          {user?.designation || 'Not specified'}
-        </Typography>
-      </Box>
-    </Paper>
-  </Box>
-
-  {/* Profile Info and Resume Section */}
-  <Grid container spacing={3} mt={3}>
-    <Grid item xs={12} lg={8}>
-      <Paper sx={{ p: 3 }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-          <Typography fontWeight="600">Profile Information</Typography>
-          <IconButton onClick={() => setOpenEditDialog(true)}>
-            <Box component="img" src={Writelogo} alt="Edit" sx={{ height: 20 }} />
-          </IconButton>
-        </Box>
-
-        <Typography sx={{ mb: 2 }}>{profileData.description}</Typography>
-
-        <Stack spacing={1}>
-          {[
-            ['Full Name:', profileData.fullName],
-            ['Mobile:', profileData.phoneNumber || 'Not specified'],
-            ['Email:', profileData.email],
-            [
-              'Resume:',
-              existingResumes.length > 0 ? (
-                <Typography>
-                  {selectedResumeId
-                    ? existingResumes.find((r) => r.id === selectedResumeId)?.fileDetails
-                        ?.fileName || 'Selected resume'
-                    : 'Select a resume below'}
-                </Typography>
-              ) : (
-                <Typography color="text.secondary">No resume uploaded</Typography>
-              ),
-            ],
-            [
-              'Password:',
-              <>
-                ***********{' '}
-                <Link href="#" underline="hover" onClick={() => setOpenPasswordModal(true)}>
-                  Change password
-                </Link>
-              </>,
-            ],
-            ['Address:', profileData.address || 'Not specified'],
-          ].map(([label, value]) => (
-            <Box key={label} display="flex" gap={1.5}>
-              <Typography sx={{ width: 90 }} color="text.secondary">
-                {label}
-              </Typography>
-              <Typography fontWeight="600">{value}</Typography>
-            </Box>
-          ))}
-        </Stack>
-      </Paper>
-    </Grid>
-
-    <Grid item xs={12} lg={4}>
-      {/* Resume Section */}
-      <Paper sx={{ p: 3 }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography fontWeight="600">Resume</Typography>
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => fileInputRef.current.click()}
-            startIcon={isUploading ? <CircularProgress size={16} /> : <CloudUploadIcon />}
-            sx={{ textTransform: 'none' }}
-            disabled={isUploading}
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        {/* Profile Banner */}
+        <Box sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid transparent' }}>
+          <Box
+            component="img"
+            src={bgImage}
+            alt="Banner"
+            sx={{ width: '100%', height: 300, objectFit: 'cover' }}
+          />
+          <Paper
+            elevation={3}
+            sx={{
+              position: 'relative',
+              p: 2,
+              display: 'flex',
+              gap: 2,
+              alignItems: 'center',
+              bgcolor: 'rgba(255,255,255,0.9)',
+              backdropFilter: 'blur(6px)',
+              borderRadius: 2,
+              mt: -6,
+              mx: 2,
+            }}
           >
-            Add New Resume
-          </Button>
+            <Avatar src={user?.avatar?.fileUrl || ''} sx={{ width: 48, height: 48 }} />
+            <Box>
+              <Typography fontWeight="600">{profileData?.fullName || 'No Name'}</Typography>
+              <Typography fontSize="0.75rem" color="text.secondary">
+                {user?.designation || 'Not specified'}
+              </Typography>
+            </Box>
+          </Paper>
         </Box>
 
-        <List sx={{ maxHeight: 160, overflow: 'auto', mb: 2 }}>
-          {existingResumes.map((r) => (
-            <React.Fragment key={r.id}>
-              <ListItem
-                selected={selectedResumeId === r.id}
-                button
-                onClick={() => handleSelectResume(r.id)}
-                disabled={isUploading}
-                secondaryAction={
-                  <Box display="flex" alignItems="center">
-                    {selectedResumeId === r.id && (
-                      <CheckCircleIcon sx={{ color: green[600], mr: 1 }} />
-                    )}
-                    <IconButton
-                      edge="end"
-                      onClick={() => {
-                        setResumeToDelete(r.id);
-                        setConfirmDeleteOpen(true);
-                      }}
-                      aria-label="delete"
-                      disabled={isUploading}
-                    >
-                      <DeleteIcon sx={{ color: 'red' }} />
-                    </IconButton>
+        {/* Profile Info and Resume Section */}
+        <Grid container spacing={3} mt={3}>
+          <Grid item xs={12} lg={8}>
+            <Paper sx={{ p: 3 }}>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                <Typography fontWeight="600">Profile Information</Typography>
+                <IconButton onClick={() => setOpenEditDialog(true)}>
+                  <Box component="img" src={Writelogo} alt="Edit" sx={{ height: 20 }} />
+                </IconButton>
+              </Box>
+
+              <Typography sx={{ mb: 2 }}>{profileData.description}</Typography>
+
+              <Stack spacing={1}>
+                {[
+                  ['Full Name:', profileData.fullName],
+                  ['Mobile:', profileData.phoneNumber || 'Not specified'],
+                  ['Email:', profileData.email],
+                  [
+                    'Resume:',
+                    existingResumes.length > 0 ? (
+                      <Typography>
+                        {selectedResumeId
+                          ? existingResumes.find((r) => r.id === selectedResumeId)?.fileDetails
+                              ?.fileName || 'Selected resume'
+                          : 'Select a resume below'}
+                      </Typography>
+                    ) : (
+                      <Typography color="text.secondary">No resume uploaded</Typography>
+                    ),
+                  ],
+                  [
+                    'Password:',
+                    <>
+                      ***********{' '}
+                      <Link href="#" underline="hover" onClick={() => setOpenPasswordModal(true)}>
+                        Change password
+                      </Link>
+                    </>,
+                  ],
+                  ['Address:', profileData.address || 'Not specified'],
+                ].map(([label, value]) => (
+                  <Box key={label} display="flex" gap={1.5}>
+                    <Typography sx={{ width: 90 }} color="text.secondary">
+                      {label}
+                    </Typography>
+                    <Typography fontWeight="600">{value}</Typography>
                   </Box>
-                }
-              >
-                <ListItemText
-                  primary={
-                    <a
-                      href={r.fileDetails?.fileUrl || '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ textDecoration: 'none', color: 'inherit' }}
+                ))}
+              </Stack>
+            </Paper>
+          </Grid>
+
+          <Grid item xs={12} lg={4}>
+            {/* Resume Section */}
+            <Paper sx={{ p: 3 }}>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                <Typography fontWeight="600">Resume</Typography>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => fileInputRef.current.click()}
+                  startIcon={isUploading ? <CircularProgress size={16} /> : <CloudUploadIcon />}
+                  sx={{ textTransform: 'none' }}
+                  disabled={isUploading}
+                >
+                  Add New Resume
+                </Button>
+              </Box>
+
+              <List sx={{ maxHeight: 160, overflow: 'auto', mb: 2 }}>
+                {existingResumes.map((r) => (
+                  <React.Fragment key={r.id}>
+                    <ListItem
+                      selected={selectedResumeId === r.id}
+                      button
+                      onClick={() => handleSelectResume(r.id)}
+                      disabled={isUploading}
+                      secondaryAction={
+                        <Box display="flex" alignItems="center">
+                          {selectedResumeId === r.id && (
+                            <CheckCircleIcon sx={{ color: green[600], mr: 1 }} />
+                          )}
+                          <IconButton
+                            edge="end"
+                            onClick={() => {
+                              setResumeToDelete(r.id);
+                              setConfirmDeleteOpen(true);
+                            }}
+                            aria-label="delete"
+                            disabled={isUploading}
+                          >
+                            <DeleteIcon sx={{ color: 'red' }} />
+                          </IconButton>
+                        </Box>
+                      }
                     >
-                      {r.fileDetails?.fileName || 'Untitled Resume'}
-                    </a>
-                  }
-                  secondary={r.uploadedAt || 'No date'}
-                />
-              </ListItem>
-              <Divider />
-            </React.Fragment>
-          ))}
-        </List>
+                      <ListItemText
+                        primary={
+                          <a
+                            href={r.fileDetails?.fileUrl || '#'}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ textDecoration: 'none', color: 'inherit' }}
+                          >
+                            {r.fileDetails?.fileName || 'Untitled Resume'}
+                          </a>
+                        }
+                        secondary={r.uploadedAt || 'No date'}
+                      />
+                    </ListItem>
+                    <Divider />
+                  </React.Fragment>
+                ))}
+              </List>
 
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          accept=".pdf,.doc,.docx"
-          style={{ display: 'none' }}
-        />
-      </Paper>
-    </Grid>
-  </Grid>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept=".pdf,.doc,.docx"
+                style={{ display: 'none' }}
+              />
+            </Paper>
+          </Grid>
+        </Grid>
 
-  {/* Job Section (Placed Below Resume Section) */}
-  <Grid container spacing={3} mt={1} >
+        {/* Job Section (Placed Below Resume Section) */}
+        {/* <Grid container spacing={3} mt={1} >
 
      <Grid item xs={12} lg={5} ml={98} mt={-12}>
       <Paper sx={{ p: 3 }}>
@@ -371,9 +369,8 @@ export default function MyProfile() {
         </Box>
       </Paper>
     </Grid>
-  </Grid>
-</Container>
-
+  </Grid> */}
+      </Container>
 
       {/* Confirm Delete Dialog */}
       <Dialog open={confirmDeleteOpen} onClose={() => setConfirmDeleteOpen(false)}>
@@ -390,8 +387,6 @@ export default function MyProfile() {
           </Button>
         </DialogActions>
       </Dialog>
-
-      
 
       {/* Edit Profile Modal */}
       <ProfileUpdateModal
