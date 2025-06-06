@@ -298,7 +298,7 @@ export default function Header() {
   const handleSignout = () => {
     logout(); // Call logout to clear auth context
     localStorage.removeItem('token'); // Clear specific auth-related keys (optional, if logout doesn't handle it)
-    navigate(paths.auth.jwt.login); // Navigate to login page
+    navigate(paths.auth.jwt.login, {replace : true}); // Navigate to login page
   };
 
   return (

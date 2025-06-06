@@ -7,6 +7,7 @@ import CompactLayout from 'src/layouts/compact';
 // components
 import { SplashScreen } from 'src/components/loading-screen';
 import { element } from 'prop-types';
+import { RolesAuthRoute } from 'src/hooks/RolesAuthRoute';
 
 // ----------------------------------------------------------------------
 
@@ -57,7 +58,13 @@ export const mainRoutes = [
       { path: 'job-details', element: <JobDetailsPage />},
       { path: 'career-resume', element: <CareerPathResumePage />},
       { path: 'fobo', element: <FoboPage />},
-      { path: 'Profile', element: <ProfilePage />},
+      { path: 'Profile', 
+        element:(
+          <RolesAuthRoute roles={['customer'] || ['admin']}>
+            <ProfilePage />            
+          </RolesAuthRoute>
+        ) 
+      },
       { path: 'dashboard-page/:resumeId', element: < DashboardPage/>},
        {path: 'coming-soon', element: < Comingsoon/>},
       //  {path: 'resume-view', element: < ResumeViewPage/>},

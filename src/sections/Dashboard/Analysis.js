@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Typography, Grid, Card, Button, Stack } from '@mui/material';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import GaugeChart from 'react-gauge-chart';
 import { width } from '@mui/system';
 import { useParams } from 'react-router';
 import axiosInstance from 'src/utils/axios';
+import { SplashScreen } from 'src/components/loading-screen';
 
 const pieData = [
   {
@@ -60,7 +61,7 @@ const renderActiveShape = (props) => {
 
 export default function FoboLevelTaskDistribution() {
   const params = useParams();
-  const {resumeId} = params;
+  const { resumeId } = params;
   const [activeIndex, setActiveIndex] = useState(null);
   const [selectedSection, setSelectedSection] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -69,9 +70,9 @@ export default function FoboLevelTaskDistribution() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchProfileAnalyticsData = async () => {
-    try{
-      const response = await axiosInstance.post(`/profile-analytics`, {resumeId: Number(resumeId)});
-      if(response?.data.success){
+    try {
+      const response = await axiosInstance.post(`/profile-analytics`, { resumeId: Number(resumeId) });
+      if (response?.data.success) {
         console.log('data', response?.data?.data);
         setData(response?.data.data);
         const newPieData = [
@@ -98,20 +99,20 @@ export default function FoboLevelTaskDistribution() {
         setPieData(newPieData);
         setIsLoading(false);
       }
-    }catch(error){
+    } catch (error) {
       console.error('error', error);
     }
   };
 
   useEffect(() => {
-    if(resumeId){
+    if (resumeId) {
       fetchProfileAnalyticsData();
     }
-  },[resumeId])
+  }, [resumeId])
 
   const handlePieClick = (_, index) => {
     setActiveIndex(index);
-    setSelectedSection({name: pieData[index].name, fieldName: pieData[index].fieldName});
+    setSelectedSection({ name: pieData[index].name, fieldName: pieData[index].fieldName });
   };
 
   const handleMouseLeave = () => {
@@ -241,11 +242,37 @@ export default function FoboLevelTaskDistribution() {
       </g>
     );
   };
+  
+  useEffect(() => {
+  const needle = document.querySelector('#fobo-gauge .needle');
+  if (needle) {
+    needle.style.transition = 'transform 1.2s ease-out'; // smooth movement
+  }
+}, [data?.FOBO_Score]);
 
-  console.log('selected section', selectedSection);
+  const MemoizedGaugeChart = React.memo(function GaugeChartComponent({ score }) {
+    return (
+      <div style={{ position: 'relative', width: '100%', height: 220 }}>
+        <GaugeChart
+          id="fobo-gauge"
+          nrOfLevels={3}
+          arcsLength={[0.39, 0.3, 0.31]}
+          colors={['#00C853', '#FFEB3B', '#E53935']}
+          percent={score / 100}
+          arcPadding={0.02}
+          textColor="#000"
+          needleColor="#424242"
+          formatTextValue={() => ''} // hide center label
+          style={{ width: '100%', height: '100%' }}
+          animate={true}
+        />
+      </div>
+    );
+  });
+
   return (
-    !isLoading && (
-      <Box px={{ xs: 2, md: '12%' }} py={2}  sx={{ position: 'relative', width: '100%', maxWidth: '100%' }}>
+    !isLoading ? (
+      <Box px={{ xs: 2, md: '12%' }} py={2} sx={{ position: 'relative', width: '100%', maxWidth: '100%' }}>
         <Grid container spacing={4}>
           {/* FOBO Level */}
           <Grid item xs={12} md={6}>
@@ -254,30 +281,17 @@ export default function FoboLevelTaskDistribution() {
                 FOBO Level
               </Typography>
 
-              <Box sx={{ width: {md:'85%', xs:'100%'}, mx: 'auto', mt: 2 }}>
-                <GaugeChart
-                  id="fobo-gauge"
-                  nrOfLevels={2}
-                  arcsLength={[0.39, 0.3, 0.31]}
-                  colors={['#00C853', '#FFEB3B', '#E53935']}
-                  percent={data.FOBO_Score / 100}
-                  innerRadius={60}
-                  outerRadius={90}
-                  arcPadding={0.02}
-                  textColor="#000"
-                  needleColor="#424242"
-                  formatTextValue={() => `${data?.FOBO_Score}`}
-                />
+              <Box sx={{ width: { md: '85%', xs: '100%' }, mx: 'auto', mt: 2 }}>
+                <MemoizedGaugeChart score={data.FOBO_Score} />
 
-                <Typography
-                  variant="h4"
-                  fontWeight="bold"
-                  textAlign="center"
-                  mt={1}
-                  color={getLevelColor()}
-                >
-                  {data.FOBO_Score}
-                </Typography>
+                <Box textAlign="center" mt={3}>
+                  <Typography variant="h6" fontWeight="bold" color="#000">
+                    FOBO Score
+                  </Typography>
+                  <Typography variant="h4" fontWeight="bold" color={getLevelColor()}>
+                    {data.FOBO_Score}
+                  </Typography>
+                </Box>
               </Box>
             </Stack>
           </Grid>
@@ -291,7 +305,7 @@ export default function FoboLevelTaskDistribution() {
                 gutterBottom
                 sx={{ textAlign: 'left' }}
               >
-              Task Distribution
+                Task Distribution
               </Typography>
 
               <ResponsiveContainer width="100%" height={300}>
@@ -349,91 +363,91 @@ export default function FoboLevelTaskDistribution() {
                   }
                 `}
               </style>
-          {!selectedSection ? 
-          <Stack spacing={1.5} direction={'column'}>
-            {/* Automation */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ width: 20, height: 20, bgcolor: '#EF4444' }} />
-              <Typography
-                sx={{
-                  fontFamily: 'Roboto',
-                  fontSize: { xs: '12px', md: '12px', lg: '12px' },
-                  color: '#090808',
-                }}
-              >
-                <strong>Automation:</strong> {data.Automated_Comment}
-              </Typography>
-            </Box>
+              {!selectedSection ?
+                <Stack spacing={1.5} direction={'column'}>
+                  {/* Automation */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: 20, height: 20, bgcolor: '#EF4444' }} />
+                    <Typography
+                      sx={{
+                        fontFamily: 'Roboto',
+                        fontSize: { xs: '12px', md: '12px', lg: '12px' },
+                        color: '#090808',
+                      }}
+                    >
+                      <strong>Automation:</strong> {data.Automated_Comment}
+                    </Typography>
+                  </Box>
 
-            {/* Augmentation */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
-              <Box sx={{ width: 20, height: 20, bgcolor: '#FFB95A' }} />
-              <Typography
-                sx={{
-                  fontFamily: 'Roboto',
-                  fontSize: { xs: '12px', md: '12px' },
-                  color: '#090808',
-                }}
-              >
-                <strong>Augmentation:</strong> {data.Augmentation_Comment}
-              </Typography>
-            </Box>
+                  {/* Augmentation */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
+                    <Box sx={{ width: 20, height: 20, bgcolor: '#FFB95A' }} />
+                    <Typography
+                      sx={{
+                        fontFamily: 'Roboto',
+                        fontSize: { xs: '12px', md: '12px' },
+                        color: '#090808',
+                      }}
+                    >
+                      <strong>Augmentation:</strong> {data.Augmentation_Comment}
+                    </Typography>
+                  </Box>
 
-            {/* Human */}
-            <Box sx={{ display: 'flex', alignItems: 'left', gap: 1, mt: 1 }}>
-              <Box sx={{ width: 20, height: 20, bgcolor: '#84CC16' }} />
-              <Typography
-                sx={{
-                  fontFamily: 'Roboto',
-                  fontSize: { xs: '12px', md: '12px' },
-                  color: '#090808',
-                }}
-              >
-                <strong>Human:</strong> {data.Human_Comment}
-              </Typography>
-            </Box>
-          </Stack> : 
-            (
-            <Box sx={{width: '100%'}}>
-              <Typography variant="h6" fontWeight="bold" gutterBottom>
-                Tasks distribution for {selectedSection?.name}
-              </Typography>
+                  {/* Human */}
+                  <Box sx={{ display: 'flex', alignItems: 'left', gap: 1, mt: 1 }}>
+                    <Box sx={{ width: 20, height: 20, bgcolor: '#84CC16' }} />
+                    <Typography
+                      sx={{
+                        fontFamily: 'Roboto',
+                        fontSize: { xs: '12px', md: '12px' },
+                        color: '#090808',
+                      }}
+                    >
+                      <strong>Human:</strong> {data.Human_Comment}
+                    </Typography>
+                  </Box>
+                </Stack> :
+                (
+                  <Box sx={{ width: '100%' }}>
+                    <Typography variant="h6" fontWeight="bold" gutterBottom>
+                      Tasks distribution for {selectedSection?.name}
+                    </Typography>
 
-              {/* Horizontal bar whose color matches the selected slice */}
-              <Box
-                sx={{
-                  width: '100%',
-                  height: 2,
-                  bgcolor: pieData.find((d) => d.name === selectedSection?.name)?.color,
-                  borderRadius: 1,
-                }}
-              />
+                    {/* Horizontal bar whose color matches the selected slice */}
+                    <Box
+                      sx={{
+                        width: '100%',
+                        height: 2,
+                        bgcolor: pieData.find((d) => d.name === selectedSection?.name)?.color,
+                        borderRadius: 1,
+                      }}
+                    />
 
-              {/* Four labels spaced evenly under the bar */}
-              <Grid container spacing={1}>
-                {data[selectedSection?.fieldName]?.map((taskName, i) => (
-                  <Grid item xs={3} mb={3}>
-                  <Typography
-                    key={i}
-                    variant="caption"
-                    sx={{
-                      width: '25%',
-                      fontSize: { xs: '10px', md: '12px' },
-                      color: '#090808',
-                      textAlign: 'center',
-                      whiteSpace: 'pre-wrap',
-                      // flexBasis: '10%',
-                    }}
-                  >
-                    {taskName}
-                  </Typography>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-       )
-        }
-          </Stack>
+                    {/* Four labels spaced evenly under the bar */}
+                    <Grid container spacing={1}>
+                      {data[selectedSection?.fieldName]?.map((taskName, i) => (
+                        <Grid item xs={3} mb={3}>
+                          <Typography
+                            key={i}
+                            variant="caption"
+                            sx={{
+                              width: '25%',
+                              fontSize: { xs: '10px', md: '12px' },
+                              color: '#090808',
+                              textAlign: 'center',
+                              whiteSpace: 'pre-wrap',
+                              // flexBasis: '10%',
+                            }}
+                          >
+                            {taskName}
+                          </Typography>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Box>
+                )
+              }
+            </Stack>
           </Grid>
 
           {/* Summary Text Placeholder */}
@@ -447,7 +461,7 @@ export default function FoboLevelTaskDistribution() {
           {/* Recommendations */}
           <Grid item xs={12}>
             <Typography variant="h6" fontWeight="bold" gutterBottom>
-              Recommended Growth Strategies For {data.user.fullName}
+              Recommended Growth Strategies {`${data.user ? `For ${data.user.fullName}` : ''}`}
             </Typography>
             <Box mt={2} sx={{ backgroundColor: '#F5FAFF', borderRadius: 2, p: 2 }}>
               {data.Strategy.length > 0 && data.Strategy.map((rec, i) => (
@@ -478,6 +492,8 @@ export default function FoboLevelTaskDistribution() {
           </Grid>
         </Grid>
       </Box>
+    ) : (
+      <SplashScreen />
     )
   );
 }
