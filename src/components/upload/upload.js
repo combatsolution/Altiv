@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 // assets
 import { UploadIllustration } from 'src/assets/illustrations';
 //
+import { CircularProgress } from '@mui/material';
 import Iconify from '../iconify';
 //
 import RejectionFiles from './errors-rejection-files';
@@ -32,6 +33,7 @@ export default function Upload({
   onUpload,
   onRemove,
   onRemoveAll,
+  loading,
   sx,
   ...other
 }) {
@@ -157,7 +159,27 @@ export default function Upload({
       >
         <input {...getInputProps()} />
 
-        {hasFile ? renderSinglePreview : renderPlaceholder}
+        {loading && (
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              backgroundColor: 'rgba(255, 255, 255, 0.8)',
+              zIndex: 10,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <CircularProgress size={24} sx={{ mb: 1 }} />
+            <Typography variant="body2" color="text.secondary">
+              Uploading file...
+            </Typography>
+          </Box>
+        )}
+
+        {!loading && (hasFile ? renderSinglePreview : renderPlaceholder)}
       </Box>
 
       {removeSinglePreview}
@@ -184,4 +206,5 @@ Upload.propTypes = {
   onUpload: PropTypes.func,
   sx: PropTypes.object,
   thumbnail: PropTypes.bool,
+  loading: PropTypes.bool,
 };

@@ -13,7 +13,7 @@ export default function HomePage() {
       </Helmet>
 
       {/* <HomeView /> */}
-         <FoboView/>
+      <FoboView/>
     </>
   );
 }

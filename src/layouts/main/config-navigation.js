@@ -11,23 +11,24 @@ export const navConfig = [
   {
     title: 'FOBO',
     icon: <Iconify icon="solar:home-2-bold-duotone" />,
-    path: paths.fobo,
+    path: '/',
   },
   {
     title: 'AI Career Coach',
+  
     icon: <Iconify icon="solar:home-2-bold-duotone" />,
-    path: 'paths.comingsoon',
+    path: paths.comingSoon,
   },  
   { 
     title: 'Jobs',
     icon: <Iconify icon="solar:atom-bold-duotone" />,
-    path: '#',
+    path: paths.comingSoon,
     // paths.components
   },
   {
     title: 'Analyse your Resume',
     icon: <Iconify icon="solar:notebook-bold-duotone" />,
-    path: '#',
+    path: paths.comingSoon,
     // paths.docs
 
   },

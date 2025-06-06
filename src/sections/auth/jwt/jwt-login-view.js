@@ -1,3 +1,5 @@
+
+
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { useState, useCallback } from 'react';
@@ -13,9 +15,7 @@ import {
   InputAdornment,
   Divider,
   Button,
-  Snackbar
 } from '@mui/material';
-import MuiAlert from '@mui/material/Alert';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import altiv from 'src/images/altiv.svg';
@@ -40,7 +40,7 @@ import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { useSnackbar } from 'notistack';
 
 export default function JwtLoginView() {
-  const { enqueueSnackbar} = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   const { login } = useAuthContext();
   const router = useRouter();
   const [errorMsg, setErrorMsg] = useState('');
@@ -48,6 +48,7 @@ export default function JwtLoginView() {
   const returnTo = searchParams.get('returnTo');
   const password = useBoolean();
 
+  // Redirect helper for social buttons
   const handleRedirect = useCallback((url) => {
     window.location.href = url;
   }, []);
@@ -62,7 +63,7 @@ export default function JwtLoginView() {
     password: '',
   };
 
-  const methods = useForm({   
+  const methods = useForm({
     resolver: yupResolver(LoginSchema),
     defaultValues,
   });
@@ -73,34 +74,17 @@ export default function JwtLoginView() {
     formState: { isSubmitting },
   } = methods;
 
- const onSubmit = handleSubmit(async (data) => {
-  try {
-    await login?.(data.email, data.password);
-    enqueueSnackbar('Login successful!', { variant: 'success' });
-    setTimeout(() => {
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      await login?.(data.email, data.password);
+      enqueueSnackbar('Login success', {variant : 'success'});
       router.push(returnTo || PATH_AFTER_LOGIN);
-    }, 1500);
-  } catch (error) {
-    console.error(error);
-    enqueueSnackbar(`${error.error.message}`, { variant: 'error' });
-
-    const errorMessage = typeof error === 'string' ? error : error.message;
-
-    if (errorMessage.toLowerCase().includes('email')) {
-      methods.setError('email', {
-        type: 'manual',
-        message: 'Your email ID is wrong',
-      });
-    } else if (errorMessage.toLowerCase().includes('password')) {
-      methods.setError('password', {
-        type: 'manual',
-        message: 'Your password is wrong',
-      });
-    } else {
-      setErrorMsg(errorMessage);
+    } catch (error) {
+      console.error(error);
+      reset();
+      setErrorMsg(typeof error === 'string' ? error : error.error.message);
     }
-  }
-});
+  });
 
 
   return (
@@ -113,14 +97,14 @@ export default function JwtLoginView() {
         px: 2,
       }}
     >
-      <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center' }}>
+      <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center', mt:'-150px' }}>
         <img src={altiv} alt="ALTIV Logo" style={{ marginBottom: 8 }} />
 
         <Typography variant="h6" mb={1}>
           Login
         </Typography>
         <Typography variant="body2" color="text.secondary" mb={3}>
-          Enter your Email and password to login
+          Enter your email and password to login
         </Typography>
 
         <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -172,7 +156,7 @@ export default function JwtLoginView() {
 
             <Button
               fullWidth
-              variant="outlined"
+              variant="outlined"  
               startIcon={<Iconify icon="logos:google-icon" />}
               onClick={() => handleRedirect('https://www.google.com')}
               sx={{ textTransform: 'none' }}
@@ -184,7 +168,9 @@ export default function JwtLoginView() {
               fullWidth
               variant="outlined"
               startIcon={<Iconify icon="logos:linkedin-icon" />}
-              onClick={() => handleRedirect('https://www.linkedin.com')}
+              onClick={() =>
+                handleRedirect('https://www.linkedin.com')
+              }
               sx={{ textTransform: 'none', mt: 2 }}
             >
               Sign in with LinkedIn
@@ -192,8 +178,14 @@ export default function JwtLoginView() {
           </Stack>
 
           <Stack direction="row" spacing={1} justifyContent="center" mt={3}>
-            <Typography variant="body2">Don&apos;t have an account?</Typography>
-            <Link component={RouterLink} href={paths.auth.jwt.register} variant="subtitle2">
+            <Typography variant="body2">
+              Dont have an account?
+            </Typography>
+            <Link
+              component={RouterLink}
+              href={paths.auth.jwt.register}
+              variant="subtitle2"
+            >
               Register
             </Link>
           </Stack>
@@ -207,3 +199,4 @@ export default function JwtLoginView() {
     </Box>
   );
 }
+

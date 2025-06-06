@@ -111,17 +111,17 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
         </MenuItem>
       </CustomPopover>
 
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content="Are you sure want to delete?"
-        action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
-            Delete
-          </Button>
-        }
-      />
+        <ConfirmDialog
+          open={confirm.value}
+          onClose={confirm.onFalse}
+          title="Delete"
+          content="Are you sure want to delete?"
+          action={
+            <Button variant="contained" color="error" onClick={onDeleteRow}>
+              Delete
+            </Button>
+          }
+        />
     </>
   );
 }

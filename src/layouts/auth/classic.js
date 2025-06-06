@@ -1,4 +1,7 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
   import PropTypes from 'prop-types';
+  import { useNavigate } from 'react-router-dom';
   // @mui
   import { alpha, useTheme } from '@mui/material/styles';
   import Box from '@mui/material/Box';
@@ -53,6 +56,7 @@
   ];
 
   export default function AuthClassicLayout({ children, image, title, subtitle }) {
+    const navigate = useNavigate();
     const { method } = useAuthContext();
 
     const theme = useTheme();
@@ -76,7 +80,7 @@
           mx: 'auto',
           maxWidth: 480,
           px: { xs: 2, md: 8 },
-          py: { xs: 10, md: 15 },
+          py: { xs: 10, md: 10 },
         }}
       >
         {children}
@@ -144,8 +148,8 @@
 
         <Header />
         <Box sx={{ backgroundColor: '#E9F4FF', py: 1.5, px: 1, mt:9, width:"100%" }}>
-          <Container maxWidth="md" sx={{ display: 'flex', alignItems: 'center', gap: 1, }}>
-            <img src="/assets/home.svg" style={{width: "25px"}}alt="homesvg"/>
+          <Container sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
+            <img src="/assets/home.svg" style={{width: "25px", cursor: 'pointer'}} alt="homesvg" onClick={() => navigate('/', {replace: true})}/>
             <ArrowForwardIosIcon fontSize="small" sx={{ fontSize: '12px' }} />
             <Typography variant="body2">{subtitle}</Typography> 
           </Container>

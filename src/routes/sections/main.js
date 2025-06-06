@@ -7,6 +7,7 @@ import CompactLayout from 'src/layouts/compact';
 // components
 import { SplashScreen } from 'src/components/loading-screen';
 import { element } from 'prop-types';
+import { RolesAuthRoute } from 'src/hooks/RolesAuthRoute';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +38,7 @@ const ProfilePage = lazy(() => import('src/pages/profile/Profile-view'));
 
 const DashboardPage = lazy(() => import('src/pages/dashboard/dashboard-view'));
 const Comingsoon= lazy(() => import ('src/pages/Coming-soon/coming-view'));
-const resumeViewpage = lazy(() => import('src/sections/resume/View'));
+// const ResumeViewPage = lazy(() => import('src/pages/Resume/resume-view'));    
 
 // ----------------------------------------------------------------------
 
@@ -57,10 +58,16 @@ export const mainRoutes = [
       { path: 'job-details', element: <JobDetailsPage />},
       { path: 'career-resume', element: <CareerPathResumePage />},
       { path: 'fobo', element: <FoboPage />},
-      { path: 'Profile', element: <ProfilePage />},
-      { path: 'dashboard-page', element: < DashboardPage/>},
+      { path: 'Profile', 
+        element:(
+          <RolesAuthRoute roles={['customer'] || ['admin']}>
+            <ProfilePage />            
+          </RolesAuthRoute>
+        ) 
+      },
+      { path: 'dashboard-page/:resumeId', element: < DashboardPage/>},
        {path: 'coming-soon', element: < Comingsoon/>},
-       {path: 'resume-view', element: <resumeViewpage />},
+      //  {path: 'resume-view', element: < ResumeViewPage/>},
     
       {
         path: 'product',

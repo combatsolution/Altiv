@@ -91,7 +91,7 @@ function CareerCompass() {
                   color: '#0040D8',
                   textAlign: "left", // force left align
                   px: { xs: 0, sm: 1 },
-                  ml: { xs: -6, lg: 0 },
+                  ml: { xs: -1, lg: 0 },
                   mb:{xs: -1}
                 }}
                 
@@ -177,7 +177,7 @@ function CareerCompass() {
                   border: "1px solid #0040D8",
                   color: "#0040D8",
                   textTransform: "none",
-                  '&:hover': { bgcolor: "#f5f5f5" },
+                  // '&:hover': { bgcolor: "#f5f5f5" },
                 }}
               >
                 Start without Resume
