@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'src/auth/hooks';
 import { HOST_API } from 'src/config-global';
@@ -18,6 +18,7 @@ import {
   Divider,
   Alert,
   IconButton,
+  FormHelperText,
 } from '@mui/material';
 import { blue, indigo, green } from '@mui/material/colors';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -26,20 +27,24 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import heroImg from 'src/Fogoimages/beatfobo.png';
-import { paths } from 'src/routes/paths';
 import axiosInstance from 'src/utils/axios';
-import { fontSize, width } from '@mui/system';
+import { Upload, UploadBox } from 'src/components/upload';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import { useSnackbar } from 'notistack';
+import { paths } from 'src/routes/paths';
 
 export default function FoboHeroPage() {
   const { user: currentUser } = useAuthContext();
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
   const [existingResumes, setExistingResumes] = useState([]);
+  const [docIsLoading, setDocIsLoading] = useState(false);
   const [selectedResumeId, setSelectedResumeId] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [linkedInUrl, setLinkedInUrl] = useState('');
   const [error, setError] = useState('');
-  const fileInputRef = useRef(null);
-  const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -50,20 +55,7 @@ export default function FoboHeroPage() {
   }, [currentUser]);
 
   const handleOpenModal = () => {
-    if (!currentUser) {
-      navigate(paths.auth.jwt.login, { state: { returnTo: paths.FoboHeroPage } });
-    } else {
-      setOpen(true);
-    }
-  };
-
-  const handleFileChange = (e) => {
-    const f = e.target.files?.[0];
-    if (f) {
-      setSelectedFile(f);
-      setSelectedResumeId(null);
-      setError('');
-    }
+    setOpen(true);
   };
 
   const handleSelectResume = (id) => {
@@ -74,10 +66,14 @@ export default function FoboHeroPage() {
 
   const handleDeleteResume = async (id) => {
     try {
-      if (!window.confirm('Are you sure you want to delete this resume?')) return;
-
+      
       await axiosInstance.delete(`/resumes/${id}`);
       setExistingResumes((prev) => prev.filter((resume) => resume.id !== id));
+
+      const resume = existingResumes.find((res) => res.id === selectedResumeId);
+      if(!resume && !selectedFile){
+        setSelectedResumeId(null);
+      }
 
       if (selectedResumeId === id) {
         setSelectedResumeId(null);
@@ -88,114 +84,55 @@ export default function FoboHeroPage() {
     }
   };
 
-  //   if (!currentUser) {
-  //     navigate(paths.auth.jwt.login, { state: { returnTo: paths.FoboHeroPage } });
-  //     return;
-  //   }
-
-  //   try {
-  //     setError('');
-  //     const token = localStorage.getItem('accessToken');
-
-  //     if (linkedInUrl && !linkedInUrl.startsWith('https://www.linkedin.com/in/')) {
-  //       setError('Please enter a valid LinkedIn profile URL.');
-  //       return;
-  //     }
-
-  //     if (selectedResumeId && !selectedFile && !linkedInUrl) {
-  //       navigate(paths.dashboardPage);
-  //       return;
-  //     }
-
-  //     if (selectedFile || linkedInUrl) {
-  //       const formData = new FormData();
-  //       if (selectedFile) formData.append('file', selectedFile);
-
-  //       const res = await axiosInstance.post('/files', formData);
-
-  //       if (!res.data) {
-  //         const errorText = await res.text();
-  //         throw new Error(`Upload failed: ${errorText}`);
-  //       }
-
-  //       const data = {};
-
-  //       if (linkedInUrl) {
-  //         data.linkedinUrl = linkedInUrl;
-  //       }
-
-  //       if (selectedFile && res.data) {
-  //         data.fileDetails = res.data.files[0];
-  //       }
-
-  //       await axiosInstance.post('resumes', data);
-  //     }
-
-  //     navigate(paths.dashboardPage);
-  //   } catch (err) {
-  //     console.error(err);
-  //     setError(err.message || 'An unexpected error occurred.');
-  //   }
-  // };
   const handleContinue = async () => {
-    if (!currentUser) {
-      navigate(paths.auth.jwt.login, { state: { returnTo: paths.FoboHeroPage } });
-      return;
-    }
+    if(!selectedResumeId){
+      enqueueSnackbar('Please select or upload resume', {variant: 'error'});
+    } 
 
-    // Clear previous error
-    setError('');
+    navigate(paths.dashboardPage(selectedResumeId));
+  };
 
-    // Validate LinkedIn URL if entered
-    if (linkedInUrl && !linkedInUrl.startsWith('https://www.linkedin.com/in/')) {
-      setError('Please enter a valid LinkedIn profile URL.');
-      return;
-    }
+  const handleUploadResume = async (file) => {
+    try{
+      setIsLoading(true);
+      const data = {
+        fileDetails: file
+      };
 
-    if (!selectedResumeId && !selectedFile && !linkedInUrl) {
-      setError('Please select or upload a resume, or enter a valid LinkedIn URL to continue.');
-      return;
-    }
-
-    try {
-      // If a file or LinkedIn URL is provided, upload/process
-      if (selectedFile || linkedInUrl) {
-        const formData = new FormData();
-        if (selectedFile) formData.append('file', selectedFile);
-
-        // Upload file if selected
-        let uploadedFileData = null;
-        if (selectedFile) {
-          const res = await axiosInstance.post('/files', formData);
-          if (!res.data) {
-            const errorText = await res.text();
-            throw new Error(`Upload failed: ${errorText}`);
-          }
-          uploadedFileData = res.data.files[0];
-        }
-
-        // Prepare resume data
-        const data = {};
-        if (linkedInUrl) {
-          data.linkedinUrl = linkedInUrl;
-        }
-        if (uploadedFileData) {
-          data.fileDetails = uploadedFileData;
-        }
-
-        await axiosInstance.post('resumes', data);
+      console.log('data', data);
+      const response = await axiosInstance.post(currentUser ? '/resumes' : '/resumes/guest-upload', data);
+      if(response.data){
+        enqueueSnackbar('Upload success', {variant: 'success'});
+        setSelectedResumeId(response?.data?.id)
       }
+      setDocIsLoading(false);
+      setIsLoading(false);
+    // eslint-disable-next-line no-shadow
+    }catch(error){
+      console.error('Error while uploading resume', error);
+      enqueueSnackbar(error.error.message, {variant : 'error'});
+      setSelectedFile(null);
+      setDocIsLoading(false);
+      setIsLoading(false);
+    }
+  }
 
-      // If an existing resume was selected, no upload needed, just continue
-      navigate(paths.dashboardPage);
-    } catch (err) {
-      console.error(err);
-      setError(err.message || 'An unexpected error occurred.');
+  const handleDrop = async (acceptedFiles) => {
+    setDocIsLoading(true);
+    const file = acceptedFiles[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      const response = await axiosInstance.post('/files', formData);
+      const { data } = response;
+      await handleUploadResume(data.files[0]);
+      setSelectedFile(data.files[0]);
+      setDocIsLoading(false);
     }
   };
 
   return (
-    <Box sx={{ px: { xs: 1, sm: 4, md:4, lg:3 }, py: { xs: 8, sm: 6, md: 8, lg: 16 }, mx:{lg:7} }}>
+    <Box sx={{ px: { xs: 1, sm: 4, md: 4, lg: 3 }, py: { xs: 8, sm: 6, md: 8, lg: 16 }, mx: { lg: 7 } }}>
       <Grid container spacing={4} alignItems="center" marginTop={1}>
         <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }}>
           <Stack spacing={3}>
@@ -206,13 +143,13 @@ export default function FoboHeroPage() {
               fontFamily="Inter, sans-serif"
               sx={{
                 ml: { xs: 2, sm: 0, md: 0, lg: 0 },
-                fontSize: {   xs: '16px', sm: '24px', md: '24px', lg: '24px' },
-                
+                fontSize: { xs: '16px', sm: '24px', md: '24px', lg: '24px' },
+
               }}
             >
               From AI Anxiety to AI Advantage
             </Typography>
-          
+
 
             {/* Desktop View: One line, full sentence */}
             <Typography
@@ -243,7 +180,7 @@ export default function FoboHeroPage() {
                 component="h1"
                 fontSize="36px"
                 lineHeight={1}
-                sx={{ 
+                sx={{
                   display: { xs: 'block', lg: 'block' },
                   width: '310px',
                   fontWeight: 700,
@@ -252,7 +189,7 @@ export default function FoboHeroPage() {
                 }}
               >
                 Beat FOBO{' '}
-                <Box component="span" sx={{ fontWeight: 300, width: '360px',  }}>
+                <Box component="span" sx={{ fontWeight: 300, width: '360px', }}>
                   (Fear of Being Obsolete)
                 </Box>
               </Typography>
@@ -283,10 +220,10 @@ export default function FoboHeroPage() {
                 width: isMobile ? 'auto' : '233px',
                 borderRadius: '29px',
                 mt: { xs: 2, lg: 5 },
-                mx: { xs: 1,  },
+                mx: { xs: 1, },
                 height: { xs: '48px', lg: '60px' },
                 textTransform: 'none', // Optional: to keep text case normal
-                ml:{lg:20}
+                ml: { lg: 20 }
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, }}>
@@ -314,7 +251,7 @@ export default function FoboHeroPage() {
       </Grid>
 
       {/* Modal */}
-      <Modal open={open} onClose={() => setOpen(false)}>
+      <Modal open={open} onClose={() => setOpen(false)} sx={{overflowY: 'scroll'}}>
         <Box display="flex" alignItems="center" justifyContent="center" minHeight="100vh" px={2}>
           <Box
             sx={{
@@ -346,9 +283,9 @@ export default function FoboHeroPage() {
             <Typography variant="subtitle1" fontWeight={600} mb={1}>
               Select or Upload Resume
             </Typography>
-            <List sx={{ maxHeight: 160, overflow: 'auto', mb: 2 }}>
-              {existingResumes.length > 0 &&
-                existingResumes.map((r) => (
+            {existingResumes.length > 0 && 
+              <List sx={{ mb: 2, height: '120px', overflowY: 'scroll' }}>
+                {existingResumes.map((r) => (
                   <React.Fragment key={r.id}>
                     <ListItem
                       selected={selectedResumeId === r.id}
@@ -386,23 +323,55 @@ export default function FoboHeroPage() {
                     <Divider />
                   </React.Fragment>
                 ))}
-              <ListItem button onClick={() => fileInputRef.current.click()}>
-                <CloudUploadIcon sx={{ mr: 1 }} />
-                <ListItemText primary="Add New Resume" />
-              </ListItem>
-            </List>
-            <input
-              type="file"
-              accept=".pdf,.doc,.docx"
-              ref={fileInputRef}
-              style={{ display: 'none' }}
-              onChange={handleFileChange}
-            />
-            {selectedFile && (
-              <Typography variant="body2" mb={2}>
-                Selected file: <strong>{selectedFile.name}</strong>
-              </Typography>
-            )}
+                </List>}
+              {selectedFile?.fileUrl ? (
+                // Show uploaded file info
+                <Box sx={{ px: 2, py: 2, border: '1px dashed #ccc', borderRadius: 2, mb: '10px' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                    <InsertDriveFileIcon sx={{ mr: 1 }} />
+                    <Typography variant="body2">
+                      {selectedFile.fileName} ({(selectedFile.size / 1024).toFixed(1)} KB)
+                    </Typography>
+                  </Box>
+
+                  {/* Optional Preview Link */}
+                  <Typography variant="body2">
+                    <a href={selectedFile.fileUrl} target="_blank" rel="noopener noreferrer">
+                      View / Download File
+                    </a>
+                  </Typography>
+
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    sx={{ mt: 2 }}
+                    onClick={() => setSelectedFile(null)} // reset state to show upload again
+                  >
+                    Remove File
+                  </Button>
+                </Box>
+              ) : (
+                // Show Upload Box
+                <Upload
+                  sx={{mb: '10px'}}
+                  loading={!!docIsLoading}
+                  placeholder="Drop or Select Resume"
+                  accept={{
+                    'application/pdf': [],
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [],
+                  }}
+                  file={null}
+                  error={false}
+                  onDrop={handleDrop}
+                  helperText={
+                    (false || '') && (
+                      <FormHelperText error={!!error} sx={{ px: 2 }}>
+                        {error ? error?.message : ""}
+                      </FormHelperText>
+                    )
+                  }
+                />
+              )}
             <TextField
               label="LinkedIn Profile URL"
               fullWidth
@@ -414,7 +383,8 @@ export default function FoboHeroPage() {
             <Button
               variant="contained"
               fullWidth
-              onClick={handleContinue}
+              onClick={() => handleContinue()}
+              disabled={!selectedFile && !selectedResumeId}
               sx={{
                 bgcolor: indigo[500],
                 '&:hover': { bgcolor: indigo[700] },
@@ -424,7 +394,7 @@ export default function FoboHeroPage() {
                 fontWeight: 500,
               }}
             >
-              {selectedFile || selectedResumeId || linkedInUrl ? 'Continue' : 'Upload Resume'}
+              continue
             </Button>
           </Box>
         </Box>
