@@ -60,7 +60,7 @@ function FoboImpactPage() {
         {/* Text Second on Mobile */}
         <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }} pl={{ md: '35px' }}>
           <Stack spacing={3}>
-            <Box component="div" sx={{ position: 'relative', paddingLeft:{xs:'0px' lg:''}, }}>
+            <Box component="div" sx={{ position: 'relative', paddingLeft:{xs:'0px', lg:'2em'}, }}>
               <Typography
                 component="h1"
                 sx={{
