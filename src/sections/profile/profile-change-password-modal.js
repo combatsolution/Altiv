@@ -1,27 +1,33 @@
+import React from 'react';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
-import LoadingButton from '@mui/lab/LoadingButton';
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-// hooks
-import { useBoolean } from 'src/hooks/use-boolean';
-// components
-import Iconify from 'src/components/iconify';
-import { useSnackbar } from 'src/components/snackbar';
-import FormProvider, { RHFTextField } from 'src/components/hook-form';
-import { Dialog, DialogTitle, Modal } from '@mui/material';
 import PropTypes from 'prop-types';
+
+// MUI
+import {
+  Dialog,
+  DialogTitle,
+  Stack,
+  IconButton,
+  InputAdornment,
+} from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
+import CloseIcon from '@mui/icons-material/Close';
+
+// Hooks & Utils
+import { useBoolean } from 'src/hooks/use-boolean';
+import { useSnackbar } from 'src/components/snackbar';
 import axiosInstance from 'src/utils/axios';
+
+// Components
+import Iconify from 'src/components/iconify';
+import FormProvider, { RHFTextField } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
 export default function ProfileChangePassword({ open, onClose }) {
   const { enqueueSnackbar } = useSnackbar();
-
   const password = useBoolean();
 
   const ChangePassWordSchema = Yup.object().shape({
@@ -62,7 +68,7 @@ export default function ProfileChangePassword({ open, onClose }) {
       });
       reset();
       enqueueSnackbar('Update success!');
-      console.info('DATA', data);
+      onClose(); // close dialog on success
     } catch (error) {
       console.error(error);
       enqueueSnackbar('Something Went Wrong', { variant: 'error' });
@@ -75,11 +81,17 @@ export default function ProfileChangePassword({ open, onClose }) {
       maxWidth={false}
       open={open}
       onClose={onClose}
-      PaperProps={{
-        sx: { maxWidth: 720 },
-      }}
+      PaperProps={{ sx: { maxWidth: 720 } }}
     >
       <DialogTitle>Change Password</DialogTitle>
+
+      <IconButton
+        onClick={onClose}
+        sx={{ position: 'absolute', top: 8, right:19}}
+      >
+        <CloseIcon />
+      </IconButton>
+
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack spacing={3} sx={{ p: 3 }}>
           <RHFTextField
@@ -112,8 +124,8 @@ export default function ProfileChangePassword({ open, onClose }) {
             }}
             helperText={
               <Stack component="span" direction="row" alignItems="center">
-                <Iconify icon="eva:info-fill" width={16} sx={{ mr: 0.5 }} /> Password must be
-                minimum 6+
+                <Iconify icon="eva:info-fill" width={16} sx={{ mr: 0.5 }} />
+                Password must be minimum 6+
               </Stack>
             }
           />

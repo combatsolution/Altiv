@@ -1,431 +1,4 @@
-// import React, { useState, useRef } from 'react';
-// import {
-//   Box,
-//   Avatar,
-//   Container,
-//   Typography,
-//   IconButton,
-//   Paper,
-//   Link,
-//   Grid,
-//   Stack,
-//   Modal,
-//   TextField,
-//   Button,
-//   useMediaQuery,
-//   useTheme,
-// } from '@mui/material';
-// import EditIcon from '@mui/icons-material/Edit';
-// import CloseIcon from '@mui/icons-material/Close';
-// import DeleteIcon from '@mui/icons-material/Delete';
-// import { useAuthContext } from 'src/auth/hooks';
-// import bgImage from 'src/images/image.png';
-// import Writelogo from 'src/images/write.svg';
-// import axiosInstance from 'src/utils/axios';
 
-// const jobMatches = [
-//   {
-//     company: 'Netflix',
-//     logo: 'https://storage.googleapis.com/a1aa/image/4ccd54d6-b484-449a-82cb-c851fae2c976.jpg',
-//     title: 'Sr. Director AI | Data scientist',
-//     snippet: 'Awesome work, can you...',
-//   },
-//   {
-//     company: 'Google',
-//     logo: 'https://storage.googleapis.com/a1aa/image/b34fb2e9-b9cb-4fc2-144f-63f7040062d2.jpg',
-//     title: 'Sr. Director AI | Data scientist',
-//     snippet: 'About files I can...',
-//   },
-//   {
-//     company: 'Netflix',
-//     logo: 'https://storage.googleapis.com/a1aa/image/4ccd54d6-b484-449a-82cb-c851fae2c976.jpg',
-//     title: 'Sr. Director AI | Data scientist',
-//     snippet: 'Have a great afternoon...',
-//   },
-// ];
-
-// export default function MyProfile() {
-//   const { user, loading } = useAuthContext();
-//   const [open, setOpen] = useState(false);
-//   const [editOpen, setEditOpen] = useState(false);
-//   const [currentPassword, setCurrentPassword] = useState('');
-//   const [newPassword, setNewPassword] = useState('');
-//   const [confirmPassword, setConfirmPassword] = useState('');
-//   const [resumeFile, setResumeFile] = useState(null);
-//   const [resumeUrl, setResumeUrl] = useState(user?.resumeUrl || '');
-
-//   const fileInputRef = useRef(null);
-//   const theme = useTheme();
-//   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-//   const profileImage = user?.avatar?.fileUrl || '';
-//   const fullName = user?.displayName || `${user?.firstName || ''} ${user?.lastName || ''}`.trim();
-//   const email = user?.email || '';
-//   const phoneNumber = user?.phoneNumber || '';
-//   const address =
-//     user?.fullAddress || user?.city || user?.state
-//       ? `${user?.fullAddress || ''} ${user?.city || ''} ${user?.state || ''}`.trim()
-//       : '';
-
-//   const [profileData, setProfileData] = useState({
-//     fullName,
-//     phoneNumber,
-//     email,
-//     address,
-//     description: `Directors are responsible for overseeing the development of an organization's business goals and objectives...`,
-//   });
-
-//   if (loading) return <Box>Loading profile...</Box>;
-//   if (!user) return <Box>Please log in to view your profile.</Box>;
-
-//   const handleChangePassword = async () => {
-//     try {
-//       await axiosInstance.post('/setPassword', {
-//         oldPassword: currentPassword,
-//         newPassword,
-//       });
-//       setOpen(false);
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-
-//   const handleEditSubmit = () => {
-//     // Send `profileData` to backend if needed
-//     setEditOpen(false);
-//   };
-
-//   const handleFileChange = (e) => {
-//     setResumeFile(e.target.files[0]);
-//   };
-
-//   const handleUploadResume = async () => {
-//     if (!resumeFile) return;
-//     const formData = new FormData();
-//     formData.append('resume', resumeFile);
-
-//     try {
-//       const response = await axiosInstance.post('/upload-resume', formData, {
-//         headers: { 'Content-Type': 'multipart/form-data' },
-//       });
-//       setResumeUrl(response.data.resumeUrl);
-//       setResumeFile(null);
-//     } catch (error) {
-//       console.error('Upload failed:', error);
-//     }
-//   };
-
-//   const handleDeleteResume = async () => {
-//     try {
-//       await axiosInstance.delete('/delete-resume');
-//       setResumeUrl('');
-//     } catch (error) {
-//       console.error('Delete failed:', error);
-//     }
-//   };
-
-//   return (
-//     <Box sx={{ backgroundColor: '#F5F9FF', minHeight: '100vh' }}>
-//       <Container maxWidth="lg" sx={{ py: 4 }}>
-//         <Box sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid transparent' }}>
-//           <Box
-//             component="img"
-//             src={bgImage}
-//             alt="Banner"
-//             sx={{ width: '100%', height: 300, objectFit: 'cover' }}
-//           />
-//           <Paper
-//             elevation={3}
-//             sx={{
-//               position: 'relative',
-//               p: 2,
-//               display: 'flex',
-//               gap: 2,
-//               alignItems: 'center',
-//               bgcolor: 'rgba(255,255,255,0.9)',
-//               backdropFilter: 'blur(6px)',
-//               borderRadius: 2,
-//               mt: -6,
-//               mx: 2,
-//             }}
-//           >
-//             <Avatar src={profileImage} sx={{ width: 48, height: 48 }} />
-//             <Box>
-//               <Typography fontWeight="600">{profileData.fullName}</Typography>
-//               <Typography fontSize="0.75rem" color="text.secondary">
-//                 {user.jobTitle || 'Not specified'}
-//               </Typography>
-//             </Box>
-//           </Paper>
-//         </Box>
-
-//         <Grid container spacing={3} mt={3}>
-//           <Grid item xs={12} lg={8}>
-//             <Paper sx={{ p: 3 }}>
-//               <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-//                 <Typography fontWeight="600" fontSize="16px">
-//                   Profile Information
-//                 </Typography>
-//                 <IconButton onClick={() => setEditOpen(true)}>
-//                   <Box component="img" src={Writelogo} alt="Write Logo" sx={{ height: 20 }} />
-//                 </IconButton>
-//               </Box>
-//               <Typography
-//                 sx={{
-//                   fontWeight: 400,
-//                   fontSize: '14px',
-//                   lineHeight: '21px',
-//                   letterSpacing: '-0.39px',
-//                   color: '#67748E',
-//                   mb: 2,
-//                 }}
-//               >
-//                 {profileData.description}
-//               </Typography>
-
-//               <Stack spacing={1}>
-//                 {[
-//                   ['Full Name:', profileData.fullName],
-//                   ['Mobile:', profileData.phoneNumber],
-//                   ['Email:', profileData.email],
-//                   ['Address:', profileData.address],
-//                   [
-//                     'Resume:',
-//                     resumeUrl ? (
-//                       <Link
-//                         href={resumeUrl}
-//                         target="_blank"
-//                         rel="noopener noreferrer"
-//                         underline="hover"
-//                         sx={{ fontSize: '0.75rem', fontWeight: 600 }}
-//                       >
-//                         {resumeUrl.split('/').pop()}
-//                       </Link>
-//                     ) : (
-//                       <Typography fontSize="0.75rem" fontWeight="600" color="text.secondary">
-//                         No resume uploaded
-//                       </Typography>
-//                     ),
-//                   ],
-//                   [
-//                     'Password:',
-//                     <>
-//                       ***********{' '}
-//                       <Link href="#" underline="hover" onClick={() => setOpen(true)}>
-//                         Change password
-//                       </Link>
-//                     </>,
-//                   ],
-//                 ].map(([label, value]) => (
-//                   <Box key={label} display="flex" gap={1.5}>
-//                     <Typography sx={{ width: 90 }} fontSize="0.75rem" color="text.secondary">
-//                       {label}
-//                     </Typography>
-//                     <Typography fontSize="0.75rem" fontWeight="600">
-//                       {value}
-//                     </Typography>
-//                   </Box>
-//                 ))}
-//               </Stack>
-//             </Paper>
-//           </Grid>
-
-//           <Grid item xs={12} lg={4}>
-//             <Paper sx={{ p: 3 }}>
-//               <Typography fontWeight="600" fontSize="0.9rem" mb={2}>
-//                 Top Job Matches
-//               </Typography>
-//               <Stack spacing={2}>
-//                 {jobMatches.map((job, idx) => (
-//                   <Box key={idx} display="flex" gap={1.5}>
-//                     <Avatar src={job.logo} sx={{ width: 24, height: 24 }} />
-//                     <Box flexGrow={1}>
-//                       <Typography fontSize="0.75rem" fontWeight="600" noWrap>
-//                         {job.title}
-//                       </Typography>
-//                       <Typography fontSize="0.75rem" color="text.secondary" noWrap>
-//                         {job.snippet}
-//                       </Typography>
-//                     </Box>
-//                     <Link href="#" fontSize="0.75rem" underline="hover" sx={{ color: '#2563EB' }}>
-//                       Status
-//                     </Link>
-//                   </Box>
-//                 ))}
-//               </Stack>
-//             </Paper>
-
-//             <Paper sx={{ p: 3, mt: 3 }}>
-//               <Typography fontWeight="600" fontSize="0.9rem" mb={2}>
-//                 Resume
-//               </Typography>
-
-//               {resumeUrl ? (
-//                 <Box display="flex" alignItems="center" justifyContent="space-between">
-//                   <Typography
-//                     fontSize="0.75rem"
-//                     noWrap
-//                     sx={{ cursor: 'pointer', color: '#2563EB' }}
-//                     onClick={() => window.open(resumeUrl, '_blank')}
-//                   >
-//                     {resumeUrl.split('/').pop()}
-//                   </Typography>
-
-//                   <Box>
-//                     <IconButton size="small" onClick={() => window.open(resumeUrl, '_blank')}>
-//                       <EditIcon fontSize="small" />
-//                     </IconButton>
-//                     <IconButton size="small" onClick={handleDeleteResume}>
-//                       <DeleteIcon fontSize="small" color="error" />
-//                     </IconButton>
-//                   </Box>
-//                 </Box>
-//               ) : (
-//                 <Typography fontSize="0.75rem" color="text.secondary" mb={2}>
-//                   No resume uploaded
-//                 </Typography>
-//               )}
-
-//               <Box mt={2}>
-//                 <input
-//                   type="file"
-//                   ref={fileInputRef}
-//                   onChange={handleFileChange}
-//                   accept=".pdf,.doc,.docx"
-//                   style={{ display: 'none' }}
-//                 />
-//                 <Button
-//                   variant="outlined"
-//                   size="small"
-//                   onClick={() => fileInputRef.current.click()}
-//                   fullWidth
-//                   sx={{ mb: 1 }}
-//                 >
-//                   {resumeFile ? resumeFile.name : 'Select File'}
-//                 </Button>
-//                 {resumeFile && (
-//                   <Button
-//                     variant="contained"
-//                     size="small"
-//                     onClick={handleUploadResume}
-//                     fullWidth
-//                   >
-//                     Upload Resume
-//                   </Button>
-//                 )}
-//               </Box>
-//             </Paper>
-//           </Grid>
-//         </Grid>
-//       </Container>
-
-//       {/* Password Modal */}
-//       <Modal open={open} onClose={() => setOpen(false)}>
-//         <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh" px={2}>
-//           <Box
-//             sx={{
-//               width: isMobile ? '90%' : 400,
-//               bgcolor: 'background.paper',
-//               p: 3,
-//               boxShadow: 5,
-//               borderRadius: 2,
-//               position: 'relative',
-//             }}
-//           >
-//             <IconButton aria-label="close" onClick={() => setOpen(false)} sx={{ position: 'absolute', top: 8, right: 8 }}>
-//               <CloseIcon fontSize="small" />
-//             </IconButton>
-//             <Typography variant="h6" mb={2}>Change Password</Typography>
-//             <TextField
-//               label="Current Password"
-//               type="password"
-//               fullWidth
-//               margin="normal"
-//               value={currentPassword}
-//               onChange={(e) => setCurrentPassword(e.target.value)}
-//             />
-//             <TextField
-//               label="New Password"
-//               type="password"
-//               fullWidth
-//               margin="normal"
-//               value={newPassword}
-//               onChange={(e) => setNewPassword(e.target.value)}
-//             />
-//             <TextField
-//               label="Confirm New Password"
-//               type="password"
-//               fullWidth
-//               margin="normal"
-//               value={confirmPassword}
-//               onChange={(e) => setConfirmPassword(e.target.value)}
-//               sx={{ mb: 3 }}
-//             />
-//             <Box display="flex" gap={2}>
-//               <Button variant="contained" fullWidth onClick={handleChangePassword}>Change</Button>
-//               <Button variant="outlined" fullWidth onClick={() => setOpen(false)}>Cancel</Button>
-//             </Box>
-//           </Box>
-//         </Box>
-//       </Modal>
-
-//       {/* Edit Modal */}
-//       <Modal open={editOpen} onClose={() => setEditOpen(false)}>
-//         <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="100vh" px={2}>
-//           <Box
-//             sx={{
-//               width: isMobile ? '90%' : 500,
-//               bgcolor: 'background.paper',
-//               p: 3,
-//               boxShadow: 5,
-//               borderRadius: 2,
-//             }}
-//           >
-//             <Typography variant="h6" mb={2}>Edit Profile</Typography>
-//             <Stack spacing={2}>
-//               <TextField
-//                 label="Full Name"
-//                 fullWidth
-//                 value={profileData.fullName}
-//                 onChange={(e) => setProfileData({ ...profileData, fullName: e.target.value })}
-//               />
-//               <TextField
-//                 label="Phone Number"
-//                 fullWidth
-//                 value={profileData.phoneNumber}
-//                 onChange={(e) => setProfileData({ ...profileData, phoneNumber: e.target.value })}
-//               />
-//               <TextField
-//                 label="Email"
-//                 fullWidth
-//                 value={profileData.email}
-//                 onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-//               />
-//               <TextField
-//                 label="Address"
-//                 fullWidth
-//                 value={profileData.address}
-//                 onChange={(e) => setProfileData({ ...profileData, address: e.target.value })}
-//               />
-//               <TextField
-//                 label="Description"
-//                 multiline
-//                 minRows={4}
-//                 fullWidth
-//                 value={profileData.description}
-//                 onChange={(e) => setProfileData({ ...profileData, description: e.target.value })}
-//               />
-//             </Stack>
-//             <Box display="flex" gap={2} mt={3}>
-//               <Button variant="contained" fullWidth onClick={handleEditSubmit}>Save</Button>
-//               <Button variant="outlined" fullWidth onClick={() => setEditOpen(false)}>Cancel</Button>
-//             </Box>
-//           </Box>
-//         </Box>
-//       </Modal>
-//     </Box>
-//   );
-// }
 
 import React, { useState, useRef, useEffect } from 'react';
 import {
@@ -438,60 +11,54 @@ import {
   Link,
   Grid,
   Stack,
-  Modal,
-  TextField,
   Button,
   useMediaQuery,
   useTheme,
   CircularProgress,
   Alert,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useAuthContext } from 'src/auth/hooks';
 import bgImage from 'src/images/image.png';
 import Writelogo from 'src/images/write.svg';
-import axios from 'axios';
 import axiosInstance from 'src/utils/axios';
-import FormProvider from 'src/components/hook-form';
+import { green } from '@mui/material/colors';
+import { useSnackbar } from 'notistack';
 import ProfileChangePassword from './profile-change-password-modal';
+import ProfileUpdateModal from './profile-update-modal';
 
-// Job matches data
-const jobMatches = [
-  {
-    company: 'Netflix',
-    logo: 'https://storage.googleapis.com/a1aa/image/4ccd54d6-b484-449a-82cb-c851fae2c976.jpg',
-    title: 'Sr. Director AI | Data scientist',
-    snippet: 'Awesome work, can you...',
-  },
-  {
-    company: 'Google',
-    logo: 'https://storage.googleapis.com/a1aa/image/b34fb2e9-b9cb-4fc2-144f-63f7040062d2.jpg',
-    title: 'Sr. Director AI | Data scientist',
-    snippet: 'About files I can...',
-  },
-];
+const jobMatches = []; // You can populate this later
 
 export default function MyProfile() {
   const { user, loading } = useAuthContext();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const fileInputRef = useRef(null);
+  const { enqueueSnackbar } = useSnackbar();
 
-  // State management
   const [openPasswordModal, setOpenPasswordModal] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [resumeFile, setResumeFile] = useState(null);
-  const [resumeUrl, setResumeUrl] = useState('');
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  // Profile data state
+  const [existingResumes, setExistingResumes] = useState([]);
+  const [selectedResumeId, setSelectedResumeId] = useState(null);
+
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [resumeToDelete, setResumeToDelete] = useState(null);
+
   const [profileData, setProfileData] = useState({
     fullName: '',
     phoneNumber: '',
@@ -500,32 +67,27 @@ export default function MyProfile() {
     description: '',
   });
 
-  // Initialize profile data
   useEffect(() => {
     if (user) {
-      const fullName =
-        user?.displayName || `${user?.firstName || ''} ${user?.lastName || ''}`.trim();
-      const address = user?.fullAddress || `${user?.city || ''} ${user?.state || ''}`.trim();
-
       setProfileData({
-        fullName,
+        fullName: user?.fullName,
         phoneNumber: user?.phoneNumber || '',
         email: user?.email || '',
-        address,
+        address: user?.fullAddress,
         description:
-          user?.bio || 'Director responsible for overseeing business goals and objectives...',
+          user?.bio ||
+          'Directors are responsible for overseeing the development of an organizations business goals and objectives...',
       });
 
-      setResumeUrl(user?.resumeUrl || '');
+      setExistingResumes(user?.resumes || []);
+      setSelectedResumeId(null);
     }
   }, [user]);
 
-  // Handle file selection
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Validate file type
     const validTypes = [
       'application/pdf',
       'application/msword',
@@ -537,86 +99,96 @@ export default function MyProfile() {
       return;
     }
 
-    // Validate file size (5MB max)
     if (file.size > 5 * 1024 * 1024) {
       setError('File size must be less than 5MB');
       return;
     }
 
-    setResumeFile(file);
-    setError(null);
-  };
-
-
-  // Update profile handler
-  const handleEditSubmit = async () => {
-    try {
-      const [firstName, ...lastNameParts] = profileData.fullName.split(' ');
-      const lastName = lastNameParts.join(' ');
-
-      await axiosInstance.patch('/users/me', {
-        firstName,
-        lastName,
-        email: profileData.email,
-        phoneNumber: profileData.phoneNumber,
-        fullAddress: profileData.address,
-        bio: profileData.description,
-      });
-
-      setSuccess('Profile updated successfully');
-      setOpenEditModal(false);
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to update profile');
-    }
-  };
-
-  // Upload resume handler
-  const handleUploadResume = async () => {
-    if (!resumeFile) return;
-
     const formData = new FormData();
-    formData.append('resume', resumeFile);
+    formData.append('file', file);
 
     try {
       setIsUploading(true);
-      const response = await axiosInstance.post('/users/upload-resume', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      setError(null);
+      setSuccess(null);
 
-      setResumeUrl(response.data.url);
+      const res = await axiosInstance.post('/files', formData);
+      const uploadedFileData = res.data.files?.[0];
+      if (!uploadedFileData) throw new Error('Invalid file upload response');
+
+      const resumeRes = await axiosInstance.post('/resumes', { fileDetails: uploadedFileData });
+      setExistingResumes((prev) => [...prev, resumeRes.data]);
+      setSelectedResumeId(null);
       setSuccess('Resume uploaded successfully');
-      setResumeFile(null);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to upload resume');
     } finally {
       setIsUploading(false);
+      fileInputRef.current.value = '';
     }
   };
 
-  // Delete resume handler
-  const handleDeleteResume = async () => {
+  const handleSelectResume = (id) => {
+    setSelectedResumeId(id);
+    setError(null);
+  };
+
+  const handleDeleteResume = async (id) => {
     try {
-      await axiosInstance.delete('/users/resume');
-      setResumeUrl('');
+      await axiosInstance.delete(`/resumes/${id}`);
+      setExistingResumes((prev) => prev.filter((resume) => resume.id !== id));
+      if (selectedResumeId === id) setSelectedResumeId(null);
       setSuccess('Resume deleted successfully');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to delete resume');
+      console.error(err);
+      setError('Failed to delete resume. Please try again.');
+    } finally {
+      setConfirmDeleteOpen(false);
+      setResumeToDelete(null);
     }
   };
 
-  // Clear notifications
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setError(null);
-      setSuccess(null);
-    }, 5000);
+  const handleEditSubmit = async (data) => {
+    try {
+      await axiosInstance.patch(`/api/users/${user.id}`, {
+        fullName: data.fullName.trim(),
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        fullAddress: data.address,
+        profileDescription: data.description,
+        designation: data.designation,
+      });
 
-    return () => clearTimeout(timer);
-  }, [error, success]);
+      setOpenEditDialog(false);
+      enqueueSnackbar('Profile Updated successfully!');
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || 'Failed to update profile. Please try again.');
+    }
+  };
+
+   useEffect(() => {
+    if (error || success) {
+      const timer = setTimeout(() => {
+      setError(null);
+       setSuccess(null);   
+      }, 5000);
+
+     return () => clearTimeout(timer);
+    }
+    return undefined;
+     }, [error, success]);
+
+  if (loading || !user) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ backgroundColor: '#F5F9FF', minHeight: '100vh' }}>
-      {/* Notifications */}
       {error && (
         <Alert severity="error" sx={{ position: 'fixed', top: 16, right: 16, zIndex: 9999 }}>
           {error}
@@ -628,253 +200,209 @@ export default function MyProfile() {
         </Alert>
       )}
 
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        {/* Profile Banner */}
-        <Box sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid transparent' }}>
-          <Box
-            component="img"
-            src={bgImage}
-            alt="Banner"
-            sx={{ width: '100%', height: 300, objectFit: 'cover' }}
-          />
-          <Paper
-            elevation={3}
-            sx={{
-              position: 'relative',
-              p: 2,
-              display: 'flex',
-              gap: 2,
-              alignItems: 'center',
-              bgcolor: 'rgba(255,255,255,0.9)',
-              backdropFilter: 'blur(6px)',
-              borderRadius: 2,
-              mt: -6,
-              mx: 2,
-            }}
-          >
-            <Avatar src={user?.avatar?.fileUrl} sx={{ width: 48, height: 48 }} />
-            <Box>
-              <Typography fontWeight="600">{profileData.fullName}</Typography>
-              <Typography fontSize="0.75rem" color="text.secondary">
-                {user.jobTitle || 'Not specified'}
-              </Typography>
-            </Box>
-          </Paper>
+     <Container maxWidth="lg" sx={{ py: 4 }}>
+  {/* Profile Banner */}
+  <Box sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid transparent' }}>
+    <Box
+      component="img"
+      src={bgImage}
+      alt="Banner"
+      sx={{ width: '100%', height: 300, objectFit: 'cover' }}
+    />
+    <Paper
+      elevation={3}
+      sx={{
+        position: 'relative',
+        p: 2,
+        display: 'flex',
+        gap: 2,
+        alignItems: 'center',
+        bgcolor: 'rgba(255,255,255,0.9)',
+        backdropFilter: 'blur(6px)',
+        borderRadius: 2,
+        mt: -6,
+        mx: 2,
+      }}
+    >
+      <Avatar src={user?.avatar?.fileUrl || ''} sx={{ width: 48, height: 48 }} />
+      <Box>
+        <Typography fontWeight="600">{profileData?.fullName || 'No Name'}</Typography>
+        <Typography fontSize="0.75rem" color="text.secondary">
+          {user?.designation || 'Not specified'}
+        </Typography>
+      </Box>
+    </Paper>
+  </Box>
+
+  {/* Profile Info and Resume Section */}
+  <Grid container spacing={3} mt={3}>
+    <Grid item xs={12} lg={8}>
+      <Paper sx={{ p: 3 }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+          <Typography fontWeight="600">Profile Information</Typography>
+          <IconButton onClick={() => setOpenEditDialog(true)}>
+            <Box component="img" src={Writelogo} alt="Edit" sx={{ height: 20 }} />
+          </IconButton>
         </Box>
 
-        {/* Main Content */}
-        <Grid container spacing={3} mt={3}>
-          {/* Profile Information Column */}
-          <Grid item xs={12} lg={8}>
-            <Paper sx={{ p: 3 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                <Typography fontWeight="600" fontSize="16px">
-                  Profile Information
+        <Typography sx={{ mb: 2 }}>{profileData.description}</Typography>
+
+        <Stack spacing={1}>
+          {[
+            ['Full Name:', profileData.fullName],
+            ['Mobile:', profileData.phoneNumber || 'Not specified'],
+            ['Email:', profileData.email],
+            [
+              'Resume:',
+              existingResumes.length > 0 ? (
+                <Typography>
+                  {selectedResumeId
+                    ? existingResumes.find((r) => r.id === selectedResumeId)?.fileDetails
+                        ?.fileName || 'Selected resume'
+                    : 'Select a resume below'}
                 </Typography>
-                <IconButton onClick={() => setOpenEditModal(true)}>
-                  <Box component="img" src={Writelogo} alt="Write Logo" sx={{ height: 20 }} />
-                </IconButton>
-              </Box>
-
-              <Typography sx={{ mb: 2 }}>{profileData.description}</Typography>
-
-              <Stack spacing={1}>
-                {[
-                  ['Full Name:', profileData.fullName],
-                  ['Mobile:', profileData.phoneNumber || 'Not specified'],
-                  ['Email:', profileData.email],
-                  ['Address:', profileData.address || 'Not specified'],
-                  [
-                    'Resume:',
-                    resumeUrl ? (
-                      <Link
-                        href={resumeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        underline="hover"
-                      >
-                        {resumeUrl.split('/').pop()}
-                      </Link>
-                    ) : (
-                      <Typography color="text.secondary">No resume uploaded</Typography>
-                    ),
-                  ],
-                  [
-                    'Password:',
-                    <>
-                      ***********{' '}
-                      <Link href="#" underline="hover" onClick={() => setOpenPasswordModal(true)}>
-                        Change password
-                      </Link>
-                    </>,
-                  ],
-                ].map(([label, value]) => (
-                  <Box key={label} display="flex" gap={1.5}>
-                    <Typography sx={{ width: 90 }} color="text.secondary">
-                      {label}
-                    </Typography>
-                    <Typography fontWeight="600">{value}</Typography>
-                  </Box>
-                ))}
-              </Stack>
-            </Paper>
-          </Grid>
-
-          {/* Right Sidebar Column */}
-          <Grid item xs={12} lg={4}>
-            {/* Job Matches Section */}
-            <Paper sx={{ p: 3 }}>
-              <Typography fontWeight="600" mb={2}>
-                Top Job Matches
-              </Typography>
-              <Stack spacing={2}>
-                {jobMatches.map((job, idx) => (
-                  <Box key={idx} display="flex" gap={1.5}>
-                    <Avatar src={job.logo} sx={{ width: 24, height: 24 }} />
-                    <Box flexGrow={1}>
-                      <Typography fontWeight="600" noWrap>
-                        {job.title}
-                      </Typography>
-                      <Typography color="text.secondary" noWrap>
-                        {job.snippet}
-                      </Typography>
-                    </Box>
-                    <Link href="#" underline="hover" sx={{ color: '#2563EB' }}>
-                      Status
-                    </Link>
-                  </Box>
-                ))}
-              </Stack>
-            </Paper>
-
-            {/* Resume Section */}
-            <Paper sx={{ p: 3, mt: 3 }}>
-              <Typography fontWeight="600" mb={2}>
-                Resume
-              </Typography>
-
-              {resumeUrl ? (
-                <Box display="flex" alignItems="center" justifyContent="space-between">
-                  <Link href={resumeUrl} target="_blank" underline="hover">
-                    {resumeUrl.split('/').pop()}
-                  </Link>
-                  <Box>
-                    <IconButton size="small" onClick={() => fileInputRef.current.click()}>
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton size="small" onClick={handleDeleteResume}>
-                      <DeleteIcon fontSize="small" color="error" />
-                    </IconButton>
-                  </Box>
-                </Box>
               ) : (
-                <Typography color="text.secondary" mb={2}>
-                  No resume uploaded
-                </Typography>
-              )}
-
-              <Box mt={2}>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  accept=".pdf,.doc,.docx"
-                  style={{ display: 'none' }}
-                />
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={() => fileInputRef.current.click()}
-                  fullWidth
-                  sx={{ mb: 1 }}
-                >
-                  {resumeFile ? resumeFile.name : 'Select File'}
-                </Button>
-                {resumeFile && (
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={handleUploadResume}
-                    fullWidth
-                    disabled={isUploading}
-                  >
-                    {isUploading ? <CircularProgress size={24} /> : 'Upload Resume'}
-                  </Button>
-                )}
-              </Box>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Container>
-
-      {/* Profile Edit Modal */}
-      <Modal open={openEditModal} onClose={() => setOpenEditModal(false)}>
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          minHeight="100vh"
-          px={2}
-        >
-          <Box
-            sx={{
-              width: isMobile ? '90%' : 500,
-              bgcolor: 'background.paper',
-              p: 3,
-              boxShadow: 5,
-              borderRadius: 2,
-            }}
-          >
-            <Typography variant="h6" mb={2}>
-              Edit Profile
-            </Typography>
-            <Stack spacing={2}>
-              <TextField
-                label="Full Name"
-                fullWidth
-                value={profileData.fullName}
-                onChange={(e) => setProfileData({ ...profileData, fullName: e.target.value })}
-              />
-              <TextField
-                label="Phone Number"
-                fullWidth
-                value={profileData.phoneNumber}
-                onChange={(e) => setProfileData({ ...profileData, phoneNumber: e.target.value })}
-              />
-              <TextField
-                label="Email"
-                fullWidth
-                value={profileData.email}
-                onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-              />
-              <TextField
-                label="Address"
-                fullWidth
-                value={profileData.address}
-                onChange={(e) => setProfileData({ ...profileData, address: e.target.value })}
-              />
-              <TextField
-                label="Description"
-                multiline
-                minRows={4}
-                fullWidth
-                value={profileData.description}
-                onChange={(e) => setProfileData({ ...profileData, description: e.target.value })}
-              />
-            </Stack>
-            <Box display="flex" gap={2} mt={3}>
-              <Button variant="contained" fullWidth onClick={handleEditSubmit}>
-                Save Changes
-              </Button>
-              <Button variant="outlined" fullWidth onClick={() => setOpenEditModal(false)}>
-                Cancel
-              </Button>
+                <Typography color="text.secondary">No resume uploaded</Typography>
+              ),
+            ],
+            [
+              'Password:',
+              <>
+                ***********{' '}
+                <Link href="#" underline="hover" onClick={() => setOpenPasswordModal(true)}>
+                  Change password
+                </Link>
+              </>,
+            ],
+            ['Address:', profileData.address || 'Not specified'],
+          ].map(([label, value]) => (
+            <Box key={label} display="flex" gap={1.5}>
+              <Typography sx={{ width: 90 }} color="text.secondary">
+                {label}
+              </Typography>
+              <Typography fontWeight="600">{value}</Typography>
             </Box>
-          </Box>
-        </Box>
-      </Modal>
+          ))}
+        </Stack>
+      </Paper>
+    </Grid>
 
+    <Grid item xs={12} lg={4}>
+      {/* Resume Section */}
+      <Paper sx={{ p: 3 }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Typography fontWeight="600">Resume</Typography>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => fileInputRef.current.click()}
+            startIcon={isUploading ? <CircularProgress size={16} /> : <CloudUploadIcon />}
+            sx={{ textTransform: 'none' }}
+            disabled={isUploading}
+          >
+            Add New Resume
+          </Button>
+        </Box>
+
+        <List sx={{ maxHeight: 160, overflow: 'auto', mb: 2 }}>
+          {existingResumes.map((r) => (
+            <React.Fragment key={r.id}>
+              <ListItem
+                selected={selectedResumeId === r.id}
+                button
+                onClick={() => handleSelectResume(r.id)}
+                disabled={isUploading}
+                secondaryAction={
+                  <Box display="flex" alignItems="center">
+                    {selectedResumeId === r.id && (
+                      <CheckCircleIcon sx={{ color: green[600], mr: 1 }} />
+                    )}
+                    <IconButton
+                      edge="end"
+                      onClick={() => {
+                        setResumeToDelete(r.id);
+                        setConfirmDeleteOpen(true);
+                      }}
+                      aria-label="delete"
+                      disabled={isUploading}
+                    >
+                      <DeleteIcon sx={{ color: 'red' }} />
+                    </IconButton>
+                  </Box>
+                }
+              >
+                <ListItemText
+                  primary={
+                    <a
+                      href={r.fileDetails?.fileUrl || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      {r.fileDetails?.fileName || 'Untitled Resume'}
+                    </a>
+                  }
+                  secondary={r.uploadedAt || 'No date'}
+                />
+              </ListItem>
+              <Divider />
+            </React.Fragment>
+          ))}
+        </List>
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept=".pdf,.doc,.docx"
+          style={{ display: 'none' }}
+        />
+      </Paper>
+    </Grid>
+  </Grid>
+
+  {/* Job Section (Placed Below Resume Section) */}
+  <Grid container spacing={3} mt={1} >
+
+     <Grid item xs={12} lg={5} ml={98} mt={-12}>
+      <Paper sx={{ p: 3 }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Typography fontWeight="600">NO Jobs Found</Typography>
+        </Box>
+      </Paper>
+    </Grid>
+  </Grid>
+</Container>
+
+
+      {/* Confirm Delete Dialog */}
+      <Dialog open={confirmDeleteOpen} onClose={() => setConfirmDeleteOpen(false)}>
+        <DialogTitle>Delete Resume</DialogTitle>
+        <DialogContent>Are you sure you want to delete this resume?</DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmDeleteOpen(false)}>Cancel</Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => handleDeleteResume(resumeToDelete)}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      
+
+      {/* Edit Profile Modal */}
+      <ProfileUpdateModal
+        open={openEditDialog}
+        onClose={() => setOpenEditDialog(false)}
+        onSubmit={handleEditSubmit}
+        profileData={profileData}
+        setProfileData={setProfileData}
+      />
+
+      {/* Password Change Modal */}
       <ProfileChangePassword open={openPasswordModal} onClose={() => setOpenPasswordModal(false)} />
     </Box>
   );

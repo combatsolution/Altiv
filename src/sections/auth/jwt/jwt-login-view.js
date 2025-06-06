@@ -104,14 +104,14 @@ export default function JwtLoginView() {
           Login
         </Typography>
         <Typography variant="body2" color="text.secondary" mb={3}>
-          Enter your username and password to login
+          Enter your email and password to login
         </Typography>
 
         <FormProvider methods={methods} onSubmit={onSubmit}>
           <Stack spacing={2.5}>
             {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
 
-            <RHFTextField name="email" label="User Name" />
+            <RHFTextField name="email" label="Email" />
 
             <Box sx={{ position: 'relative' }}>
               <RHFTextField

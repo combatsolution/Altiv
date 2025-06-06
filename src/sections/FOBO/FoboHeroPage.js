@@ -55,7 +55,20 @@ export default function FoboHeroPage() {
   }, [currentUser]);
 
   const handleOpenModal = () => {
-    setOpen(true);
+    if (!currentUser) {
+      // navigate(paths.auth.jwt.login, { state: { returnTo: paths.FoboHeroPage } });
+    } else {
+      setOpen(true);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const f = e.target.files?.[0];
+    if (f) {
+      setSelectedFile(f);
+      setSelectedResumeId(null);
+      setError('');
+    }
   };
 
   const handleSelectResume = (id) => {
@@ -84,6 +97,7 @@ export default function FoboHeroPage() {
     }
   };
 
+ 
   const handleContinue = async () => {
     if(!selectedResumeId){
       enqueueSnackbar('Please select or upload resume', {variant: 'error'});
@@ -134,17 +148,18 @@ export default function FoboHeroPage() {
   return (
     <Box sx={{ px: { xs: 1, sm: 4, md: 4, lg: 3 }, py: { xs: 8, sm: 6, md: 8, lg: 16 }, mx: { lg: 7 } }}>
       <Grid container spacing={4} alignItems="center" marginTop={1}>
-        <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }}>
+        <Grid item xs={12} md={6} order={{ xs: 2, md: 1 , }} alignItems="center">
           <Stack spacing={3}>
             <Typography
+           
               fontWeight="bold"
               textalign={{ xs: 'center', sm: 'left', md: 'left', lg: 'left' }}
               color="#212529"
               fontFamily="Inter, sans-serif"
               sx={{
-                ml: { xs: 2, sm: 0, md: 0, lg: 0 },
+                ml: { xs: 3, sm: 0, md: 0, lg: 0 },
                 fontSize: { xs: '16px', sm: '24px', md: '24px', lg: '24px' },
-
+                display:{xs:'center'}
               }}
             >
               From AI Anxiety to AI Advantage
@@ -217,7 +232,7 @@ export default function FoboHeroPage() {
               sx={{
                 bgcolor: '#2A4DD0',
                 '&:hover': { bgcolor: '#002fb3' },
-                width: isMobile ? 'auto' : '233px',
+                width: isMobile ? '290px' : '233px',
                 borderRadius: '29px',
                 mt: { xs: 2, lg: 5 },
                 mx: { xs: 1, },

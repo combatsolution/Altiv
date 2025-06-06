@@ -5,14 +5,13 @@ import PersonIcon from '@mui/icons-material/Person';
 import CloudCircleIcon from '@mui/icons-material/CloudCircle';
 import SavedSearchIcon from '@mui/icons-material/SavedSearch';
 import VerifiedIcon from '@mui/icons-material/Verified';
-import { arrow} from '@mui/system';
 
 const steps = [
   {
     title: 'Task Analysis',
     description: 'Learn which tasks in your role can be AI-augmented vs automated',
     icon: PersonIcon,
-  },
+  },  
   {
     title: 'AI-vantage Score',
     description: 'Track your AI readiness against industry benchmarks',
@@ -64,7 +63,7 @@ const WorkingProcessSection = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          ml:{xs:'4px'}
+          ml: { xs: '4px' },
         }}
       >
         How Altiv Helps You Beat FOBO
@@ -76,7 +75,7 @@ const WorkingProcessSection = () => {
           fontSize: '40px',
           mb: 6,
           width: { xs: '275px', sm: '100%', md: '100%' },
-          ml:{xs:'4px'},
+          ml: { xs: '4px' },
           alignItems: 'center',
         }}
       >
@@ -101,8 +100,10 @@ const WorkingProcessSection = () => {
       >
         {steps.map((step, index) => {
           const IconComponent = step.icon;
-
+ 
           return (
+
+            
             <Paper
               key={index}
               elevation={0}
@@ -136,13 +137,12 @@ const WorkingProcessSection = () => {
                     color: '#767F8C',
                   },
                 },
-              }}
-            >
-
+              }} >
+                
               
-                     
+
               <Box
-                className="iconBox"
+                className="iconBox" 
                 sx={{
                   width: isMobile ? 56 : 72,
                   height: isMobile ? 56 : 72,
@@ -155,6 +155,8 @@ const WorkingProcessSection = () => {
                   transition: 'all 0.3s ease',
                 }}
               >
+
+                
                 <IconComponent
                   sx={{
                     fontSize: isMobile ? 24 : 32,
@@ -184,7 +186,7 @@ const WorkingProcessSection = () => {
                 {step.description}
               </Typography>
             </Paper>
-
+            
           );
         })}
       </Box>
@@ -193,4 +195,3 @@ const WorkingProcessSection = () => {
 };
 
 export default WorkingProcessSection;
-

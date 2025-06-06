@@ -58,19 +58,20 @@ function FoboImpactPage() {
         </Grid>
 
         {/* Text Second on Mobile */}
-        <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }} pl={{ md: '32px' }}>
+        <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }} pl={{ md: '35px' }}>
           <Stack spacing={3}>
-            <Box component="div" sx={{ position: 'relative' }}>
+            <Box component="div" sx={{ position: 'relative', paddingLeft:{xs:'0px' lg:''}, }}>
               <Typography
                 component="h1"
                 sx={{
                   fontFamily: 'Inter, sans-serif',
                   fontWeight: 700,
-                  fontSize: { xs: '36px', sm: '40px', md: '72px' },
+                  fontSize: { xs: '38px', sm: '40px', md: '72px' },
                   lineHeight: '100%',
                   letterSpacing: '-2%',
                   color: '#212529',
-                  textAlign: { xs: 'center', md: 'left' },
+                   textAlign: { xs: 'center', md: 'left' },
+                  
                 }}
               >
                 How FOBO <br />
@@ -101,10 +102,10 @@ function FoboImpactPage() {
                 fontFamily: 'Inter, sans-serif',
                 fontWeight: 400,
                 fontSize: '17px',
-                lineHeight: '30px',
+                lineHeight: '30px', 
                 letterSpacing: '-0.02em',
                 color: '#212529',
-                paddingLeft: '1.2em', // ensures bullets are aligned
+                paddingLeft: '3em', // ensures bullets are aligned
                 margin: 0,
                 width:{ xs: '290px', md: '619px' },
               }}

@@ -10,12 +10,12 @@ import Typography from '@mui/material/Typography';
 // assets
 import { UploadIllustration } from 'src/assets/illustrations';
 //
+import { CircularProgress } from '@mui/material';
 import Iconify from '../iconify';
 //
 import RejectionFiles from './errors-rejection-files';
 import MultiFilePreview from './preview-multi-file';
 import SingleFilePreview from './preview-single-file';
-import { CircularProgress } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
