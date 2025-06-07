@@ -85,12 +85,10 @@ function FoboDefineSection() {
                 fontWeight: 400,
                 fontSize: { xs: '18px', lg: '18px' },
                 lineHeight: '30px',
-
                 letterSpacing: '-0.02em',
                 color: '#000000',
                 width: { xs: '290px', lg: '618px' },
-
-                ml: { xs: '2px', md: 0 },
+                ml: { xs: '30px', md: 0 }, // 4px margin-left for mobile
               }}
             >
               Fear of Being Obsolete (FOBO) is the growing anxiety among professionals about AI’s

@@ -79,12 +79,11 @@ export default function FoboHeroPage() {
 
   const handleDeleteResume = async (id) => {
     try {
-      
       await axiosInstance.delete(`/resumes/${id}`);
       setExistingResumes((prev) => prev.filter((resume) => resume.id !== id));
 
       const resume = existingResumes.find((res) => res.id === selectedResumeId);
-      if(!resume && !selectedFile){
+      if (!resume && !selectedFile) {
         setSelectedResumeId(null);
       }
 
@@ -97,39 +96,41 @@ export default function FoboHeroPage() {
     }
   };
 
- 
   const handleContinue = async () => {
-    if(!selectedResumeId){
-      enqueueSnackbar('Please select or upload resume', {variant: 'error'});
-    } 
+    if (!selectedResumeId) {
+      enqueueSnackbar('Please select or upload resume', { variant: 'error' });
+    }
 
     navigate(paths.dashboardPage(selectedResumeId));
   };
 
   const handleUploadResume = async (file) => {
-    try{
+    try {
       setIsLoading(true);
       const data = {
-        fileDetails: file
+        fileDetails: file,
       };
 
       console.log('data', data);
-      const response = await axiosInstance.post(currentUser ? '/resumes' : '/resumes/guest-upload', data);
-      if(response.data){
-        enqueueSnackbar('Upload success', {variant: 'success'});
-        setSelectedResumeId(response?.data?.id)
+      const response = await axiosInstance.post(
+        currentUser ? '/resumes' : '/resumes/guest-upload',
+        data
+      );
+      if (response.data) {
+        enqueueSnackbar('Upload success', { variant: 'success' });
+        setSelectedResumeId(response?.data?.id);
       }
       setDocIsLoading(false);
       setIsLoading(false);
-    // eslint-disable-next-line no-shadow
-    }catch(error){
+      // eslint-disable-next-line no-shadow
+    } catch (error) {
       console.error('Error while uploading resume', error);
-      enqueueSnackbar(error.error.message, {variant : 'error'});
+      enqueueSnackbar(error.error.message, { variant: 'error' });
       setSelectedFile(null);
       setDocIsLoading(false);
       setIsLoading(false);
     }
-  }
+  };
 
   const handleDrop = async (acceptedFiles) => {
     setDocIsLoading(true);
@@ -146,30 +147,45 @@ export default function FoboHeroPage() {
   };
 
   return (
-    <Box sx={{ px: { xs: 1, sm: 4, md: 4, lg: 3 }, py: { xs: 8, sm: 6, md: 8, lg: 16 }, mx: { lg: 7 } }}>
+    <Box
+      sx={{
+        px: { xs: 1, sm: 4, md: 4, lg: 6 },
+        py: { xs: 8, sm: 6, md: 8, lg: 12 },
+        mx: { lg: 3 },
+      }}
+    >
       <Grid container spacing={4} alignItems="center" marginTop={1}>
-        <Grid item xs={12} md={6} order={{ xs: 2, md: 1 , }} alignItems="center">
+        <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }} alignItems="center">
           <Stack spacing={3}>
-            <Typography
-           
-              fontWeight="bold"
-              textalign={{ xs: 'center', sm: 'left', md: 'left', lg: 'left' }}
-              color="#212529"
-              fontFamily="Inter, sans-serif"
+            <Box
               sx={{
-                ml: { xs: 3, sm: 0, md: 0, lg: 0 },
-                fontSize: { xs: '16px', sm: '24px', md: '24px', lg: '24px' },
-                display:{xs:'center'}
+                display: 'flex',
+                justifyContent: { xs: 'center', lg: 'left' },
+                alignItems: { xs: 'center', lg: 'left' },
+                textAlign: 'center',
+                px: 0, // padding for small screen breathing room
               }}
             >
-              From AI Anxiety to AI Advantage
-            </Typography>
+              <Typography
+                fontWeight="bold"
+                textalign={{ xs: 'center', sm: 'left', md: 'left', lg: 'left' }}
+                color="#212529"
+                fontFamily="Inter, sans-serif"
+                mb='-15px'
+                sx={{
+                  fontSize: { xs:'16px', sm: '24px', md: '24px', lg: '24px' },
 
+                }}
+
+              >
+                From AI Anxiety to AI Advantage
+              </Typography>
+            </Box>
 
             {/* Desktop View: One line, full sentence */}
             <Typography
               component="h1"
-              fontWeight={700}
+              fontWeight={600}
               fontSize="64px"
               color="#212529"
               lineHeight={1}
@@ -186,25 +202,29 @@ export default function FoboHeroPage() {
               sx={{
                 display: { xs: 'flex', lg: 'none' },
                 flexDirection: 'column',
-                width: '288px',
-                ml: 2,
-                gap: 0.5,
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center', // Ensures text is centered inside the Typography
               }}
             >
               <Typography
                 component="h1"
                 fontSize="36px"
                 lineHeight={1}
+                marginTop="-4px"
                 sx={{
-                  display: { xs: 'block', lg: 'block' },
                   width: '310px',
                   fontWeight: 700,
-                  alignItems: 'center',
-                  justifyContent: 'center',
                 }}
               >
                 Beat FOBO{' '}
-                <Box component="span" sx={{ fontWeight: 300, width: '360px', }}>
+                <Box
+                  component="span"
+                  sx={{
+                    display: 'inline',
+                    fontWeight: 400,
+                  }}
+                >
                   (Fear of Being Obsolete)
                 </Box>
               </Typography>
@@ -224,7 +244,7 @@ export default function FoboHeroPage() {
               At Altiv, we help you beat decision paralysis with smarter tools and human-first
               design.
             </Typography>
-
+           
             <Button
               variant="contained"
               size="large"
@@ -234,17 +254,18 @@ export default function FoboHeroPage() {
                 '&:hover': { bgcolor: '#002fb3' },
                 width: isMobile ? '290px' : '233px',
                 borderRadius: '29px',
-                mt: { xs: 2, lg: 5 },
-                mx: { xs: 1, },
+                mt: { xs: 2, lg: 3 },
+                mx: { xs: 'auto' },
                 height: { xs: '48px', lg: '60px' },
                 textTransform: 'none', // Optional: to keep text case normal
-                ml: { lg: 20 }
+                
               }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, }}>
+              <Box sx={{ display: 'flex', alignItems:{ xs:'center', lg:'left'}, gap: '7px' }}>
                 Check Your Score <ArrowForwardIcon />
               </Box>
             </Button>
+            
           </Stack>
         </Grid>
         <Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>
@@ -266,7 +287,7 @@ export default function FoboHeroPage() {
       </Grid>
 
       {/* Modal */}
-      <Modal open={open} onClose={() => setOpen(false)} sx={{overflowY: 'scroll'}}>
+      <Modal open={open} onClose={() => setOpen(false)} sx={{ overflowY: 'scroll' }}>
         <Box display="flex" alignItems="center" justifyContent="center" minHeight="100vh" px={2}>
           <Box
             sx={{
@@ -298,7 +319,7 @@ export default function FoboHeroPage() {
             <Typography variant="subtitle1" fontWeight={600} mb={1}>
               Select or Upload Resume
             </Typography>
-            {existingResumes.length > 0 && 
+            {existingResumes.length > 0 && (
               <List sx={{ mb: 2, height: '120px', overflowY: 'scroll' }}>
                 {existingResumes.map((r) => (
                   <React.Fragment key={r.id}>
@@ -338,55 +359,56 @@ export default function FoboHeroPage() {
                     <Divider />
                   </React.Fragment>
                 ))}
-                </List>}
-              {selectedFile?.fileUrl ? (
-                // Show uploaded file info
-                <Box sx={{ px: 2, py: 2, border: '1px dashed #ccc', borderRadius: 2, mb: '10px' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                    <InsertDriveFileIcon sx={{ mr: 1 }} />
-                    <Typography variant="body2">
-                      {selectedFile.fileName} ({(selectedFile.size / 1024).toFixed(1)} KB)
-                    </Typography>
-                  </Box>
-
-                  {/* Optional Preview Link */}
+              </List>
+            )}
+            {selectedFile?.fileUrl ? (
+              // Show uploaded file info
+              <Box sx={{ px: 2, py: 2, border: '1px dashed #ccc', borderRadius: 2, mb: '10px' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <InsertDriveFileIcon sx={{ mr: 1 }} />
                   <Typography variant="body2">
-                    <a href={selectedFile.fileUrl} target="_blank" rel="noopener noreferrer">
-                      View / Download File
-                    </a>
+                    {selectedFile.fileName} ({(selectedFile.size / 1024).toFixed(1)} KB)
                   </Typography>
-
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    sx={{ mt: 2 }}
-                    onClick={() => setSelectedFile(null)} // reset state to show upload again
-                  >
-                    Remove File
-                  </Button>
                 </Box>
-              ) : (
-                // Show Upload Box
-                <Upload
-                  sx={{mb: '10px'}}
-                  loading={!!docIsLoading}
-                  placeholder="Drop or Select Resume"
-                  accept={{
-                    'application/pdf': [],
-                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [],
-                  }}
-                  file={null}
-                  error={false}
-                  onDrop={handleDrop}
-                  helperText={
-                    (false || '') && (
-                      <FormHelperText error={!!error} sx={{ px: 2 }}>
-                        {error ? error?.message : ""}
-                      </FormHelperText>
-                    )
-                  }
-                />
-              )}
+
+                {/* Optional Preview Link */}
+                <Typography variant="body2">
+                  <a href={selectedFile.fileUrl} target="_blank" rel="noopener noreferrer">
+                    View / Download File
+                  </a>
+                </Typography>
+
+                <Button
+                  variant="outlined"
+                  size="small"
+                  sx={{ mt: 2 }}
+                  onClick={() => setSelectedFile(null)} // reset state to show upload again
+                >
+                  Remove File
+                </Button>
+              </Box>
+            ) : (
+              // Show Upload Box
+              <Upload
+                sx={{ mb: '10px' }}
+                loading={!!docIsLoading}
+                placeholder="Drop or Select Resume"
+                accept={{
+                  'application/pdf': [],
+                  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [],
+                }}
+                file={null}
+                error={false}
+                onDrop={handleDrop}
+                helperText={
+                  (false || '') && (
+                    <FormHelperText error={!!error} sx={{ px: 2 }}>
+                      {error ? error?.message : ''}
+                    </FormHelperText>
+                  )
+                }
+              />
+            )}
             <TextField
               label="LinkedIn Profile URL"
               fullWidth

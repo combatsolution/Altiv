@@ -38,7 +38,8 @@ const ProfilePage = lazy(() => import('src/pages/profile/Profile-view'));
 
 const DashboardPage = lazy(() => import('src/pages/dashboard/dashboard-view'));
 const Comingsoon= lazy(() => import ('src/pages/Coming-soon/coming-view'));
-// const ResumeViewPage = lazy(() => import('src/pages/Resume/resume-view'));    
+// const ResumeViewPage = lazy(() => import('src/pages/Resume/resume-view')); 
+const Policy = lazy(() => import ('src/pages/Policies/policies-view'));   
 
 // ----------------------------------------------------------------------
 
@@ -68,6 +69,8 @@ export const mainRoutes = [
       { path: 'dashboard-page/:resumeId', element: < DashboardPage/>},
        {path: 'coming-soon', element: < Comingsoon/>},
       //  {path: 'resume-view', element: < ResumeViewPage/>},
+       {path: 'privacy-policy', element: <Policy/>},
+
     
       {
         path: 'product',

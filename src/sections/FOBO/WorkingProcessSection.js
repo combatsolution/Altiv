@@ -11,7 +11,7 @@ const steps = [
     title: 'Task Analysis',
     description: 'Learn which tasks in your role can be AI-augmented vs automated',
     icon: PersonIcon,
-  },  
+  },
   {
     title: 'AI-vantage Score',
     description: 'Track your AI readiness against industry benchmarks',
@@ -53,35 +53,42 @@ const WorkingProcessSection = () => {
 
   return (
     <Box sx={{ bgcolor: '#003366', color: '#fff', py: 8, px: 3, textAlign: 'center' }}>
-      <Typography
+      <Box
         sx={{
-          fontFamily: 'Inter',
-          fontWeight: 500,
-          fontSize: '24px',
-          mb: 1,
-          width: { xs: '275px', sm: '100%', md: '100%' },
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          ml: { xs: '4px' },
+          flexDirection: 'column',
         }}
       >
-        How Altiv Helps You Beat FOBO
-      </Typography>
-      <Typography
-        sx={{
-          fontFamily: 'Inter',
-          fontWeight: 500,
-          fontSize: '40px',
-          mb: 6,
-          width: { xs: '275px', sm: '100%', md: '100%' },
-          ml: { xs: '4px' },
-          alignItems: 'center',
-        }}
-      >
-        Real solutions, not theory: Your practical AI game plan
-      </Typography>
-
+        <Typography
+          sx={{
+            fontFamily: 'Inter',
+            fontWeight: 500,
+            fontSize: '24px',
+            mb: 1,
+            width: { xs: '275px', sm: '100%', md: '100%' },
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            ml: { xs: '4px' },
+          }}
+        >
+          How Altiv Helps You Beat FOBO
+        </Typography>
+        <Typography
+          sx={{
+            fontFamily: 'Inter',
+            fontWeight: 500,
+            fontSize: '40px',
+            mb: 6,
+            width: { xs: '275px', sm: '100%', md: '100%' },
+            ml: { xs: '4px' },
+          }}
+        >
+          Real solutions, not theory: Your practical AI game plan
+        </Typography>
+      </Box>
       <Box
         ref={scrollRef}
         sx={{
@@ -100,10 +107,8 @@ const WorkingProcessSection = () => {
       >
         {steps.map((step, index) => {
           const IconComponent = step.icon;
- 
-          return (
 
-            
+          return (
             <Paper
               key={index}
               elevation={0}
@@ -137,12 +142,10 @@ const WorkingProcessSection = () => {
                     color: '#767F8C',
                   },
                 },
-              }} >
-                
-              
-
+              }}
+            >
               <Box
-                className="iconBox" 
+                className="iconBox"
                 sx={{
                   width: isMobile ? 56 : 72,
                   height: isMobile ? 56 : 72,
@@ -155,8 +158,6 @@ const WorkingProcessSection = () => {
                   transition: 'all 0.3s ease',
                 }}
               >
-
-                
                 <IconComponent
                   sx={{
                     fontSize: isMobile ? 24 : 32,
@@ -186,7 +187,6 @@ const WorkingProcessSection = () => {
                 {step.description}
               </Typography>
             </Paper>
-            
           );
         })}
       </Box>

@@ -39,14 +39,14 @@ function Datasecuritypage() {
               <Typography
                 component="h1"
                 sx={{
-                  width: { xs: '100%', sm: '80%', lg: '690px' },
+                  width: { xs: '290px', sm: '80%', lg: '690px' },
                   height: { xs: 'auto', sm: '100px', md: '180px' },
                   fontFamily: 'Inter, sans-serif',
                   fontWeight: 700,  
                   fontSize: { xs: '36px', sm: '48px', md: '64px' },
                   lineHeight: '100%',
                   letterSpacing: '-0.02em',
-                  color: '#212529',
+                  color: '#212529', 
                   textAlign: { xs: 'center', lg: 'left' },
                   bottom: { xs: 0, md: '0' },
                 }}
@@ -83,9 +83,8 @@ function Datasecuritypage() {
                 mt: { xs: 2, md: '-30px' },
               }}
             >
-              The app is open source and your notes are saved to an open format, so you will always
-              have access to them. Uses End-To-End Encryption (E2EE) to secure your notes and ensure
-              no-one but yourself can access them.
+              We ensure your data stays secure and private. Using advanced encryption, your information is protected at every step.
+               Rest assured, your data is in your hands and handled with the atmost care.
             </Typography>
 
             {/* Button */}

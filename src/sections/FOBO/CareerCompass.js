@@ -89,7 +89,7 @@ function CareerCompass() {
                 fontFamily: 'Inter',
                 fontWeight: 400,
                 fontSize: { xs: '24px', md: '32px' },
-                lineHeight: '1.3',
+                lineHeight: '30px',
                 letterSpacing: '2%',
                 color: '#090808',
                 textAlign: { xs: 'left', md: 'left' },

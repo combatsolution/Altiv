@@ -74,7 +74,7 @@ function FoboImpactPage() {
                   
                 }}
               >
-                How FOBO <br />
+                How FOBO 
                 Impacts You
               </Typography>
 

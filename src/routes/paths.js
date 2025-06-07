@@ -2,6 +2,7 @@
 import { paramCase } from 'src/utils/change-case';
 import { _id, _postTitles } from 'src/_mock/assets';
 import { ResumeView } from 'src/sections/resume/View';
+import { PolicyView } from 'src/sections/Policies/View';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +19,11 @@ const ROOTS = {
 // ----------------------------------------------------------------------
 
 export const paths = {
+
+  // footer
+  PolicyView:'/privacy-policy',
+
+  
   jobDetails: '/job-details',
   careerResume: '/career-resume',
   fobo:'/fobo',

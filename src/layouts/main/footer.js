@@ -135,7 +135,7 @@ export default function Footer() {
         </Grid>
 
         {/* Column 4: About Altiv */}
-        <Grid xs={12} sm={6} md={2.4} >
+        <Grid xs={12} sm={6} md={1} >
           <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5}>
             About Altiv
           </Typography>
@@ -173,12 +173,12 @@ export default function Footer() {
             Subscribe to our newsletter
           </Typography>
 
-          <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={1} mb={1.5}> {/* Reduced gap and margin */}
+          <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={1} mb={1}> {/* Reduced gap and margin */}
             <TextField
               placeholder="Email Address"
               size="small"
               sx={{
-                width: { xs: '80%', lg: '70%' }, // Full width on mobile, half on small screens
+                width: { xs: '80%', lg: '110%' }, // Full width on mobile, half on small screens
                 maxWidth: '1441pxpx',
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 0,

@@ -17,6 +17,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import avt1 from 'src/Fogoimages/Avater01.png';
 import avt2 from 'src/Fogoimages/Avater02.jpg';
 import avt3 from 'src/Fogoimages/Avater03.png';
+import { lineHeight } from '@mui/system';
 
 const testimonials = [
   {
@@ -178,7 +179,7 @@ export default function TestimonialCarousel() {
       ];
 
   return (
-    <Box py={6} textAlign="center">
+    <Box py={6} textAlign="center" >
       <Typography
         component="h2"
         sx={{
@@ -197,9 +198,10 @@ export default function TestimonialCarousel() {
             fontWeight: 700,
             fontSize: { xs: '40px', sm: '60px', md: '72px' },
             color: '#212529',
+            lineHeight:'100%',  
           }}
         >
-          Real People, Real Progress
+          Real People, Real Progress  
         </Typography>
         <Box
           component="img"
@@ -208,7 +210,7 @@ export default function TestimonialCarousel() {
           sx={{
             position: 'absolute',
             width: { xs: 150, sm: 200, md: 250 },
-            top: { xs: '108px', sm: '80px', lg: 65 },
+            top: { xs: '70px', sm: '80px', lg: 65 },
             right: { xs: 70, sm: 60, md: 180 },
             zIndex: -1,
           }}
