@@ -6,7 +6,8 @@
   import Box from '@mui/material/Box';
   // routes
   import { RouterLink } from 'src/routes/components';
-  import Altivlogo from 'src/images/Altivlogo.svg';
+  import Altivlogo from 'src/images/Altivlogo.png';
+import { Grid } from 'lucide-react';
 
   // ----------------------------------------------------------------------
 
@@ -34,8 +35,8 @@
         ref={ref}
         component="div"
         sx={{
-          width: 40,
-          height: 40,
+          width: '96px',
+          height: '26px',
           display: 'inline-flex',
           ...sx,
         }}
@@ -74,7 +75,11 @@
             />
           </g>
         </svg> 
-         <img src={Altivlogo} alt="BigCo Inc. logo"/>
+ 
+        
+        <img src={Altivlogo} alt="BigCo Inc. logo"/>
+       
+          
       </Box>
     );
 
