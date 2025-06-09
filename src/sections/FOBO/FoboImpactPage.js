@@ -12,7 +12,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { useState, useRef } from 'react';
-import Impact from 'src/Fogoimages/impact.png';
+import Impact from 'src/Fogoimages/impact1.png';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { paths } from 'src/routes/paths';

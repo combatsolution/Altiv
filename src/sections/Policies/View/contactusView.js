@@ -1,18 +1,18 @@
 import { useScroll } from 'framer-motion';
 // components
 import ScrollProgress from 'src/components/scroll-progress';
-import PrivacyPolicy from '../PrivacyPolicy'
+import ContactUsPage from '../ContactUsPage';
 
 
 // ----------------------------------------------------------------------
 
-export default function PolicyView() {
+export default function ContactUsView() {
   const { scrollYProgress } = useScroll();
 
   return (
-    <> 
+    <>
       <ScrollProgress scrollYProgress={scrollYProgress} />    
-      <PrivacyPolicy/>
+      <ContactUsPage/>
     </>
   );
 

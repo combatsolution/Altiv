@@ -40,8 +40,16 @@ const DashboardPage = lazy(() => import('src/pages/dashboard/dashboard-view'));
 const Comingsoon= lazy(() => import ('src/pages/Coming-soon/coming-view'));
 // const ResumeViewPage = lazy(() => import('src/pages/Resume/resume-view')); 
 const Policy = lazy(() => import ('src/pages/Policies/policies-view'));   
+const AboutUsPage = lazy(() => import('src/pages/Policies/about-us-page'));
+const FaqPage = lazy(() => import('src/pages/Policies/faq-view'));
+const ContactUsPage =lazy(()=>import ('src/pages/Policies/contact-us-page'))
+const AttributionsView =lazy(()=>import ('src/pages/Policies/attributions-view'))
+const AitrainingpolicyView =lazy(()=>import ('src/pages/Policies/aItrainingpolicyview'))
 
-// ----------------------------------------------------------------------
+
+
+
+// ---------------------------- -----------------------------------------
 
 export const mainRoutes = [
   {
@@ -53,9 +61,11 @@ export const mainRoutes = [
       </MainLayout>
     ),
     children: [
-      { path: 'about-us', element: <AboutPage /> },
-      { path: 'contact-us', element: <ContactPage /> },
-      { path: 'faqs', element: <FaqsPage /> },
+       { path: 'attributions', element: <AttributionsView /> },
+       { path: 'ai-training-policy', element: <AitrainingpolicyView /> },
+      { path: 'about-us', element: <AboutUsPage /> },
+      { path: 'contact-us', element: <ContactUsPage /> },
+      { path: 'faqs', element: <FaqPage /> },
       { path: 'job-details', element: <JobDetailsPage />},
       { path: 'career-resume', element: <CareerPathResumePage />},
       { path: 'fobo', element: <FoboPage />},

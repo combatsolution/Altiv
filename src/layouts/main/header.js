@@ -1,5 +1,3 @@
-
-
 import { m } from 'framer-motion';
 import { alpha, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -19,7 +17,7 @@ import { bgBlur } from 'src/theme/css';
 import { paths } from 'src/routes/paths';
 import { useAuthContext } from 'src/auth/hooks';
 import { varHover } from 'src/components/animate';
-import Altivlogo from 'src/images/Altivlogo.svg';
+import Altivlogo from 'src/images/Altivlogo.png';
 import { HEADER } from '../config-layout';
 import { navConfig } from './config-navigation';
 import NavMobile from './nav/mobile';
@@ -46,7 +44,7 @@ export default function Header() {
   const handleSignout = () => {
     logout(); // Call logout to clear auth context
     localStorage.removeItem('token'); // Clear specific auth-related keys (optional, if logout doesn't handle it)
-    navigate(paths.auth.jwt.login, {replace : true}); // Navigate to login page
+    navigate(paths.auth.jwt.login, { replace: true }); // Navigate to login page
   };
 
   return (
@@ -90,7 +88,11 @@ export default function Header() {
                   navigate('/');
                 }
               }}
-              sx={{ cursor: 'pointer', display: 'inline-block' }}
+              sx={{
+                cursor: 'pointer',
+                display: 'inline-block',
+                width: { xs: '114px', lg: '128px' },
+              }}
               aria-label="Go to home"
             >
               <img src={Altivlogo} alt="BigCo Inc. lo go" />
@@ -99,8 +101,7 @@ export default function Header() {
 
           <Box sx={{ flexGrow: 1 }} />
 
-         
-          {/* {isProfilePage ? (
+          {isProfilePage ? (
             <m.div
               initial={{ x: '-100%', opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -110,69 +111,50 @@ export default function Header() {
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: {
-                    xs: 'flex-start',
-                    lg: 'flex-end',
-                  },
-                  flexDirection: {
-                    xs: 'column',
-                    lg: 'row',
-                  },
+                  justifyContent: 'space-between',
+                  flexDirection: { xs: 'row', lg: 'row' }, // Row on all screens
+                  width: '100%',
                   p: 2,
-                  gap: { xs: 2, lg: 4 },
-                  backgroundColor: '#fff',
+                  gap: 2,
+                  // backgroundColor: '#fff',
                   borderRadius: 2,
                 }}
               >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '8px',
-                    px: 1.5,
-                    py: 0.5,
-                    width: { xs: '100%', sm: 'auto', lg: 'auto' },
-                  }}
-                >
-                  <SearchIcon sx={{ fontSize: 18, color: 'text.secondary', mr: 1 }} />
-                  <InputBase placeholder="Type here…" sx={{ fontSize: 14, flex: 1 }} />
-                </Box>
+                {/* Notification Bell */}
+                <IconButton>
+                  <Badge badgeContent={0} color="error">
+                    <NotificationsIcon sx={{ color: 'black' }} />
+                  </Badge>
+                </IconButton>
 
+                {/* My Jobs */}
                 <Typography
                   variant="body2"
                   sx={{
                     cursor: 'pointer',
                     fontSize: 15,
-                    width: { xs: '100%', lg: 'auto' },
-                    textAlign: { xs: 'left', lg: 'inherit' },
+                    whiteSpace: 'nowrap',
                   }}
                   onClick={() => navigate(paths.comingSoon)}
                 >
                   My Jobs
                 </Typography>
 
+                {/* Signout */}
                 <Typography
                   variant="body2"
                   sx={{
                     cursor: 'pointer',
                     fontSize: 15,
-                    width: { xs: '100%', lg: 'auto' },
-                    textAlign: { xs: 'left', lg: 'inherit' },
+                    whiteSpace: 'nowrap',
                   }}
                   onClick={handleSignout}
                 >
                   Signout
                 </Typography>
-
-                <IconButton>
-                  <Badge badgeContent={0} color="error">
-                    <NotificationsIcon sx={{ color: 'black' }} />
-                  </Badge>
-                </IconButton>
               </Box>
             </m.div>
-          ) : ( */}
+          ) : (
             <>
               {mdUp && (
                 <NavDesktop offsetTop={offsetTop} sx={{ marginLeft: '20px' }} data={navConfig} />
@@ -239,7 +221,7 @@ export default function Header() {
                 {!mdUp && <NavMobile offsetTop={offsetTop} data={navConfig} />}
               </Stack>
             </>
-          {/* )} */}
+          )}
         </Container>
       </Toolbar>
 

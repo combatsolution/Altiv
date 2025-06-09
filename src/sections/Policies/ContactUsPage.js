@@ -5,12 +5,10 @@ import {
   Box,
   Grid,
   Link,
-  Divider,
   Paper,
   useTheme,
   useMediaQuery,
   Button,
-  ListItem,
 } from '@mui/material';
 import {
   Email as EmailIcon,
@@ -19,7 +17,6 @@ import {
   Instagram as InstagramIcon,
   RecordVoiceOver as MediaIcon,
 } from '@mui/icons-material';
-import { List } from 'src/components/organizational-chart/organizational-chart';
 
 const ContactUsPage = () => {
   const theme = useTheme();
@@ -30,45 +27,49 @@ const ContactUsPage = () => {
     sections: [
       {
         title: 'Get in Touch',
-        icon: <EmailIcon color="primary" fontSize="large" />,
+        icon: <EmailIcon sx={{ fontSize: 40, color: '#1976d2' }} />,
         items: [
           {
             text: 'hello@altiv.ai',
             href: 'mailto:hello@altiv.ai',
-            icon: <EmailIcon />,
+            icon: <EmailIcon sx={{ color: '#1976d2' }} />,
           },
         ],
       },
       {
         title: 'Connect With Us',
-        icon: <LinkedInIcon color="primary" fontSize="large" />,
+        icon: (
+          <LinkedInIcon
+            sx={{ display: 'flex', alignItems: 'center', fontSize: 40, color: '#0a66c2' }}
+          />
+        ),
         description: 'Follow our journey and join the conversation about the future of work:',
         items: [
           {
             text: 'Altiv.AI',
             href: 'https://linkedin.com/company/altiv-ai',
-            icon: <LinkedInIcon />,
+            icon: <LinkedInIcon sx={{ color: '#0a66c2' }} />,
           },
           {
             text: '@altivai',
             href: 'https://twitter.com/altivai',
-            icon: <TwitterIcon />,
+            icon: <TwitterIcon sx={{ color: '#1da1f2' }} />,
           },
           {
             text: '@altiv.ai',
             href: 'https://instagram.com/altiv.ai',
-            icon: <InstagramIcon />,
+            icon: <InstagramIcon sx={{ color: '#e4405f' }} />,
           },
         ],
       },
       {
         title: 'Media Inquiries',
-        icon: <MediaIcon color="primary" fontSize="large" />,
+        icon: <MediaIcon sx={{ fontSize: 40, color: '#6a1b9a' }} />,
         items: [
           {
-            text: "For press and media inquiries, please email us with 'Media' in the subject line",
+            text: "Email us with 'Media' in the subject line",
             href: 'mailto:hello@altiv.ai?subject=Media Inquiry',
-            icon: <MediaIcon />,
+            icon: <MediaIcon sx={{ color: '#6a1b9a' }} />,
           },
         ],
       },
@@ -81,8 +82,8 @@ const ContactUsPage = () => {
     <Container maxWidth="lg" sx={{ py: isMobile ? 4 : 8 }}>
       <Box textAlign="center" mb={6}>
         <Typography
-          variant="h2"
-          component="h1"
+          variant="h3"
+          component="h3"
           sx={{
             fontWeight: 700,
             color: 'primary.main',
@@ -92,7 +93,7 @@ const ContactUsPage = () => {
         >
           Contact Us
         </Typography>
-        <Typography variant="h6" component="p" color="text.secondary">
+        <Typography variant="h5" component="p" color="text.secondary">
           {contactData.heading}
         </Typography>
       </Box>
@@ -130,7 +131,15 @@ const ContactUsPage = () => {
                 </Typography>
               )}
 
-              <Box sx={{ width: '100%', mt: 2 }}>
+              <Box
+                sx={{
+                  width: '100%',
+                  mt: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}
+              >
                 {section.items.map((item, itemIndex) => (
                   <Button
                     key={itemIndex}
@@ -138,16 +147,22 @@ const ContactUsPage = () => {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    startIcon={item.icon}
                     sx={{
                       textTransform: 'none',
-                      justifyContent: 'flex-start',
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                       width: '100%',
-                      textAlign: 'left',
-                      mb: 1,
+                      mb: 0.5,
+                      fontWeight: 500,
+                      textAlign: 'center',
+                      gap: 0.5,
+                      // py: 0.3,
                     }}
                   >
-                    {item.text}
+                    {item.icon}
+                    <Typography variant="body1">{item.text}</Typography>
                   </Button>
                 ))}
               </Box>

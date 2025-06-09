@@ -1,6 +1,8 @@
 import React from 'react';
 import { Grid, Box, Typography, Stack } from '@mui/material';
-import brainImage from 'src/Fogoimages/brainimage.jpg';
+// import brainImage from 'src/Fogoimages/brainimage.jpg';
+import foboImage from 'src/Fogoimages/fobodefine.png';
+
 import { letterSpacing, textAlign } from '@mui/system';
 
 function FoboDefineSection() {
@@ -19,7 +21,7 @@ function FoboDefineSection() {
         <Grid item xs={12} md={6} order={{ xs: 1, md: 1 }}>
           <Box
             component="img"
-            src={brainImage}
+            src={foboImage}
             alt="What is FOBO Illustration"
             sx={{
               width: '100%',

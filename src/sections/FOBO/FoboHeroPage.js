@@ -279,7 +279,7 @@ export default function FoboHeroPage() {
               width: isMobile ? '345px' : '685px',
               height: isMobile ? '189px' : '453px',
               pr: { xs: 0, sm: 0 },
-              pl: { xs: 2, sm: 2 },
+              pl: { xs: 0, sm: 2 },
               mt: { xs: 0, lg: -5 },
             }}
           />

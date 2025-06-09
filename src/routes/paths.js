@@ -22,8 +22,8 @@ export const paths = {
 
   // footer
   PolicyView:'/privacy-policy',
-
-  
+  attributions:'/attributions',
+  AitrainingpolicyView:'/ai-training-policy',
   jobDetails: '/job-details',
   careerResume: '/career-resume',
   fobo:'/fobo',

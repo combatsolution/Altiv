@@ -8,45 +8,41 @@ import {
   Avatar,
   useMediaQuery,
   useTheme,
-  IconButton,
 } from '@mui/material';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-// Avatar imports
-import avt1 from 'src/Fogoimages/Avater01.png';
-import avt2 from 'src/Fogoimages/Avater02.jpg';
-import avt3 from 'src/Fogoimages/Avater03.png';
-import { lineHeight } from '@mui/system';
+// Avatar images
+import avt1 from 'src/Fogoimages/Aisha.png';
+import avt2 from 'src/Fogoimages/David.png';
+import avt3 from 'src/Fogoimages/Jennifer.png';
 
 const testimonials = [
   {
-    name: 'James M',
-    content:
-      'Understanding my AI-vantage score helped me pivot my skills strategically. I got promoted last month.',
-    rating: 5,
-    icon: avt1,
-    designation: 'Business Analyst',
-  },
-  {
-    name: 'Aisha K',
+    name: 'Aisha K.',
     content:
       'Great for seeing beyond technical skills. Helped me understand how to position myself as an AI translator between tech and business teams. Game-changing for my career growth.',
     rating: 5,
-    icon: avt2,
+    icon: avt1,
     designation: 'Lead Data Scientist',
   },
   {
-    name: 'Jennifer L',
+    name: 'David R.',
     content:
-      "The AI-vantage Score was eye-opening. Instead of competing with AI, I'm now using it to enhance my creative process. Game changer.",
+      "I was skeptical about AI tools, but this gave me concrete insights about my career's AI readiness. It's like having a career insurance policy in uncertain times.",
+    rating: 5,
+    icon: avt2,
+    designation: 'Marketing Director',
+  },
+  {
+    name: 'Jennifer L.',
+    content:
+      "The FOBO Score was eye-opening. Instead of getting caught up in AI anxiety, I finally have a clear picture of where I stand. Now I'm using AI to enhance my creative process rather than competing with it. Game changer.",
     rating: 5,
     icon: avt3,
     designation: 'Product Designer',
   },
 ];
 
-function StarRating({ count = 5 }) {
+function StarRating({ count }) {
   return (
     <Typography variant="body2" sx={{ color: 'gold' }}>
       {'★'.repeat(count)}
@@ -55,7 +51,7 @@ function StarRating({ count = 5 }) {
   );
 }
 StarRating.propTypes = {
-  count: PropTypes.number,
+  count: PropTypes.number.isRequired,
 };
 
 function TestimonialCard({ testimonial, isWhite }) {
@@ -81,7 +77,7 @@ function TestimonialCard({ testimonial, isWhite }) {
           flexDirection: 'column',
           p: { xs: 3, sm: 5 },
           gap: 3,
-          alignItems: { xs: 'center', sm: 'center' },
+          alignItems: 'center',
         }}
       >
         <Avatar src={testimonial.icon} sx={{ width: 70, height: 70 }} />
@@ -92,7 +88,7 @@ function TestimonialCard({ testimonial, isWhite }) {
             textAlign: 'left',
             fontSize: { xs: 16, sm: 18 },
             lineHeight: '28px',
-            color: 'text.primary',
+            color: isWhite ? '#000' : '#fff',
           }}
         >
           “{testimonial.content}”
@@ -104,8 +100,8 @@ function TestimonialCard({ testimonial, isWhite }) {
           sx={{
             display: 'flex',
             flexDirection: { xs: 'column', sm: 'row' },
-            justifyContent: { xs: 'center', sm: 'space-between' },
-            alignItems: { xs: 'flex-start', sm: 'flex-start' },
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
             mt: 'auto',
             gap: { xs: 1, sm: 14 },
           }}
@@ -113,7 +109,7 @@ function TestimonialCard({ testimonial, isWhite }) {
           <Typography
             variant="body1"
             sx={{
-              fontWeight: 400,
+              fontWeight: 700,
               fontSize: { xs: 16, sm: 18 },
               lineHeight: '28px',
               textAlign: 'left',
@@ -140,19 +136,7 @@ export default function TestimonialCarousel() {
   const [autoPlay, setAutoPlay] = useState(true);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const intervalDuration = 5000; // 5 seconds
-
-  const handlePrev = () => {
-    setAutoPlay(false);
-    setCurrentIndex((i) => (i === 0 ? testimonials.length - 1 : i - 1));
-    setTimeout(() => setAutoPlay(true), intervalDuration * 2);
-  };
-
-  const handleNext = () => {
-    setAutoPlay(false);
-    setCurrentIndex((i) => (i === testimonials.length - 1 ? 0 : i + 1));
-    setTimeout(() => setAutoPlay(true), intervalDuration * 2);
-  };
+  const intervalDuration = 5000;
 
   const handleDotClick = (idx) => {
     setAutoPlay(false);
@@ -161,25 +145,31 @@ export default function TestimonialCarousel() {
   };
 
   useEffect(() => {
-    let interval;
-    if (autoPlay) {
-      interval = setInterval(() => {
-        setCurrentIndex((prevIndex) => (prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1));
-      }, intervalDuration);
-    }
-    return () => clearInterval(interval);
-  }, [autoPlay]);
+  let interval;
+  if (autoPlay) {
+    interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 2));
+    }, intervalDuration);
+  }
+  return () => clearInterval(interval);
+}, [autoPlay]);
 
-  const itemsToShow = isMobile
-    ? [testimonials[currentIndex]]
+  const displayedTestimonials = isMobile
+    ? [{ ...testimonials[currentIndex], isWhite: true }]
     : [
-        testimonials[(currentIndex + testimonials.length - 1) % testimonials.length],
-        testimonials[currentIndex],
-        testimonials[(currentIndex + 1) % testimonials.length],
+        { ...testimonials[currentIndex], isWhite: true },
+        {
+          ...testimonials[(currentIndex + 1) % testimonials.length],
+          isWhite: false,
+        },
+        {
+          ...testimonials[(currentIndex + 2) % testimonials.length],
+          isWhite: false,
+        },
       ];
 
   return (
-    <Box py={6} textAlign="center" >
+    <Box py={6} textAlign="center">
       <Typography
         component="h2"
         sx={{
@@ -198,10 +188,10 @@ export default function TestimonialCarousel() {
             fontWeight: 700,
             fontSize: { xs: '40px', sm: '60px', md: '72px' },
             color: '#212529',
-            lineHeight:'100%',  
+            lineHeight: '100%',
           }}
         >
-          Real People, Real Progress  
+          Real People, Real Progress
         </Typography>
         <Box
           component="img"
@@ -217,7 +207,6 @@ export default function TestimonialCarousel() {
         />
       </Box>
 
-      {/* Carousel with Nav Buttons */}
       <Box
         display="flex"
         justifyContent="center"
@@ -227,21 +216,15 @@ export default function TestimonialCarousel() {
         flexWrap={isMobile ? 'wrap' : 'nowrap'}
         position="relative"
       >
-        
-
-        {itemsToShow.map((t, idx) => (
+        {displayedTestimonials.map((t, idx) => (
           <TestimonialCard
             key={idx}
             testimonial={t}
-            isWhite={t.name === 'James M'} // Always white for first testimonial
+            isWhite={t.isWhite}
           />
         ))}
-
-        
-        
       </Box>
 
-      {/* Dot Navigation */}
       <Box mt={4} display="flex" justifyContent="center" gap={1}>
         {testimonials.map((_, idx) => (
           <Box
@@ -251,9 +234,9 @@ export default function TestimonialCarousel() {
               width: 12,
               height: 12,
               borderRadius: '50%',
-              backgroundColor: idx === currentIndex ? '#4F9CF9' : '#1E3A8A',
+              backgroundColor: idx === currentIndex ? '#1E3A8A' : '#4F9CF9',
               cursor: 'pointer',
-              transition: 'background-color 0s',
+              transition: 'background-color 0.3s',
             }}
           />
         ))}

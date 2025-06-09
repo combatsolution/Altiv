@@ -3,7 +3,7 @@ import SubHeader from "src/components/subheader/subheader";
 import { PolicyView } from "src/sections/Policies/View";
 
 
-export default function ProfileViewPage(){
+export default function PrivacyPolicyPage(){
     return(
         <>
             <Helmet>
