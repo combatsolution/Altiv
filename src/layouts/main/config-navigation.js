@@ -19,6 +19,12 @@ export const navConfig = [
     icon: <Iconify icon="solar:home-2-bold-duotone" />,
     path: paths.comingSoon,
   },  
+   {
+    title: 'Programs',
+    icon: <Iconify icon="solar:notebook-bold-duotone" />,
+    path: paths.comingSoon,
+    // paths.docs
+  },
   { 
     title: 'Jobs',
     icon: <Iconify icon="solar:atom-bold-duotone" />,
@@ -26,10 +32,10 @@ export const navConfig = [
     // paths.components
   },
   {
-    title: 'Analyse your Resume',
+    title: 'Analyze Your Resume',
     icon: <Iconify icon="solar:notebook-bold-duotone" />,
     path: paths.comingSoon,
-    // paths.docs
-
+    
   },
+  
 ];

@@ -120,14 +120,9 @@ export default function Header() {
                   borderRadius: 2,
                 }}
               >
-                {/* Notification Bell */}
-                <IconButton>
-                  <Badge badgeContent={0} color="error">
-                    <NotificationsIcon sx={{ color: 'black' }} />
-                  </Badge>
-                </IconButton>
+               
 
-                {/* My Jobs */}
+                
                 <Typography
                   variant="body2"
                   sx={{
@@ -140,7 +135,7 @@ export default function Header() {
                   My Jobs
                 </Typography>
 
-                {/* Signout */}
+            
                 <Typography
                   variant="body2"
                   sx={{
@@ -152,6 +147,11 @@ export default function Header() {
                 >
                   Signout
                 </Typography>
+                <IconButton>
+                  <Badge badgeContent={0} color="error">
+                    <NotificationsIcon sx={{ color: 'black' }} />
+                  </Badge>
+                </IconButton>
               </Box>
             </m.div>
           ) : (

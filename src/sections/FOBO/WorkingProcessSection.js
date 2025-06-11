@@ -55,140 +55,149 @@ const WorkingProcessSection = () => {
     <Box sx={{ bgcolor: '#003366', color: '#fff', py: 8, px: 3, textAlign: 'center' }}>
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
+          position:'relative',
+           maxWidth: '1200px', // Reduced main width
+          // mx: 'auto',
         }}
       >
-        <Typography
+        <Box
           sx={{
-            fontFamily: 'Inter',
-            fontWeight: 500,
-            fontSize: '24px',
-            mb: 1,
-            width: { xs: '275px', sm: '100%', md: '100%' },
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            ml: { xs: '4px' },
+            flexDirection: 'column',
           }}
         >
-          How Altiv Helps You Beat FOBO
-        </Typography>
-        <Typography
+          <Typography
+            sx={{
+              fontFamily: 'Inter',
+              fontWeight: 500,
+              fontSize: '24px',
+              mb: 1,
+              width: { xs: '275px', sm: '100%', md: '100%' },
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              ml: { xs: '4px' },
+            }}
+          >
+            How Altiv Helps You Beat FOBO
+          </Typography>
+          <Typography
+            sx={{
+              fontFamily: 'Inter',
+              fontWeight: 500,
+              fontSize: '40px',
+              mb: 6,
+              width: { xs: '275px', sm: '100%', md: '100%' },
+              ml: { xs: '4px' },
+            }}
+          >
+            Real solutions, not theory: Your practical AI game plan
+          </Typography>
+        </Box>
+        <Box
+          ref={scrollRef}
           sx={{
-            fontFamily: 'Inter',
-            fontWeight: 500,
-            fontSize: '40px',
-            mb: 6,
-            width: { xs: '275px', sm: '100%', md: '100%' },
-            ml: { xs: '4px' },
+            position:'relative',
+            display: isMobile ? 'flex' : 'grid',
+            gridTemplateColumns: isMobile ? 'none' : 'repeat(4, 1fr)',
+            gap: isMobile ? 2 : 3,
+            overflowX: isMobile ? 'auto' : 'unset',
+            scrollbarWidth: 'none', // Firefox
+            '&::-webkit-scrollbar': {
+              display: 'none', // Chrome, Safari
+            },
+            scrollSnapType: isMobile ? 'x mandatory' : 'none',
+            scrollBehavior: 'smooth',
+            px: isMobile ? 1 : 0,
           }}
         >
-          Real solutions, not theory: Your practical AI game plan
-        </Typography>
-      </Box>
-      <Box
-        ref={scrollRef}
-        sx={{
-          display: isMobile ? 'flex' : 'grid',
-          gridTemplateColumns: isMobile ? 'none' : 'repeat(4, 1fr)',
-          gap: isMobile ? 2 : 4,
-          overflowX: isMobile ? 'auto' : 'unset',
-          scrollbarWidth: 'none', // Firefox
-          '&::-webkit-scrollbar': {
-            display: 'none', // Chrome, Safari
-          },
-          scrollSnapType: isMobile ? 'x mandatory' : 'none',
-          scrollBehavior: 'smooth',
-          px: isMobile ? 1 : 0,
-        }}
-      >
-        {steps.map((step, index) => {
-          const IconComponent = step.icon;
+          {steps.map((step, index) => {
+            const IconComponent = step.icon;
 
-          return (
-            <Paper
-              key={index}
-              elevation={0}
-              sx={{
-                minWidth: isMobile ? '100%' : 312,
-                maxWidth: isMobile ? '100%' : 'auto',
-                height: isMobile ? 240 : 224,
-                flexShrink: 0,
-                p: 3,
-                borderRadius: 3,
-                bgcolor: 'transparent',
-                color: '#fff',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center',
-                scrollSnapAlign: isMobile ? 'start' : 'none',
-                transition: 'all 0.3s ease',
-                mx: isMobile ? 'auto' : 'initial',
-                '&:hover': {
-                  bgcolor: '#fff',
-                  color: '#000',
-                  '& .iconBox': {
-                    bgcolor: '#0A65CC',
-                  },
-                  '& .iconBox svg': {
-                    color: '#fff',
-                  },
-                  '& .descriptionText': {
-                    color: '#767F8C',
-                  },
-                },
-              }}
-            >
-              <Box
-                className="iconBox"
+            return (
+              <Paper
+                key={index}
+                elevation={0}
                 sx={{
-                  width: isMobile ? 56 : 72,
-                  height: isMobile ? 56 : 72,
-                  borderRadius: '50%',
+                  minWidth: isMobile ? '100%' : '300px',
+                  maxWidth: isMobile ? '100%' : '312px',
+                  height: isMobile ? 240 : 224,
+                  flexShrink: 0,
+                  p: 3,
+                  borderRadius: 3,
+                  bgcolor: 'transparent',
+                  color: '#fff',
                   display: 'flex',
+                  flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  p: 2,
-                  bgcolor: '#fff',
+                  textAlign: 'center',
+                  scrollSnapAlign: isMobile ? 'start' : 'none',
                   transition: 'all 0.3s ease',
+                  mx: isMobile ? 'auto' : 'initial',
+                  '&:hover': {
+                    bgcolor: '#fff',
+                    color: '#000',
+                    '& .iconBox': {
+                      bgcolor: '#0A65CC',
+                    },
+                    '& .iconBox svg': {
+                      color: '#fff',
+                    },
+                    '& .descriptionText': {
+                      color: '#767F8C',
+                    },
+                  },
                 }}
               >
-                <IconComponent
+                <Box
+                  className="iconBox"
                   sx={{
-                    fontSize: isMobile ? 24 : 32,
-                    color: '#0A65CC',
-                    transition: 'color 0.3s ease',
+                    width: isMobile ? 56 : 72,
+                    height: isMobile ? 56 : 72,
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    p: 2,
+                    bgcolor: '#fff',
+                    transition: 'all 0.3s ease',
                   }}
-                />
-              </Box>
+                >
+                  <IconComponent
+                    sx={{
+                      fontSize: isMobile ? 24 : 32,
+                      color: '#0A65CC',
+                      transition: 'color 0.3s ease',
+                    }}
+                  />
+                </Box>
 
-              <Typography
-                sx={{ fontFamily: 'Inter', fontWeight: 600, fontSize: isMobile ? 16 : 18, mt: 2 }}
-              >
-                {step.title}
-              </Typography>
+                <Typography
+                  sx={{ fontFamily: 'Inter', fontWeight: 600, fontSize: isMobile ? 16 : 18, mt: 2 }}
+                >
+                  {step.title}
+                </Typography>
 
-              <Typography
-                className="descriptionText"
-                sx={{
-                  fontFamily: 'Inter',
-                  fontWeight: 400,
-                  fontSize: isMobile ? 12 : 14,
-                  lineHeight: isMobile ? '18px' : '20px',
-                  color: '#C3DCFF',
-                  mt: 1,
-                }}
-              >
-                {step.description}
-              </Typography>
-            </Paper>
-          );
-        })}
+                <Typography
+                  className="descriptionText"
+                  sx={{
+                    fontFamily: 'Inter',
+                    fontWeight: 400,
+                    fontSize: isMobile ? 12 : 14,
+                    lineHeight: isMobile ? '18px' : '20px',
+                    color: '#C3DCFF',
+                    mt: 1,
+                  }}
+                >
+                  {step.description}
+                </Typography>
+              </Paper>
+            );
+          })}
+        </Box>
       </Box>
     </Box>
   );

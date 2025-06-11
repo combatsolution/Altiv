@@ -98,3 +98,4 @@ export default function ContactMap({ contacts }) {
 ContactMap.propTypes = {
   contacts: PropTypes.array,
 };
+

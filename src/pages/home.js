@@ -8,8 +8,8 @@ import { HomeView } from 'src/sections/home/view';
 export default function HomePage() {
   return (
     <>
-      <Helmet>
-        <title> Altiv:FOBO View </title>
+      <Helmet>  
+        <title> Altiv AI </title>
       </Helmet>
 
       {/* <HomeView /> */}

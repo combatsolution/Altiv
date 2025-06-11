@@ -54,9 +54,20 @@ export default function FoboHeroPage() {
     }
   }, [currentUser]);
 
+  // const handleOpenModal = () => {
+  //   if (currentUser) {
+  //     //  navigate(paths.auth.jwt.login, { state: { returnTo: paths.FoboHeroPage } });
+  //   } else {
+  //     setOpen(true);
+  //   }
+  // };
+
   const handleOpenModal = () => {
-    if (!currentUser) {
-      // navigate(paths.auth.jwt.login, { state: { returnTo: paths.FoboHeroPage } });
+    if (currentUser) {
+      console.warn('User not logged in');
+      // For dev testing, allow modal to open anyway:
+      // setOpen(true);
+      navigate(paths.auth.jwt.login, { state: { returnTo: paths.FoboHeroPage } });
     } else {
       setOpen(true);
     }
@@ -149,102 +160,86 @@ export default function FoboHeroPage() {
   return (
     <Box
       sx={{
-        px: { xs: 1, sm: 4, md: 4, lg: 6 },
-        py: { xs: 8, sm: 6, md: 8, lg: 12 },
-        mx: { lg: 3 },
+        px: { xs: 1, sm: 4, md: 4, lg: 3 },
+        py: { xs: 8, sm: 6, md: 8, lg: 16 },
+        mx: { lg: 7 },
       }}
     >
       <Grid container spacing={4} alignItems="center" marginTop={1}>
         <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }} alignItems="center">
-          <Stack spacing={3}>
-            <Box
+          <Stack spacing={1.5}>
+            {/* Subtitle */}
+            <Typography
+              fontWeight="bold"
+              color="#212529"
+              fontFamily="Inter, sans-serif"
+              textAlign={{ xs: 'center', sm: 'left' }}
               sx={{
-                display: 'flex',
-                justifyContent: { xs: 'center', lg: 'left' },
-                alignItems: { xs: 'center', lg: 'left' },
-                textAlign: 'center',
-                px: 0, // padding for small screen breathing room
+                fontSize: { xs: '16px', sm: '20px', md: '24px' },
               }}
             >
-              <Typography
-                fontWeight="bold"
-                textalign={{ xs: 'center', sm: 'left', md: 'left', lg: 'left' }}
-                color="#212529"
-                fontFamily="Inter, sans-serif"
-                mb='-15px'
-                sx={{
-                  fontSize: { xs:'16px', sm: '24px', md: '24px', lg: '24px' },
+              From AI Anxiety to AI Advantage
+            </Typography>
 
-                }}
-
-              >
-                From AI Anxiety to AI Advantage
-              </Typography>
-            </Box>
-
-            {/* Desktop View: One line, full sentence */}
+            {/* Main Heading - Visible only on lg and up */}
             <Typography
               component="h1"
-              fontWeight={600}
-              fontSize="64px"
+              fontWeight={700}
               color="#212529"
               lineHeight={1}
+              width={{ lg: '692px' }}
+              textAlign={{ xs: 'center', sm: 'left' }}
               sx={{
+                fontSize: { xs: '36px', sm: '48px', md: '56px', lg: '64px' },
                 display: { xs: 'none', lg: 'block' },
-                ml: { xs: 2, sm: 0 },
+                mb: 2,
               }}
             >
               Beat FOBO (Fear of Being Obsolete)
             </Typography>
 
             {/* Mobile View: Split into two, second part lighter */}
+           
+
             <Box
               sx={{
                 display: { xs: 'flex', lg: 'none' },
                 flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center', // Ensures text is centered inside the Typography
+                width: '100%',
+                px: 2,
+                gap: 1,
               }}
             >
               <Typography
                 component="h1"
-                fontSize="36px"
-                lineHeight={1}
-                marginTop="-4px"
-                sx={{
-                  width: '310px',
-                  fontWeight: 700,
-                }}
+                fontSize="32px"
+                fontWeight={700}
+                lineHeight={1.2}
+                textAlign="center"
+                sx={{ width: '100%' }}
               >
                 Beat FOBO{' '}
-                <Box
-                  component="span"
-                  sx={{
-                    display: 'inline',
-                    fontWeight: 400,
-                  }}
-                >
+                <Box component="span" sx={{ fontWeight: 300 }}>
                   (Fear of Being Obsolete)
                 </Box>
               </Typography>
             </Box>
 
+            {/* Description Text */}
             <Typography
-              fontSize="16px"
-              lineHeight={2}
-              weight={400}
+              fontWeight={400}
+              color="#212529"
+              textAlign={{ xs: 'left', lg: 'left' }}
               sx={{
                 width: { xs: '288px', sm: '100%', md: '100%', lg: '683px' },
-                height: { xs: '90px', sm: '100%', md: '100%', lg: '60px' },
-                fontSize: { xs: '18px', sm: '24px', md: '24px', lg: '18px' },
-                ml: { xs: 2, sm: 0, md: 0, lg: 0 },
+                mx: { xs: 'auto', lg: 0 },
+                fontSize: { xs: '18px', sm: '20px', md: '20px', lg: '18px' },
+                lineHeight: 1.3,
               }}
             >
               At Altiv, we help you beat decision paralysis with smarter tools and human-first
               design.
             </Typography>
-           
             <Button
               variant="contained"
               size="large"
@@ -254,18 +249,17 @@ export default function FoboHeroPage() {
                 '&:hover': { bgcolor: '#002fb3' },
                 width: isMobile ? '290px' : '233px',
                 borderRadius: '29px',
-                mt: { xs: 2, lg: 3 },
-                mx: { xs: 'auto' },
+                mt: { xs: 2, lg: 5 },
+                mx: { xs: 1 },
                 height: { xs: '48px', lg: '60px' },
                 textTransform: 'none', // Optional: to keep text case normal
-                
+                ml: { lg: 20 },
               }}
             >
-              <Box sx={{ display: 'flex', alignItems:{ xs:'center', lg:'left'}, gap: '7px' }}>
+              <Box > {/* sx={{ display: 'flex', alignItems: 'center', gap: 1 }} */}
                 Check Your Score <ArrowForwardIcon />
               </Box>
             </Button>
-            
           </Stack>
         </Grid>
         <Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>
@@ -279,7 +273,7 @@ export default function FoboHeroPage() {
               width: isMobile ? '345px' : '685px',
               height: isMobile ? '189px' : '453px',
               pr: { xs: 0, sm: 0 },
-              pl: { xs: 0, sm: 2 },
+              pl: { xs: 2, sm: 2 },
               mt: { xs: 0, lg: -5 },
             }}
           />

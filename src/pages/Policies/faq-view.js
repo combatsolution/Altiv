@@ -9,7 +9,7 @@ export default function FaqPage(){
             <Helmet>
                 <title>faq page</title>
             </Helmet>
-            <SubHeader subtitle="FAQ View" />
+            <SubHeader subtitle="FAQ" />
             <FaqView/>
            
         </>
