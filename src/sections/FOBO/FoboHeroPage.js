@@ -55,11 +55,11 @@ export default function FoboHeroPage() {
   }, [currentUser]);
 
   const handleOpenModal = () => {
-    if (!currentUser) {
-      // navigate(paths.auth.jwt.login, { state: { returnTo: paths.FoboHeroPage } });
-    } else {
+    // if (!currentUser) {
+    //   // navigate(paths.auth.jwt.login, { state: { returnTo: paths.FoboHeroPage } });
+    // } else {
       setOpen(true);
-    }
+    // }
   };
 
   const handleFileChange = (e) => {

@@ -106,6 +106,7 @@
     "stylis": "^4.2.0",
     "stylis-plugin-rtl": "^2.0.2",
     "swr": "^2.1.5",
+    "tinycolor2": "^1.6.0",
     "worker-loader": "^3.0.8",
     "yet-another-react-lightbox": "^3.11.1",
     "yup": "^1.2.0"
