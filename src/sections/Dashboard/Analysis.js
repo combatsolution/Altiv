@@ -1,17 +1,21 @@
-/* eslint-disable react/prop-types */
 import React, { useEffect, useMemo, useState } from 'react';
-import { Box, Typography, Grid, Card, Button, Stack } from '@mui/material';
+import { Box, Typography, Grid, Card, Button, Stack, useTheme, useMediaQuery, FormControlLabel, Switch } from '@mui/material';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import GaugeChart from 'react-gauge-chart';
 import { width } from '@mui/system';
 import { useParams } from 'react-router';
 import axiosInstance from 'src/utils/axios';
 import { SplashScreen } from 'src/components/loading-screen';
-
-
+import CustomDonutChart from 'src/components/custom-charts/donutChart';
+import PropTypes from 'prop-types';
+import tinycolor from 'tinycolor2';
 
 export default function FoboLevelTaskDistribution() {
   const params = useParams();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
   const { resumeId } = params;
   const [activeIndex, setActiveIndex] = useState(null);
   const [selectedSection, setSelectedSection] = useState(null);
@@ -19,11 +23,22 @@ export default function FoboLevelTaskDistribution() {
   const [data, setData] = useState(null);
   const [pieData, setPieData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [viewDetails, setViewDetails] = useState(true);
+  const baseColor = pieData?.find((d) => d.name === selectedSection?.name)?.color || '#ccc';
+
+  // Generate 4 shades (lighter to darker)
+  const shades = [0.4, 0.6, 0.8, 1].map(opacity =>
+    tinycolor(baseColor).setAlpha(opacity).toRgbString()
+  );
 
   const fetchProfileAnalyticsData = async () => {
     try {
+      setIsLoading(true);
+      setActiveIndex(null);
+      setSelectedSection(null);
       const response = await axiosInstance.post(`/profile-analytics`, {
         resumeId: Number(resumeId),
+        viewDetails
       });
       if (response?.data.success) {
         console.log('data', response?.data?.data);
@@ -31,18 +46,21 @@ export default function FoboLevelTaskDistribution() {
         const newPieData = [
           {
             name: 'Augmentation',
+            label: 'Augmentation',
             value: response?.data?.data?.Augmented_Score,
             color: '#FFB95A',
             fieldName: 'Task_Distribution_Augmentation',
           },
           {
             name: 'Automation',
+            label: 'Automation',
             value: response?.data?.data?.Automated_Score,
             color: '#EF4444',
             fieldName: 'Task_Distribution_Automation',
           },
           {
             name: 'Human',
+            label: 'Human',
             value: response?.data?.data?.Human_Score,
             color: '#84CC16',
             fieldName: 'Task_Distribution_Human',
@@ -54,6 +72,7 @@ export default function FoboLevelTaskDistribution() {
       }
     } catch (error) {
       console.error('error', error);
+      setIsLoading(false);
     }
   };
 
@@ -61,16 +80,15 @@ export default function FoboLevelTaskDistribution() {
     if (resumeId) {
       fetchProfileAnalyticsData();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resumeId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resumeId, viewDetails]);
 
-  const handlePieClick = (_, index) => {
-    setActiveIndex(index);
-    setSelectedSection({ name: pieData[index].name, fieldName: pieData[index].fieldName });
+  const handlePieClick = (index, item) => {
+    setSelectedSection(item);
   };
 
   const handleMouseLeave = () => {
-    // setSelectedSection(null);
+    setSelectedIndex(null);
   };
 
   const getLevelColor = () => {
@@ -80,7 +98,7 @@ export default function FoboLevelTaskDistribution() {
   };
 
   const handleMouseEnter = (_, index) => {
-    setActiveIndex(index);
+    setSelectedIndex(index);
   };
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, index }) => {
@@ -136,59 +154,6 @@ export default function FoboLevelTaskDistribution() {
     );
   };
 
-  const renderCenterLabel = () => {
-    if (activeIndex == null || !pieData[activeIndex]) return null;
-
-    const total = pieData.reduce((acc, cur) => acc + cur.value, 0);
-    const selected = pieData[activeIndex];
-    const percent = ((selected.value / total) * 100).toFixed(0);
-
-    return (
-      <>
-        <text
-          x="50%"
-          y="50%"
-          dy={-6}
-          textAnchor="middle"
-          fill={selected.color}
-          fontSize={16}
-          fontWeight="bold"
-        >
-          {selected.name}
-        </text>
-        <text
-          x="50%"
-          y="50%"
-          dy={14}
-          textAnchor="middle"
-          fill="#555"
-          fontWeight="bold"
-          fontSize={14}
-        >
-          {percent}%
-        </text>
-      </>
-    );
-  };
-
-  const renderActiveShape = (props) => {
-    const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload } = props;
-
-    return (
-      <g style={{ transition: 'transform 0.3s ease' }}>
-        <Sector
-          cx={cx}
-          cy={cy}
-          innerRadius={innerRadius}
-          outerRadius={outerRadius + 10}
-          startAngle={startAngle}
-          endAngle={endAngle}
-          fill={fill}
-        />
-      </g>
-    );
-  };
-
   useEffect(() => {
     const needle = document.querySelector('#fobo-gauge .needle');
     if (needle) {
@@ -196,23 +161,143 @@ export default function FoboLevelTaskDistribution() {
     }
   }, [data?.FOBO_Score]);
 
-  const MemoizedGaugeChart = React.memo(({ score }) => (
-    <div style={{ position: 'relative', width: '100%', height: 220 }}>
-      <GaugeChart
-        id="fobo-gauge"
-        nrOfLevels={3}
-        arcsLength={[0.39, 0.3, 0.31]}
-        colors={['#00C853', '#FFEB3B', '#E53935']}
-        percent={score / 100}
-        arcPadding={0.02}
-        textColor="#000"
-        needleColor="#424242"
-        formatTextValue={() => ''} // hide center label
-        style={{ width: '100%', height: '100%' }}
-        animate
-      />
-    </div>
-  ));
+  const getLabelStyles = () => {
+    if (isMobile) {
+      return {
+        good: { top: '20%', left: '10%', transform: 'rotate(-50deg)' },
+        moderate: { top: '-7%', right: '35%', transform: 'rotate(10deg)' },
+        bad: { top: '20%', right: '12%', transform: 'rotate(54deg)' },
+      };
+    } else if (isTablet) {
+      return {
+        good: { top: '30%', left: '15%', transform: 'rotate(-50deg)' },
+        moderate: { top: '-2%', right: '40%', transform: 'rotate(10deg)' },
+        bad: { top: '30%', right: '15%', transform: 'rotate(60deg)' },
+      };
+    } else {
+      return {
+        good: { top: '20%', left: '15%', transform: 'rotate(-50deg)' },
+        moderate: { top: '-3%', right: '35%', transform: 'rotate(10deg)' },
+        bad: { top: '25%', right: '14%', transform: 'rotate(60deg)' },
+      };
+    }
+  };
+
+  const getCountStyles = () => {
+    if (isMobile) {
+      return {
+        good: { top: '29%', left: '18%', transform: 'rotate(-60deg)' },
+        moderate: { top: '7%', right: '38%', transform: 'rotate(10deg)' },
+        bad: { top: '27%', right: '18%', transform: 'rotate(54deg)' },
+      };
+    } else if (isTablet) {
+      return {
+        good: { top: '35%', left: '20%', transform: 'rotate(-50deg)' },
+        moderate: { top: '9%', right: '42%', transform: 'rotate(10deg)' },
+        bad: { top: '37%', right: '19%', transform: 'rotate(60deg)' },
+      };
+    } else {
+      return {
+        good: { top: '28%', left: '22%', transform: 'rotate(-50deg)' },
+        moderate: { top: '9%', right: '40%', transform: 'rotate(10deg)' },
+        bad: { top: '31%', right: '19%', transform: 'rotate(57deg)' },
+      };
+    }
+  };
+
+  const labelStyles = getLabelStyles();
+  const countStyles = getCountStyles();
+
+  const MemoizedGaugeChart = React.memo(({ score }) => {
+    const percent = score / 100;
+    const levelColor = useMemo(() => getLevelColor(score), [score]);
+
+
+    return (
+      <div style={{ position: 'relative', width: '100%', margin: 'auto' }}>
+        {/* Gauge Chart */}
+        <GaugeChart
+          id="fobo-gauge"
+          nrOfLevels={3}
+          arcsLength={[0.39, 0.3, 0.31]}
+          colors={['#00C853', '#FFB300', '#D32F2F']}
+          percent={percent}
+          arcPadding={0}
+          arcWidth={0.3} // <- Increase this value for thicker arcs (default is ~0.2)
+          needleColor="#424242"
+          textColor="transparent"
+          style={{ width: '100%' }}
+          animate
+        />
+
+        <div
+          style={{
+            position: 'absolute',
+            ...labelStyles.good,
+          }}
+        >
+          <Typography variant='body1'>Good</Typography>
+        </div>
+
+        <div
+          style={{
+            position: 'absolute',
+            ...countStyles.good,
+          }}
+        >
+          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>0 - 39</Typography>
+        </div>
+
+        <div
+          style={{
+            position: 'absolute',
+            ...labelStyles.moderate,
+          }}
+        >
+          <Typography variant='body1'>Moderate</Typography>
+        </div>
+
+        <div
+          style={{
+            position: 'absolute',
+            ...countStyles.moderate,
+          }}
+        >
+          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>70 - 100</Typography>
+        </div>
+
+        <div
+          style={{
+            position: 'absolute',
+            ...labelStyles.bad,
+          }}
+        >
+          <Typography variant='body1'>Bad</Typography>
+        </div>
+
+        <div
+          style={{
+            position: 'absolute',
+            ...countStyles.bad,
+          }}
+        >
+          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>40 - 69</Typography>
+        </div>
+
+
+        {/* FOBO Label and Score */}
+        <div style={{ textAlign: 'center', marginTop: 10 }}>
+          <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO LEVEL</div>
+          <div style={{ fontWeight: 'bold', fontSize: 24, color: levelColor }}>
+            {score}
+          </div>
+        </div>
+      </div>
+    );
+  }, (prev, next) => prev.score === next.score);
+  MemoizedGaugeChart.propTypes = {
+    score: PropTypes.number,
+  }
 
   return !isLoading ? (
     <Box
@@ -220,87 +305,60 @@ export default function FoboLevelTaskDistribution() {
       py={2}
       sx={{ position: 'relative', width: '100%', maxWidth: '100%' }}
     >
+       <Box sx={{ width: '100%', textAlign: isMobile ? 'left' : 'right', position: 'relative', zIndex: 1000 }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={viewDetails}
+              onChange={() => setViewDetails((prev) => !prev)}
+              color="primary"
+            />
+          }
+          label={viewDetails ? 'Show Long Description' : 'Show Short Description'}
+        />
+
+      </Box>
       <Grid container spacing={4}>
         {/* FOBO Level */}
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={12} lg={6}>
           <Stack direction="column" spacing={1.5}>
             <Typography variant="h5" fontWeight="bold" sx={{ textAlign: 'left' }} gutterBottom>
               FOBO Level
             </Typography>
 
-            <Box sx={{ width: { md: '85%', xs: '100%' }, mx: 'auto', mt: 2 }}>
+            <Box sx={{ width: { md: '85%', xs: '100%', display: 'flex', justifyContent: 'center' }, mx: 'auto', mt: 2 }}>
               <MemoizedGaugeChart score={data?.FOBO_Score} />
-
-              <Box textAlign="center" mt={3}>
-                <Typography variant="h6" fontWeight="bold" color="#000">
-                  FOBO Score
-                </Typography>
-                <Typography variant="h4" fontWeight="bold" color={getLevelColor()}>
-                  {data?.FOBO_Score}
-                </Typography>
-              </Box>
             </Box>
           </Stack>
         </Grid>
 
         {/* Task Distribution Pie */}
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={12} lg={6}>
           <Stack direction="column" spacing={1.5}>
             <Typography variant="h5" fontWeight="bold" gutterBottom sx={{ textAlign: 'left' }}>
               Task Distribution
             </Typography>
 
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
+            <Box sx={{ position: 'relative', width: '100%', paddingTop: isMobile ? '250px' : '280px' }}>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  width: '100%',
+                  top: isMobile ? '-25%' : '-30%',
+                  left: 0,
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <CustomDonutChart
                   data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={80}
-                  outerRadius={120}
-                  paddingAngle={2}
-                  dataKey="value"
-                  onClick={handlePieClick}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                  activeIndex={activeIndex}
-                  activeShape={renderActiveShape}
-                  labelLine={renderCustomLabelLine}
-                  label={renderCustomizedLabel}
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={entry.color}
-                      opacity={activeIndex != null && activeIndex !== index ? 0.3 : 1}
-                      cursor="pointer"
-                      style={{
-                        transition: 'opacity 0.5s ease, transform 0.5s ease',
-                      }}
-                    />
-                  ))}
-                </Pie>
-                {renderCenterLabel()}
-                {/* <Tooltip /> */}
-              </PieChart>
-            </ResponsiveContainer>
-
-            {/* style to override default style */}
-            <style>
-              {`
-                  .recharts-sector:focus,
-                  .recharts-sector:hover,
-                  .recharts-pie-sector:focus,
-                  .recharts-pie-sector:hover {
-                    outline: none !important;
-                    transition: opacity 0.3s ease, transform 0.3s ease;
-                  }
-
-                  .recharts-pie-sector {
-                    transition: opacity 0.5s ease, transform 0.5s ease;
-                  }
-                `}
-            </style>
+                  size={isMobile ? 350 : 450}
+                  innerRadius={isMobile ? 70 : 90}
+                  outerRadius={isMobile ? 100 : 130}
+                  onSliceClick={handlePieClick}
+                />
+              </Box>
+            </Box>
             {!selectedSection ? (
               <Stack spacing={1.5} direction="column">
                 {/* Automation */}
@@ -351,20 +409,24 @@ export default function FoboLevelTaskDistribution() {
                   Tasks distribution for {selectedSection?.name}
                 </Typography>
 
-                {/* Horizontal bar whose color matches the selected slice */}
-                <Box
-                  sx={{
-                    width: '100%',
-                    height: 2,
-                    bgcolor: pieData?.find((d) => d.name === selectedSection?.name)?.color,
-                    borderRadius: 1,
-                  }}
-                />
+                <Box sx={{ width: '100%', height: 4, display: 'flex', gap: '2px' }}>
+                  {shades.map((color, index) => (
+                    <Box
+                      key={index}
+                      sx={{
+                        flex: 1,
+                        height: '100%',
+                        bgcolor: color,
+                        borderRadius: index === 0 ? '4px 0 0 4px' : index === shades.length - 1 ? '0 4px 4px 0' : 0,
+                      }}
+                    />
+                  ))}
+                </Box>
 
                 {/* Four labels spaced evenly under the bar */}
                 <Grid container spacing={1}>
                   {data[selectedSection?.fieldName]?.map((taskName, i) => (
-                    <Grid item xs={3} mb={3}>
+                    <Grid item xs={viewDetails ? 3 : 12} md={viewDetails ? 3 : 12}>
                       <Typography
                         key={i}
                         variant="caption"

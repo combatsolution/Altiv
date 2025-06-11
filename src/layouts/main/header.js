@@ -186,7 +186,7 @@ export default function Header() {
                 )}
 
                 {user &&
-                  !isLoginPage && ( // Hide avatar on login page
+                  (!isLoginPage || !isProfilePage) && ( // Hide avatar on login page
                     <IconButton
                       component={m.button}
                       whileTap="tap"
@@ -214,9 +214,16 @@ export default function Header() {
                         }}
                       />
                     </IconButton>
-                  )}
+                  ) 
+                  }
+
+                  {isProfilePage && <Button variant="none" onClick={() => handleSignout()} sx={{ mr: 1,  color: "#0040D8", }}>
+                      Sign out
+                    </Button>}
 
                 {!user && <LoginButton />}
+
+                {}
 
                 {!mdUp && <NavMobile offsetTop={offsetTop} data={navConfig} />}
               </Stack>
