@@ -32,6 +32,10 @@ import { Upload, UploadBox } from 'src/components/upload';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { useSnackbar } from 'notistack';
 import { paths } from 'src/routes/paths';
+import { m } from 'framer-motion';
+
+const MotionBox = m(Box);
+const MotionImage = m(Box);
 
 export default function FoboHeroPage() {
   const { user: currentUser } = useAuthContext();
@@ -65,8 +69,7 @@ export default function FoboHeroPage() {
   const handleOpenModal = () => {
     if (currentUser) {
       console.warn('User not logged in');
-      // For dev testing, allow modal to open anyway:
-      // setOpen(true);
+     
       navigate(paths.auth.jwt.login, { state: { returnTo: paths.FoboHeroPage } });
     } else {
       setOpen(true);
@@ -167,6 +170,11 @@ export default function FoboHeroPage() {
     >
       <Grid container spacing={4} alignItems="center" marginTop={1}>
         <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }} alignItems="center">
+          <MotionBox
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
+          >
           <Stack spacing={1.5}>
             {/* Subtitle */}
             <Typography
@@ -261,21 +269,17 @@ export default function FoboHeroPage() {
               </Box>
             </Button>
           </Stack>
+          </MotionBox>
         </Grid>
         <Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>
-          <Box
-            display="flex"
-            justifyContent="center"
+          <MotionImage
             component="img"
             src={heroImg}
             alt="AI Coach"
-            sx={{
-              width: isMobile ? '345px' : '685px',
-              height: isMobile ? '189px' : '453px',
-              pr: { xs: 0, sm: 0 },
-              pl: { xs: 2, sm: 2 },
-              mt: { xs: 0, lg: -5 },
-            }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            sx={{ width: isMobile ? '345px' : '685px', height: isMobile ? '189px' : '453px', pr: { xs: 0, sm: 0 }, pl: { xs: 2, sm: 2 }, mt: { xs: 0, lg: -5 } }}
           />
         </Grid>
       </Grid>

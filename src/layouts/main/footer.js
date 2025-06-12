@@ -66,6 +66,7 @@ export default function Footer() {
         email,
         createdAt: now,
         updatedAt: now,
+        
         deletedAt: now,
         isDeleted: false,
       };
@@ -151,8 +152,8 @@ export default function Footer() {
         </Stack>
       </Grid>
 
-      <Grid xs={12} sm={6} md={2}>
-        <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5}>
+      <Grid xs={12} sm={6} md={1} mr={3}>
+        <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5} >
           Recruiters
         </Typography>
         <Stack spacing={0.75}>
@@ -189,7 +190,7 @@ export default function Footer() {
         </Stack>
       </Grid>
 
-      <Grid xs={12} sm={3} md={2.4} lg={4}>
+      <Grid xs={12} sm={3} md={2.4} lg={3}>
         <Grid
           sx={{ display: { xs: 'none', lg: 'block' }, width: { xs: '54px', lg: '128px' }, my: 1 }}
         >
