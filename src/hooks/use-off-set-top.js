@@ -10,7 +10,7 @@ export function useOffSetTop(top = 0, options) {
 
   const onOffSetTop = useCallback(() => {
     scrollY.on('change', (scrollHeight) => {
-      if (scrollHeight > top) {
+      if (scrollHeight > 10) {
         setValue(true);
       } else {
         setValue(false);

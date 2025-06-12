@@ -69,11 +69,11 @@ export default function FoboHeroPage() {
   const handleOpenModal = () => {
     if (currentUser) {
       console.warn('User not logged in');
-     
+      // For dev testing, allow modal to open anyway:
+      // setOpen(true);
       navigate(paths.auth.jwt.login, { state: { returnTo: paths.FoboHeroPage } });
     } else {
       setOpen(true);
-    }
   };
 
   const handleFileChange = (e) => {
