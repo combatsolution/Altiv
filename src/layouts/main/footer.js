@@ -1,5 +1,3 @@
-
-
 import { useState } from 'react';
 import { useSnackbar } from 'notistack'; //
 import { alpha } from '@mui/material/styles';
@@ -57,7 +55,7 @@ const AboutAltiv = [
 
 export default function Footer() {
   const [email, setEmail] = useState('');
-   const { enqueueSnackbar } = useSnackbar(); //
+  const { enqueueSnackbar } = useSnackbar(); //
 
   const handleSubscribe = async () => {
     try {
@@ -66,7 +64,7 @@ export default function Footer() {
         email,
         createdAt: now,
         updatedAt: now,
-        
+
         deletedAt: now,
         isDeleted: false,
       };
@@ -87,7 +85,11 @@ export default function Footer() {
       columns={14}
       rowSpacing={2}
       columnSpacing={2}
-      sx={{ pl: { xs: 3, lg: 9 }, mt: { lg: 15 } }}
+      sx={{
+        pl: { xs: 3, lg: 9 },
+        mt: { lg: 15 },
+        // overflow: 'hidden', // prevent horizontal scroll from propagating
+      }}
     >
       <Grid
         sx={{ display: { xs: 'block', lg: 'none' }, width: { xs: '114px', lg: '120px' }, my: 1 }}
@@ -95,7 +97,7 @@ export default function Footer() {
         <img src={Altivlogo} alt="Altiv Logo" />
       </Grid>
 
-      <Grid xs={12} sm={6} md={2}>
+      <Grid xs={12} sm={6} md={2} >
         <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5}>
           Jobseekers
         </Typography>
@@ -152,8 +154,8 @@ export default function Footer() {
         </Stack>
       </Grid>
 
-      <Grid xs={12} sm={6} md={1} mr={3}>
-        <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5} >
+      <Grid xs={12} sm={6} md={2} mr='-6px'>
+        <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5}>
           Recruiters
         </Typography>
         <Stack spacing={0.75}>
@@ -171,7 +173,7 @@ export default function Footer() {
         </Stack>
       </Grid>
 
-      <Grid xs={12} sm={6} md={2}>
+      <Grid xs={12} sm={6} md={2} >
         <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5}>
           About Altiv
         </Typography>
@@ -190,7 +192,7 @@ export default function Footer() {
         </Stack>
       </Grid>
 
-      <Grid xs={12} sm={3} md={2.4} lg={3}>
+      <Grid xs={12} sm={3} md={3} lg={3}>
         <Grid
           sx={{ display: { xs: 'none', lg: 'block' }, width: { xs: '54px', lg: '128px' }, my: 1 }}
         >
@@ -208,8 +210,8 @@ export default function Footer() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             sx={{
-              width: { xs: '100%', lg: '1300px' },
-              maxWidth: '1441px',
+              flexGrow: 1,
+              width: '100%',
               '& .MuiOutlinedInput-root': {
                 borderRadius: 0,
                 height: '36px',
@@ -245,8 +247,6 @@ export default function Footer() {
           </Button>
         </Box>
 
-        
-
         <Box display="flex" alignItems="center" gap={1.5}>
           {/* Twitter Icon */}
           <Box
@@ -260,8 +260,8 @@ export default function Footer() {
               justifyContent: 'center',
               backgroundColor: '#1da1f2',
               borderRadius: '4px',
-              width: 32,
-              height: 32,
+              width: 25,
+              height: 25,
               cursor: 'pointer',
             }}
           >
@@ -280,12 +280,12 @@ export default function Footer() {
               justifyContent: 'center',
               // backgroundColor: '#0a66c2',
               borderRadius: '4px',
-              width: 32,
-              height: 32,
+              width: 25,
+              height: 25,
               cursor: 'pointer',
             }}
           >
-            <img src={linkedinlogo} alt="LinkedIn Logo" width="30" height="30" />
+            <img src={linkedinlogo} alt="LinkedIn Logo" width="25" height="25" />
           </Box>
 
           {/* Instagram Icon */}
@@ -300,12 +300,12 @@ export default function Footer() {
               justifyContent: 'center',
               // backgroundColor: '#e4405f',
               borderRadius: '4px',
-              width: 32,
-              height: 32,
+              width: 25,
+              height: 25,
               cursor: 'pointer',
             }}
           >
-            <img src={Instagramlogo} alt="LinkedIn Logo" width="30" height="30" />
+            <img src={Instagramlogo} alt="LinkedIn Logo" width="25" height="25" />
           </Box>
         </Box>
       </Grid>

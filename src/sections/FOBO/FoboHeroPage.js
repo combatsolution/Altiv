@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'src/auth/hooks';
-import { HOST_API } from 'src/config-global';
+// import { HOST_API } from 'src/config-global';
 import {
   Box,
   Stack,
@@ -69,11 +69,10 @@ export default function FoboHeroPage() {
   const handleOpenModal = () => {
     if (currentUser) {
       console.warn('User not logged in');
-      // For dev testing, allow modal to open anyway:
-      // setOpen(true);
       navigate(paths.auth.jwt.login, { state: { returnTo: paths.FoboHeroPage } });
     } else {
       setOpen(true);
+    }
   };
 
   const handleFileChange = (e) => {
@@ -113,8 +112,8 @@ export default function FoboHeroPage() {
   const handleContinue = async () => {
     if (!selectedResumeId) {
       enqueueSnackbar('Please select or upload resume', { variant: 'error' });
+      return;
     }
-
     navigate(paths.dashboardPage(selectedResumeId));
   };
 
@@ -175,100 +174,103 @@ export default function FoboHeroPage() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
           >
-          <Stack spacing={1.5}>
-            {/* Subtitle */}
-            <Typography
-              fontWeight="bold"
-              color="#212529"
-              fontFamily="Inter, sans-serif"
-              textAlign={{ xs: 'center', sm: 'left' }}
-              sx={{
-                fontSize: { xs: '16px', sm: '20px', md: '24px' },
-              }}
-            >
-              From AI Anxiety to AI Advantage
-            </Typography>
+            <Stack spacing={1.5}>
+              {/* Subtitle */}
+              <Typography
+                fontWeight="bold"
+                color="#212529"
+                fontFamily="Inter, sans-serif"
+                textAlign={{ xs: 'center', sm: 'left' }}
+                sx={{
+                  fontSize: { xs: '16px', sm: '20px', md: '24px' },
+                }}
+              >
+                From AI Anxiety to AI Advantage
+              </Typography>
 
-            {/* Main Heading - Visible only on lg and up */}
-            <Typography
-              component="h1"
-              fontWeight={700}
-              color="#212529"
-              lineHeight={1}
-              width={{ lg: '692px' }}
-              textAlign={{ xs: 'center', sm: 'left' }}
-              sx={{
-                fontSize: { xs: '36px', sm: '48px', md: '56px', lg: '64px' },
-                display: { xs: 'none', lg: 'block' },
-                mb: 2,
-              }}
-            >
-              Beat FOBO (Fear of Being Obsolete)
-            </Typography>
-
-            {/* Mobile View: Split into two, second part lighter */}
-           
-
-            <Box
-              sx={{
-                display: { xs: 'flex', lg: 'none' },
-                flexDirection: 'column',
-                width: '100%',
-                px: 2,
-                gap: 1,
-              }}
-            >
+              {/* Main Heading - Visible only on lg and up */}
               <Typography
                 component="h1"
-                fontSize="32px"
                 fontWeight={700}
-                lineHeight={1.2}
-                textAlign="center"
-                sx={{ width: '100%' }}
+                color="#212529"
+                lineHeight={1}
+                width={{ lg: '692px' }}
+                textAlign={{ xs: 'center', sm: 'left' }}
+                sx={{
+                  fontSize: { xs: '36px', sm: '48px', md: '56px', lg: '64px' },
+                  display: { xs: 'none', lg: 'block' },
+                  mb: 2,
+                }}
               >
-                Beat FOBO{' '}
-                <Box component="span" sx={{ fontWeight: 300 }}>
-                  (Fear of Being Obsolete)
-                </Box>
+                Beat FOBO (Fear of Being Obsolete)
               </Typography>
-            </Box>
 
-            {/* Description Text */}
-            <Typography
-              fontWeight={400}
-              color="#212529"
-              textAlign={{ xs: 'left', lg: 'left' }}
-              sx={{
-                width: { xs: '288px', sm: '100%', md: '100%', lg: '683px' },
-                mx: { xs: 'auto', lg: 0 },
-                fontSize: { xs: '18px', sm: '20px', md: '20px', lg: '18px' },
-                lineHeight: 1.3,
-              }}
-            >
-              At Altiv, we help you beat decision paralysis with smarter tools and human-first
-              design.
-            </Typography>
-            <Button
-              variant="contained"
-              size="large"
-              onClick={handleOpenModal}
-              sx={{
-                bgcolor: '#2A4DD0',
-                '&:hover': { bgcolor: '#002fb3' },
-                width: isMobile ? '290px' : '233px',
-                borderRadius: '29px',
-                mt: { xs: 2, lg: 5 },
-                mx: { xs: 1 },
-                height: { xs: '48px', lg: '60px' },
-                textTransform: 'none', // Optional: to keep text case normal
-                ml: { lg: 20 },
-              }}
-            >
-              <Box > {/* sx={{ display: 'flex', alignItems: 'center', gap: 1 }} */}
-                Check Your Score <ArrowForwardIcon />
+              {/* Mobile View: Split into two, second part lighter */}
+
+              <Box
+                sx={{
+                  display: { xs: 'flex', lg: 'none' },
+                  flexDirection: 'column',
+                  width: '100%',
+                  px: 2,
+                  gap: 1,
+                }}
+              >
+                <Typography
+                  component="h1"
+                  fontSize="32px"
+                  fontWeight={700}
+                  lineHeight={1.2}
+                  textAlign="center"
+                  sx={{ width: '100%' }}
+                >
+                  Beat FOBO{' '}
+                  <Box component="span" sx={{ fontWeight: 300 }}>
+                    (Fear of Being Obsolete)
+                  </Box>
+                </Typography>
               </Box>
-            </Button>
-          </Stack>
+
+              {/* Description Text */}
+              <Typography
+                fontWeight={400}
+                color="#212529"
+                textAlign={{ xs: 'left', lg: 'left' }}
+                sx={{
+                  width: { xs: '288px', sm: '100%', md: '100%', lg: '683px' },
+                  mx: { xs: 'auto', lg: 0 },
+                  fontSize: { xs: '18px', sm: '20px', md: '20px', lg: '18px' },
+                  lineHeight: 1.3,
+                }}
+              >
+                At Altiv, we help you beat decision paralysis with smarter tools and human-first
+                design.
+              </Typography>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={handleOpenModal}
+                sx={{
+                  display:{xs:'flex'},
+                   alignItems:{xs:'center'},
+                   justifyContent:{ xs:'center'} ,
+                  bgcolor: '#2A4DD0',
+                  '&:hover': { bgcolor: '#002fb3' },
+                  width: isMobile ? '290px' : '233px',
+                  borderRadius: '29px',
+                  mt: { xs: 2, lg: 5 },
+                  mx: { xs: 1 },
+                  height: { xs: '48px', lg: '60px' },
+                  textTransform: 'none', // Optional: to keep text case normal
+                  ml: { lg: 20 },
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}
+                >
+                  Check Your Score <ArrowForwardIcon />
+                </Box>
+              </Button>
+            </Stack>
           </MotionBox>
         </Grid>
         <Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>
@@ -277,9 +279,16 @@ export default function FoboHeroPage() {
             src={heroImg}
             alt="AI Coach"
             initial={{ opacity: 0, scale: 0.9 }}
+             whileHover={{ scale: 1.05 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
-            sx={{ width: isMobile ? '345px' : '685px', height: isMobile ? '189px' : '453px', pr: { xs: 0, sm: 0 }, pl: { xs: 2, sm: 2 }, mt: { xs: 0, lg: -5 } }}
+            sx={{
+              width: isMobile ? '345px' : '685px',
+              height: isMobile ? '189px' : '453px',
+              pr: { xs: 0, sm: 0 },
+              pl: { xs: 2, sm: 2 },
+              mt: { xs: 0, lg: -5 },
+            }}
           />
         </Grid>
       </Grid>
@@ -399,9 +408,9 @@ export default function FoboHeroPage() {
                 error={false}
                 onDrop={handleDrop}
                 helperText={
-                  (false || '') && (
-                    <FormHelperText error={!!error} sx={{ px: 2 }}>
-                      {error ? error?.message : ''}
+                  error && (
+                    <FormHelperText error sx={{ px: 2 }}>
+                      {error}
                     </FormHelperText>
                   )
                 }
@@ -436,5 +445,4 @@ export default function FoboHeroPage() {
       </Modal>
     </Box>
   );
-  }
 }
