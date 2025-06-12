@@ -436,4 +436,5 @@ export default function FoboHeroPage() {
       </Modal>
     </Box>
   );
+  }
 }
