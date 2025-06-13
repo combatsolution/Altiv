@@ -79,11 +79,6 @@ export default function JwtRegisterView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-       // Split name into firstName and lastName
-      const nameParts = data.name.trim().split(/\s+/);
-      const firstName = nameParts[0];
-      const lastName = nameParts.slice(1).join(' ');
-
       await register?.(data.email, data.password, data.name, data.phone);
       enqueueSnackbar('Register success', {variant: 'success'});
       router.push(paths.auth.jwt.login);
