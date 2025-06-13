@@ -13,13 +13,13 @@ const MOCK_TITLE = _postTitles[2];
 const ROOTS = {
   AUTH: '/auth',
   AUTH_DEMO: '/auth-demo',
+  GOOGLE_LOGIN: '/auth/google'
   // DASHBOARD: '/dashboard',
 };
 
 // ----------------------------------------------------------------------
 
 export const paths = {
-
   // footer
   PolicyView:'/privacy-policy',
   attributions:'/attributions',

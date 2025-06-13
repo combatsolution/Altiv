@@ -1,3 +1,5 @@
+/* eslint-disable no-nested-ternary */
+/* eslint-disable no-else-return */
 import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Typography, Grid, Card, Button, Stack, useTheme, useMediaQuery, FormControlLabel, Switch } from '@mui/material';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Tooltip } from 'recharts';
@@ -93,7 +95,7 @@ export default function FoboLevelTaskDistribution() {
 
   const getLevelColor = () => {
     if (data?.FOBO_Score <= 39) return '#00C853';
-    if (data?.FOBO_Score <= 69) return '#FFEB3B';
+    if (data?.FOBO_Score <= 69) return '#F57F17';
     return '#E53935';
   };
 
@@ -299,13 +301,67 @@ export default function FoboLevelTaskDistribution() {
     score: PropTypes.number,
   }
 
+  const showDetailedDescription = (arrayData) => {
+    if (!arrayData?.length) return null;
+
+    const groupedArrays = [[], [], [], []];
+
+    arrayData.forEach((item, index) => {
+      groupedArrays[index % 4].push(item);
+    });
+
+    return (
+      <Box component='div' sx={{width: '100%', maxHeight: '350px', overflowY: 'scroll', '&::-webkit-scrollbar': {display: 'none',},'-ms-overflow-style': 'none', 'scrollbar-width': 'none',}}>
+        {groupedArrays.map((group, groupIndex) => {
+          if (group.length === 0) return null;
+
+          return (
+            <React.Fragment sx key={groupIndex}>
+              {/* Colored Bar */}
+              <Box sx={{ width: '100%', height: 4, display: 'flex', gap: '2px', mb: 1 }}>
+                <Box
+                  sx={{
+                    flex: 1,
+                    height: '100%',
+                    bgcolor: shades[groupIndex],
+                    borderRadius: '4px 0 0 4px',
+                  }}
+                />
+              </Box>
+
+              {/* Labels */}
+              <Grid container spacing={1}>
+                {group.map((taskName, i) => (
+                  <Grid item xs={viewDetails ? 3 : 12} md={viewDetails ? 3 : 12} key={i}>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        width: '25%',
+                        fontSize: { xs: '10px', md: '12px' },
+                        color: '#090808',
+                        textAlign: 'center',
+                        whiteSpace: 'pre-wrap',
+                      }}
+                    >
+                      {taskName}
+                    </Typography>
+                  </Grid>
+                ))}
+              </Grid>
+            </React.Fragment>
+          );
+        })}
+      </Box>
+    );
+  };
+
   return !isLoading ? (
     <Box
       px={{ xs: 2, md: '12%' }}
       py={2}
       sx={{ position: 'relative', width: '100%', maxWidth: '100%' }}
     >
-       <Box sx={{ width: '100%', textAlign: isMobile ? 'left' : 'right', position: 'relative', zIndex: 1000 }}>
+      <Box sx={{ width: '100%', textAlign: isMobile ? 'left' : 'right', position: 'relative', zIndex: 1000 }}>
         <FormControlLabel
           control={
             <Switch
@@ -409,41 +465,47 @@ export default function FoboLevelTaskDistribution() {
                   Tasks distribution for {selectedSection?.name}
                 </Typography>
 
-                <Box sx={{ width: '100%', height: 4, display: 'flex', gap: '2px' }}>
-                  {shades.map((color, index) => (
-                    <Box
-                      key={index}
-                      sx={{
-                        flex: 1,
-                        height: '100%',
-                        bgcolor: color,
-                        borderRadius: index === 0 ? '4px 0 0 4px' : index === shades.length - 1 ? '0 4px 4px 0' : 0,
-                      }}
-                    />
-                  ))}
-                </Box>
+                {viewDetails ? (
+                  <>
+                    <Box sx={{ width: '100%', height: 4, display: 'flex', gap: '2px' }}>
+                      {shades.map((color, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            flex: 1,
+                            height: '100%',
+                            bgcolor: color,
+                            borderRadius: index === 0 ? '4px 0 0 4px' : index === shades.length - 1 ? '0 4px 4px 0' : 0,
+                          }}
+                        />
+                      ))}
+                    </Box>
 
-                {/* Four labels spaced evenly under the bar */}
-                <Grid container spacing={1}>
-                  {data[selectedSection?.fieldName]?.map((taskName, i) => (
-                    <Grid item xs={viewDetails ? 3 : 12} md={viewDetails ? 3 : 12}>
-                      <Typography
-                        key={i}
-                        variant="caption"
-                        sx={{
-                          width: '25%',
-                          fontSize: { xs: '10px', md: '12px' },
-                          color: '#090808',
-                          textAlign: 'center',
-                          whiteSpace: 'pre-wrap',
-                          // flexBasis: '10%',
-                        }}
-                      >
-                        {taskName}
-                      </Typography>
+                    {/* Four labels spaced evenly under the bar */}
+                    <Grid container spacing={1}>
+                      {data[selectedSection?.fieldName]?.map((taskName, i) => (
+                        <Grid item xs={viewDetails ? 3 : 12} md={viewDetails ? 3 : 12}>
+                          <Typography
+                            key={i}
+                            variant="caption"
+                            sx={{
+                              width: '25%',
+                              fontSize: { xs: '10px', md: '12px' },
+                              color: '#090808',
+                              textAlign: 'center',
+                              whiteSpace: 'pre-wrap',
+                              // flexBasis: '10%',
+                            }}
+                          >
+                            {taskName}
+                          </Typography>
+                        </Grid>
+                      ))}
                     </Grid>
-                  ))}
-                </Grid>
+                  </>
+                ) : (
+                  showDetailedDescription(data[selectedSection?.fieldName] || [])
+                )}
               </Box>
             )}
           </Stack>

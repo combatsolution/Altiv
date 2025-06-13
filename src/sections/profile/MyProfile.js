@@ -1,4 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+/* eslint-disable no-else-return */
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import PropTypes from 'prop-types';
+import GaugeChart from 'react-gauge-chart';
+import { useNavigate } from 'react-router';
 import {
   Box,
   Avatar,
@@ -22,7 +26,10 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Card,
+  CardContent,
 } from '@mui/material';
+import { paths } from 'src/routes/paths';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -40,8 +47,11 @@ const jobMatches = []; // You can populate this later
 
 export default function MyProfile() {
   const { user, loading } = useAuthContext();
+  const navigate = useNavigate();
+  const [lastFOBOData, setLastFOBOData] = useState(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const fileInputRef = useRef(null);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -65,6 +75,21 @@ export default function MyProfile() {
     description: '',
   });
 
+  const fetchLastFoboScore = async () => {
+    try {
+      const resumeIds = existingResumes?.map((resume) => resume.id) || [];
+      if (resumeIds.length > 0) {
+        const response = await axiosInstance.post('/last-fobo-score', { resumeIds });
+        if (response?.data?.success) {
+          setLastFOBOData(response?.data?.analytics);
+        }
+      }
+      // eslint-disable-next-line no-shadow
+    } catch (error) {
+      console.log('Error while fetching last fobo score', error);
+    }
+  }
+
   useEffect(() => {
     if (user) {
       setProfileData({
@@ -81,6 +106,16 @@ export default function MyProfile() {
       setSelectedResumeId(null);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (existingResumes) {
+      fetchLastFoboScore();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [existingResumes]);
+
+  console.log('fobo score', lastFOBOData);
+
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -185,6 +220,154 @@ export default function MyProfile() {
     );
   }
 
+  const getLevelColor = () => {
+    if (lastFOBOData?.FOBO_Score <= 39) return '#00C853';
+    if (lastFOBOData?.FOBO_Score <= 69) return '#F57F17';
+    return '#E53935';
+  };
+
+  const getLabelStyles = () => {
+    if (isMobile) {
+      return {
+        good: { top: '20%', left: '10%', transform: 'rotate(-60deg)' },
+        moderate: { top: '-4%', right: '32%', transform: 'rotate(10deg)' },
+        bad: { top: '20%', right: '12%', transform: 'rotate(60deg)' },
+      };
+    } else if (isTablet) {
+      return {
+        good: { top: '29%', left: '15%', transform: 'rotate(-60deg)' },
+        moderate: { top: '0', right: '40%', transform: 'rotate(10deg)' },
+        bad: { top: '35%', right: '14%', transform: 'rotate(60deg)' },
+      };
+    } else {
+      return {
+        good: { top: '35%', left: '8%', transform: 'rotate(-56deg)' },
+        moderate: { top: '-4%', right: '57%', transform: 'rotate(12deg)' },
+        bad: { top: '35%', right: '43%', transform: 'rotate(60deg)' },
+      };
+    }
+  };
+
+  const getCountStyles = () => {
+    if (isMobile) {
+      return {
+        good: { top: '27%', left: '18%', transform: 'rotate(-60deg)' },
+        moderate: { top: '10%', right: '38%', transform: 'rotate(7deg)' },
+        bad: { top: '28%', right: '17%', transform: 'rotate(60deg)' },
+      };
+    } else if (isTablet) {
+      return {
+        good: { top: '35%', left: '22%', transform: 'rotate(-60deg)' },
+        moderate: { top: '12%', right: '42%', transform: 'rotate(10deg)' },
+        bad: { top: '41%', right: '20%', transform: 'rotate(60deg)' },
+      };
+    } else {
+      return {
+        good: { top: '44%', left: '13%', transform: 'rotate(-58deg)' },
+        moderate: { top: '15%', right: '60%', transform: 'rotate(10deg)' },
+        bad: { top: '45%', right: '46%', transform: 'rotate(61deg)' },
+      };
+    }
+  };
+
+  const labelStyles = getLabelStyles();
+  const countStyles = getCountStyles();
+
+  const MemoizedGaugeChart = React.memo(({ score }) => {
+    const percent = score / 100;
+    const levelColor = useMemo(() => getLevelColor(score), [score]);
+
+
+    return (
+      <div style={{ position: 'relative', width: '100%', margin: 'auto', marginTop: '20px' }}>
+        <Grid container spacing={1} alignItems='center'>
+          <Grid item xs={12} md={8}>
+            {/* Gauge Chart */}
+            <GaugeChart
+              id="fobo-gauge"
+              nrOfLevels={3}
+              arcsLength={[0.39, 0.3, 0.31]}
+              colors={['#00C853', '#FFB300', '#D32F2F']}
+              percent={percent}
+              arcPadding={0}
+              arcWidth={0.3} // <- Increase this value for thicker arcs (default is ~0.2)
+              needleColor="#424242"
+              textColor="transparent"
+              style={{ width: '100%' }}
+              animate
+            />
+
+            <div
+              style={{
+                position: 'absolute',
+                ...labelStyles.good,
+              }}
+            >
+              <Typography variant='body1'>Good</Typography>
+            </div>
+
+            <div
+              style={{
+                position: 'absolute',
+                ...countStyles.good,
+              }}
+            >
+              <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>0 - 39</Typography>
+            </div>
+
+            <div
+              style={{
+                position: 'absolute',
+                ...labelStyles.moderate,
+              }}
+            >
+              <Typography variant='body1'>Moderate</Typography>
+            </div>
+
+            <div
+              style={{
+                position: 'absolute',
+                ...countStyles.moderate,
+              }}
+            >
+              <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>70 - 100</Typography>
+            </div>
+
+            <div
+              style={{
+                position: 'absolute',
+                ...labelStyles.bad,
+              }}
+            >
+              <Typography variant='body1'>Bad</Typography>
+            </div>
+
+            <div
+              style={{
+                position: 'absolute',
+                ...countStyles.bad,
+              }}
+            >
+              <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>40 - 69</Typography>
+            </div>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            {/* FOBO Label and Score */}
+            <div style={{ textAlign: 'center', marginTop: 10 }}>
+              <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO SCORE</div>
+              <div style={{ fontWeight: 'bold', fontSize: 24, color: levelColor }}>
+                {score}
+              </div>
+            </div>
+          </Grid>
+        </Grid>
+      </div>
+    );
+  }, (prev, next) => prev.score === next.score);
+  MemoizedGaugeChart.propTypes = {
+    score: PropTypes.number,
+  }
+
   return (
     <Box sx={{ backgroundColor: '#F5F9FF', minHeight: '100vh' }}>
       {error && (
@@ -256,7 +439,7 @@ export default function MyProfile() {
                       <Typography>
                         {selectedResumeId
                           ? existingResumes.find((r) => r.id === selectedResumeId)?.fileDetails
-                              ?.fileName || 'Selected resume'
+                            ?.fileName || 'Selected resume'
                           : 'Select a resume below'}
                       </Typography>
                     ) : (
@@ -356,6 +539,85 @@ export default function MyProfile() {
                 style={{ display: 'none' }}
               />
             </Paper>
+          </Grid>
+
+          {/* Profile analytics section */}
+          <Grid item xs={12} lg={8}>
+            {lastFOBOData ? (
+              <Paper
+                elevation={3}
+                sx={{
+                  position: 'relative',
+                  p: 2,
+                  bgcolor: 'rgba(255,255,255,0.9)',
+                  backdropFilter: 'blur(6px)',
+                  borderRadius: 2,
+                }}
+              >
+                <Box sx={{ width: '100%' }}>
+                  <MemoizedGaugeChart score={lastFOBOData?.FOBO_Score} />
+                </Box>
+                <Box sx={{ width: '100%', position: 'relative', p: 2 }}>
+                  <Typography sx={{ textAlign: 'center' }} variant="h6" fontWeight="bold" gutterBottom>
+                    Strategies to Improve FOBO
+                  </Typography>
+
+                  <Typography sx={{textAlign: 'center'}} variant="body2" gutterBottom>
+                    Reduce your hesitation by practicing mindful decision-making, limiting options,
+                    and focusing on long-term satisfaction instead of perfect outcomes. <span style={{ filter: 'blur(2px)'}}>Reduce your hesitation
+                    by practicing mindful decision-making, limiting options, and focusing on long-term satisfaction
+                    instead of perfect outcomes. Reduce your hesitation by practicing mindful decision-making,
+                    limiting options, and focusing on long-term satisfaction instead of perfect outcomes.</span>
+                  </Typography>
+
+                  {/* Optional blue glow lines */}
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      bottom: isMobile ? '90px' : '80px',
+                      left: '10%',
+                      width: '80%',
+                      height: 4,
+                      bgcolor: 'primary.main',
+                      borderRadius: 2,
+                      boxShadow: '0 0 15px rgba(33,150,243,0.8)',
+                      animation: 'pulse 2s infinite ease-in-out',
+                    }}
+                  />
+
+                  {/* White faded overlay */}
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      bottom: 0,
+                      width: '100%',
+                      height: isMobile ? '200px' : '110px',
+                      bgcolor: 'white',
+                      opacity: 0.85,
+                      zIndex: 1,
+                    }}
+                  />
+
+                  {/* Analyze Again Button */}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => navigate(paths.dashboardPage(lastFOBOData?.resumeId))}
+                    sx={{
+                      position: 'absolute',
+                      bottom: isMobile ? '40px' : '30px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      zIndex: 2,
+                    }}
+                  >
+                    Analyze Again
+                  </Button>
+                </Box>
+              </Paper>
+            ) : (
+              <Typography variant='body1'>No Data</Typography>
+            )}
           </Grid>
         </Grid>
 

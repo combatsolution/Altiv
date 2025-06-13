@@ -20,6 +20,7 @@ import { SplashScreen } from 'src/components/loading-screen';
 // JWT
 const JwtLoginPage = lazy(() => import('src/pages/auth/jwt/login'));
 const JwtRegisterPage = lazy(() => import('src/pages/auth/jwt/register'));
+const GoogleLoginPage = lazy(() => import('src/pages/auth/jwt/googleLogin'));
 
 // FIREBASE
 // const FirebaseLoginPage = lazy(() => import('src/pages/auth/firebase/login'));
@@ -103,74 +104,20 @@ const authJwt = {
   ],
 };
 
-// const authFirebase = {
-//   path: 'firebase',
-//   element: (
-//     <GuestGuard>
-//       <Suspense fallback={<SplashScreen />}>
-//         <Outlet />
-//       </Suspense>
-//     </GuestGuard>
-//   ),
-//   children: [
-//     {
-//       path: 'login',
-//       element: (
-//         <AuthClassicLayout>
-//           <FirebaseLoginPage />
-//         </AuthClassicLayout>
-//       ),
-//     },
-//     {
-//       path: 'register',
-//       element: (
-//         <AuthClassicLayout title="Manage the job more effectively with Minimal">
-//           <FirebaseRegisterPage />
-//         </AuthClassicLayout>
-//       ),
-//     },
-//     {
-//       element: (
-//         <CompactLayout>
-//           <Outlet />
-//         </CompactLayout>
-//       ),
-//       children: [
-//         { path: 'verify', element: <FirebaseVerifyPage /> },
-//         { path: 'forgot-password', element: <FirebaseForgotPasswordPage /> },
-//       ],
-//     },
-//   ],
-// };
-
-// const authAuth0 = {
-//   path: 'auth0',
-//   element: (
-//     <GuestGuard>
-//       <Suspense fallback={<SplashScreen />}>
-//         <Outlet />
-//       </Suspense>
-//     </GuestGuard>
-//   ),
-//   children: [
-//     {
-//       path: 'login',
-//       element: (
-//         <AuthClassicLayout>
-//           <Auth0LoginPage />
-//         </AuthClassicLayout>
-//       ),
-//     },
-//     {
-//       path: 'callback',
-//       element: <Auth0Callback />,
-//     },
-//   ],
-// };
+const authGoogle = {
+  path: 'google',
+  element: (
+    <GuestGuard>
+      <Suspense fallback={<SplashScreen />}>
+        <GoogleLoginPage />
+      </Suspense>
+    </GuestGuard>
+  ),
+};
 
 export const authRoutes = [
   {
     path: 'auth',
-    children: [authJwt],
+    children: [authJwt, authGoogle],
   },
 ];
