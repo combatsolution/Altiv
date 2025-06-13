@@ -121,17 +121,16 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  const register = useCallback(async (email, password, firstName, lastName, phone) => {
-    try {
-      const data = {
-        firstName,
-        lastName,
-        email,
-        password,
-        phoneNumber: phone,
-        permissions: ['customer'],
-        isActive: true,
-        isDeleted: false,
+  const register = useCallback(async (email, password, fullName, phone) => {
+      try {
+        const data = {
+          fullName,
+          email,
+          password,
+          phoneNumber: phone,
+          permissions: ['customer'],
+          isActive: true,
+          isDeleted: false,
       };
 
       console.log('Register attempt with payload:', data);
