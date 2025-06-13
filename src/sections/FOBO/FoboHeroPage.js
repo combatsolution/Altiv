@@ -58,21 +58,10 @@ export default function FoboHeroPage() {
     }
   }, [currentUser]);
 
-  // const handleOpenModal = () => {
-  //   if (currentUser) {
-  //     //  navigate(paths.auth.jwt.login, { state: { returnTo: paths.FoboHeroPage } });
-  //   } else {
-  //     setOpen(true);
-  //   }
-  // };
+ 
 
-  const handleOpenModal = () => {
-    if (currentUser) {
-      console.warn('User not logged in');
-      navigate(paths.auth.jwt.login, { state: { returnTo: paths.FoboHeroPage } });
-    } else {
+ const handleOpenModal = () => {
       setOpen(true);
-    }
   };
 
   const handleFileChange = (e) => {
@@ -237,8 +226,9 @@ export default function FoboHeroPage() {
                 color="#212529"
                 textAlign={{ xs: 'left', lg: 'left' }}
                 sx={{
-                  width: { xs: '288px', sm: '100%', md: '100%', lg: '683px' },
+                  width: { xs: '288px', sm: '100%', md: '100%', lg: '680px' },
                   mx: { xs: 'auto', lg: 0 },
+                  mr: { xs: '0', lg:'10px' },
                   fontSize: { xs: '18px', sm: '20px', md: '20px', lg: '18px' },
                   lineHeight: 1.3,
                 }}
@@ -246,26 +236,29 @@ export default function FoboHeroPage() {
                 At Altiv, we help you beat decision paralysis with smarter tools and human-first
                 design.
               </Typography>
+              
+
               <Button
                 variant="contained"
                 size="large"
                 onClick={handleOpenModal}
                 sx={{
-                  display:{xs:'flex'},
-                   alignItems:{xs:'center'},
-                   justifyContent:{ xs:'center'} ,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   bgcolor: '#2A4DD0',
                   '&:hover': { bgcolor: '#002fb3' },
-                  width: isMobile ? '290px' : '233px',
+                  width: { xs: '290px', md: '233px' },
                   borderRadius: '29px',
                   mt: { xs: 2, lg: 5 },
-                  mx: { xs: 1 },
+                  mx: { xs: 'auto', md: '0' }, // <-- centers the button on mobile
                   height: { xs: '48px', lg: '60px' },
-                  textTransform: 'none', // Optional: to keep text case normal
-                  ml: { lg: 20 },
+                  textTransform: 'none',
+                  ml: { lg: 20 }, // retains left margin on large view if needed
                 }}
               >
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}
+                <Box
+                  sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}
                 >
                   Check Your Score <ArrowForwardIcon />
                 </Box>
@@ -279,7 +272,7 @@ export default function FoboHeroPage() {
             src={heroImg}
             alt="AI Coach"
             initial={{ opacity: 0, scale: 0.9 }}
-             whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.05 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             sx={{

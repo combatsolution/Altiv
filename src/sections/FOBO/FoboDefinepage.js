@@ -45,11 +45,31 @@ function FoboDefineSection() {
           <Stack spacing={3} sx={{ px: { xs: 0, sm: 2 }, maxWidth: '100%' }}>
             {/* Slide-in from right */}
             <MotionBox
+              sx={{ position: 'relative', display: 'inline-block', width: '100%' }}
               initial={{ x: 100, opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: 'easeOut' }}
             >
+              {/* SVG image behind text */}
+              <Box
+                component="img"
+                src="/assets/images/impact.svg"
+                alt="impact decorative"
+                sx={{
+                  position: 'absolute',
+                  top: '75%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  zIndex: 0,
+                  display: { xs: 'block', md: 'none' },
+                  width: '230.46px',
+                  height: '32.25px',
+                  pointerEvents: 'none',
+                }}
+              />
+
+              {/* Heading text */}
               <Typography
                 component="h1"
                 sx={{
@@ -60,26 +80,15 @@ function FoboDefineSection() {
                   letterSpacing: '-0.02em',
                   color: '#212529',
                   textAlign: { xs: 'center', md: 'left' },
-                  zIndex: 2,
+                  zIndex: 1,
+                  position: 'relative',
                 }}
               >
                 What is FOBO?
               </Typography>
             </MotionBox>
 
-            <Box
-              component="img"
-              src="/assets/images/impact.svg"
-              alt="impact decorative"
-              sx={{
-                display: { xs: 'block', md: 'none' },
-                width: '230.46px',
-                height: '32.25px',
-                ml: { xs: '40px' },
-                mt: '-41px',
-                zIndex: 1,
-              }}
-            />
+           
 
             <MotionBox
               initial={{ x: 100, opacity: 0 }}

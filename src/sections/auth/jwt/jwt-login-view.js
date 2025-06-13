@@ -1,5 +1,3 @@
-
-
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { useState, useCallback } from 'react';
@@ -90,14 +88,14 @@ export default function JwtLoginView() {
   return (
     <Box
       sx={{
-        minHeight: '100vh',
+        minHeight: '80vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         px: 2,
       }}
     >
-      <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center', mt:'-150px' }}>
+      <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center', mt:'0px' }}>
         <img src={altiv} alt="ALTIV Logo" style={{ marginBottom: 8 }} />
 
         <Typography variant="h6" mb={1}>
@@ -171,7 +169,7 @@ export default function JwtLoginView() {
               onClick={() =>
                 handleRedirect('https://www.linkedin.com')
               }
-              sx={{ textTransform: 'none', mt: 2 }}
+              sx={{ textTransform: 'none', mt: 0 }}
             >
               Sign in with LinkedIn
             </Button>

@@ -18,36 +18,36 @@ import Instagramlogo from 'src/images/Instagramlogo.png';
 // import dayjs from 'dayjs';
 
 const jobseekers = [
-  { name: 'Search Jobs', href: paths.auth.jwt.register },
+  { name: 'Search Jobs', href: paths.comingSoon },
   { name: 'Register', href: paths.auth.jwt.register },
-  { name: 'Job Alerts', href: paths.JobAlerts },
-  { name: 'Career Advice', href: paths.CareerAdvice },
+  { name: 'Job Alerts', href: paths.comingSoon },
+  { name: 'Career Advice', href: paths.comingSoon },
 ];
 
 const AICareerCoach = [
-  { name: 'FOBO', href: '#' },
-  { name: 'Career Compass', href: paths.auth.jwt.register },
-  { name: 'Smart Job Feed', href: paths.JobAlerts },
-  { name: 'Job Match Boost', href: paths.CareerAdvice },
+  { name: 'FOBO', href: paths.fobo },
+  { name: 'Career Compass', href: paths.careerResume },
+  { name: 'Smart Job Feed', href: paths.comingSoon },
+  { name: 'Job Match Boost', href: paths.comingSoon },
 ];
 
 const Programs = [
-  { name: 'Marketing Track', href: '#' },
-  { name: 'Data Science Track', href: '#' },
-  { name: 'Product Track', href: '#' },
-  { name: 'Software Engineering Track', href: '#' },
+  { name: 'Marketing Track', href: paths.comingSoon },
+  { name: 'Data Science Track', href: paths.comingSoon },
+  { name: 'Product Track', href: paths.comingSoon },
+  { name: 'Software Engineering Track', href: paths.comingSoon },
 ];
 
 const Recruiters = [
-  { name: 'Post Jobs', href: '#' },
+  { name: 'Post Jobs', href: paths.comingSoon },
   { name: 'Register', href: paths.auth.jwt.register },
-  { name: 'Find Candidates', href: '#' },
+  { name: 'Find Candidates', href: paths.comingSoon },
 ];
 
 const AboutAltiv = [
   { name: 'About Us', href: paths.about },
   { name: 'Contact Us', href: paths.contact },
-  { name: 'Terms of Use', href: '#' },
+  { name: 'Terms of Use', href: paths.comingSoon },
   { name: 'Attributions', href: paths.attributions },
   { name: 'Privacy Policy', href: paths.PolicyView },
   { name: 'FAQ', href: paths.faqs },
