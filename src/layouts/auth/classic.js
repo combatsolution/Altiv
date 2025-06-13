@@ -80,7 +80,7 @@
           mx: 'auto',
           maxWidth: 480,
           px: { xs: 2, md: 8 },
-          py: { xs: 10, md: 10 },
+          py: { xs: 6, md: 6 },
         }}
       >
         {children}
