@@ -265,7 +265,7 @@ export default function FoboLevelTaskDistribution() {
             ...countStyles.moderate,
           }}
         >
-          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>70 - 100</Typography>
+          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>40 - 69</Typography>
         </div>
 
         <div
@@ -283,7 +283,7 @@ export default function FoboLevelTaskDistribution() {
             ...countStyles.bad,
           }}
         >
-          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>40 - 69</Typography>
+          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>70 - 100</Typography>
         </div>
 
 
@@ -311,7 +311,7 @@ export default function FoboLevelTaskDistribution() {
     });
 
     return (
-      <Box component='div' sx={{width: '100%', maxHeight: '350px', overflowY: 'scroll', '&::-webkit-scrollbar': {display: 'none',},'-ms-overflow-style': 'none', 'scrollbar-width': 'none',}}>
+      <Box component='div' sx={{ width: '100%', maxHeight: '350px', overflowY: 'scroll', '&::-webkit-scrollbar': { display: 'none', }, '-ms-overflow-style': 'none', 'scrollbar-width': 'none', }}>
         {groupedArrays.map((group, groupIndex) => {
           if (group.length === 0) return null;
 
@@ -354,6 +354,60 @@ export default function FoboLevelTaskDistribution() {
       </Box>
     );
   };
+
+  const showShortDescription = (arrayData) => {
+    if (!arrayData || arrayData.length === 0) return null;
+
+    const groupWiseElements = [];
+
+    // Chunk the array into groups of 4
+    for (let i = 0; i < arrayData.length; i += 4) {
+      groupWiseElements.push(arrayData.slice(i, i + 4));
+    }
+
+    return (
+      <>
+        {groupWiseElements.map((group, rowIndex) => (
+          <Box key={rowIndex} sx={{ mb: 2 }}>
+            {/* Colored bar */}
+            <Box sx={{ width: '100%', height: 4, display: 'flex', gap: '2px' }}>
+              {shades.map((color, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    flex: 1,
+                    height: '100%',
+                    bgcolor: color,
+                    borderRadius: index === 0 ? '4px 0 0 4px' : index === shades.length - 1 ? '0 4px 4px 0' : 0,
+                  }}
+                />
+              ))}
+            </Box>
+
+            {/* Task labels */}
+            <Grid container spacing={1}>
+              {group.map((taskName, i) => (
+                <Grid item xs={viewDetails ? 3 : 12} md={viewDetails ? 3 : 12} key={i}>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontSize: { xs: '10px', md: '12px' },
+                      color: '#090808',
+                      textAlign: 'center',
+                      whiteSpace: 'pre-wrap',
+                    }}
+                  >
+                    {taskName}
+                  </Typography>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        ))}
+      </>
+    );
+  };
+
 
   return !isLoading ? (
     <Box
@@ -466,43 +520,7 @@ export default function FoboLevelTaskDistribution() {
                 </Typography>
 
                 {viewDetails ? (
-                  <>
-                    <Box sx={{ width: '100%', height: 4, display: 'flex', gap: '2px' }}>
-                      {shades.map((color, index) => (
-                        <Box
-                          key={index}
-                          sx={{
-                            flex: 1,
-                            height: '100%',
-                            bgcolor: color,
-                            borderRadius: index === 0 ? '4px 0 0 4px' : index === shades.length - 1 ? '0 4px 4px 0' : 0,
-                          }}
-                        />
-                      ))}
-                    </Box>
-
-                    {/* Four labels spaced evenly under the bar */}
-                    <Grid container spacing={1}>
-                      {data[selectedSection?.fieldName]?.map((taskName, i) => (
-                        <Grid item xs={viewDetails ? 3 : 12} md={viewDetails ? 3 : 12}>
-                          <Typography
-                            key={i}
-                            variant="caption"
-                            sx={{
-                              width: '25%',
-                              fontSize: { xs: '10px', md: '12px' },
-                              color: '#090808',
-                              textAlign: 'center',
-                              whiteSpace: 'pre-wrap',
-                              // flexBasis: '10%',
-                            }}
-                          >
-                            {taskName}
-                          </Typography>
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </>
+                  showShortDescription(data[selectedSection?.fieldName] || [])
                 ) : (
                   showDetailedDescription(data[selectedSection?.fieldName] || [])
                 )}

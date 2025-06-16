@@ -98,7 +98,7 @@ export default function MyProfile() {
         email: user?.email || '',
         address: user?.fullAddress,
         description:
-          user?.bio ||
+          user?.profileDescription ||
           'Directors are responsible for overseeing the development of an organizations business goals and objectives...',
       });
 
@@ -330,7 +330,7 @@ export default function MyProfile() {
                 ...countStyles.moderate,
               }}
             >
-              <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>70 - 100</Typography>
+              <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>40 - 69</Typography>
             </div>
 
             <div
@@ -348,7 +348,7 @@ export default function MyProfile() {
                 ...countStyles.bad,
               }}
             >
-              <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>40 - 69</Typography>
+              <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>70 - 100</Typography>
             </div>
           </Grid>
           <Grid item xs={12} md={4}>
@@ -542,7 +542,7 @@ export default function MyProfile() {
           </Grid>
 
           {/* Profile analytics section */}
-          <Grid item xs={12} lg={8}>
+          {lastFOBOData && <Grid item xs={12} lg={8}>
             {lastFOBOData ? (
               <Paper
                 elevation={3}
@@ -618,7 +618,7 @@ export default function MyProfile() {
             ) : (
               <Typography variant='body1'>No Data</Typography>
             )}
-          </Grid>
+          </Grid>}
         </Grid>
 
         {/* Job Section (Placed Below Resume Section) */}
