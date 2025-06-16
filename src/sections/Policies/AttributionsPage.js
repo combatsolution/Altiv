@@ -376,6 +376,7 @@ const Attributions = () => {
                     px: 2,
                     py: 1,
                     borderRadius: 20,
+                    color:'#fff',
                     backgroundColor: 'rgba(255,255,255,0.15)',
                     backdropFilter: 'blur(5px)'
                   }}>

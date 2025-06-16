@@ -1,3 +1,6 @@
+
+
+
 // import React from 'react';
 // import { Box, Typography, Button, useMediaQuery } from '@mui/material';
 // import { useNavigate } from 'react-router-dom';
@@ -125,17 +128,15 @@
 // };
 
 // export default FoboHeroSection;
+
+
+
 import React from 'react';
 import { Box, Typography, Button, useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { paths } from 'src/routes/paths';
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { m } from 'framer-motion';
-import { paths } from 'src/routes/paths';
-
-const MotionBox = m(Box);
-const MotionTypography = m(Typography);
-const MotionButton = m(Button);
 
 const FoboHeroSection = () => {
   const navigate = useNavigate();
@@ -150,119 +151,109 @@ const FoboHeroSection = () => {
         bgcolor: '#043873',
         color: 'common.white',
         py: { xs: 6, md: 12 },
-        px: { xs: 2, md: 0 },
+        px: { xs: 2, md: 4 },
         textAlign: 'center',
         overflow: 'hidden',
       }}
     >
-      {/* Background image */}
-      <img
+      {/* Background Illustration */}
+      <Box
+        component="img"
         src="/assets/images/impacts2.svg"
-        alt="impact"
-        style={{
+        alt="impact bg"
+        sx={{
           position: 'absolute',
           top: '50%',
           left: 0,
           transform: 'translateY(-50%)',
+          width: { xs: 160, sm: 200, md: 240 },
+          opacity: 0.2,
           zIndex: 0,
         }}
       />
 
-      {/* Heading 1 - Slide in left */}
-      <MotionTypography
-        initial={{ opacity: 0, x: -60 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        whileHover={{ x: -8 }}
-        transition={{ duration: 0.6 }}
-        variant={isMobile ? 'h6' : 'h3'}
-        sx={{ mb: 1, fontSize: '36px' }}
+      {/* Top Tagline */}
+      <Typography
+        variant="h3"
+        sx={{
+          fontSize: { xs: '22px', sm: '32px', md: '36px' },
+          mb: 2,
+          position: 'relative',
+          zIndex: 1,
+          fontWeight: 600,
+        }}
       >
         You don’t need the perfect job.
-      </MotionTypography>
+      </Typography>
 
-      {/* Heading 2 - Slide in right */}
-      <Box sx={{ position: 'relative', width: '100%' }}>
-        <Box
-          component="img"
-          src="/assets/images/impact1.svg"
-          alt="impact"
+      {/* Main Headline with SVG underline */}
+      <Box sx={{ position: 'relative', display: 'inline-block', zIndex: 1 }}>
+        <Typography
+          component="h1"
           sx={{
-            display: { xs: 'none', md: 'block' },
-            position: 'absolute',
-            width: '312.23px',
-            height: '31.38px',
-            bottom: '-15px',
-            right: '170px',
-            zIndex: 0,
-          }}
-        />
-
-        <MotionTypography
-          initial={{ opacity: 0, x: 60 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          whileHover={{ x: 8 }}
-          transition={{ duration: 0.6 }}
-          fontWeight="bold"
-          sx={{
-            fontSize: { xs: '36px', sm: '48px', md: '64px', lg: '72px' },
-            position: 'relative',
-            display: 'inline-block',
+            fontWeight: 700,
+            fontSize: { xs: '32px', sm: '48px', md: '64px', lg: '72px' },
             lineHeight: 1.2,
-            zIndex: 1,
           }}
         >
           You need the right next step.
-        </MotionTypography>
+        </Typography>
+
+        <Box
+          component="img"
+          src="/assets/images/impact1.svg"
+          alt="impact underline"
+          sx={{
+            display: { xs: 'none', md: 'block' },
+            position: 'absolute',
+            width: 312,
+            height: 'auto',
+            bottom: -10,
+            right: { md: -60, lg: -80 },
+            zIndex: -1,
+          }}
+        />
       </Box>
 
-      {/* Subheading - Slide in up */}
-      <MotionTypography
-        component="p"
-        initial={{ opacity: 0, y: 60 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        whileHover={{ y: -4 }}
-        transition={{ duration: 0.7 }}
+      {/* Subheading Text */}
+      <Typography
+        variant="body1"
         sx={{
-          width: { xs: '290px', lg: '70%' },
-          fontSize: '18px',
-          fontWeight: 400,
-          mt: 3,
-          maxWidth: '1064px',
+          mt: 4,
+          maxWidth: '700px',
           mx: 'auto',
-          lineHeight: 1.6,
-          textAlign: 'center',
+          fontSize: { xs: '16px', sm: '18px' },
+          lineHeight: 1.7,
+          fontWeight: 400,
         }}
       >
         Stand out in every application. Get actionable tips and strategic insights to enhance your
         chances. Know exactly what to improve and how to present yourself.
-      </MotionTypography>
+      </Typography>
 
-      <MotionButton
-        initial={{ scale: 1 }}
-        animate={{ scale: [1, 1.05, 1] }}
-        transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+      {/* Call-to-Action Button */}
+      <Button
+        onClick={() => navigate(paths.comingSoon)}
         sx={{
-          height: '48px',
-          width: '290px',
-          fontFamily: 'Inter, sans-serif',
-          fontWeight: 500,
+          mt: 5,
+          px: 4,
+          py: 1.5,
           fontSize: '16px',
-          px: 3,
           borderRadius: '40px',
-          textTransform: 'none',
           bgcolor: '#fff',
           color: '#0040D8',
-          gap: '10px',
-          mt: 4,
-          transition: 'color 0.3s ease', // smooth text color transition
+          fontWeight: 600,
+          textTransform: 'none',
+          gap: 1.5,
           '&:hover': {
-            color: '#fff',
+            bgcolor: '#fff',
+            color: '#0040D8',
+            boxShadow: 'none',
           },
         }}
-        onClick={() => navigate(paths.comingSoon)}
       >
         Boost My Application <ArrowForwardIcon />
-      </MotionButton>
+      </Button>
     </Box>
   );
 };
