@@ -44,7 +44,7 @@ function FoboDefineSection() {
         </Grid>
 
         {/* Text Section */}
-        <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }}>
+        <Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}> 
           <Stack spacing={4} sx={{ maxWidth: '100%' }}>
             {/* Animated Heading */}
             <MotionBox

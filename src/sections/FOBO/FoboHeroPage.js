@@ -473,6 +473,7 @@ import { Upload } from 'src/components/upload';
 import { useSnackbar } from 'notistack';
 import { paths } from 'src/routes/paths';
 import { m } from 'framer-motion';
+import { display } from '@mui/system';
 
 const MotionBox = m(Box);
 const MotionImage = m(Box);
@@ -574,7 +575,8 @@ export default function FoboHeroPage() {
         py: { xs: 4, sm: 6, md: 8, lg: 10 },
         mx: 'auto',
         maxWidth: { lg: 1400 },
-        my: { xs: 2, md: 3 }
+        my: { xs: 2, md: 5 }
+        
       }}
     >
       <Grid 
@@ -652,12 +654,14 @@ export default function FoboHeroPage() {
               <Typography
                 color="text.secondary"
                 sx={{
+                  display:'flex',
+                  alignItems:'center',                                                                      
                   fontSize: { xs: '1rem', md: '1.125rem' },
                   lineHeight: 1.6,
-                  maxWidth: { xs: '100%', md: '90%', lg: '85%' },
-                  textAlign: { xs: 'center', md: 'left' },
-                  mx: { xs: 'auto', md: 0 }
-                }}
+                  maxWidth: { xs: '70%', md: '90%', lg: '85%' },
+                  textAlign: { xs: 'left', md: 'left' },
+                  ml: { xs: 6, md: 0 }
+                }}  
               >
                 At Altiv, we help you beat decision paralysis with smarter tools and human-first
                 design.
@@ -714,6 +718,7 @@ export default function FoboHeroPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             sx={{
+              margintop:"20px",
               width: '100%',
               height: 'auto',
               maxWidth: { xs: '100%', sm: '80%', md: '100%' },

@@ -340,16 +340,16 @@ function TestimonialCard({ testimonial, isWhite }) {
   return (
     <Card
       sx={{
-        width: { xs: '100%', sm: 300, md: 360, lg: 400 },
+        width: { xs: '370px', sm: 300, md: 360, lg: 400 },
         minWidth: { xs: '90%', sm: 300 },
         height: { xs: 'auto', sm: 450 },
         bgcolor: isWhite ? '#fff' : '#4F9CF9',
         color: isWhite ? '#000' : '#fff',
         boxShadow: isWhite ? 6 : 3,
-        borderRadius: 2,
+        borderRadius: 3,
         display: 'flex',
         flexDirection: 'column',
-        mx: 'auto',
+        mx:{xs:2},
         transition: 'all 0.3s',
         flexShrink: 0,
       }}

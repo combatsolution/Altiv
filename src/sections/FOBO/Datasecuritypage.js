@@ -321,9 +321,8 @@ export default function Datasecuritypage() {
                   mx: { xs: 'auto', md: 0 }
                 }}
               >
-                We ensure your data stays secure and private. Using advanced encryption, your
-                information is protected at every step. Rest assured, your data is in your hands
-                and handled with the utmost care.
+                The app is open source and your notes are saved to an open format, so you will always have access to them. 
+                Uses End-To-End Encryption (E2EE) to secure your notes and ensure no-one but yourself can access them.
               </Typography>
 
               {/* CTA BUTTON */}
