@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import {
@@ -46,6 +46,16 @@ export default function JwtLoginView() {
   const returnTo = searchParams.get('returnTo');
   const password = useBoolean();
 
+  useEffect(() => {
+    const googleError = searchParams.get('googleError');
+    const errorMessage = searchParams.get('errorMessage');
+
+    if(googleError && errorMessage){
+      enqueueSnackbar(errorMessage, {variant : 'error'});
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+  
   // Redirect helper for social buttons
   const handleRedirect = useCallback((url) => {
     window.location.href = url;
@@ -84,6 +94,9 @@ export default function JwtLoginView() {
     }
   });
 
+  const handleGoogleLogin = async() => {
+    window.location.href = `${process.env.REACT_APP_HOST_API}/auth/google`;
+  }
 
   return (
     <Box
@@ -156,7 +169,7 @@ export default function JwtLoginView() {
               fullWidth
               variant="outlined"  
               startIcon={<Iconify icon="logos:google-icon" />}
-              onClick={() => handleRedirect('https://www.google.com')}
+              onClick={() => handleGoogleLogin()}
               sx={{ textTransform: 'none' }}
             >
               Sign in with Google

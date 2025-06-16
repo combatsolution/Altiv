@@ -169,6 +169,20 @@ export function AuthProvider({ children }) {
     });
   }, []);
 
+  // for google login
+  const googleLogin = useCallback(async (accessToken, userProfile) => {
+    console.log('Logging with google');
+    localStorage.setItem(STORAGE_KEY, accessToken);
+    setSession(accessToken);
+
+    dispatch({
+      type: 'LOGIN',
+      payload: {
+        user: userProfile,
+      },
+    });
+  }, []);
+
   const checkAuthenticated = state.user ? 'authenticated' : 'unauthenticated';
 
   const status = state.loading ? 'loading' : checkAuthenticated;
@@ -183,8 +197,9 @@ export function AuthProvider({ children }) {
       login,
       register,
       logout,
+      googleLogin
     }),
-    [login, logout, register, state.user, status]
+    [login, logout, register, state.user, status, googleLogin]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;
