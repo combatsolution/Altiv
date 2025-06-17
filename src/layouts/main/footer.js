@@ -1,5 +1,3 @@
-
-
 import { useState } from 'react';
 import { useSnackbar } from 'notistack'; //
 import { alpha } from '@mui/material/styles';
@@ -20,36 +18,36 @@ import Instagramlogo from 'src/images/Instagramlogo.png';
 // import dayjs from 'dayjs';
 
 const jobseekers = [
-  { name: 'Search Jobs', href: paths.auth.jwt.register },
+  { name: 'Search Jobs', href: paths.comingSoon },
   { name: 'Register', href: paths.auth.jwt.register },
-  { name: 'Job Alerts', href: paths.JobAlerts },
-  { name: 'Career Advice', href: paths.CareerAdvice },
+  { name: 'Job Alerts', href: paths.comingSoon },
+  { name: 'Career Advice', href: paths.comingSoon },
 ];
 
 const AICareerCoach = [
-  { name: 'FOBO', href: '#' },
-  { name: 'Career Compass', href: paths.auth.jwt.register },
-  { name: 'Smart Job Feed', href: paths.JobAlerts },
-  { name: 'Job Match Boost', href: paths.CareerAdvice },
+  { name: 'FOBO', href: paths.fobo },
+  { name: 'Career Compass', href: paths.careerResume },
+  { name: 'Smart Job Feed', href: paths.comingSoon },
+  { name: 'Job Match Boost', href: paths.comingSoon },
 ];
 
 const Programs = [
-  { name: 'Marketing Track', href: '#' },
-  { name: 'Data Science Track', href: '#' },
-  { name: 'Product Track', href: '#' },
-  { name: 'Software Engineering Track', href: '#' },
+  { name: 'Marketing Track', href: paths.comingSoon },
+  { name: 'Data Science Track', href: paths.comingSoon },
+  { name: 'Product Track', href: paths.comingSoon },
+  { name: 'Software Engineering Track', href: paths.comingSoon },
 ];
 
 const Recruiters = [
-  { name: 'Post Jobs', href: '#' },
+  { name: 'Post Jobs', href: paths.comingSoon },
   { name: 'Register', href: paths.auth.jwt.register },
-  { name: 'Find Candidates', href: '#' },
+  { name: 'Find Candidates', href: paths.comingSoon },
 ];
 
 const AboutAltiv = [
   { name: 'About Us', href: paths.about },
   { name: 'Contact Us', href: paths.contact },
-  { name: 'Terms of Use', href: '#' },
+  { name: 'Terms of Use', href: paths.comingSoon },
   { name: 'Attributions', href: paths.attributions },
   { name: 'Privacy Policy', href: paths.PolicyView },
   { name: 'FAQ', href: paths.faqs },
@@ -57,7 +55,7 @@ const AboutAltiv = [
 
 export default function Footer() {
   const [email, setEmail] = useState('');
-   const { enqueueSnackbar } = useSnackbar(); //
+  const { enqueueSnackbar } = useSnackbar(); //
 
   const handleSubscribe = async () => {
     try {
@@ -66,6 +64,7 @@ export default function Footer() {
         email,
         createdAt: now,
         updatedAt: now,
+
         deletedAt: now,
         isDeleted: false,
       };
@@ -83,10 +82,13 @@ export default function Footer() {
   return (
     <Grid
       container
-      columns={14}
-      rowSpacing={2}
-      columnSpacing={2}
-      sx={{ pl: { xs: 3, lg: 9 }, mt: { lg: 15 } }}
+      columns={12}
+     
+      sx={{ 
+        pl: { xs: 3, lg: 9 },
+        mt: { lg: 15 },
+        // overflow: 'hidden', // prevent horizontal scroll from propagating
+      }}
     >
       <Grid
         sx={{ display: { xs: 'block', lg: 'none' }, width: { xs: '114px', lg: '120px' }, my: 1 }}
@@ -94,8 +96,8 @@ export default function Footer() {
         <img src={Altivlogo} alt="Altiv Logo" />
       </Grid>
 
-      <Grid xs={12} sm={6} md={2}>
-        <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5}>
+      <Grid item xs={12} sm={6} md={1}  >
+        <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5}  mt={2}>
           Jobseekers
         </Typography>
         <Stack spacing={0.7}>
@@ -113,8 +115,8 @@ export default function Footer() {
         </Stack>
       </Grid>
 
-      <Grid xs={12} sm={6} md={2}>
-        <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5}>
+      <Grid item  xs={12} sm={6} md={1} sx={{ ml: { md: 4, xs: 0 }}}>
+        <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5}  mt={2}>
           AI Career Coach
         </Typography>
         <Stack spacing={0.75}>
@@ -132,8 +134,8 @@ export default function Footer() {
         </Stack>
       </Grid>
 
-      <Grid xs={12} sm={6} md={2}>
-        <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5}>
+      <Grid item xs={12} sm={6} md={2} sx={{ ml: { md: 4, xs: 0 }}}>
+        <Typography fontWeight={700} fontSize={16} lineHeight="130%"  mb={1.5}  mt={2}>
           Programs
         </Typography>
         <Stack spacing={0.75}>
@@ -151,8 +153,8 @@ export default function Footer() {
         </Stack>
       </Grid>
 
-      <Grid xs={12} sm={6} md={2}>
-        <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5}>
+      <Grid item xs={12} sm={6} md={1} sx={{ ml: { md: 0, xs: 0 }}}>
+        <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5} mt={2}>
           Recruiters
         </Typography>
         <Stack spacing={0.75}>
@@ -170,8 +172,8 @@ export default function Footer() {
         </Stack>
       </Grid>
 
-      <Grid xs={12} sm={6} md={2}>
-        <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5}>
+      <Grid item xs={12} sm={6} md={1} sx={{ ml: { md: 4, xs: 0 }}} >
+        <Typography fontWeight={700} fontSize={16} lineHeight="130%" mb={1.5} mt={2}>
           About Altiv
         </Typography>
         <Stack spacing={0.75}>
@@ -189,26 +191,26 @@ export default function Footer() {
         </Stack>
       </Grid>
 
-      <Grid xs={12} sm={3} md={2.4} lg={4}>
+      <Grid xs={12} sm={3} md={4} sx={{ ml: { md: 4, xs: 0 }}}>
         <Grid
-          sx={{ display: { xs: 'none', lg: 'block' }, width: { xs: '54px', lg: '128px' }, my: 1 }}
+          sx={{ display: { xs: 'none', lg: 'block' }, width: { xs: '54px', lg: '128px' }, mt:2}}
         >
           <img src={Altivlogo} alt="Altiv Logo" />
         </Grid>
 
-        <Typography fontWeight={700} fontSize="16px" mb={1.5}>
+        <Typography fontWeight={700} fontSize="16px" mb={1.5} mt={2}>
           Subscribe to our newsletter
         </Typography>
 
-        <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap="10px" mb={1}>
+        <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap="10px" mb={1} mt={2}>
           <TextField
             placeholder="Email Address"
             size="small"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             sx={{
-              width: { xs: '100%', lg: '1300px' },
-              maxWidth: '1441px',
+              flexGrow: 1,
+              width: '90%',
               '& .MuiOutlinedInput-root': {
                 borderRadius: 0,
                 height: '36px',
@@ -238,13 +240,11 @@ export default function Footer() {
                 backgroundColor: '#f0f0f0',
                 borderColor: '#0040D8',
               },
-            }}
+            }}  
           >
             Subscribe
           </Button>
         </Box>
-
-        
 
         <Box display="flex" alignItems="center" gap={1.5}>
           {/* Twitter Icon */}
@@ -259,8 +259,8 @@ export default function Footer() {
               justifyContent: 'center',
               backgroundColor: '#1da1f2',
               borderRadius: '4px',
-              width: 32,
-              height: 32,
+              width: 25,
+              height: 25,
               cursor: 'pointer',
             }}
           >
@@ -279,12 +279,12 @@ export default function Footer() {
               justifyContent: 'center',
               // backgroundColor: '#0a66c2',
               borderRadius: '4px',
-              width: 32,
-              height: 32,
+              width: 25,
+              height: 25,
               cursor: 'pointer',
             }}
           >
-            <img src={linkedinlogo} alt="LinkedIn Logo" width="30" height="30" />
+            <img src={linkedinlogo} alt="LinkedIn Logo" width="25" height="25" />
           </Box>
 
           {/* Instagram Icon */}
@@ -299,15 +299,17 @@ export default function Footer() {
               justifyContent: 'center',
               // backgroundColor: '#e4405f',
               borderRadius: '4px',
-              width: 32,
-              height: 32,
+              width: 25,
+              height: 25,
               cursor: 'pointer',
             }}
           >
-            <img src={Instagramlogo} alt="LinkedIn Logo" width="30" height="30" />
+            <img src={Instagramlogo} alt="LinkedIn Logo" width="25" height="25" />
           </Box>
         </Box>
       </Grid>
     </Grid>
   );
 }
+
+

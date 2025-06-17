@@ -39,13 +39,7 @@ export default function ProfileView() {
   return (
     <>
       <ScrollProgress scrollYProgress={scrollYProgress} />
-      
-      
-      
       <MyProfile/>
-    
-     
-
     </>
   );
 }
