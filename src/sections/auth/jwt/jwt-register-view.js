@@ -28,17 +28,17 @@ import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import altiv from 'src/images/altiv.svg';
 import { useSnackbar } from 'notistack';
+import { PATH_AFTER_LOGIN } from 'src/config-global';
 
 export default function JwtRegisterView() {
   const {enqueueSnackbar} = useSnackbar();
   const { register } = useAuthContext();
   const router = useRouter();
   const [errorMsg, setErrorMsg] = useState('');
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const searchParams = useSearchParams();
   const returnTo = searchParams.get('returnTo');
   const password = useBoolean();
-
-  console.log('JwtRegisterView rendered, register function:', register ? 'defined' : 'undefined');
 
   const RegisterSchema = Yup.object().shape({
     name: Yup.string()
@@ -81,13 +81,20 @@ export default function JwtRegisterView() {
     try {
       await register?.(data.email, data.password, data.name, data.phone);
       enqueueSnackbar('Register success', {variant: 'success'});
-      router.push(paths.auth.jwt.login);
+      router.replace(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
       reset();
       setErrorMsg(typeof error === 'string' ? error : error.error.message);
     }
   });
+
+  const handleGoogleLogin = async() => {
+    setIsGoogleLoading(true);
+    window.location.href = `${process.env.REACT_APP_HOST_API}/auth/google`;
+    setIsGoogleLoading(false);
+  }
+
 
   return (
     <Box
@@ -172,6 +179,17 @@ export default function JwtRegisterView() {
               }}
             >
               Next
+            </LoadingButton>
+
+            <LoadingButton
+              fullWidth
+              variant="outlined"  
+              loading={isGoogleLoading}
+              startIcon={<Iconify icon="logos:google-icon" />}
+              onClick={() => handleGoogleLogin()}
+              sx={{ textTransform: 'none' }}
+            >
+              Sign in with Google
             </LoadingButton>
           </Stack>
         </FormProvider>

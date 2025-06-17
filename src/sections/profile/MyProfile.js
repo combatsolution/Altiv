@@ -539,6 +539,20 @@ export default function MyProfile() {
                 style={{ display: 'none' }}
               />
             </Paper>
+
+            <Paper sx={{ p: 3, borderRadius: 2,mt:2 }}>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                <Typography variant="subtitle1" fontWeight="600">
+                  Job Applications
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  No jobs found
+                </Typography>
+              </Box>
+
+            
+              
+            </Paper>
           </Grid>
 
           {/* Profile analytics section */}
