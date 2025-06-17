@@ -26,6 +26,7 @@ export default function FoboLevelTaskDistribution() {
   const [pieData, setPieData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [viewDetails, setViewDetails] = useState(true);
+  const [smartInsights, setSmartInsights] = useState(false);
   const baseColor = pieData?.find((d) => d.name === selectedSection?.name)?.color || '#ccc';
 
   // Generate 4 shades (lighter to darker)
@@ -40,7 +41,8 @@ export default function FoboLevelTaskDistribution() {
       setSelectedSection(null);
       const response = await axiosInstance.post(`/profile-analytics`, {
         resumeId: Number(resumeId),
-        viewDetails
+        viewDetails,
+        smartInsights
       });
       if (response?.data.success) {
         console.log('data', response?.data?.data);
@@ -83,7 +85,7 @@ export default function FoboLevelTaskDistribution() {
       fetchProfileAnalyticsData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resumeId, viewDetails]);
+  }, [resumeId, viewDetails, smartInsights]);
 
   const handlePieClick = (index, item) => {
     setSelectedSection(item);
@@ -426,7 +428,16 @@ export default function FoboLevelTaskDistribution() {
           }
           label={viewDetails ? 'Show Long Description' : 'Show Short Description'}
         />
-
+        <FormControlLabel
+          control={
+            <Switch
+              checked={smartInsights}
+              onChange={() => setSmartInsights((prev) => !prev)}
+              color="primary"
+            />
+          }
+          label='Smart Insight Mode'
+        />
       </Box>
       <Grid container spacing={4}>
         {/* FOBO Level */}

@@ -3,7 +3,6 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import GaugeChart from 'react-gauge-chart';
 import { useNavigate } from 'react-router';
-
 import {
   Box,
   Avatar,
@@ -41,10 +40,10 @@ import Writelogo from 'src/images/write.svg';
 import axiosInstance from 'src/utils/axios';
 import { green } from '@mui/material/colors';
 import { useSnackbar } from 'notistack';
-import DescriptionIcon from '@mui/icons-material/Description';
-import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import ProfileChangePassword from './profile-change-password-modal';
 import ProfileUpdateModal from './profile-update-modal';
+
+const jobMatches = []; // You can populate this later
 
 export default function MyProfile() {
   const { user, loading } = useAuthContext();
@@ -89,7 +88,7 @@ export default function MyProfile() {
     } catch (error) {
       console.log('Error while fetching last fobo score', error);
     }
-  };
+  }
 
   useEffect(() => {
     if (user) {
@@ -116,6 +115,7 @@ export default function MyProfile() {
   }, [existingResumes]);
 
   console.log('fobo score', lastFOBOData);
+
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -150,18 +150,9 @@ export default function MyProfile() {
       if (!uploadedFileData) throw new Error('Invalid file upload response');
 
       const resumeRes = await axiosInstance.post('/resumes', { fileDetails: uploadedFileData });
-      const uploadedResumeId = resumeRes.data?.id;
-
       setExistingResumes((prev) => [...prev, resumeRes.data]);
       setSelectedResumeId(null);
       setSuccess('Resume uploaded successfully');
-
-      // ✅ Call /last-fobo-score API
-      if (uploadedResumeId !== undefined) {
-        await axiosInstance.post('/last-fobo-score', {
-          resumeIds: [uploadedResumeId],
-        });
-      }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to upload resume');
     } finally {
@@ -282,77 +273,56 @@ export default function MyProfile() {
   const labelStyles = getLabelStyles();
   const countStyles = getCountStyles();
 
-  const MemoizedGaugeChart = React.memo(
-    ({ score }) => {
-      const percent = score / 100;
-      const levelColor = useMemo(() => getLevelColor(score), [score]);
+  const MemoizedGaugeChart = React.memo(({ score }) => {
+    const percent = score / 100;
+    const levelColor = useMemo(() => getLevelColor(score), [score]);
 
-      return (
-        <div style={{ position: 'relative', width: '100%', margin: 'auto', marginTop: '20px' }}>
-          <Grid container spacing={1} alignItems="center">
-            <Grid item xs={12} md={8}>
-              {/* Gauge Chart */}
-              <GaugeChart
-                id="fobo-gauge"
-                nrOfLevels={3}
-                arcsLength={[0.39, 0.3, 0.31]}
-                colors={['#00C853', '#FFB300', '#D32F2F']}
-                percent={percent}
-                arcPadding={0}
-                arcWidth={0.3} // <- Increase this value for thicker arcs (default is ~0.2)
-                needleColor="#424242"
-                textColor="transparent"
-                style={{ width: '100%' }}
-                animate
-              />
 
-      return (
-        <div style={{ position: 'relative', width: '100%', margin: 'auto', marginTop: '20px' }}>
-          <Grid container spacing={1} alignItems="center">
-            <Grid item xs={12} md={8}>
-              {/* Gauge Chart */}
-              <GaugeChart
-                id="fobo-gauge"
-                nrOfLevels={3}
-                arcsLength={[0.39, 0.3, 0.31]}
-                colors={['#00C853', '#FFB300', '#D32F2F']}
-                percent={percent}
-                arcPadding={0}
-                arcWidth={0.3} // <- Increase this value for thicker arcs (default is ~0.2)
-                needleColor="#424242"
-                textColor="transparent"
-                style={{ width: '100%' }}
-                animate
-              />
+    return (
+      <div style={{ position: 'relative', width: '100%', margin: 'auto', marginTop: '20px' }}>
+        <Grid container spacing={1} alignItems='center'>
+          <Grid item xs={12} md={8}>
+            {/* Gauge Chart */}
+            <GaugeChart
+              id="fobo-gauge"
+              nrOfLevels={3}
+              arcsLength={[0.39, 0.3, 0.31]}
+              colors={['#00C853', '#FFB300', '#D32F2F']}
+              percent={percent}
+              arcPadding={0}
+              arcWidth={0.3} // <- Increase this value for thicker arcs (default is ~0.2)
+              needleColor="#424242"
+              textColor="transparent"
+              style={{ width: '100%' }}
+              animate
+            />
 
-              <div
-                style={{
-                  position: 'absolute',
-                  ...labelStyles.good,
-                }}
-              >
-                <Typography variant="body1">Good</Typography>
-              </div>
+            <div
+              style={{
+                position: 'absolute',
+                ...labelStyles.good,
+              }}
+            >
+              <Typography variant='body1'>Good</Typography>
+            </div>
 
-              <div
-                style={{
-                  position: 'absolute',
-                  ...countStyles.good,
-                }}
-              >
-                <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
-                  0 - 39
-                </Typography>
-              </div>
+            <div
+              style={{
+                position: 'absolute',
+                ...countStyles.good,
+              }}
+            >
+              <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>0 - 39</Typography>
+            </div>
 
-              <div
-                style={{
-                  position: 'absolute',
-                  ...labelStyles.moderate,
-                }}
-              >
-                <Typography variant="body1">Moderate</Typography>
-              </div>
+            <div
+              style={{
+                position: 'absolute',
+                ...labelStyles.moderate,
+              }}
+            >
+              <Typography variant='body1'>Moderate</Typography>
+            </div>
 
             <div
               style={{
@@ -362,25 +332,15 @@ export default function MyProfile() {
             >
               <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>40 - 69</Typography>
             </div>
-              <div
-                style={{
-                  position: 'absolute',
-                  ...countStyles.moderate,
-                }}
-              >
-                <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
-                  70 - 100
-                </Typography>
-              </div>
 
-              <div
-                style={{
-                  position: 'absolute',
-                  ...labelStyles.bad,
-                }}
-              >
-                <Typography variant="body1">Bad</Typography>
-              </div>
+            <div
+              style={{
+                position: 'absolute',
+                ...labelStyles.bad,
+              }}
+            >
+              <Typography variant='body1'>Bad</Typography>
+            </div>
 
             <div
               style={{
@@ -397,91 +357,16 @@ export default function MyProfile() {
               <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO SCORE</div>
               <div style={{ fontWeight: 'bold', fontSize: 24, color: levelColor }}>
                 {score}
-              <div
-                style={{
-                  position: 'absolute',
-                  ...countStyles.bad,
-                }}
-              >
-                <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
-                  40 - 69
-                </Typography>
               </div>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              {/* FOBO Label and Score */}
-              <div style={{ textAlign: 'center', marginTop: 10 }}>
-                <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO SCORE</div>
-                <div style={{ fontWeight: 'bold', fontSize: 24, color: levelColor }}>{score}</div>
-              </div>
-
-              <div
-                style={{
-                  position: 'absolute',
-                  ...countStyles.good,
-                }}
-              >
-                <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
-                  0 - 39
-                </Typography>
-              </div>
-
-              <div
-                style={{
-                  position: 'absolute',
-                  ...labelStyles.moderate,
-                }}
-              >
-                <Typography variant="body1">Moderate</Typography>
-              </div>
-
-              <div
-                style={{
-                  position: 'absolute',
-                  ...countStyles.moderate,
-                }}
-              >
-                <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
-                  70 - 100
-                </Typography>
-              </div>
-
-              <div
-                style={{
-                  position: 'absolute',
-                  ...labelStyles.bad,
-                }}
-              >
-                <Typography variant="body1">Bad</Typography>
-              </div>
-
-              <div
-                style={{
-                  position: 'absolute',
-                  ...countStyles.bad,
-                }}
-              >
-                <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
-                  40 - 69
-                </Typography>
-              </div>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              {/* FOBO Label and Score */}
-              <div style={{ textAlign: 'center', marginTop: 10 }}>
-                <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO SCORE</div>
-                <div style={{ fontWeight: 'bold', fontSize: 24, color: levelColor }}>{score}</div>
-              </div>
-            </Grid>
+            </div>
           </Grid>
-        </div>
-      );
-    },
-    (prev, next) => prev.score === next.score
-  );
+        </Grid>
+      </div>
+    );
+  }, (prev, next) => prev.score === next.score);
   MemoizedGaugeChart.propTypes = {
     score: PropTypes.number,
-  };
+  }
 
   return (
     <Box sx={{ backgroundColor: '#F5F9FF', minHeight: '100vh' }}>
@@ -497,7 +382,7 @@ export default function MyProfile() {
       )}
 
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        {/* Banner */}
+        {/* Profile Banner */}
         <Box sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid transparent' }}>
           <Box
             component="img"
@@ -530,6 +415,7 @@ export default function MyProfile() {
           </Paper>
         </Box>
 
+        {/* Profile Info and Resume Section */}
         <Grid container spacing={3} mt={3}>
           <Grid item xs={12} lg={8}>
             <Paper sx={{ p: 3 }}>
@@ -553,7 +439,7 @@ export default function MyProfile() {
                       <Typography>
                         {selectedResumeId
                           ? existingResumes.find((r) => r.id === selectedResumeId)?.fileDetails
-                              ?.fileName || 'Selected resume'
+                            ?.fileName || 'Selected resume'
                           : 'Select a resume below'}
                       </Typography>
                     ) : (
@@ -583,8 +469,9 @@ export default function MyProfile() {
           </Grid>
 
           <Grid item xs={12} lg={4}>
-            <Paper sx={{ p: 3, gap:2 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}  gap={1.5}>
+            {/* Resume Section */}
+            <Paper sx={{ p: 3 }}>
+              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                 <Typography fontWeight="600">Resume</Typography>
                 <Button
                   variant="outlined"
@@ -652,20 +539,6 @@ export default function MyProfile() {
                 style={{ display: 'none' }}
               />
             </Paper>
-
-            <Paper sx={{ p: 3, borderRadius: 2,mt:2 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="subtitle1" fontWeight="600">
-                  Job Applications
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  No jobs found
-                </Typography>
-              </Box>
-
-            
-              
-            </Paper>
           </Grid>
 
           {/* Profile analytics section */}
@@ -685,24 +558,16 @@ export default function MyProfile() {
                   <MemoizedGaugeChart score={lastFOBOData?.FOBO_Score} />
                 </Box>
                 <Box sx={{ width: '100%', position: 'relative', p: 2 }}>
-                  <Typography
-                    sx={{ textAlign: 'center' }}
-                    variant="h6"
-                    fontWeight="bold"
-                    gutterBottom
-                  >
+                  <Typography sx={{ textAlign: 'center' }} variant="h6" fontWeight="bold" gutterBottom>
                     Strategies to Improve FOBO
                   </Typography>
 
-                  <Typography sx={{ textAlign: 'center' }} variant="body2" gutterBottom>
+                  <Typography sx={{textAlign: 'center'}} variant="body2" gutterBottom>
                     Reduce your hesitation by practicing mindful decision-making, limiting options,
-                    and focusing on long-term satisfaction instead of perfect outcomes.{' '}
-                    <span style={{ filter: 'blur(2px)' }}>
-                      Reduce your hesitation by practicing mindful decision-making, limiting
-                      options, and focusing on long-term satisfaction instead of perfect outcomes.
-                      Reduce your hesitation by practicing mindful decision-making, limiting
-                      options, and focusing on long-term satisfaction instead of perfect outcomes.
-                    </span>
+                    and focusing on long-term satisfaction instead of perfect outcomes. <span style={{ filter: 'blur(2px)'}}>Reduce your hesitation
+                    by practicing mindful decision-making, limiting options, and focusing on long-term satisfaction
+                    instead of perfect outcomes. Reduce your hesitation by practicing mindful decision-making,
+                    limiting options, and focusing on long-term satisfaction instead of perfect outcomes.</span>
                   </Typography>
 
                   {/* Optional blue glow lines */}
@@ -751,12 +616,25 @@ export default function MyProfile() {
                 </Box>
               </Paper>
             ) : (
-              <Typography variant="body1">No Data</Typography>
+              <Typography variant='body1'>No Data</Typography>
             )}
           </Grid>}
         </Grid>
+
+        {/* Job Section (Placed Below Resume Section) */}
+        {/* <Grid container spacing={3} mt={1} >
+
+     <Grid item xs={12} lg={5} ml={98} mt={-12}>
+      <Paper sx={{ p: 3 }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Typography fontWeight="600">NO Jobs Found</Typography>
+        </Box>
+      </Paper>
+    </Grid>
+  </Grid> */}
       </Container>
 
+      {/* Confirm Delete Dialog */}
       <Dialog open={confirmDeleteOpen} onClose={() => setConfirmDeleteOpen(false)}>
         <DialogTitle>Delete Resume</DialogTitle>
         <DialogContent>Are you sure you want to delete this resume?</DialogContent>
@@ -772,6 +650,7 @@ export default function MyProfile() {
         </DialogActions>
       </Dialog>
 
+      {/* Edit Profile Modal */}
       <ProfileUpdateModal
         open={openEditDialog}
         onClose={() => setOpenEditDialog(false)}
@@ -780,6 +659,7 @@ export default function MyProfile() {
         setProfileData={setProfileData}
       />
 
+      {/* Password Change Modal */}
       <ProfileChangePassword open={openPasswordModal} onClose={() => setOpenPasswordModal(false)} />
     </Box>
   );
