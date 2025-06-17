@@ -206,6 +206,7 @@ export default function Datasecuritypage() {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
+            
             height: '100%',
             backgroundColor: 'transparent' // Ensures no background
           }}
@@ -226,8 +227,8 @@ export default function Datasecuritypage() {
               src={security}
               alt="Data Flow Structure"
               sx={{
-                width: '100%',
-                maxWidth: { xs: '400px', sm: '500px', md: '600px', lg: '650px' },
+                width: {xs:'230px', lg:'681px'},
+                maxWidth: { xs: '400px', sm: '500px', md: '600px', lg: '680px' },
                 height: 'auto',
                 objectFit: 'contain',
                 backgroundColor: 'transparent', // Removes image background
@@ -277,7 +278,8 @@ export default function Datasecuritypage() {
                     color: 'text.primary',
                     mb: { xs: 2, md: 3 },
                     position: 'relative',
-                    zIndex: 1
+                    zIndex: 1,
+                    mx: { xs: 3, md: 0 },
                   }}
                 >
                   Your data is 100% SAFE
@@ -315,10 +317,11 @@ export default function Datasecuritypage() {
                     sm: '1.125rem' // 18px
                   },
                   lineHeight: 1.7,
-                  color: 'text.secondary',
+                  color: '#212529',
                   px: { xs: 0, sm: 1, md: 0 },
                   maxWidth: { xs: '100%', sm: '90%', md: '100%' },
-                  mx: { xs: 'auto', md: 0 }
+                  mx: { xs: 'auto', md: 0 },
+                  my: { xs: 'auto', md: -3 }
                 }}
               >
                 The app is open source and your notes are saved to an open format, so you will always have access to them. 

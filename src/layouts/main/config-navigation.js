@@ -11,7 +11,7 @@ export const navConfig = [
   {
     title: 'FOBO',
     icon: <Iconify icon="solar:home-2-bold-duotone" />,
-    path: '/',
+    path: paths.fobo,
   },
   {
     title: 'AI Career Coach',

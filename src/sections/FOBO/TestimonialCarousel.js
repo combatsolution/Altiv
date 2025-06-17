@@ -340,13 +340,13 @@ function TestimonialCard({ testimonial, isWhite }) {
   return (
     <Card
       sx={{
-        width: { xs: '370px', sm: 300, md: 360, lg: 400 },
+        width: { xs: '340px', sm: 300, md: 360, lg: 400 },
         minWidth: { xs: '90%', sm: 300 },
         height: { xs: 'auto', sm: 450 },
         bgcolor: isWhite ? '#fff' : '#4F9CF9',
         color: isWhite ? '#000' : '#fff',
         boxShadow: isWhite ? 6 : 3,
-        borderRadius: 3,
+        borderRadius: '10px',
         display: 'flex',
         flexDirection: 'column',
         mx:{xs:2},
@@ -383,10 +383,11 @@ function TestimonialCard({ testimonial, isWhite }) {
             display: 'flex',
             flexDirection: { xs: 'column', sm: 'row' },
             justifyContent: 'space-between',
-            alignItems: { xs: 'flex-start', sm: 'center' },
+            alignItems: { xs: 'center', sm: 'center' },
             mt: 'auto',
             width: '100%',
             gap: { xs: 1, sm: 14 },
+            
           }}
         >
           <Typography
@@ -396,6 +397,7 @@ function TestimonialCard({ testimonial, isWhite }) {
               fontSize: { xs: 16, sm: 18 },
               lineHeight: '28px',
               color: isWhite ? '#000' : '#fff',
+              
             }}
           >
             {testimonial.name}
@@ -472,8 +474,9 @@ export default function TestimonialCarousel() {
       >
         Where Are They Now?
       </MotionTypography>
-
+  <grid>
       <MotionTypography
+        
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         whileHover={{ y: 4 }}
@@ -481,11 +484,12 @@ export default function TestimonialCarousel() {
         viewport={{ once: true }}
         component="h1"
         sx={{
+          position:'relative',
           fontWeight: 700,
           fontSize: { xs: '32px', sm: '48px', md: '64px' },
           color: '#212529',
           lineHeight: 1.2,
-          maxWidth: { xs: '300px', sm: '100%' },
+          maxWidth: { xs: '264px', sm: '100%' },
           mx: 'auto',
           mt: 2,
         }}
@@ -503,18 +507,15 @@ export default function TestimonialCarousel() {
         src="/assets/images/impact.svg"
         alt="impact"
         sx={{
-          width: { xs: 150, sm: 200, md: 250 },
-          mt: -1, // margin top to push it below the text
-          mr: 6,
-          //  float:'right',
-
-          mb: 2, // optional: reduce space below if needed
-          mx: 'auto',
-          display: 'block', // ensure it renders as block element
-          zIndex: -1,
+           
+         position: 'absolute',
+            width: { xs: 150, sm: 200, md: 250 },
+           right: { xs: 100, sm: 60, md: 230 },
+            zIndex: -1,
+          
         }}
       />
-
+</grid>
       <Box
         ref={scrollRef}
         onScroll={handleScroll}

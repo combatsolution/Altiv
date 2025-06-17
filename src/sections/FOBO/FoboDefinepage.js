@@ -110,7 +110,7 @@ function FoboDefineSection() {
                   fontSize: { xs: '16px', sm: '18px' },
                   lineHeight: { xs: '28px', sm: '30px' },
                   color: '#000',
-                  textAlign: { xs: 'center', md: 'left' },
+                  textAlign: { xs: 'left', md: 'left' },
                   px: { xs: 2, sm: 0 },
                   maxWidth: { xs: '100%', md: '620px' },
                   mx: { xs: 'auto', md: 0 },
