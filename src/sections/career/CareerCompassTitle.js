@@ -82,30 +82,18 @@ const CareerCard = ({ title, match, rate, salary, experience }) => {
   else if (match < 80) variant = matchStyles.warning;
 
   return (
-    <Paper
-      variant="outlined"
-      sx={{
-        p: 2,
-        position: 'relative',
-        width: { xs: '100%', sm: 360 },
-        height: 127,
-        borderRadius: 2,
-      }}
-    >
-      <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 0.5 }}>
+    <Paper variant="outlined" sx={{ p: 2, position: 'relative', width: '100%' }}>
+      <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 1 }}>
         {title}
       </Typography>
-
       <Box component="span" sx={badgeStyles}>
         {rate} Transition rate
       </Box>
-
       <Typography variant="caption" color="grey.600" sx={{ lineHeight: 1.4 }}>
         Salary: {salary}
         <br />
         Experience: {experience}
       </Typography>
-
       <Box component="span" sx={{ ...matchStyles.base, ...variant }}>
         {match}%<br />
         Match
@@ -137,36 +125,13 @@ export default function CareerPathProjection() {
       salary: '$50L - $55L',
       experience: '8-12 years',
     },
-    next: [
-      {
-        title: 'Senior Data Scientist',
-        match: 80,
-        rate: '18%',
-        salary: '$50L - $55L',
-        experience: '8-12 years',
-      },
-      {
-        title: 'Senior Data Scientist 1',
-        match: 80,
-        rate: '18%',
-        salary: '$50L - $55L',
-        experience: '8-12 years',
-      },
-      {
-        title: 'Senior Data Scientist 2',
-        match: 80,
-        rate: '18%',
-        salary: '$50L - $55L',
-        experience: '8-12 years',
-      },
-      {
-        title: 'Senior Data Scientist 3',
-        match: 80,
-        rate: '18%',
-        salary: '$50L - $55L',
-        experience: '8-12 years',
-      },
-    ],
+    next: Array(4).fill({
+      title: 'Senior Data Scientist',
+      match: 80,
+      rate: '18%',
+      salary: '$50L - $55L',
+      experience: '8-12 years',
+    }),
     executive: [
       {
         title: 'Director Data Science',
@@ -210,47 +175,34 @@ export default function CareerPathProjection() {
 
   return (
     <Box sx={{ bgcolor: 'white', p: { xs: 2, sm: 3, md: 5 } }}>
-          <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-             {/* Title & Filters */}
-             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, float:'right' }}>
-               <Button variant="outlined">Upload resume to unlock your potential</Button>
-             </Box>
-     
-             <Grid container spacing={2} alignItems="center" sx={{ mb: 2 }}>
-               <Grid item>
-                 <Typography fontSize={14}>Lead Data Scientist</Typography>
-               </Grid>
-               <Grid item>
-                 <Select size="small" value={expYears} onChange={(e) => setExpYears(e.target.value)}>
-                   <MenuItem value={5}>5 Years</MenuItem>
-                   <MenuItem value={10}>10 Years</MenuItem>
-                 </Select>
-               </Grid>
-               <Grid item>
-                 <Button variant="outlined">Modify</Button>
-               </Grid>
-             </Grid>
-     
-             <Typography variant="body2" color="text.secondary" mb={2}>
-               Popular: <b>Senior Data Scientist, Director Data Science</b>
-             </Typography>
+      <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
+        {/* Title & Filters */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, float: 'right' }}>
+          <Button variant="outlined">Upload resume to unlock your potential</Button>
+        </Box>
 
-        <Grid container alignItems="flex-start" spacing={2} sx={{ mb: 4 }}>
-          <Box
-            aria-hidden
-            sx={{
-              position: 'absolute',
-              marginTop: '100px',
-              top: 250,
-              bottom: -360,
-              left: { xs: 40, md: 100 },
-              width: 10,
-              bgcolor: '#F0F0F0',
-              borderRadius: 1,
-              zIndex: 1,
-            }}
-          />
+        <Grid container spacing={2} alignItems="center" sx={{ mb: 2 }}>
+          <Grid item>
+            <Typography fontSize={14}>Lead Data Scientist</Typography>
+          </Grid>
+          <Grid item>
+            <Select size="small" value={expYears} onChange={(e) => setExpYears(e.target.value)}>
+              <MenuItem value={5}>5 Years</MenuItem>
+              <MenuItem value={10}>10 Years</MenuItem>
+            </Select>
+          </Grid>
+          <Grid item>
+            <Button variant="outlined">Modify</Button>
+          </Grid>
+        </Grid>
 
+        <Typography variant="body2" color="text.secondary" mb={2}>
+          Popular: <b>Senior Data Scientist, Director Data Science</b>
+        </Typography>
+
+        {/* Graph Area */}
+        <Grid container alignItems="flex-start" spacing={2} sx={{ position: 'relative', mb: 4 }}>
+          {/* Vertical labels */}
           <Grid item xs="auto">
             <Stack spacing={isMdUp ? 15 : 4} alignItems="center">
               <Box sx={labelStyles.primary}>Current Role</Box>
@@ -272,31 +224,42 @@ export default function CareerPathProjection() {
             </Stack>
           </Grid>
 
+          {/* Cards */}
           <Grid item xs>
             <Stack spacing={6}>
               <CareerCard {...paths.current} />
-
-              {[paths.next, paths.executive, paths.alternate].map((group, index) => (
-                <Grid
-                  container
-                  spacing={2}
-                  key={index}
-                  justifyContent={{ xs: 'center', md: 'flex-start' }}
-                >
-                  {group.map((p, i) => (
-                    <Grid item key={i} sx={{ flex: '0 0 auto' }}>
-                      <CareerCard {...p} />
-                    </Grid>
-                  ))}
-                </Grid>
-              ))}
+              <Grid container spacing={2}>
+                {paths.next.map((p, i) => (
+                  <Grid item xs={12} sm={6} md={3} key={i}>
+                    <CareerCard {...p} />
+                  </Grid>
+                ))}
+              </Grid>
+              <Grid container spacing={2}>
+                {paths.executive.map((p, i) => (
+                  <Grid item xs={12} sm={6} md={4} key={i}>
+                    <CareerCard {...p} />
+                  </Grid>
+                ))}
+              </Grid>
+              <Grid container spacing={2}>
+                {paths.alternate.map((p, i) => (
+                  <Grid item xs={12} sm={6} md={6} key={i}>
+                    <CareerCard {...p} />
+                  </Grid>
+                ))}
+              </Grid>
             </Stack>
           </Grid>
         </Grid>
 
-        <Box sx={{ textAlign: 'center', mt: 4 }}>
-          <Button  sx={{ borderRadius: 5, px: 4,bgcolor:'#2A4DD0', color:'#fff'}}>
-            Show job match
+        {/* Bottom Buttons */}
+        <Box sx={{ textAlign: 'center' }}>
+          <Button variant="outlined" sx={{ mx: 1 }}>
+            Modify designation
+          </Button>
+          <Button variant="outlined" sx={{ mx: 1 }}>
+            Upload your resume
           </Button>
         </Box>
       </Box>

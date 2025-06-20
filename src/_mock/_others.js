@@ -180,6 +180,7 @@ export const _pricingPlans = [
     price: 4.99,
     caption: 'Saving $24 a year',
     lists: [
+      
       '3 Prototypes',
       '3 Boards',
       'Up To 5 Team Members',

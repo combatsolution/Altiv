@@ -24,10 +24,15 @@ const CareerToolkitHero = () => {
       }}
     >
       <Typography
-        variant={isMobile ? "h5" : "h2"}
+        variant='h2'
         fontWeight="600"
-        color="black"
-        
+        color="black" 
+        sx={
+          {
+           fontsize:{xs:'40px', md:'54px'}
+
+          }
+        }
       >
         Your Career Acceleration Toolkit
       </Typography>
@@ -36,7 +41,14 @@ const CareerToolkitHero = () => {
         color="text.secondary"
         mt={2}
         maxWidth="700px"
+         sx={
+          {
+           fontsize:{xs:'16px', md:'20px'}
+           
+          }
+        }
       >
+      
         Transform your career journey from guesswork to strategy with AI-powered tools from Altiv.AI
       </Typography>
     </Box>

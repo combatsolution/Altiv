@@ -26,6 +26,7 @@ export const paths = {
   AitrainingpolicyView:'/ai-training-policy',
   jobDetails: '/job-details',
   careerResume: '/career-resume',
+  careerTitle:'/career-title',
   fobo:'/fobo',
   // comingsoonPage:'/comingsoon-Page',
   dashboardPage:(resumeId) => `/dashboard-page/${resumeId}`, 
@@ -96,7 +97,7 @@ export const paths = {
       verify: `${ROOTS.AUTH_DEMO}/classic/verify`,
     },
     modern: {
-      login: `${ROOTS.AUTH_DEMO}/modern/login`,
+      login: `${ROOTS.AUTH_DEMO}/modern/login`, 
       register: `${ROOTS.AUTH_DEMO}/modern/register`,
       forgotPassword: `${ROOTS.AUTH_DEMO}/modern/forgot-password`,
       newPassword: `${ROOTS.AUTH_DEMO}/modern/new-password`,

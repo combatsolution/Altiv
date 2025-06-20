@@ -20,7 +20,7 @@ import PaymentNewCardDialog from './payment-new-card-dialog';
 const PAYMENT_OPTIONS = [
   {
     value: 'paypal',
-    label: 'Paypal',
+    label: 'paypal',
   },
   {
     value: 'credit',

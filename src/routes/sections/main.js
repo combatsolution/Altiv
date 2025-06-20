@@ -32,6 +32,10 @@ const PostDetailsPage = lazy(() => import('src/pages/post/details'));
 // JOB DETAILS
 const JobDetailsPage = lazy(() => import('src/pages/job-details/jobDetails'));
 const CareerPathResumePage = lazy(() => import('src/pages/career/CareerCompassResume'));
+const CareerPathTitlePage = lazy(() => import('src/pages/career/CareerCompassTitle'));
+
+
+
 // FOBO
 const FoboPage = lazy(() => import('src/pages/Fobo/fobo-view'));
 const ProfilePage = lazy(() => import('src/pages/profile/Profile-view'));
@@ -45,6 +49,7 @@ const AboutUsPage = lazy(() => import('src/pages/Policies/about-us-page'));
 // const ContactUsPage =lazy(()=>import ('src/pages/Policies/contact-us-page'))
 const AttributionsView =lazy(()=>import ('src/pages/Policies/attributions-view'))
 const AitrainingpolicyView =lazy(()=>import ('src/pages/Policies/aItrainingpolicyview'))
+
 
 
 
@@ -68,6 +73,8 @@ export const mainRoutes = [
       { path: 'faqs', element: <FaqPage/> },
       { path: 'job-details', element: <JobDetailsPage />},
       { path: 'career-resume', element: <CareerPathResumePage />},
+      { path: 'career-title', element: <CareerPathTitlePage />},
+    
       { path: 'fobo', element: <FoboPage />},
       { path: 'Profile', 
         element:(
