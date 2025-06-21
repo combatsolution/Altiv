@@ -110,7 +110,7 @@ CareerCard.propTypes = {
   experience: PropTypes.string.isRequired,
 };
 
-export default function CareerPathProjection() {
+export default function CareerCompassTitle() {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
 

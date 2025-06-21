@@ -20,13 +20,19 @@ const ROOTS = {
 // ----------------------------------------------------------------------
 
 export const paths = {
+  SubscriptionSuccess:'/successpage',
+  subscription:'/subscription',
+  paymentSuccess:'/payment-success',
   // footer
   PolicyView:'/privacy-policy',
   attributions:'/attributions',
   AitrainingpolicyView:'/ai-training-policy',
+  TermsAndConditions:'/termsandconditions',
   jobDetails: '/job-details',
   careerResume: '/career-resume',
   careerTitle:'/career-title',
+  jobFeed:'/job-feed',
+
   fobo:'/fobo',
   // comingsoonPage:'/comingsoon-Page',
   dashboardPage:(resumeId) => `/dashboard-page/${resumeId}`, 

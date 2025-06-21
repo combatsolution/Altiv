@@ -8,7 +8,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { useState, useRef } from 'react';
-import Impact from 'src/Fogoimages/impact1.png';
+import Impact from 'src/Fogoimages/impact1.webp';
 import { m } from 'framer-motion';
 
 const MotionBox = m(Box);

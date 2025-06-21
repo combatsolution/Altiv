@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Grid, Typography, Button, Paper, Stack } from '@mui/material';
-import TimerImage from 'src/Fogoimages/timerlogo.png';
+import TimerImage from 'src/Fogoimages/timerlogo.webp';
 import demoImage from 'src/images/human.png';
 import { useNavigate } from 'react-router-dom';
 import { paths } from 'src/routes/paths';

@@ -120,7 +120,18 @@ export default function Header() {
                   borderRadius: 2,
                 }}
               >
-               
+               <Typography
+                  variant="body2"
+                  sx={{
+                    cursor: 'pointer',
+                    fontSize: 15,
+                    whiteSpace: 'nowrap',
+                  }}
+                  onClick={() => navigate(paths.subscription)}
+                >
+                  Subscriptions
+                </Typography>
+
 
                 
                 <Typography

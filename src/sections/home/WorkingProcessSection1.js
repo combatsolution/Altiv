@@ -5,7 +5,7 @@ import { m } from 'framer-motion';
 import PersonIcon from '@mui/icons-material/Person';
 import CloudCircleIcon from '@mui/icons-material/CloudCircle';
 import SavedSearchIcon from '@mui/icons-material/SavedSearch';
-import { VerifiedIcon } from 'lucide-react';
+import VerifiedIcon from '@mui/icons-material/Verified';
 import { paths } from 'src/routes/paths';
 import {  useNavigate } from 'react-router';
 

@@ -9,6 +9,7 @@ import { SplashScreen } from 'src/components/loading-screen';
 import { element } from 'prop-types';
 import { RolesAuthRoute } from 'src/hooks/RolesAuthRoute';
 
+
 // ----------------------------------------------------------------------
 
 export const HomePage = lazy(() => import('src/pages/home'));
@@ -34,7 +35,13 @@ const JobDetailsPage = lazy(() => import('src/pages/job-details/jobDetails'));
 const CareerPathResumePage = lazy(() => import('src/pages/career/CareerCompassResume'));
 const CareerPathTitlePage = lazy(() => import('src/pages/career/CareerCompassTitle'));
 
+const JobFeedPage = lazy(() => import('src/pages/job-feed/JobFeedPage'));
 
+// Payment
+const PaymentsuccessPage = lazy(() => import('src/pages/paymentpage'));
+const SubscriptionData  = lazy(() => import('src/pages/subscription/SubscriptionHistory'));
+
+const Subscriptionsuccess  = lazy(() => import('src/pages/subscription/SubscriptionSuccessPage'));
 
 // FOBO
 const FoboPage = lazy(() => import('src/pages/Fobo/fobo-view'));
@@ -49,8 +56,8 @@ const AboutUsPage = lazy(() => import('src/pages/Policies/about-us-page'));
 // const ContactUsPage =lazy(()=>import ('src/pages/Policies/contact-us-page'))
 const AttributionsView =lazy(()=>import ('src/pages/Policies/attributions-view'))
 const AitrainingpolicyView =lazy(()=>import ('src/pages/Policies/aItrainingpolicyview'))
-
-
+ const TermsCondition =lazy(()=>import ('src/pages/Policies/Terms&ConditionsPage'))
+  
 
 
 
@@ -74,9 +81,16 @@ export const mainRoutes = [
       { path: 'job-details', element: <JobDetailsPage />},
       { path: 'career-resume', element: <CareerPathResumePage />},
       { path: 'career-title', element: <CareerPathTitlePage />},
-    
+      { path: 'job-feed', element: <JobFeedPage />},
+     { path: 'payment-success', element: <PaymentsuccessPage />},
+      { path: 'subscription', element: <SubscriptionData />},
+      { path: 'successpage', element: <Subscriptionsuccess />},
+      { path: 'termsandconditions', element: <TermsCondition />},
+
+
+     
       { path: 'fobo', element: <FoboPage />},
-      { path: 'Profile', 
+      { path: 'Profile',  
         element:(
           <RolesAuthRoute roles={['customer'] || ['admin']}>
             <ProfilePage />            

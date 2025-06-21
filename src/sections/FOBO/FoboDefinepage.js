@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Grid, Box, Typography, Stack, useTheme, useMediaQuery } from '@mui/material';
 import { m } from 'framer-motion';
-import foboImage from 'src/Fogoimages/fobodefine.png';
+import foboImage from 'src/Fogoimages/fobodefine.webp';
 
 const MotionBox = m(Box);
 const MotionImage = m(Box);

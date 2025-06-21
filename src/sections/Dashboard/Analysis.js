@@ -5,7 +5,7 @@ import {
   Box,
   Typography,
   Grid,
-
+  Card,
   Button,
   Stack,
   useTheme,
@@ -55,7 +55,7 @@ export default function FoboLevelTaskDistribution() {
       setSelectedSection(null);
       const response = await axiosInstance.post(`/profile-analytics`, {
         resumeId: Number(resumeId),
-        viewDetails
+        viewDetails,
       });
       if (response?.data.success) {
         console.log('data', response?.data?.data);
@@ -276,14 +276,16 @@ export default function FoboLevelTaskDistribution() {
             <Typography variant="body1">Moderate</Typography>
           </div>
 
-        <div
-          style={{
-            position: 'absolute',
-            ...countStyles.moderate,
-          }}
-        >
-          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>70 - 100</Typography>
-        </div>
+          <div
+            style={{
+              position: 'absolute',
+              ...countStyles.moderate,
+            }}
+          >
+            <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
+              70 - 100
+            </Typography>
+          </div>
 
           <div
             style={{
@@ -294,15 +296,16 @@ export default function FoboLevelTaskDistribution() {
             <Typography variant="body1">Bad</Typography>
           </div>
 
-        <div
-          style={{
-            position: 'absolute',
-            ...countStyles.bad,
-          }}
-        >
-          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>40 - 69</Typography>
-        </div>
-
+          <div
+            style={{
+              position: 'absolute',
+              ...countStyles.bad,
+            }}
+          >
+            <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
+              40 - 69
+            </Typography>
+          </div>
 
           {/* FOBO Label and Score */}
           <div style={{ textAlign: 'center', marginTop: 10 }}>
@@ -328,7 +331,17 @@ export default function FoboLevelTaskDistribution() {
     });
 
     return (
-      <Box component='div' sx={{width: '100%', maxHeight: '350px', overflowY: 'scroll', '&::-webkit-scrollbar': {display: 'none',},'-ms-overflow-style': 'none', 'scrollbar-width': 'none',}}>
+      <Box
+        component="div"
+        sx={{
+          width: '100%',
+          maxHeight: '350px',
+          overflowY: 'scroll',
+          '&::-webkit-scrollbar': { display: 'none' },
+          '-ms-overflow-style': 'none',
+          'scrollbar-width': 'none',
+        }}
+      >
         {groupedArrays.map((group, groupIndex) => {
           if (group.length === 0) return null;
 
@@ -395,7 +408,8 @@ export default function FoboLevelTaskDistribution() {
                     flex: 1,
                     height: '100%',
                     bgcolor: color,
-                    borderRadius: index === 0 ? '4px 0 0 4px' : index === shades.length - 1 ? '0 4px 4px 0' : 0,
+                    borderRadius:
+                      index === 0 ? '4px 0 0 4px' : index === shades.length - 1 ? '0 4px 4px 0' : 0,
                   }}
                 />
               ))}
@@ -425,7 +439,6 @@ export default function FoboLevelTaskDistribution() {
     );
   };
 
-
   return !isLoading ? (
     <Box
       px={{ xs: 2, md: '12%' }}
@@ -450,7 +463,6 @@ export default function FoboLevelTaskDistribution() {
           }
           label={viewDetails ? 'Show Long Description' : 'Show Short Description'}
         />
-
       </Box>
       <Grid container spacing={4}>
         {/* FOBO Level */}
@@ -561,7 +573,12 @@ export default function FoboLevelTaskDistribution() {
                             flex: 1,
                             height: '100%',
                             bgcolor: color,
-                            borderRadius: index === 0 ? '4px 0 0 4px' : index === shades.length - 1 ? '0 4px 4px 0' : 0,
+                            borderRadius:
+                              index === 0
+                                ? '4px 0 0 4px'
+                                : index === shades.length - 1
+                                ? '0 4px 4px 0'
+                                : 0,
                           }}
                         />
                       ))}
@@ -626,7 +643,7 @@ export default function FoboLevelTaskDistribution() {
         {/* CTA Button */}
         <Grid item xs={12} textAlign="left">
           <Button
-            variant="contained" 
+            variant="contained"
             onClick={() => navigate(paths.pricing)}
             sx={{
               backgroundColor: '#2C47D3',
@@ -634,10 +651,12 @@ export default function FoboLevelTaskDistribution() {
               px: 4,
               textTransform: 'none',
               fontWeight: 'bold',
+              '&:hover': {
+                backgroundColor: '#2C47D3', // disables hover color change
+              },
             }}
           >
             Beat FOBO Now
-              
           </Button>
         </Grid>
       </Grid>

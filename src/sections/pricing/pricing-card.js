@@ -12,10 +12,13 @@ import { PlanFreeIcon, PlanStarterIcon, PlanPremiumIcon } from 'src/assets/icons
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
+import { useNavigate } from 'react-router-dom';
+import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
 export default function PricingCard({ card, sx, ...other }) {
+   const navigate = useNavigate();
   const { subscription, price, caption, lists, labelAction } = card;
 
   const basic = subscription === 'basic';
@@ -23,7 +26,7 @@ export default function PricingCard({ card, sx, ...other }) {
   const starter = subscription === 'starter';
 
   const premium = subscription === 'premium';
-
+  
   const renderIcon = (
     <Stack direction="row" alignItems="center" justifyContent="space-between">
       <Box sx={{ width: 48, height: 48 }}>
@@ -128,14 +131,16 @@ export default function PricingCard({ card, sx, ...other }) {
       {renderList}
 
       <Button
-        fullWidth
-        size="large"
-        variant="contained"
-        disabled={basic}
-        color={starter ? 'primary' : 'inherit'}
-      >
-        {labelAction}
-      </Button>
+  onClick={() => navigate(paths.payment)}
+  fullWidth
+  size="large"
+  variant="contained"
+  disabled={basic}
+  color={starter ? 'primary' : 'inherit'}
+>
+  {labelAction}
+</Button>
+
     </Stack>
   );
 }

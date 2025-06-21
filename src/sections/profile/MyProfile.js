@@ -29,6 +29,7 @@ import {
   Card,
   CardContent,
 } from '@mui/material';
+
 import { paths } from 'src/routes/paths';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -71,7 +72,7 @@ export default function MyProfile() {
     fullName: '',
     phoneNumber: '',
     email: '',
-    address: '',
+    // address: '',
     description: '',
   });
 
@@ -88,7 +89,7 @@ export default function MyProfile() {
     } catch (error) {
       console.log('Error while fetching last fobo score', error);
     }
-  }
+  };
 
   useEffect(() => {
     if (user) {
@@ -96,7 +97,7 @@ export default function MyProfile() {
         fullName: user?.fullName,
         phoneNumber: user?.phoneNumber || '',
         email: user?.email || '',
-        address: user?.fullAddress,
+        // address: user?.fullAddress,
         description:
           user?.profileDescription ||
           'Directors are responsible for overseeing the development of an organizations business goals and objectives...',
@@ -115,7 +116,6 @@ export default function MyProfile() {
   }, [existingResumes]);
 
   console.log('fobo score', lastFOBOData);
-
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -187,7 +187,7 @@ export default function MyProfile() {
         fullName: data.fullName.trim(),
         email: data.email,
         phoneNumber: data.phoneNumber,
-        fullAddress: data.address,
+        // fullAddress: data.address,
         profileDescription: data.description,
         designation: data.designation,
       });
@@ -273,100 +273,106 @@ export default function MyProfile() {
   const labelStyles = getLabelStyles();
   const countStyles = getCountStyles();
 
-  const MemoizedGaugeChart = React.memo(({ score }) => {
-    const percent = score / 100;
-    const levelColor = useMemo(() => getLevelColor(score), [score]);
+  const MemoizedGaugeChart = React.memo(
+    ({ score }) => {
+      const percent = score / 100;
+      const levelColor = useMemo(() => getLevelColor(score), [score]);
 
+      return (
+        <div style={{ position: 'relative', width: '100%', margin: 'auto', marginTop: '20px' }}>
+          <Grid container spacing={1} alignItems="center">
+            <Grid item xs={12} md={8}>
+              {/* Gauge Chart */}
+              <GaugeChart
+                id="fobo-gauge"
+                nrOfLevels={3}
+                arcsLength={[0.39, 0.3, 0.31]}
+                colors={['#00C853', '#FFB300', '#D32F2F']}
+                percent={percent}
+                arcPadding={0}
+                arcWidth={0.3} // <- Increase this value for thicker arcs (default is ~0.2)
+                needleColor="#424242"
+                textColor="transparent"
+                style={{ width: '100%' }}
+                animate
+              />
 
-    return (
-      <div style={{ position: 'relative', width: '100%', margin: 'auto', marginTop: '20px' }}>
-        <Grid container spacing={1} alignItems='center'>
-          <Grid item xs={12} md={8}>
-            {/* Gauge Chart */}
-            <GaugeChart
-              id="fobo-gauge"
-              nrOfLevels={3}
-              arcsLength={[0.39, 0.3, 0.31]}
-              colors={['#00C853', '#FFB300', '#D32F2F']}
-              percent={percent}
-              arcPadding={0}
-              arcWidth={0.3} // <- Increase this value for thicker arcs (default is ~0.2)
-              needleColor="#424242"
-              textColor="transparent"
-              style={{ width: '100%' }}
-              animate
-            />
-
-            <div
-              style={{
-                position: 'absolute',
-                ...labelStyles.good,
-              }}
-            >
-              <Typography variant='body1'>Good</Typography>
-            </div>
-
-            <div
-              style={{
-                position: 'absolute',
-                ...countStyles.good,
-              }}
-            >
-              <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>0 - 39</Typography>
-            </div>
-
-            <div
-              style={{
-                position: 'absolute',
-                ...labelStyles.moderate,
-              }}
-            >
-              <Typography variant='body1'>Moderate</Typography>
-            </div>
-
-            <div
-              style={{
-                position: 'absolute',
-                ...countStyles.moderate,
-              }}
-            >
-              <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>40 - 69</Typography>
-            </div>
-
-            <div
-              style={{
-                position: 'absolute',
-                ...labelStyles.bad,
-              }}
-            >
-              <Typography variant='body1'>Bad</Typography>
-            </div>
-
-            <div
-              style={{
-                position: 'absolute',
-                ...countStyles.bad,
-              }}
-            >
-              <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>70 - 100</Typography>
-            </div>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            {/* FOBO Label and Score */}
-            <div style={{ textAlign: 'center', marginTop: 10 }}>
-              <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO SCORE</div>
-              <div style={{ fontWeight: 'bold', fontSize: 24, color: levelColor }}>
-                {score}
+              <div
+                style={{
+                  position: 'absolute',
+                  ...labelStyles.good,
+                }}
+              >
+                <Typography variant="body1">Good</Typography>
               </div>
-            </div>
+
+              <div
+                style={{
+                  position: 'absolute',
+                  ...countStyles.good,
+                }}
+              >
+                <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
+                  0 - 39
+                </Typography>
+              </div>
+
+              <div
+                style={{
+                  position: 'absolute',
+                  ...labelStyles.moderate,
+                }}
+              >
+                <Typography variant="body1">Moderate</Typography>
+              </div>
+
+              <div
+                style={{
+                  position: 'absolute',
+                  ...countStyles.moderate,
+                }}
+              >
+                <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
+                  40 - 69
+                </Typography>
+              </div>
+
+              <div
+                style={{
+                  position: 'absolute',
+                  ...labelStyles.bad,
+                }}
+              >
+                <Typography variant="body1">Bad</Typography>
+              </div>
+
+              <div
+                style={{
+                  position: 'absolute',
+                  ...countStyles.bad,
+                }}
+              >
+                <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
+                  70 - 100
+                </Typography>
+              </div>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              {/* FOBO Label and Score */}
+              <div style={{ textAlign: 'center', marginTop: 10 }}>
+                <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO SCORE</div>
+                <div style={{ fontWeight: 'bold', fontSize: 24, color: levelColor }}>{score}</div>
+              </div>
+            </Grid>
           </Grid>
-        </Grid>
-      </div>
-    );
-  }, (prev, next) => prev.score === next.score);
+        </div>
+      );
+    },
+    (prev, next) => prev.score === next.score
+  );
   MemoizedGaugeChart.propTypes = {
     score: PropTypes.number,
-  }
+  };
 
   return (
     <Box sx={{ backgroundColor: '#F5F9FF', minHeight: '100vh' }}>
@@ -406,11 +412,43 @@ export default function MyProfile() {
             }}
           >
             <Avatar src={user?.avatar?.fileUrl || ''} sx={{ width: 48, height: 48 }} />
-            <Box>
-              <Typography fontWeight="600">{profileData?.fullName || 'No Name'}</Typography>
-              <Typography fontSize="0.75rem" color="text.secondary">
-                {user?.designation || 'Not specified'}
-              </Typography>
+
+            <Box
+              sx={{
+                flex: 1,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              {/* Text Section */}
+              <Box>
+                <Typography fontWeight="600">{profileData?.fullName || 'No Name'}</Typography>
+                <Typography fontSize="0.75rem" color="text.secondary">
+                  {user?.designation || 'Not specified'}
+                </Typography>
+              </Box>
+
+              {/* Plan Upgrade Button */}
+              <Button
+                onClick={() => navigate(paths.pricing)}
+                variant="outlined"
+                size="small"
+                sx={{
+                  textTransform: 'none',
+                  fontWeight: 500,
+                  borderRadius: 5,
+                  px: 2,
+                  borderColor: 'primary.main',
+                  color: 'primary.main',
+                  '&:hover': {
+                    borderColor: 'primary.dark',
+                    color: 'primary.dark',
+                  },
+                }}
+              >
+                Plan Upgrade
+              </Button>
             </Box>
           </Paper>
         </Box>
@@ -439,7 +477,7 @@ export default function MyProfile() {
                       <Typography>
                         {selectedResumeId
                           ? existingResumes.find((r) => r.id === selectedResumeId)?.fileDetails
-                            ?.fileName || 'Selected resume'
+                              ?.fileName || 'Selected resume'
                           : 'Select a resume below'}
                       </Typography>
                     ) : (
@@ -455,7 +493,7 @@ export default function MyProfile() {
                       </Link>
                     </>,
                   ],
-                  ['Address:', profileData.address || 'Not specified'],
+                  // ['Address:', profileData.address || 'Not specified'],
                 ].map(([label, value]) => (
                   <Box key={label} display="flex" gap={1.5}>
                     <Typography sx={{ width: 90 }} color="text.secondary">
@@ -540,99 +578,106 @@ export default function MyProfile() {
               />
             </Paper>
 
-            <Paper sx={{ p: 3, borderRadius: 2,mt:2 }}>
+            <Paper sx={{ p: 3, borderRadius: 2, mt: 2 }}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                 <Typography variant="subtitle1" fontWeight="600">
                   Job Applications
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  No jobs found
+                  Coming Soon..
                 </Typography>
               </Box>
-
-            
-              
             </Paper>
           </Grid>
 
           {/* Profile analytics section */}
-          {lastFOBOData && <Grid item xs={12} lg={8}>
-            {lastFOBOData ? (
-              <Paper
-                elevation={3}
-                sx={{
-                  position: 'relative',
-                  p: 2,
-                  bgcolor: 'rgba(255,255,255,0.9)',
-                  backdropFilter: 'blur(6px)',
-                  borderRadius: 2,
-                }}
-              >
-                <Box sx={{ width: '100%' }}>
-                  <MemoizedGaugeChart score={lastFOBOData?.FOBO_Score} />
-                </Box>
-                <Box sx={{ width: '100%', position: 'relative', p: 2 }}>
-                  <Typography sx={{ textAlign: 'center' }} variant="h6" fontWeight="bold" gutterBottom>
-                    Strategies to Improve FOBO
-                  </Typography>
+          {lastFOBOData && (
+            <Grid item xs={12} lg={8}>
+              {lastFOBOData ? (
+                <Paper
+                  elevation={3}
+                  sx={{
+                    position: 'relative',
+                    p: 2,
+                    bgcolor: 'rgba(255,255,255,0.9)',
+                    backdropFilter: 'blur(6px)',
+                    borderRadius: 2,
+                  }}
+                >
+                  <Box sx={{ width: '100%' }}>
+                    <MemoizedGaugeChart score={lastFOBOData?.FOBO_Score} />
+                  </Box>
+                  <Box sx={{ width: '100%', position: 'relative', p: 2 }}>
+                    <Typography
+                      sx={{ textAlign: 'center' }}
+                      variant="h6"
+                      fontWeight="bold"
+                      gutterBottom
+                    >
+                      Strategies to Improve FOBO
+                    </Typography>
 
-                  <Typography sx={{textAlign: 'center'}} variant="body2" gutterBottom>
-                    Reduce your hesitation by practicing mindful decision-making, limiting options,
-                    and focusing on long-term satisfaction instead of perfect outcomes. <span style={{ filter: 'blur(2px)'}}>Reduce your hesitation
-                    by practicing mindful decision-making, limiting options, and focusing on long-term satisfaction
-                    instead of perfect outcomes. Reduce your hesitation by practicing mindful decision-making,
-                    limiting options, and focusing on long-term satisfaction instead of perfect outcomes.</span>
-                  </Typography>
+                    <Typography sx={{ textAlign: 'center' }} variant="body2" gutterBottom>
+                      Reduce your hesitation by practicing mindful decision-making, limiting
+                      options, and focusing on long-term satisfaction instead of perfect outcomes.{' '}
+                      <span style={{ filter: 'blur(2px)' }}>
+                        Reduce your hesitation by practicing mindful decision-making, limiting
+                        options, and focusing on long-term satisfaction instead of perfect outcomes.
+                        Reduce your hesitation by practicing mindful decision-making, limiting
+                        options, and focusing on long-term satisfaction instead of perfect outcomes.
+                      </span>
+                    </Typography>
 
-                  {/* Optional blue glow lines */}
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      bottom: isMobile ? '90px' : '80px',
-                      left: '10%',
-                      width: '80%',
-                      height: 4,
-                      bgcolor: 'primary.main',
-                      borderRadius: 2,
-                      boxShadow: '0 0 15px rgba(33,150,243,0.8)',
-                      animation: 'pulse 2s infinite ease-in-out',
-                    }}
-                  />
+                    {/* Optional blue glow lines */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        bottom: isMobile ? '90px' : '80px',
+                        left: '10%',
+                        width: '80%',
+                        height: 4,
+                        bgcolor: 'primary.main',
+                        borderRadius: 2,
+                        boxShadow: '0 0 15px rgba(33,150,243,0.8)',
+                        animation: 'pulse 2s infinite ease-in-out',
+                      }}
+                    />
 
-                  {/* White faded overlay */}
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      bottom: 0,
-                      width: '100%',
-                      height: isMobile ? '200px' : '110px',
-                      bgcolor: 'white',
-                      opacity: 0.85,
-                      zIndex: 1,
-                    }}
-                  />
+                    {/* White faded overlay */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        bottom: 0,
+                        width: '100%',
+                        height: isMobile ? '200px' : '110px',
+                        bgcolor: 'white',
+                        opacity: 0.85,
+                        zIndex: 1,
+                      }}
+                    />
 
-                  {/* Analyze Again Button */}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => navigate(paths.dashboardPage(lastFOBOData?.resumeId))}
-                    sx={{
-                      position: 'absolute',
-                      bottom: isMobile ? '40px' : '30px',
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      zIndex: 2,
-                    }}
-                  >
-                    Analyze Again
-                  </Button>
-                </Box>
-              </Paper>
-            ) : (
-              <Typography variant='body1'>No Data</Typography>
-            )}
-          </Grid>}
+                    {/* Analyze Again Button */}
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => navigate(paths.dashboardPage(lastFOBOData?.resumeId))}
+                      sx={{
+                        position: 'absolute',
+                        bottom: isMobile ? '40px' : '30px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        zIndex: 2,
+                      }}
+                    >
+                      Analyze Again
+                    </Button>
+                  </Box>
+                </Paper>
+              ) : (
+                <Typography variant="body1">No Data</Typography>
+              )}
+            </Grid>
+          )}
         </Grid>
 
         {/* Job Section (Placed Below Resume Section) */}

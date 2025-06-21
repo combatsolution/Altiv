@@ -36,6 +36,7 @@ import { useAuthContext } from 'src/auth/hooks';
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { useSnackbar } from 'notistack';
+import { Navigate } from 'react-router';
 
 export default function JwtLoginView() {
   const { enqueueSnackbar } = useSnackbar();
@@ -51,12 +52,12 @@ export default function JwtLoginView() {
     const googleError = searchParams.get('googleError');
     const errorMessage = searchParams.get('errorMessage');
 
-    if(googleError && errorMessage){
-      enqueueSnackbar(errorMessage, {variant : 'error'});
+    if (googleError && errorMessage) {
+      enqueueSnackbar(errorMessage, { variant: 'error' });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
-  
+
   // Redirect helper for social buttons
   const handleRedirect = useCallback((url) => {
     window.location.href = url;
@@ -86,7 +87,7 @@ export default function JwtLoginView() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       await login?.(data.email, data.password);
-      enqueueSnackbar('Login success', {variant : 'success'});
+      enqueueSnackbar('Login success', { variant: 'success' });
       router.replace(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
@@ -95,11 +96,11 @@ export default function JwtLoginView() {
     }
   });
 
-  const handleGoogleLogin = async() => {
+  const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
     window.location.href = `${process.env.REACT_APP_HOST_API}/auth/google`;
     setIsGoogleLoading(false);
-  }
+  };
 
   return (
     <Box
@@ -111,7 +112,7 @@ export default function JwtLoginView() {
         px: 2,
       }}
     >
-      <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center', mt:'0px' }}>
+      <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center', mt: '0px' }}>
         <img src={altiv} alt="ALTIV Logo" style={{ marginBottom: 8 }} />
 
         <Typography variant="h6" mb={1}>
@@ -137,11 +138,7 @@ export default function JwtLoginView() {
                     <InputAdornment position="end">
                       <IconButton onClick={password.onToggle} edge="end">
                         <Iconify
-                          icon={
-                            password.value
-                              ? 'solar:eye-bold'
-                              : 'solar:eye-closed-bold'
-                          }
+                          icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'}
                         />
                       </IconButton>
                     </InputAdornment>
@@ -170,7 +167,7 @@ export default function JwtLoginView() {
 
             <LoadingButton
               fullWidth
-              variant="outlined"  
+              variant="outlined"
               loading={isGoogleLoading}
               startIcon={<Iconify icon="logos:google-icon" />}
               onClick={() => handleGoogleLogin()}
@@ -179,7 +176,7 @@ export default function JwtLoginView() {
               Sign in with Google
             </LoadingButton>
 
-            <Button
+            {/* <Button
               fullWidth
               variant="outlined"
               startIcon={<Iconify icon="logos:linkedin-icon" />}
@@ -189,29 +186,28 @@ export default function JwtLoginView() {
               sx={{ textTransform: 'none', mt: 0 }}
             >
               Sign in with LinkedIn
-            </Button>
+            </Button> */}
           </Stack>
 
           <Stack direction="row" spacing={1} justifyContent="center" mt={3}>
-            <Typography variant="body2">
-              Dont have an account?
-            </Typography>
-            <Link
-              component={RouterLink}
-              href={paths.auth.jwt.register}
-              variant="subtitle2"
-            >
+            <Typography variant="body2">Dont have an account?</Typography>
+            <Link component={RouterLink} href={paths.auth.jwt.register} variant="subtitle2">
               Register
             </Link>
           </Stack>
 
           <Typography variant="body2" color="text.secondary" mt={1}>
             Need help? Visit our{' '}
-            <Link underline="hover">help center</Link>
+            <Link
+              underline="hover"
+              onClick={() => router.push(paths.contact)}
+              sx={{ cursor: 'pointer' }}
+            >
+              help center
+            </Link>
           </Typography>
         </FormProvider>
       </Box>
     </Box>
   );
 }
-
