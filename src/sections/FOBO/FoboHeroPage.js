@@ -169,7 +169,7 @@ export default function FoboHeroPage() {
     <Box
       sx={{
         px: { xs: 2, sm: 3, md: 6, lg: 10 },
-        py: { xs: 2, sm: 6, md: 8, lg: 0 },
+        py: { xs: 2, sm: 6, md: 8, lg: 10 },
         mx: 'auto',
         maxWidth: { lg: 1400 },
         my: { xs: 2, md: 5 }
@@ -181,7 +181,7 @@ export default function FoboHeroPage() {
         spacing={{ xs: 4, sm: 6, md: 8 }}
         alignItems="center"
         justifyContent="center"
-        margintop='2px'
+        margintop='20px'
       >
         {/* Content Column */}
         <Grid
@@ -199,7 +199,7 @@ export default function FoboHeroPage() {
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
-          >
+          > 
             <Stack spacing={{ xs: 1, sm: 3, md: 1 }}>
               <Typography
                 fontWeight="bold"
@@ -224,7 +224,7 @@ export default function FoboHeroPage() {
                     xs: '36px', 
                     sm: '3rem', 
                     md: '3.5rem', 
-                    lg: '4rem' 
+                    lg: '60px' 
                   },
                   lineHeight: 1,
                   display: { xs: 'none', lg: 'block' }
@@ -319,7 +319,7 @@ export default function FoboHeroPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             sx={{
-              margintop: "20px",
+              margintop: "50px",
               width: '100%',
               height: 'auto',
               maxWidth: { xs: '100%', sm: '80%', md: '100%' },
