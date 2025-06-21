@@ -169,7 +169,7 @@ export default function FoboHeroPage() {
     <Box
       sx={{
         px: { xs: 2, sm: 3, md: 6, lg: 10 },
-        py: { xs: 2, sm: 6, md: 8, lg: 10 },
+        py: { xs: 2, sm: 6, md: 8, lg: 5 },
         mx: 'auto',
         maxWidth: { lg: 1400 },
         my: { xs: 2, md: 5 }

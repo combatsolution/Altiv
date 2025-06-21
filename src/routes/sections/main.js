@@ -9,7 +9,6 @@ import { SplashScreen } from 'src/components/loading-screen';
 import { element } from 'prop-types';
 import { RolesAuthRoute } from 'src/hooks/RolesAuthRoute';
 
-
 // ----------------------------------------------------------------------
 
 export const HomePage = lazy(() => import('src/pages/home'));
@@ -39,27 +38,24 @@ const JobFeedPage = lazy(() => import('src/pages/job-feed/JobFeedPage'));
 
 // Payment
 const PaymentsuccessPage = lazy(() => import('src/pages/paymentpage'));
-const SubscriptionData  = lazy(() => import('src/pages/subscription/SubscriptionHistory'));
+const SubscriptionData = lazy(() => import('src/pages/subscription/SubscriptionHistory'));
 
-const Subscriptionsuccess  = lazy(() => import('src/pages/subscription/SubscriptionSuccessPage'));
+const Subscriptionsuccess = lazy(() => import('src/pages/subscription/SubscriptionSuccessPage'));
 
 // FOBO
 const FoboPage = lazy(() => import('src/pages/Fobo/fobo-view'));
 const ProfilePage = lazy(() => import('src/pages/profile/Profile-view'));
 
 const DashboardPage = lazy(() => import('src/pages/dashboard/dashboard-view'));
-const Comingsoon= lazy(() => import ('src/pages/Coming-soon/coming-view'));
-// const ResumeViewPage = lazy(() => import('src/pages/Resume/resume-view')); 
-const Policy = lazy(() => import ('src/pages/Policies/policies-view'));   
+const Comingsoon = lazy(() => import('src/pages/Coming-soon/coming-view'));
+// const ResumeViewPage = lazy(() => import('src/pages/Resume/resume-view'));
+const Policy = lazy(() => import('src/pages/Policies/policies-view'));
 const AboutUsPage = lazy(() => import('src/pages/Policies/about-us-page'));
- const FaqPage = lazy(() => import('src/pages/Policies/faq-view'));
+const FaqPage = lazy(() => import('src/pages/Policies/faq-view'));
 // const ContactUsPage =lazy(()=>import ('src/pages/Policies/contact-us-page'))
-const AttributionsView =lazy(()=>import ('src/pages/Policies/attributions-view'))
-const AitrainingpolicyView =lazy(()=>import ('src/pages/Policies/aItrainingpolicyview'))
- const TermsCondition =lazy(()=>import ('src/pages/Policies/Terms&ConditionsPage'))
-  
-
-
+const AttributionsView = lazy(() => import('src/pages/Policies/attributions-view'));
+const AitrainingpolicyView = lazy(() => import('src/pages/Policies/aItrainingpolicyview'));
+const TermsCondition = lazy(() => import('src/pages/Policies/Terms&ConditionsPage'));
 
 // ---------------------------- -----------------------------------------
 
@@ -73,36 +69,34 @@ export const mainRoutes = [
       </MainLayout>
     ),
     children: [
-       { path: 'attributions', element: <AttributionsView /> },
-       { path: 'ai-training-policy', element: <AitrainingpolicyView /> },
+      { path: 'attributions', element: <AttributionsView /> },
+      { path: 'ai-training-policy', element: <AitrainingpolicyView /> },
       { path: 'about-us', element: <AboutUsPage /> },
       { path: 'contact-us', element: <ContactPage /> },
-      { path: 'faqs', element: <FaqPage/> },
-      { path: 'job-details', element: <JobDetailsPage />},
-      { path: 'career-resume', element: <CareerPathResumePage />},
-      { path: 'career-title', element: <CareerPathTitlePage />},
-      { path: 'job-feed', element: <JobFeedPage />},
-     { path: 'payment-success', element: <PaymentsuccessPage />},
-      { path: 'subscription', element: <SubscriptionData />},
-      { path: 'successpage', element: <Subscriptionsuccess />},
-      { path: 'termsandconditions', element: <TermsCondition />},
+      { path: 'faqs', element: <FaqPage /> },
+      { path: 'job-details', element: <JobDetailsPage /> },
+      { path: 'career-resume', element: <CareerPathResumePage /> },
+      { path: 'career-title', element: <CareerPathTitlePage /> },
+      { path: 'job-feed', element: <JobFeedPage /> },
+      { path: 'payment-success', element: <PaymentsuccessPage /> },
+      { path: 'subscription', element: <SubscriptionData /> },
+      { path: 'successpage', element: <Subscriptionsuccess /> },
+      { path: 'termsandconditions', element: <TermsCondition /> },
 
-
-     
-      { path: 'fobo', element: <FoboPage />},
-      { path: 'Profile',  
-        element:(
+      { path: 'fobo', element: <FoboPage /> },
+      {
+        path: 'Profile',
+        element: (
           <RolesAuthRoute roles={['customer'] || ['admin']}>
-            <ProfilePage />            
+            <ProfilePage />
           </RolesAuthRoute>
-        ) 
+        ),
       },
-      { path: 'dashboard-page/:resumeId', element: < DashboardPage/>},
-       {path: 'coming-soon', element: < Comingsoon/>},
+      { path: 'dashboard-page/:resumeId', element: <DashboardPage /> },
+      { path: 'coming-soon', element: <Comingsoon /> },
       //  {path: 'resume-view', element: < ResumeViewPage/>},
-       {path: 'privacy-policy', element: <Policy/>},
+      { path: 'privacy-policy', element: <Policy /> },
 
-    
       {
         path: 'product',
         children: [
@@ -144,7 +138,6 @@ export const mainRoutes = [
       </CompactLayout>
     ),
     children: [
-      { path: 'coming-soon', element: <ComingSoonPage /> },
       { path: 'maintenance', element: <MaintenancePage /> },
       { path: '500', element: <Page500 /> },
       { path: '404', element: <Page404 /> },

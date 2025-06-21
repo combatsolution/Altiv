@@ -193,12 +193,12 @@ export default function ProfileUpdateModal({
   });
 
   const defaultValues = {
-    backgroundImage: profileData?.backgroundImage || '',
-    avatar: profileData?.avatar || '',
+    backgroundImage: profileData?.backgroundImage || null,
+    avatar: profileData?.avatar || null,
     fullName: profileData?.fullName || '',
     phoneNumber: profileData?.phoneNumber || '',
     email: profileData?.email || '',
-    address: profileData?.address || '',
+    address: profileData?.fullAddress || '',
     description: profileData?.profileDescription || '',
     designation: profileData?.designation || '',
   };

@@ -82,22 +82,7 @@ export default function TermsAndConditionsPage() {
       <Divider sx={{ my: 4 }} />
 
       {/* Action Button */}
-      <Box textAlign="center">
-        <Button
-          variant="contained"
-          size={isMobile ? 'medium' : 'large'}
-          sx={{
-            backgroundColor: '#2A4DD0',
-            color: '#fff',
-            px: 4,
-            '&:hover': {
-              backgroundColor: '#2445b5',
-            },
-          }}
-        >
-          I Agree
-        </Button>
-      </Box>
+    
     </Container>
   );
 }

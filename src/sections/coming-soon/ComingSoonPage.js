@@ -77,7 +77,7 @@ export default function ComingSoonPage() {
       };
 
       await axiosInstance.post('/wait-lists', payload);
-      enqueueSnackbar('You have been subscribed successfully!', { variant: 'success' });
+      // enqueueSnackbar('You have been subscribed successfully!', { variant: 'success' });
       reset();
 
       // ✅ Redirect only after success

@@ -158,11 +158,11 @@ export default function Header() {
                 >
                   Signout
                 </Typography>
-                <IconButton>
+                {/* <IconButton>
                   <Badge badgeContent={0} color="error">
                     <NotificationsIcon sx={{ color: 'black' }} />
                   </Badge>
-                </IconButton>
+                </IconButton> */}
               </Box>
             </m.div>
           ) : (

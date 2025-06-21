@@ -42,6 +42,7 @@ import axiosInstance from 'src/utils/axios';
 import { green } from '@mui/material/colors';
 import { useSnackbar } from 'notistack';
 import { SplashScreen } from 'src/components/loading-screen';
+import { format } from 'date-fns';
 import ProfileChangePassword from './profile-change-password-modal';
 import ProfileUpdateModal from './profile-update-modal';
 
@@ -71,6 +72,7 @@ export default function MyProfile() {
   const [resumeToDelete, setResumeToDelete] = useState(null);
 
   const [profileData, setProfileData] = useState(null);
+  console.log('profileData',profileData)
 
   const fetchLastFoboScore = async () => {
     try {
@@ -447,7 +449,7 @@ export default function MyProfile() {
                       </Link>
                     </>,
                   ],
-                  ['Address:', profileData?.address || 'Not specified'],
+                  // ['Address:', profileData?.address || 'Not specified'],
                 ].map(([label, value]) => (
                   <Box key={label} display="flex" gap={1.5}>
                     <Typography sx={{ width: 90 }} color="text.secondary">
@@ -515,7 +517,7 @@ export default function MyProfile() {
                             {r.fileDetails?.fileName || 'Untitled Resume'}
                           </a>
                         }
-                        secondary={r.uploadedAt || 'No date'}
+                        secondary={r?.updatedAt ? format(r?.updatedAt, 'dd-MM-yyyy') : ''}
                       />
                     </ListItem>
                     <Divider />
@@ -538,7 +540,7 @@ export default function MyProfile() {
                   Job Applications
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  No jobs found
+                 Coming Soon...
                 </Typography>
               </Box>
 

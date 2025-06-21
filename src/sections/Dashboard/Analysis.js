@@ -17,16 +17,15 @@ import CompactLayout from 'src/layouts/compact';
 import { MotionContainer, varBounce } from 'src/components/animate';
 import SeverErrorIllustration from 'src/assets/illustrations/sever-error-illustration';
 import { RouterLink } from 'src/routes/components';
-import { paths } from 'src/routes/paths';
 
 export default function FoboLevelTaskDistribution() {
+  const navigate = useNavigate();
   const params = useParams();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
   const { resumeId } = params;
-  const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(null);
   const [selectedSection, setSelectedSection] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -39,7 +38,7 @@ export default function FoboLevelTaskDistribution() {
   const baseColor = pieData?.find((d) => d.name === selectedSection?.name)?.color || '#ccc';
 
   // Generate 4 shades (lighter to darker)
-  const shades = [0.4, 0.6, 0.8, 1].map((opacity) =>
+  const shades = [0.4, 0.6, 0.8, 1].map(opacity =>
     tinycolor(baseColor).setAlpha(opacity).toRgbString()
   );
 
@@ -51,6 +50,7 @@ export default function FoboLevelTaskDistribution() {
       const response = await axiosInstance.post(`/profile-analytics`, {
         resumeId: Number(id),
         viewDetails,
+        smartInsights
       });
       if (response?.data.success) {
         console.log('data', response?.data?.data);
@@ -229,56 +229,45 @@ export default function FoboLevelTaskDistribution() {
   const labelStyles = getLabelStyles();
   const countStyles = getCountStyles();
 
-  const MemoizedGaugeChart = React.memo(
-    ({ score }) => {
-      const percent = score / 100;
-      const levelColor = useMemo(() => getLevelColor(score), [score]);
+  const MemoizedGaugeChart = React.memo(({ score }) => {
+    const percent = score / 100;
+    const levelColor = useMemo(() => getLevelColor(score), [score]);
 
-      return (
-        <div style={{ position: 'relative', width: '100%', margin: 'auto' }}>
-          {/* Gauge Chart */}
-          <GaugeChart
-            id="fobo-gauge"
-            nrOfLevels={3}
-            arcsLength={[0.39, 0.3, 0.31]}
-            colors={['#00C853', '#FFB300', '#D32F2F']}
-            percent={percent}
-            arcPadding={0}
-            arcWidth={0.3} // <- Increase this value for thicker arcs (default is ~0.2)
-            needleColor="#424242"
-            textColor="transparent"
-            style={{ width: '100%' }}
-            animate
-          />
 
-          <div
-            style={{
-              position: 'absolute',
-              ...labelStyles.good,
-            }}
-          >
-            <Typography variant="body1">Good</Typography>
-          </div>
+    return (
+      <div style={{ position: 'relative', width: '100%', margin: 'auto' }}>
+        {/* Gauge Chart */}
+        <GaugeChart
+          id="fobo-gauge"
+          nrOfLevels={3}
+          arcsLength={[0.39, 0.3, 0.31]}
+          colors={['#00C853', '#FFB300', '#D32F2F']}
+          percent={percent}
+          arcPadding={0}
+          arcWidth={0.3} // <- Increase this value for thicker arcs (default is ~0.2)
+          needleColor="#424242"
+          textColor="transparent"
+          style={{ width: '100%' }}
+          animate
+        />
 
-          <div
-            style={{
-              position: 'absolute',
-              ...countStyles.good,
-            }}
-          >
-            <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
-              0 - 39
-            </Typography>
-          </div>
+        <div
+          style={{
+            position: 'absolute',
+            ...labelStyles.good,
+          }}
+        >
+          <Typography variant='body1'>Good</Typography>
+        </div>
 
-          <div
-            style={{
-              position: 'absolute',
-              ...labelStyles.moderate,
-            }}
-          >
-            <Typography variant="body1">Moderate</Typography>
-          </div>
+        <div
+          style={{
+            position: 'absolute',
+            ...countStyles.good,
+          }}
+        >
+          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>0 - 39</Typography>
+        </div>
 
         <div
           style={{
@@ -304,39 +293,47 @@ export default function FoboLevelTaskDistribution() {
           </svg>
         </div>
 
-          <div
-            style={{
-              position: 'absolute',
-              ...labelStyles.bad,
-            }}
-          >
-            <Typography variant="body1">Bad</Typography>
-          </div>
+        <div
+          style={{
+            position: 'absolute',
+            ...countStyles.moderate,
+          }}
+        >
+          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>40 - 69</Typography>
+        </div>
 
-          <div
-            style={{
-              position: 'absolute',
-              ...countStyles.bad,
-            }}
-          >
-            <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
-              40 - 69
-            </Typography>
-          </div>
+        <div
+          style={{
+            position: 'absolute',
+            ...labelStyles.bad,
+          }}
+        >
+          <Typography variant='body1'>Bad</Typography>
+        </div>
 
-          {/* FOBO Label and Score */}
-          <div style={{ textAlign: 'center', marginTop: 10 }}>
-            <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO LEVEL</div>
-            <div style={{ fontWeight: 'bold', fontSize: 24, color: levelColor }}>{score}</div>
+        <div
+          style={{
+            position: 'absolute',
+            ...countStyles.bad,
+          }}
+        >
+          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>70 - 100</Typography>
+        </div>
+
+
+        {/* FOBO Label and Score */}
+        <div style={{ textAlign: 'center', marginTop: 10 }}>
+          <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO LEVEL</div>
+          <div style={{ fontWeight: 'bold', fontSize: 24, color: levelColor }}>
+            {score}
           </div>
         </div>
-      );
-    },
-    (prev, next) => prev.score === next.score
-  );
+      </div>
+    );
+  }, (prev, next) => prev.score === next.score);
   MemoizedGaugeChart.propTypes = {
     score: PropTypes.number,
-  };
+  }
 
   const showDetailedDescription = (arrayData) => {
     if (!arrayData?.length) return null;
@@ -348,17 +345,7 @@ export default function FoboLevelTaskDistribution() {
     });
 
     return (
-      <Box
-        component="div"
-        sx={{
-          width: '100%',
-          maxHeight: '350px',
-          overflowY: 'scroll',
-          '&::-webkit-scrollbar': { display: 'none' },
-          '-ms-overflow-style': 'none',
-          'scrollbar-width': 'none',
-        }}
-      >
+      <Box component='div' sx={{ width: '100%', maxHeight: '350px', overflowY: 'scroll', '&::-webkit-scrollbar': { display: 'none', }, '-ms-overflow-style': 'none', 'scrollbar-width': 'none', }}>
         {groupedArrays.map((group, groupIndex) => {
           if (group.length === 0) return null;
 
@@ -425,8 +412,7 @@ export default function FoboLevelTaskDistribution() {
                     flex: 1,
                     height: '100%',
                     bgcolor: color,
-                    borderRadius:
-                      index === 0 ? '4px 0 0 4px' : index === shades.length - 1 ? '0 4px 4px 0' : 0,
+                    borderRadius: index === 0 ? '4px 0 0 4px' : index === shades.length - 1 ? '0 4px 4px 0' : 0,
                   }}
                 />
               ))}
@@ -493,13 +479,7 @@ export default function FoboLevelTaskDistribution() {
               FOBO Level
             </Typography>
 
-            <Box
-              sx={{
-                width: { md: '85%', xs: '100%', display: 'flex', justifyContent: 'center' },
-                mx: 'auto',
-                mt: 2,
-              }}
-            >
+            <Box sx={{ width: { md: '85%', xs: '100%', display: 'flex', justifyContent: 'center' }, mx: 'auto', mt: 2 }}>
               <MemoizedGaugeChart score={data?.FOBO_Score} />
             </Box>
           </Stack>
@@ -512,9 +492,7 @@ export default function FoboLevelTaskDistribution() {
               Task Distribution
             </Typography>
 
-            <Box
-              sx={{ position: 'relative', width: '100%', paddingTop: isMobile ? '250px' : '280px' }}
-            >
+            <Box sx={{ position: 'relative', width: '100%', paddingTop: isMobile ? '250px' : '280px' }}>
               <Box
                 sx={{
                   position: 'absolute',
@@ -585,48 +563,7 @@ export default function FoboLevelTaskDistribution() {
                 </Typography>
 
                 {viewDetails ? (
-                  <>
-                    <Box sx={{ width: '100%', height: 4, display: 'flex', gap: '2px' }}>
-                      {shades.map((color, index) => (
-                        <Box
-                          key={index}
-                          sx={{
-                            flex: 1,
-                            height: '100%',
-                            bgcolor: color,
-                            borderRadius:
-                              index === 0
-                                ? '4px 0 0 4px'
-                                : index === shades.length - 1
-                                ? '0 4px 4px 0'
-                                : 0,
-                          }}
-                        />
-                      ))}
-                    </Box>
-
-                    {/* Four labels spaced evenly under the bar */}
-                    <Grid container spacing={1}>
-                      {data[selectedSection?.fieldName]?.map((taskName, i) => (
-                        <Grid item xs={viewDetails ? 3 : 12} md={viewDetails ? 3 : 12}>
-                          <Typography
-                            key={i}
-                            variant="caption"
-                            sx={{
-                              width: '25%',
-                              fontSize: { xs: '10px', md: '12px' },
-                              color: '#090808',
-                              textAlign: 'center',
-                              whiteSpace: 'pre-wrap',
-                              // flexBasis: '10%',
-                            }}
-                          >
-                            {taskName}
-                          </Typography>
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </>
+                  showShortDescription(data[selectedSection?.fieldName] || [])
                 ) : (
                   showDetailedDescription(data[selectedSection?.fieldName] || [])
                 )}
@@ -665,16 +602,12 @@ export default function FoboLevelTaskDistribution() {
         <Grid item xs={12} textAlign="left">
           <Button
             variant="contained"
-            onClick={() => navigate(paths.pricing)}
             sx={{
               backgroundColor: '#2C47D3',
               borderRadius: 10,
               px: 4,
               textTransform: 'none',
               fontWeight: 'bold',
-              '&:hover': {
-                backgroundColor: '#2C47D3', // disables hover color change
-              },
             }}
           >
             Beat FOBO Now

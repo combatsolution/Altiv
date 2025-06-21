@@ -8,19 +8,9 @@ import {
   useMediaQuery,
   Container,
   Fade,
-  keyframes,
+  
 } from '@mui/material';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-
-// Keyframe animations
-const bounce = keyframes`
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-`;
 
 const SubscriptionSuccessCard = () => {
   const theme = useTheme();
@@ -71,7 +61,7 @@ const SubscriptionSuccessCard = () => {
               sx={{
                 fontSize: { xs: 64, sm: 80 },
                 color: '#2A4DD0',
-                animation: `${bounce} 1s ease-in-out infinite`,
+              
               }}
             />
           </Box>

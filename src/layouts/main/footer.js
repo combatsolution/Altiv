@@ -34,12 +34,12 @@ const Programs = [
   { name: 'Marketing Track', href: paths.comingSoon },
   { name: 'Data Science Track', href: paths.comingSoon },
   { name: 'Product Track', href: paths.comingSoon },
-  { name: 'Software Engineering Track', href: paths.comingSoon },
+  { name: 'Software Eng. Track', href: paths.comingSoon },
 ];
 
 const Recruiters = [
-  { name: 'Post Jobs', href: paths.SubscriptionSuccess },
-  { name: 'Register', href: paths.auth.jwt.register },
+  { name: 'Post Jobs', href: paths.comingSoon },
+  { name: 'Register', href: paths.comingSoon },
   { name: 'Find Candidates', href: paths.comingSoon },
 ];
 
@@ -90,7 +90,7 @@ export default function Footer() {
     };
 
     await axiosInstance.post('/wait-lists', payload);
-    enqueueSnackbar('Subscription successful!', { variant: 'success' });
+    // enqueueSnackbar('Subscription successful!', { variant: 'success' });
     setEmail('');
     navigate(paths.SubscriptionSuccess); // ✅ navigate after success
   } catch (error) {
