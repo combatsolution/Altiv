@@ -17,6 +17,7 @@ import CompactLayout from 'src/layouts/compact';
 import { MotionContainer, varBounce } from 'src/components/animate';
 import SeverErrorIllustration from 'src/assets/illustrations/sever-error-illustration';
 import { RouterLink } from 'src/routes/components';
+import { paths } from 'src/routes/paths';
 
 export default function FoboLevelTaskDistribution() {
   const navigate = useNavigate();
@@ -601,6 +602,7 @@ export default function FoboLevelTaskDistribution() {
         {/* CTA Button */}
         <Grid item xs={12} textAlign="left">
           <Button
+            onClick={() => navigate(paths.comingSoon)}
             variant="contained"
             sx={{
               backgroundColor: '#2C47D3',

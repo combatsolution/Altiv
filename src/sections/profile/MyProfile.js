@@ -42,9 +42,9 @@ import axiosInstance from 'src/utils/axios';
 import { green } from '@mui/material/colors';
 import { useSnackbar } from 'notistack';
 import { SplashScreen } from 'src/components/loading-screen';
+import { format } from 'date-fns';
 import ProfileChangePassword from './profile-change-password-modal';
 import ProfileUpdateModal from './profile-update-modal';
-import { format } from 'date-fns';
 
 const jobMatches = []; // You can populate this later
 
@@ -516,7 +516,7 @@ export default function MyProfile() {
                             {r.fileDetails?.fileName || 'Untitled Resume'}
                           </a>
                         }
-                        secondary={r?.updatedAt ? format(r?.updatedAt, 'dd-MM-yyyy') : ''}
+                        secondary={r?.updatedAt ? format(new Date(r?.updatedAt), 'dd-MM-yyyy') : ''}
                       />
                     </ListItem>
                     <Divider />
