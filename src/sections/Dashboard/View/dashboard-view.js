@@ -43,11 +43,7 @@ export default function DashboardView() {
   return (
     <>
       <ScrollProgress scrollYProgress={scrollYProgress} />
-      
-      
      <Analysis/>
-     
-
     </>
   );
 }

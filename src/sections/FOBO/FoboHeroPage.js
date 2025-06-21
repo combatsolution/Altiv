@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import CryptoJS from 'crypto-js';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'src/auth/hooks';
 import {
@@ -33,13 +34,16 @@ import { useSnackbar } from 'notistack';
 import { paths } from 'src/routes/paths';
 import { m } from 'framer-motion';
 import { display } from '@mui/system';
+import { useSearchParams } from 'src/routes/hook';
 
 const MotionBox = m(Box);
 const MotionImage = m(Box);
 
 export default function FoboHeroPage() {
+  const searchParams = useSearchParams();
   const { user: currentUser } = useAuthContext();
   const navigate = useNavigate();
+
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
   const [existingResumes, setExistingResumes] = useState([]);
@@ -58,6 +62,14 @@ export default function FoboHeroPage() {
       setExistingResumes(currentUser.resumes || []);
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    const retry = searchParams.get('retry');
+
+    if (retry) {
+      handleOpenModal();
+    }
+  }, [searchParams])
 
   const handleOpenModal = () => setOpen(true);
 
@@ -92,7 +104,21 @@ export default function FoboHeroPage() {
       enqueueSnackbar('Please select or upload a resume.', { variant: 'error' });
       return;
     }
-    navigate(paths.dashboardPage(selectedResumeId));
+
+    try {
+      const key = process.env.REACT_APP_ENCRYPTION_KEY;
+      if (!key) {
+        throw new Error('Encryption key not set');
+      }
+
+      const encryptedId = encodeURIComponent(
+        CryptoJS.AES.encrypt(String(selectedResumeId), key).toString()
+      );
+
+      navigate(paths.dashboardPage(encryptedId));
+    } catch (error) {
+      console.error('Error during encryption or navigation:', error);
+    }
   };
 
   const handleUploadResume = async (file) => {
@@ -134,7 +160,10 @@ export default function FoboHeroPage() {
     setLinkedInUrl('');
     setDocIsLoading(false);
     setIsLoading(false);
+    navigate('/', { replace: true });
   }
+
+  console.log('selected file', selectedFile);
 
   return (
     <Box
@@ -144,20 +173,20 @@ export default function FoboHeroPage() {
         mx: 'auto',
         maxWidth: { lg: 1400 },
         my: { xs: 2, md: 5 }
-        
+
       }}
     >
-      <Grid 
-        container 
-        spacing={{ xs: 4, sm: 6, md: 8 }} 
+      <Grid
+        container
+        spacing={{ xs: 4, sm: 6, md: 8 }}
         alignItems="center"
         justifyContent="center"
       >
         {/* Content Column */}
-        <Grid 
-          item 
-          xs={12} 
-          md={6} 
+        <Grid
+          item
+          xs={12}
+          md={6}
           order={{ xs: 2, md: 1 }}
           sx={{
             display: 'flex',
@@ -188,11 +217,11 @@ export default function FoboHeroPage() {
                 fontWeight={700}
                 color="text.primary"
                 sx={{
-                  fontSize: { 
-                    xs: '2.25rem', 
-                    sm: '3rem', 
-                    md: '3.5rem', 
-                    lg: '4rem' 
+                  fontSize: {
+                    xs: '2.25rem',
+                    sm: '3rem',
+                    md: '3.5rem',
+                    lg: '4rem'
                   },
                   lineHeight: 1,
                   display: { xs: 'none', lg: 'block' }
@@ -222,21 +251,21 @@ export default function FoboHeroPage() {
               <Typography
                 color="text.secondary"
                 sx={{
-                  display:'flex',
-                  alignItems:'center',                                                                      
+                  display: 'flex',
+                  alignItems: 'center',
                   fontSize: { xs: '1rem', md: '1.125rem' },
                   lineHeight: 1.6,
                   maxWidth: { xs: '70%', md: '90%', lg: '85%' },
                   textAlign: { xs: 'left', md: 'left' },
                   ml: { xs: 6, md: 0 }
-                }}  
+                }}
               >
                 At Altiv, we help you beat decision paralysis with smarter tools and human-first
                 design.
               </Typography>
 
-              <Box 
-                sx={{ 
+              <Box
+                sx={{
                   mt: { xs: 2, sm: 3 },
                   display: 'flex',
                   justifyContent: { xs: 'center', md: 'flex-start' }
@@ -266,10 +295,10 @@ export default function FoboHeroPage() {
         </Grid>
 
         {/* Image Column */}
-        <Grid 
-          item 
-          xs={12} 
-          md={6} 
+        <Grid
+          item
+          xs={12}
+          md={6}
           order={{ xs: 1, md: 2 }}
           sx={{
             display: 'flex',
@@ -286,7 +315,7 @@ export default function FoboHeroPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             sx={{
-              margintop:"20px",
+              margintop: "20px",
               width: '100%',
               height: 'auto',
               maxWidth: { xs: '100%', sm: '80%', md: '100%' },
@@ -298,10 +327,10 @@ export default function FoboHeroPage() {
       </Grid>
 
       {/* Modal */}
-      <Modal 
-        open={open} 
-        onClose={() => handleCloseModel()} 
-        sx={{ 
+      <Modal
+        open={open}
+        onClose={() => handleCloseModel()}
+        sx={{
           overflowY: 'auto',
           display: 'flex',
           alignItems: 'center',
@@ -335,21 +364,21 @@ export default function FoboHeroPage() {
           <Typography variant="body2" mb={3}>
             Upload a resume, select an existing one, or add LinkedIn URL
           </Typography>
-          
+
           {error && (
             <Alert severity="error" sx={{ mb: 2 }}>
               {error}
             </Alert>
           )}
-          
+
           <Typography variant="subtitle1" fontWeight={600} mb={1}>
             Select or Upload Resume
           </Typography>
-          
+
           {existingResumes.length > 0 && (
-            <List sx={{ 
-              maxHeight: 180, 
-              overflowY: 'auto', 
+            <List sx={{
+              maxHeight: 180,
+              overflowY: 'auto',
               mb: 2,
               border: '1px solid',
               borderColor: 'divider',
@@ -360,14 +389,17 @@ export default function FoboHeroPage() {
                   <ListItem
                     selected={selectedResumeId === r.id}
                     button
-                    onClick={() => handleSelectResume(r.id)}
+                    onClick={() => {
+                      handleSelectResume(r.id);
+                      setSelectedFile(r?.fileDetails);
+                    }}
                     secondaryAction={
                       <Box display="flex" alignItems="center">
                         {selectedResumeId === r.id && (
                           <CheckCircleIcon sx={{ color: green[600], mr: 1 }} />
                         )}
-                        <IconButton 
-                          edge="end" 
+                        <IconButton
+                          edge="end"
                           onClick={() => handleDeleteResume(r.id)}
                           size="small"
                         >
@@ -380,9 +412,9 @@ export default function FoboHeroPage() {
                     <ListItemText
                       primary={
                         <a
-                          href={r.fileDetails.fileUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          href='#'
+                          // target="_blank"
+                          // rel="noopener noreferrer"
                           style={{ textDecoration: 'none', color: 'inherit' }}
                         >
                           {r.fileDetails.fileName}
@@ -398,15 +430,15 @@ export default function FoboHeroPage() {
               ))}
             </List>
           )}
-          
+
           {selectedFile?.fileUrl ? (
-            <Box sx={{ 
-              px: 2, 
-              py: 2, 
-              border: '1px dashed', 
+            <Box sx={{
+              px: 2,
+              py: 2,
+              border: '1px dashed',
               borderColor: 'divider',
-              borderRadius: 2, 
-              mb: 2 
+              borderRadius: 2,
+              mb: 2
             }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <InsertDriveFileIcon sx={{ mr: 1 }} />
@@ -446,7 +478,7 @@ export default function FoboHeroPage() {
               helperText={error && <FormHelperText error>{error}</FormHelperText>}
             />
           )}
-          
+
           <TextField
             label="LinkedIn Profile URL"
             fullWidth
@@ -455,7 +487,7 @@ export default function FoboHeroPage() {
             onChange={(e) => setLinkedInUrl(e.target.value)}
             sx={{ mb: 3 }}
           />
-          
+
           <Button
             variant="contained"
             fullWidth

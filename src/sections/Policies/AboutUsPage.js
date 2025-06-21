@@ -472,6 +472,7 @@ import {
   Psychology,
 } from '@mui/icons-material';
 import { m } from 'framer-motion';
+import { useNavigate } from 'react-router';
 
 const MotionBox = m(Box);
 const MotionGrid = m(Grid);
@@ -512,6 +513,7 @@ const staggerContainer = {
 
 export default function AboutUsPage() {
   const theme = useTheme();
+  const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
@@ -716,6 +718,7 @@ export default function AboutUsPage() {
         </Typography>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
           <Button
+            onClick={() => navigate('/?retry=true')}
             variant="contained"
             color="primary"
             size="large"

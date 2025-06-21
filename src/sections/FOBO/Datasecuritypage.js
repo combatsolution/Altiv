@@ -335,7 +335,7 @@ export default function Datasecuritypage() {
               >
                 <Button
                   variant="contained"
-                  onClick={() => navigate(paths.comingSoon)}
+                  onClick={() => navigate('/?retry=true')}
                   size="large"
                   sx={{
                     px: { xs: 3, sm: 4 },

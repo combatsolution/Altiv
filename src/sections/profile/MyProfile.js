@@ -1,5 +1,6 @@
 /* eslint-disable no-else-return */
 import React, { useState, useRef, useEffect, useMemo } from 'react';
+import CryptoJS from 'crypto-js';
 import PropTypes from 'prop-types';
 import GaugeChart from 'react-gauge-chart';
 import { useNavigate } from 'react-router';
@@ -40,6 +41,7 @@ import Writelogo from 'src/images/write.svg';
 import axiosInstance from 'src/utils/axios';
 import { green } from '@mui/material/colors';
 import { useSnackbar } from 'notistack';
+import { SplashScreen } from 'src/components/loading-screen';
 import ProfileChangePassword from './profile-change-password-modal';
 import ProfileUpdateModal from './profile-update-modal';
 
@@ -49,6 +51,7 @@ export default function MyProfile() {
   const { user, loading } = useAuthContext();
   const navigate = useNavigate();
   const [lastFOBOData, setLastFOBOData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
@@ -67,13 +70,7 @@ export default function MyProfile() {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [resumeToDelete, setResumeToDelete] = useState(null);
 
-  const [profileData, setProfileData] = useState({
-    fullName: '',
-    phoneNumber: '',
-    email: '',
-    address: '',
-    description: '',
-  });
+  const [profileData, setProfileData] = useState(null);
 
   const fetchLastFoboScore = async () => {
     try {
@@ -92,19 +89,11 @@ export default function MyProfile() {
 
   useEffect(() => {
     if (user) {
-      setProfileData({
-        fullName: user?.fullName,
-        phoneNumber: user?.phoneNumber || '',
-        email: user?.email || '',
-        address: user?.fullAddress,
-        description:
-          user?.profileDescription ||
-          'Directors are responsible for overseeing the development of an organizations business goals and objectives...',
-      });
-
+      setProfileData(user);
       setExistingResumes(user?.resumes || []);
       setSelectedResumeId(null);
     }
+    setIsLoading(false);
   }, [user]);
 
   useEffect(() => {
@@ -113,8 +102,6 @@ export default function MyProfile() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [existingResumes]);
-
-  console.log('fobo score', lastFOBOData);
 
 
   const handleFileChange = async (e) => {
@@ -181,25 +168,6 @@ export default function MyProfile() {
     }
   };
 
-  const handleEditSubmit = async (data) => {
-    try {
-      await axiosInstance.patch(`/api/users/${user.id}`, {
-        fullName: data.fullName.trim(),
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-        fullAddress: data.address,
-        profileDescription: data.description,
-        designation: data.designation,
-      });
-
-      setOpenEditDialog(false);
-      enqueueSnackbar('Profile Updated successfully!');
-    } catch (err) {
-      console.error(err);
-      setError(err.response?.data?.message || 'Failed to update profile. Please try again.');
-    }
-  };
-
   useEffect(() => {
     if (error || success) {
       const timer = setTimeout(() => {
@@ -230,19 +198,19 @@ export default function MyProfile() {
     if (isMobile) {
       return {
         good: { top: '20%', left: '10%', transform: 'rotate(-60deg)' },
-        moderate: { top: '-4%', right: '32%', transform: 'rotate(10deg)' },
+        moderate: { top: '-17%', right: '5%', transform: 'rotate(11deg)' },
         bad: { top: '20%', right: '12%', transform: 'rotate(60deg)' },
       };
     } else if (isTablet) {
       return {
         good: { top: '29%', left: '15%', transform: 'rotate(-60deg)' },
-        moderate: { top: '0', right: '40%', transform: 'rotate(10deg)' },
+        moderate: { top: '-10%', right: '23%', transform: 'rotate(10deg)' },
         bad: { top: '35%', right: '14%', transform: 'rotate(60deg)' },
       };
     } else {
       return {
         good: { top: '35%', left: '8%', transform: 'rotate(-56deg)' },
-        moderate: { top: '-4%', right: '57%', transform: 'rotate(12deg)' },
+        moderate: { top: '-17%', right: '43%', transform: 'rotate(11deg)' },
         bad: { top: '35%', right: '43%', transform: 'rotate(60deg)' },
       };
     }
@@ -321,7 +289,22 @@ export default function MyProfile() {
                 ...labelStyles.moderate,
               }}
             >
-              <Typography variant='body1'>Moderate</Typography>
+              <svg width="300" height="150">
+                <defs>
+                  <path
+                    id="curve"
+                    d="M 50,150
+                       A 100,100 0 0,1 250,150"
+                    fill="transparent"
+                  />
+                </defs>
+
+                <text fill="#000" fontSize="16" fontFamily="Arial">
+                  <textPath href="#curve" startOffset="50%" textAnchor="middle">
+                    Moderate
+                  </textPath>
+                </text>
+              </svg>
             </div>
 
             <div
@@ -369,7 +352,7 @@ export default function MyProfile() {
   }
 
   return (
-    <Box sx={{ backgroundColor: '#F5F9FF', minHeight: '100vh' }}>
+    !isLoading ? (<Box sx={{ backgroundColor: '#F5F9FF', minHeight: '100vh' }}>
       {error && (
         <Alert severity="error" sx={{ position: 'fixed', top: 16, right: 16, zIndex: 9999 }}>
           {error}
@@ -386,33 +369,42 @@ export default function MyProfile() {
         <Box sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid transparent' }}>
           <Box
             component="img"
-            src={bgImage}
+            src={profileData?.backgroundImage?.fileUrl || bgImage}
             alt="Banner"
             sx={{ width: '100%', height: 300, objectFit: 'cover' }}
           />
-          <Paper
-            elevation={3}
-            sx={{
-              position: 'relative',
-              p: 2,
-              display: 'flex',
-              gap: 2,
-              alignItems: 'center',
-              bgcolor: 'rgba(255,255,255,0.9)',
-              backdropFilter: 'blur(6px)',
-              borderRadius: 2,
-              mt: -6,
-              mx: 2,
-            }}
-          >
-            <Avatar src={user?.avatar?.fileUrl || ''} sx={{ width: 48, height: 48 }} />
-            <Box>
-              <Typography fontWeight="600">{profileData?.fullName || 'No Name'}</Typography>
-              <Typography fontSize="0.75rem" color="text.secondary">
-                {user?.designation || 'Not specified'}
-              </Typography>
-            </Box>
-          </Paper>
+          {(
+            (profileData?.fullName && profileData?.fullName !== '') ||
+            (profileData?.designation && profileData?.designation !== '')
+          ) && (
+              <Paper
+                elevation={3}
+                sx={{
+                  position: 'relative',
+                  p: 2,
+                  display: 'flex',
+                  gap: 2,
+                  alignItems: 'center',
+                  bgcolor: 'rgba(255,255,255,0.9)',
+                  backdropFilter: 'blur(6px)',
+                  borderRadius: 2,
+                  mt: -6,
+                  mx: 2,
+                }}
+              >
+                <Avatar src={profileData?.avatar?.fileUrl || ''} sx={{ width: 48, height: 48 }} />
+                <Box>
+                  {(profileData?.fullName && profileData?.fullName !== '') && (
+                    <Typography fontWeight="600">{profileData.fullName}</Typography>
+                  )}
+                  {(profileData?.designation && profileData?.designation !== '') && (
+                    <Typography fontSize="0.75rem" color="text.secondary">
+                      {profileData.designation}
+                    </Typography>
+                  )}
+                </Box>
+              </Paper>
+            )}
         </Box>
 
         {/* Profile Info and Resume Section */}
@@ -426,13 +418,13 @@ export default function MyProfile() {
                 </IconButton>
               </Box>
 
-              <Typography sx={{ mb: 2 }}>{profileData.description}</Typography>
+              <Typography sx={{ mb: 2 }}>{profileData?.profileDescription}</Typography>
 
               <Stack spacing={1}>
                 {[
-                  ['Full Name:', profileData.fullName],
-                  ['Mobile:', profileData.phoneNumber || 'Not specified'],
-                  ['Email:', profileData.email],
+                  ['Full Name:', profileData?.fullName],
+                  ['Mobile:', profileData?.phoneNumber || 'Not specified'],
+                  ['Email:', profileData?.email],
                   [
                     'Resume:',
                     existingResumes.length > 0 ? (
@@ -455,7 +447,7 @@ export default function MyProfile() {
                       </Link>
                     </>,
                   ],
-                  ['Address:', profileData.address || 'Not specified'],
+                  ['Address:', profileData?.address || 'Not specified'],
                 ].map(([label, value]) => (
                   <Box key={label} display="flex" gap={1.5}>
                     <Typography sx={{ width: 90 }} color="text.secondary">
@@ -540,7 +532,7 @@ export default function MyProfile() {
               />
             </Paper>
 
-            <Paper sx={{ p: 3, borderRadius: 2,mt:2 }}>
+            <Paper sx={{ p: 3, borderRadius: 2, mt: 2 }}>
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                 <Typography variant="subtitle1" fontWeight="600">
                   Job Applications
@@ -550,8 +542,8 @@ export default function MyProfile() {
                 </Typography>
               </Box>
 
-            
-              
+
+
             </Paper>
           </Grid>
 
@@ -576,12 +568,12 @@ export default function MyProfile() {
                     Strategies to Improve FOBO
                   </Typography>
 
-                  <Typography sx={{textAlign: 'center'}} variant="body2" gutterBottom>
+                  <Typography sx={{ textAlign: 'center' }} variant="body2" gutterBottom>
                     Reduce your hesitation by practicing mindful decision-making, limiting options,
-                    and focusing on long-term satisfaction instead of perfect outcomes. <span style={{ filter: 'blur(2px)'}}>Reduce your hesitation
-                    by practicing mindful decision-making, limiting options, and focusing on long-term satisfaction
-                    instead of perfect outcomes. Reduce your hesitation by practicing mindful decision-making,
-                    limiting options, and focusing on long-term satisfaction instead of perfect outcomes.</span>
+                    and focusing on long-term satisfaction instead of perfect outcomes. <span style={{ filter: 'blur(2px)' }}>Reduce your hesitation
+                      by practicing mindful decision-making, limiting options, and focusing on long-term satisfaction
+                      instead of perfect outcomes. Reduce your hesitation by practicing mindful decision-making,
+                      limiting options, and focusing on long-term satisfaction instead of perfect outcomes.</span>
                   </Typography>
 
                   {/* Optional blue glow lines */}
@@ -616,7 +608,10 @@ export default function MyProfile() {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => navigate(paths.dashboardPage(lastFOBOData?.resumeId))}
+                    onClick={() => {
+                      const encryptedId = CryptoJS.AES.encrypt(String(lastFOBOData?.resumeId), process.env.REACT_APP_ENCRYPTION_KEY).toString();
+                      navigate(paths.dashboardPage(encryptedId));
+                    }}
                     sx={{
                       position: 'absolute',
                       bottom: isMobile ? '40px' : '30px',
@@ -668,13 +663,14 @@ export default function MyProfile() {
       <ProfileUpdateModal
         open={openEditDialog}
         onClose={() => setOpenEditDialog(false)}
-        onSubmit={handleEditSubmit}
         profileData={profileData}
         setProfileData={setProfileData}
       />
 
       {/* Password Change Modal */}
       <ProfileChangePassword open={openPasswordModal} onClose={() => setOpenPasswordModal(false)} />
-    </Box>
+    </Box>) : (
+      <SplashScreen />
+    )
   );
 }

@@ -108,38 +108,38 @@ export default function CustomDonutChart({
               setSelectedIndex(i);
               setActiveIndex(null);
               const tooltipPoint = polarToCartesian(cx, cy, (outerRadius + innerRadius) / 2, midAngle);
-              setTooltip({
-                show: true,
-                x: tooltipPoint.x,
-                y: tooltipPoint.y,
-                label: item.label,
-                value: item.value,
-              });
+              // setTooltip({
+              //   show: true,
+              //   x: tooltipPoint.x,
+              //   y: tooltipPoint.y,
+              //   label: item.label,
+              //   value: item.value,
+              // });
               onSliceClick(i, item);
             }
           };
 
           const handleMouseEnter = () => {
-            if (selectedIndex === null) {
+            // if (selectedIndex === null) {
               setActiveIndex(i);
               const tooltipPoint = polarToCartesian(cx, cy, (outerRadius + innerRadius) / 2, midAngle);
-              setTooltip({
-                show: true,
-                x: tooltipPoint.x,
-                y: tooltipPoint.y,
-                label: item.label,
-                value: item.value,
-              });
+              // setTooltip({
+              //   show: true,
+              //   x: tooltipPoint.x,
+              //   y: tooltipPoint.y,
+              //   label: item.label,
+              //   value: item.value,
+              // });
               onSliceHover(i, item);
-            }
+            // }
           };
 
           const handleMouseLeave = () => {
-            if (selectedIndex === null) {
+            // if (selectedIndex === null) {
               setActiveIndex(null);
               setTooltip({ show: false, x: 0, y: 0, label: '', value: 0 });
               onSliceLeave();
-            }
+            // }
           };
 
           angleStart += targetAngle;
@@ -157,10 +157,10 @@ export default function CustomDonutChart({
                 style={{
                   transition: 'all 0.5s ease',
                   cursor: 'pointer',
-                  opacity: activeIndex !== null && !isActive && selectedIndex === null ? 0.3 : 1,
+                  opacity: activeIndex !== null && !isActive && selectedIndex !== activeIndex ? 0.3 : 1,
                 }}
               />
-              {isActive && selectedIndex === null && (
+              {isActive && selectedIndex !== activeIndex && (
                 <path
                   d={borderPath}
                   fill={item.color}
