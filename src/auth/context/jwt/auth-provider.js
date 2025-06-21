@@ -142,12 +142,20 @@ export function AuthProvider({ children }) {
         throw new Error('Invalid API response structure: missing userData or success flag');
       }
 
-      console.log('User registered, userData:', response.data.userData);
-
       dispatch({
         type: 'REGISTER',
         payload: {
           user: null,
+        },
+      });
+
+      localStorage.setItem(STORAGE_KEY, response.data.accessToken);
+      setSession(response.data.accessToken);
+
+      dispatch({
+        type: 'LOGIN',
+        payload: {
+          user: response.data.userData,
         },
       });
     } catch (error) {

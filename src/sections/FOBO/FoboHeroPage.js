@@ -127,6 +127,15 @@ export default function FoboHeroPage() {
     }
   };
 
+  const handleCloseModel = () => {
+    setOpen(false);
+    setSelectedFile(null);
+    setSelectedResumeId(null);
+    setLinkedInUrl('');
+    setDocIsLoading(false);
+    setIsLoading(false);
+  }
+
   return (
     <Box
       sx={{
@@ -295,7 +304,7 @@ export default function FoboHeroPage() {
       {/* Modal */}
       <Modal 
         open={open} 
-        onClose={() => setOpen(false)} 
+        onClose={() => handleCloseModel()} 
         sx={{ 
           overflowY: 'auto',
           display: 'flex',
@@ -319,7 +328,7 @@ export default function FoboHeroPage() {
           }}
         >
           <IconButton
-            onClick={() => setOpen(false)}
+            onClick={() => handleCloseModel()}
             sx={{ position: 'absolute', top: 8, right: 8 }}
           >
             <CloseIcon />
@@ -418,7 +427,10 @@ export default function FoboHeroPage() {
                 variant="outlined"
                 size="small"
                 sx={{ mt: 2 }}
-                onClick={() => setSelectedFile(null)}
+                onClick={() => {
+                  setSelectedFile(null);
+                  setDocIsLoading(false);
+                }}
               >
                 Remove File
               </Button>

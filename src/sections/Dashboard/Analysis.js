@@ -5,7 +5,7 @@ import {
   Box,
   Typography,
   Grid,
-  Card,
+
   Button,
   Stack,
   useTheme,
@@ -40,6 +40,7 @@ export default function FoboLevelTaskDistribution() {
   const [pieData, setPieData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [viewDetails, setViewDetails] = useState(true);
+  const [smartInsights, setSmartInsights] = useState(false);
   const baseColor = pieData?.find((d) => d.name === selectedSection?.name)?.color || '#ccc';
 
   // Generate 4 shades (lighter to darker)
@@ -54,7 +55,7 @@ export default function FoboLevelTaskDistribution() {
       setSelectedSection(null);
       const response = await axiosInstance.post(`/profile-analytics`, {
         resumeId: Number(resumeId),
-        viewDetails,
+        viewDetails
       });
       if (response?.data.success) {
         console.log('data', response?.data?.data);
@@ -97,7 +98,7 @@ export default function FoboLevelTaskDistribution() {
       fetchProfileAnalyticsData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resumeId, viewDetails]);
+  }, [resumeId, viewDetails, smartInsights]);
 
   const handlePieClick = (index, item) => {
     setSelectedSection(item);
@@ -275,16 +276,14 @@ export default function FoboLevelTaskDistribution() {
             <Typography variant="body1">Moderate</Typography>
           </div>
 
-          <div
-            style={{
-              position: 'absolute',
-              ...countStyles.moderate,
-            }}
-          >
-            <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
-              70 - 100
-            </Typography>
-          </div>
+        <div
+          style={{
+            position: 'absolute',
+            ...countStyles.moderate,
+          }}
+        >
+          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>70 - 100</Typography>
+        </div>
 
           <div
             style={{
@@ -295,16 +294,15 @@ export default function FoboLevelTaskDistribution() {
             <Typography variant="body1">Bad</Typography>
           </div>
 
-          <div
-            style={{
-              position: 'absolute',
-              ...countStyles.bad,
-            }}
-          >
-            <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
-              40 - 69
-            </Typography>
-          </div>
+        <div
+          style={{
+            position: 'absolute',
+            ...countStyles.bad,
+          }}
+        >
+          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>40 - 69</Typography>
+        </div>
+
 
           {/* FOBO Label and Score */}
           <div style={{ textAlign: 'center', marginTop: 10 }}>
@@ -330,17 +328,7 @@ export default function FoboLevelTaskDistribution() {
     });
 
     return (
-      <Box
-        component="div"
-        sx={{
-          width: '100%',
-          maxHeight: '350px',
-          overflowY: 'scroll',
-          '&::-webkit-scrollbar': { display: 'none' },
-          '-ms-overflow-style': 'none',
-          'scrollbar-width': 'none',
-        }}
-      >
+      <Box component='div' sx={{width: '100%', maxHeight: '350px', overflowY: 'scroll', '&::-webkit-scrollbar': {display: 'none',},'-ms-overflow-style': 'none', 'scrollbar-width': 'none',}}>
         {groupedArrays.map((group, groupIndex) => {
           if (group.length === 0) return null;
 
@@ -384,6 +372,60 @@ export default function FoboLevelTaskDistribution() {
     );
   };
 
+  const showShortDescription = (arrayData) => {
+    if (!arrayData || arrayData.length === 0) return null;
+
+    const groupWiseElements = [];
+
+    // Chunk the array into groups of 4
+    for (let i = 0; i < arrayData.length; i += 4) {
+      groupWiseElements.push(arrayData.slice(i, i + 4));
+    }
+
+    return (
+      <>
+        {groupWiseElements.map((group, rowIndex) => (
+          <Box key={rowIndex} sx={{ mb: 2 }}>
+            {/* Colored bar */}
+            <Box sx={{ width: '100%', height: 4, display: 'flex', gap: '2px' }}>
+              {shades.map((color, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    flex: 1,
+                    height: '100%',
+                    bgcolor: color,
+                    borderRadius: index === 0 ? '4px 0 0 4px' : index === shades.length - 1 ? '0 4px 4px 0' : 0,
+                  }}
+                />
+              ))}
+            </Box>
+
+            {/* Task labels */}
+            <Grid container spacing={1}>
+              {group.map((taskName, i) => (
+                <Grid item xs={viewDetails ? 3 : 12} md={viewDetails ? 3 : 12} key={i}>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontSize: { xs: '10px', md: '12px' },
+                      color: '#090808',
+                      textAlign: 'center',
+                      whiteSpace: 'pre-wrap',
+                    }}
+                  >
+                    {taskName}
+                  </Typography>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        ))}
+      </>
+    );
+  };
+
+
   return !isLoading ? (
     <Box
       px={{ xs: 2, md: '12%' }}
@@ -408,6 +450,7 @@ export default function FoboLevelTaskDistribution() {
           }
           label={viewDetails ? 'Show Long Description' : 'Show Short Description'}
         />
+
       </Box>
       <Grid container spacing={4}>
         {/* FOBO Level */}
@@ -518,12 +561,7 @@ export default function FoboLevelTaskDistribution() {
                             flex: 1,
                             height: '100%',
                             bgcolor: color,
-                            borderRadius:
-                              index === 0
-                                ? '4px 0 0 4px'
-                                : index === shades.length - 1
-                                ? '0 4px 4px 0'
-                                : 0,
+                            borderRadius: index === 0 ? '4px 0 0 4px' : index === shades.length - 1 ? '0 4px 4px 0' : 0,
                           }}
                         />
                       ))}

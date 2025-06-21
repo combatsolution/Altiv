@@ -42,6 +42,7 @@ export default function JwtLoginView() {
   const { login } = useAuthContext();
   const router = useRouter();
   const [errorMsg, setErrorMsg] = useState('');
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const searchParams = useSearchParams();
   const returnTo = searchParams.get('returnTo');
   const password = useBoolean();
@@ -86,7 +87,7 @@ export default function JwtLoginView() {
     try {
       await login?.(data.email, data.password);
       enqueueSnackbar('Login success', {variant : 'success'});
-      router.push(returnTo || PATH_AFTER_LOGIN);
+      router.replace(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
       reset();
@@ -95,7 +96,9 @@ export default function JwtLoginView() {
   });
 
   const handleGoogleLogin = async() => {
+    setIsGoogleLoading(true);
     window.location.href = `${process.env.REACT_APP_HOST_API}/auth/google`;
+    setIsGoogleLoading(false);
   }
 
   return (
@@ -165,15 +168,16 @@ export default function JwtLoginView() {
 
             <Divider>Or</Divider>
 
-            <Button
+            <LoadingButton
               fullWidth
               variant="outlined"  
+              loading={isGoogleLoading}
               startIcon={<Iconify icon="logos:google-icon" />}
               onClick={() => handleGoogleLogin()}
               sx={{ textTransform: 'none' }}
             >
               Sign in with Google
-            </Button>
+            </LoadingButton>
 
             <Button
               fullWidth
