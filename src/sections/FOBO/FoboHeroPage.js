@@ -318,7 +318,7 @@ export default function FoboHeroPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             sx={{
-              margintop: "20px",
+              marginTop: "50px",
               width: '100%',
               height: 'auto',
               maxWidth: { xs: '100%', sm: '80%', md: '100%' },
