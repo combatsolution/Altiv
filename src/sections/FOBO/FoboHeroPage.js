@@ -27,7 +27,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import heroImg from 'src/Fogoimages/beatfobo.png';
+import heroImg from 'src/Fogoimages/beatfobo.webp';
 import axiosInstance from 'src/utils/axios';
 import { Upload } from 'src/components/upload';
 import { useSnackbar } from 'notistack';
@@ -116,8 +116,8 @@ export default function FoboHeroPage() {
       );
 
       navigate(paths.dashboardPage(encryptedId));
-    } catch (error) {
-      console.error('Error during encryption or navigation:', error);
+    } catch (err) {
+      console.error('Error during encryption or navigation:', err);
     }
   };
 
@@ -168,8 +168,8 @@ export default function FoboHeroPage() {
   return (
     <Box
       sx={{
-        px: { xs: 2, sm: 3, md: 6, lg: 8 },
-        py: { xs: 4, sm: 6, md: 8, lg: 10 },
+        px: { xs: 2, sm: 3, md: 6, lg: 10 },
+        py: { xs: 2, sm: 6, md: 8, lg: 5 },
         mx: 'auto',
         maxWidth: { lg: 1400 },
         my: { xs: 2, md: 5 }
@@ -181,6 +181,7 @@ export default function FoboHeroPage() {
         spacing={{ xs: 4, sm: 6, md: 8 }}
         alignItems="center"
         justifyContent="center"
+        margintop='20px'
       >
         {/* Content Column */}
         <Grid
@@ -198,14 +199,15 @@ export default function FoboHeroPage() {
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
-          >
-            <Stack spacing={{ xs: 2, sm: 3, md: 4 }}>
+          > 
+            <Stack spacing={{ xs: 1, sm: 3, md: 1 }}>
               <Typography
                 fontWeight="bold"
                 color="text.primary"
                 sx={{
                   fontSize: { xs: '1rem', sm: '1.2rem', md: '1.5rem' },
                   textAlign: { xs: 'center', md: 'left' }
+                  
                 }}
               >
                 From AI Anxiety to AI Advantage
@@ -249,13 +251,14 @@ export default function FoboHeroPage() {
               </Typography>
 
               <Typography
-                color="text.secondary"
+                // color="text.secondary"
+                color="#000000"
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
                   fontSize: { xs: '1rem', md: '1.125rem' },
                   lineHeight: 1.6,
-                  maxWidth: { xs: '70%', md: '90%', lg: '85%' },
+                  maxWidth: { xs: '90%', md: '90%', lg: '100%' },
                   textAlign: { xs: 'left', md: 'left' },
                   ml: { xs: 6, md: 0 }
                 }}

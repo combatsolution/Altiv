@@ -1,34 +1,26 @@
 import { useNavigate } from 'react-router-dom';
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Unstable_Grid2";
-import { blue } from "@mui/material/colors";
-import heroImg from "src/images/hero-image.png";
-import {
-  Modal,
-  ToggleButton,
-  ToggleButtonGroup,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
-import { useState, useRef } from "react";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Unstable_Grid2';
+import { blue } from '@mui/material/colors';
+import heroImg from 'src/images/hero-image.png';
+import { Modal, ToggleButton, ToggleButtonGroup, useMediaQuery, useTheme } from '@mui/material';
+import { useState, useRef } from 'react';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
 import { paths } from 'src/routes/paths';
-// import { IconButton } from 'yet-another-react-lightbox';
 import IconButton from '@mui/material/IconButton';
 
-import { height } from '@mui/system';
 
 
 function HomeHero() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const [uploadType, setUploadType] = useState("resume");
+  const [uploadType, setUploadType] = useState('resume');
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleChange = (event, newType) => {
     if (newType !== null) {
@@ -49,10 +41,10 @@ function HomeHero() {
     }
   };
   return (
-    <Box sx={{ px: { xs: 2, sm: 4, md: 12 }, py: { xs: 4, sm: 6, md: 6 } }}>
+    <Box sx={{ px: { xs: 2, sm: 4, md: 12 }, py: { xs: 1, sm: 6, md: 6 } }}>
       <Grid container spacing={4} alignItems="center">
         <Grid xs={12} md={6} order={{ xs: 2, md: 1 }}>
-          <Stack spacing={3}>
+          <Stack spacing={2}>
             <Typography
               variant="body2"
               component="h1"
@@ -66,7 +58,7 @@ function HomeHero() {
                 },
                 fontWeight: 400,
                 lineHeight: 1.2,
-                marginTop: 4
+                marginTop: 4,
               }}
             >
               Your career’s secret weapon
@@ -84,44 +76,40 @@ function HomeHero() {
                 },
                 lineHeight: '160%',
                 width: {
-                  xs: '100%',       
+                  xs: '100%',
                   sm: '100%',
-                  md: '489px',       
+                  md: '489px',
                 },
                 height: {
-                  xs: 'auto',       
+                  xs: 'auto',
                   sm: 'auto',
-                  md: '116px',       
+                  md: '130px',
                 },
               }}
             >
-              Tired of career uncertainty and endless job searches?
-              Our AI coach guides your next move with data-driven
-              insights while matching you to roles you’re truly
-              qualified for — all in one place.
+              Tired of career uncertainty and endless job searches? Our AI coach guides your next
+              move with data-driven insights while matching you to roles you’re truly qualified for
+              — all in one place.
             </Typography>
 
-
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
-              
-
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
               <Button
                 variant="contained"
                 size="large"
                 sx={{
-                  bgcolor: "#0040D8",
-                  "&:hover": { bgcolor: blue[700] },
-                  width: { xs: "100%", sm: "100%", md: "100%", lg: "194px" },
-                  height: "48px",
-                  borderRadius: "29px",
-                  padding: "12px 24px",
-                  textTransform: "none",
-                  fontSize: "16px",
+                  bgcolor: '#0040D8',
+                  '&:hover': { bgcolor: blue[700] },
+                  width: { xs: '100%', sm: '100%', md: '100%', lg: '194px' },
+                  height: '48px',
+                  borderRadius: '29px',
+                  padding: '12px 24px',
+                  textTransform: 'none',
+                  fontSize: '16px',
                   fontWeight: 500,
-                  lineHeight: "21px",
-                  letterSpacing: "0px",
-                  mb: { xs: "20px", sm: "0" },
-                  mt: { xs: "50px", sm: "0" },
+                  lineHeight: '21px',
+                  letterSpacing: '0px',
+                  mb: { xs: '20px', sm: '0' },
+                  mt: { xs: '50px', sm: '0' },
                 }}
                 onClick={() => setOpen(true)}
               >
@@ -137,7 +125,6 @@ function HomeHero() {
                   minHeight="100vh"
                   px={2}
                 >
-
                   <Box
                     sx={{
                       width: '100%',
@@ -150,7 +137,6 @@ function HomeHero() {
                       position: 'relative',
                     }}
                   >
-
                     <IconButton
                       onClick={handleClose}
                       size="small"
@@ -180,7 +166,7 @@ function HomeHero() {
                       sx={{
                         mb: 2,
                         borderRadius: '26px',
-                        border: "1px solid #0040D8",
+                        border: '1px solid #0040D8',
                         overflow: 'hidden', // Ensures rounded effect applies
                       }}
                     >
@@ -188,21 +174,21 @@ function HomeHero() {
                         value="resume"
                         disableRipple
                         sx={{
-                          textTransform: "none",
+                          textTransform: 'none',
                           px: 4,
                           py: 0.5,
                           borderRadius: '26px !important', // Force override
-                          backgroundColor: uploadType === "resume" ? "#2A4DD0" : "#ffffff",
-                          color: uploadType === "resume" ? "#ffffff" : "#2A4DD0",
+                          backgroundColor: uploadType === 'resume' ? '#2A4DD0' : '#ffffff',
+                          color: uploadType === 'resume' ? '#ffffff' : '#2A4DD0',
                           '&:hover': {
-                            backgroundColor: uploadType === "resume" ? "#2f3da3" : "#f0f0f0",
+                            backgroundColor: uploadType === 'resume' ? '#2f3da3' : '#f0f0f0',
                           },
                           '&.Mui-selected': {
-                            backgroundColor: "#2A4DD0",
-                            color: "#ffffff",
+                            backgroundColor: '#2A4DD0',
+                            color: '#ffffff',
                           },
                           '&.Mui-selected:hover': {
-                            backgroundColor: "#2f3da3",
+                            backgroundColor: '#2f3da3',
                           },
                         }}
                       >
@@ -213,21 +199,21 @@ function HomeHero() {
                         value="job"
                         disableRipple
                         sx={{
-                          textTransform: "none",
+                          textTransform: 'none',
                           px: 4,
                           py: 0.5,
                           borderRadius: '26px !important', // Force override
-                          backgroundColor: uploadType === "job" ? "#2A4DD0" : "#ffffff",
-                          color: uploadType === "job" ? "#ffffff" : "#2A4DD0",
+                          backgroundColor: uploadType === 'job' ? '#2A4DD0' : '#ffffff',
+                          color: uploadType === 'job' ? '#ffffff' : '#2A4DD0',
                           '&:hover': {
-                            backgroundColor: uploadType === "job" ? "#2f3da3" : "#f0f0f0",
+                            backgroundColor: uploadType === 'job' ? '#2f3da3' : '#f0f0f0',
                           },
                           '&.Mui-selected': {
-                            backgroundColor: "#2A4DD0",
-                            color: "#ffffff",
+                            backgroundColor: '#2A4DD0',
+                            color: '#ffffff',
                           },
                           '&.Mui-selected:hover': {
-                            backgroundColor: "#2f3da3",
+                            backgroundColor: '#2f3da3',
                           },
                         }}
                       >
@@ -246,20 +232,28 @@ function HomeHero() {
                           px={2}
                           textAlign="center"
                           mb={2}
-                          sx={{ cursor: "pointer" }}
+                          sx={{ cursor: 'pointer' }}
                           onClick={() => fileInputRef.current.click()}
                         >
-                          <CloudUploadIcon fontSize="large" style={{ color: "#0040D8" }} />
+                          <CloudUploadIcon fontSize="large" style={{ color: '#0040D8' }} />
                           <Typography variant="body1" fontWeight={500} mt={1}>
-                            Drag & drop files or <Box component="span" color="#3f51b5" fontWeight="bold">Browse</Box>
+                            Drag & drop files or{' '}
+                            <Box component="span" color="#3f51b5" fontWeight="bold">
+                              Browse
+                            </Box>
                           </Typography>
-                          <Typography variant="caption" display="block" color="textSecondary" mt={1}>
+                          <Typography
+                            variant="caption"
+                            display="block"
+                            color="textSecondary"
+                            mt={1}
+                          >
                             Supported formats: JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT
                           </Typography>
                           <input
                             type="file"
                             ref={fileInputRef}
-                            style={{ display: "none" }}
+                            style={{ display: 'none' }}
                             onChange={handleFileChange}
                           />
                         </Box>
@@ -289,21 +283,23 @@ function HomeHero() {
                             }
                           }}
                           sx={{
-                            backgroundColor: "#3f51b5",
+                            backgroundColor: '#3f51b5',
                             borderRadius: 999,
                             py: 1.5,
-                            textTransform: "none",
+                            textTransform: 'none',
                             fontWeight: 500,
-                            '&:hover': { backgroundColor: "#2f3da3" },
+                            '&:hover': { backgroundColor: '#2f3da3' },
                           }}
                         >
-                          {selectedFile ? "Continue" : "Upload Resume"}
+                          {selectedFile ? 'Continue' : 'Upload Resume'}
                         </Button>
                       </>
                     ) : (
                       <>
                         <Box mb={3} width="100%" textAlign="left">
-                          <Typography variant="caption" sx={{ color: "#0040D8" }} ml={1}>Designation</Typography>
+                          <Typography variant="caption" sx={{ color: '#0040D8' }} ml={1}>
+                            Designation
+                          </Typography>
                           <Box
                             component="input"
                             placeholder="Enter Designation"
@@ -314,13 +310,15 @@ function HomeHero() {
                               py: 1.5,
                               border: '1px solid #3f51b5',
                               borderRadius: 1,
-                              fontSize: '0.9rem'
+                              fontSize: '0.9rem',
                             }}
                           />
                         </Box>
 
                         <Box width="100%" textAlign="left" mb={4}>
-                          <Typography variant="caption" sx={{ color: "#0040D8" }} ml={1}>Experience</Typography>
+                          <Typography variant="caption" sx={{ color: '#0040D8' }} ml={1}>
+                            Experience
+                          </Typography>
                           <Box display="flex" alignItems="center" mt={1}>
                             <input
                               type="range"
@@ -346,12 +344,12 @@ function HomeHero() {
                           fullWidth
                           variant="contained"
                           sx={{
-                            backgroundColor: "#3f51b5",
+                            backgroundColor: '#3f51b5',
                             borderRadius: 999,
                             py: 1.5,
-                            textTransform: "none",
+                            textTransform: 'none',
                             fontWeight: 500,
-                            '&:hover': { backgroundColor: "#2f3da3" },
+                            '&:hover': { backgroundColor: '#2f3da3' },
                           }}
                           onClick={() => navigate(paths.jobDetails)}
                         >
@@ -361,64 +359,57 @@ function HomeHero() {
                     )}
                   </Box>
                 </Box>
-
-
               </Modal>
-
-
-
 
               <Button
                 variant="outlined"
                 onClick={() => navigate(paths.comingSoon)}
                 sx={{
-                  textTransform: "none",
-                  color: "#0040D8",
+                  textTransform: 'none',
+                  color: '#0040D8',
 
-                  height: "48px",
-                  width: { xs: "100%", sm: "100%", md: "100%", lg: "218px" },
+                  height: '48px',
+                  width: { xs: '100%', sm: '100%', md: '100%', lg: '218px' },
                   // Border + radius
-                  border: "2px solid #0040D8",
-                  borderRadius: "29px",
+                  border: '2px solid #0040D8',
+                  borderRadius: '29px',
 
                   // Padding
-                  padding: "20px 24px",
+                  padding: '20px 24px',
 
                   // Gap between elements
-                  gap: "8px",
+                  gap: '8px',
 
                   // Margin left
-                  marginLeft: "12px",
+                  marginLeft: '12px',
 
                   // Hover effect
-                  "&:hover": {
-                    backgroundColor: "transparent",
+                  '&:hover': {
+                    backgroundColor: 'transparent',
                     borderColor: blue[700],
                     color: blue[700],
                   },
 
                   // Optional: position shift on breakpoints
-                  ml: { xs: 0, sm: "100px", md: "42px" },
+                  ml: { xs: 0, sm: '100px', md: '42px' },
                 }}
-
               >
                 Know How it Works
               </Button>
-
             </Stack>
           </Stack>
         </Grid>
 
-        <Grid xs={12} md={6} order={{ xs: 1, md: 2 }} sx={{ mt: { xs: 4, md: 0 } }} >
+        <Grid xs={12} md={6} order={{ xs: 1, md: 2 }} sx={{ mt: { xs: 4, md: 0 } }}>
           <Box
             component="img"
             src={heroImg}
             alt="AI Coach"
             sx={{
-              width: "100%",
-              maxHeight: { xs: "auto", md: "500px" },
-              objectFit: "cover",
-              marginTop: "80px"
+              width: '100%',
+              maxHeight: { xs: 'auto', md: '500px' },
+              objectFit: 'cover',
+              marginTop: {xs:'40px', lg:'80px'},
             }}
           />
         </Grid>

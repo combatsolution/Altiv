@@ -3,12 +3,9 @@ import {
   Container,
   Box,
   Grid,
-  Breadcrumbs,
-  Link,
   TextField,
   InputAdornment,
   Card,
-  CardHeader,
   CardContent,
   CardActions,
   Avatar,
@@ -21,19 +18,47 @@ import {
   ListItemText,
   Typography,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  Link
 } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import SearchIcon from '@mui/icons-material/Search';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 
-const similarJobs = Array.from({ length: 8 }).map((_, idx) => ({
-  id: idx,
-  title: 'Sr. Director AI | Data Science',
-  company: 'Google',
-  salary: '75L - 1Cr',
-  experience: '12-14 year',
-}));
+// ✅ Job list JSON
+const similarJobs = [
+  {
+    id: 1,
+    title: 'Sr. Director AI | Data Science',
+    company: 'Google',
+    salary: '75L - 1Cr',
+    experience: '12-14 years',
+    logo: 'https://logo.clearbit.com/google.com'
+  },
+  {
+    id: 2,
+    title: 'Machine Learning Engineer',
+    company: 'Amazon',
+    salary: '50L - 80L',
+    experience: '8-10 years',
+    logo: 'https://logo.clearbit.com/amazon.com'
+  },
+  {
+    id: 3,
+    title: 'Data Analyst',
+    company: 'Microsoft',
+    salary: '30L - 50L',
+    experience: '5-7 years',
+    logo: 'https://logo.clearbit.com/microsoft.com'
+  },
+  {
+    id: 4,
+    title: 'Lead Data Scientist',
+    company: 'Meta',
+    salary: '80L - 1.2Cr',
+    experience: '10-12 years',
+    logo: 'https://logo.clearbit.com/meta.com'
+  }
+];
 
 export default function JobDetailPage() {
   const theme = useTheme();
@@ -41,122 +66,179 @@ export default function JobDetailPage() {
 
   return (
     <Box>
-      {/* Breadcrumbs & Search */}
-      <Container sx={{ py: 2 }}>
-
-        <Box my={2}>
-          <TextField
-            fullWidth
-            placeholder="Show me product managers jobs in Bengaluru with a CTC of 35L and above"
-            variant="outlined"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
+      {/* Search Bar */}
+      <Container sx={{ py: 3 }}>
+        <TextField
+          fullWidth
+          placeholder="Show me product manager jobs in Bengaluru with a CTC of 35L and above"
+          variant="outlined"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            )
+          }}
+        />
       </Container>
 
       {/* Main Content */}
       <Container>
-        <Grid container spacing={2} direction={isMobile ? 'column' : 'row'}>
-          {/* Left Column */}
+        <Grid container spacing={3}>
+          {/* Left Panel */}
           <Grid item xs={12} md={8}>
             <Card>
-              <CardHeader
-                avatar={
-                  <Avatar sx={{ bgcolor: 'primary.main' }}>PT</Avatar>
+              <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+                {/* Header */}
+                <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+                  <Grid item xs={12} md={8}>
+                    <Box display="flex" gap={2} flexWrap="wrap" alignItems="center">
+                      <Avatar sx={{ bgcolor: 'primary.main', width: 56, height: 56 }}>PT</Avatar>
+                      <Box>
+                        <Typography variant="subtitle2" color="text.secondary">
+                          Polygon Technology
+                        </Typography>
+                        <Typography variant="h5" fontWeight={600}>
+                          Data Scientist
+                        </Typography>
+                        <Box display="flex" gap={1} flexWrap="wrap" mt={0.5}>
+                          <Typography variant="body2" color="text.secondary">
+                            📍 Mumbai
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            • 124 applicants
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="primary.main"
+                            bgcolor="primary.light"
+                            px={1}
+                            py={0.5}
+                            borderRadius={1}
+                          >
+                            12 hours ago
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Grid>
 
-                }
-                action={<BookmarkBorderIcon />}
-
-                title={<Typography variant="h5">Data Scientist</Typography>}
-                subheader="Polygon Technology 
-                • Mumbai • 124 applicants"
-              />
-              <CardContent>
-                <Box display="flex" alignItems="center" mb={1}>
-
-
-                  <Box
-                    width={80}
-                    height={60}
-                    borderRadius="50%"
-                    bgcolor="success.light"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                     sx={{ ml:70, mb:10}}
+                  {/* Match Score */}
+                  <Grid item xs={12} md="auto" textAlign={{ xs: 'left', md: 'center' }}>
+                    <Box
+                      sx={{
+                        bgcolor: 'success.light',
+                        borderRadius: '50%',
+                        width: 80,
+                        height: 80,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        mx: { md: 'auto' },
+                        mt: { xs: 2, md: 0 }
+                      }}
                     >
-                  
-                    <Typography
-                      variant="subtitle2"
-                      color="success.main"
-                      align="center"
-                      sx={{ lineHeight: 1.2 }}
-                    >
-                      Match Score <br /> 75%
-                    </Typography>
-                  </Box>
-                  <Tooltip title="How this matching score?\n\nLorem ipsum..." placement="right">
-                    <Typography
-                      variant="caption"
-                      color="primary" 
-                      sx={{ ml: 2, cursor: 'pointer' }}
-                    >
-                      {/* Why this score? */}
-                    </Typography>
-                  </Tooltip>
-                </Box>
-                <Divider />
-                {/* Job Description Paragraphs */}
-                {[...Array(5)].map((_, i) => (
+                      <Typography variant="caption" color="success.dark" fontWeight={500}>
+                        Match Score
+                      </Typography>
+                      <Typography variant="h6" color="success.dark">
+                        75%
+                      </Typography>
+                    </Box>
+                    <Tooltip title="How this score is calculated?" placement="right">
+                      <Typography
+                        variant="caption"
+                        color="primary"
+                        sx={{ mt: 1, display: 'inline-block', cursor: 'pointer' }}
+                      >
+                        Why this score?
+                      </Typography>
+                    </Tooltip>
+                  </Grid>
+                </Grid>
+
+                <Divider sx={{ my: 2 }} />
+
+                {/* Description */}
+                {[...Array(3)].map((_, i) => (
                   <Typography key={i} paragraph>
-                    Mollit in laborum tempor Lorem incididunt irure. Aute eu ex ad
-                    sunt. Pariatur sint culpa do incididunt eiusmod culpa. Mollit
-                    in laborum tempor Lorem incididunt irure. Aute eu ex ad sunt.
+                    Mollit in laborum tempor Lorem incididunt irure. Aute eu ex ad sunt. Pariatur sint
+                    culpa do incididunt eiusmod culpa. Mollit in laborum tempor Lorem incididunt irure.
                   </Typography>
                 ))}
               </CardContent>
-
             </Card>
           </Grid>
 
-          {/* Right Column */}
+          {/* Right Panel */}
           <Grid item xs={12} md={4}>
-            <Box bgcolor="grey.100" p={1} borderRadius={1} height="100%">
+            <Box bgcolor="grey.100" p={2} borderRadius={2}>
+              <Typography variant="subtitle1" gutterBottom fontWeight={600}>
+                Similar Jobs
+              </Typography>
               <List disablePadding>
                 {similarJobs.map((job) => (
-                  <ListItem key={job.id} alignItems="flex-start" sx={{ mb: 1, bgcolor: 'background.paper', borderRadius: 1 }}>
+                  <ListItem key={job.id} alignItems="flex-start" sx={{ mb: 1 }}>
                     <ListItemAvatar>
-                      <Avatar src="https://logo.clearbit.com/google.com" />
+                      <Avatar src={job.logo} />
                     </ListItemAvatar>
                     <ListItemText
                       primary={job.title}
                       secondary={
-                        <>
-                          <Typography component="span" variant="body2" color="textPrimary">
-                            Salary: {job.salary} • {job.experience}
-                          </Typography>
-                        </>
+                        <Typography variant="body2" color="text.secondary">
+                          Salary: {job.salary} • {job.experience}
+                        </Typography>
                       }
                     />
                   </ListItem>
                 ))}
               </List>
               <Box textAlign="right" mt={1}>
-                <Link href="#" underline="none">View more similar jobs</Link>
+                <Link href="#" underline="hover" variant="body2">
+                  View more similar jobs
+                </Link>
               </Box>
             </Box>
           </Grid>
-          <CardActions sx={{ display: "flex", alignItems: 'center', justifyContent: 'center', mb: 2, ml: 45 }}>
-            <Button variant="contained" size="large" sx={{ mx: 1, color: "#ffff", backgroundColor: "#0040D8", borderRadius: "100px", width: "200px" }}>Apply now</Button>
-            <Button variant="outlined" size="large" sx={{ mx: 1, color: "#0040D8", backgroundColor: "#fff", borderRadius: "100px" }}>Boost my application</Button>
-          </CardActions>
         </Grid>
+
+        {/* Call to Action Buttons */}
+        <CardActions
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 2,
+            mt: 4
+          }}
+        >
+          <Button
+            variant="contained"
+            size="large"
+            sx={{
+              color: '#fff',
+              backgroundColor: '#0040D8',
+              borderRadius: '100px',
+              width: { xs: '100%', sm: '200px' }
+            }}
+          >
+            Apply now
+          </Button>
+          <Button
+            variant="outlined"
+            size="large"
+            sx={{
+              color: '#0040D8',
+              backgroundColor: '#fff',
+              borderRadius: '100px',
+              width: { xs: '100%', sm: '200px' }
+            }}
+          >
+            Boost my application
+          </Button>
+        </CardActions>
       </Container>
     </Box>
   );

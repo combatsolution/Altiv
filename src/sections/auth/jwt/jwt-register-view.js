@@ -31,7 +31,7 @@ import { useSnackbar } from 'notistack';
 import { PATH_AFTER_LOGIN } from 'src/config-global';
 
 export default function JwtRegisterView() {
-  const {enqueueSnackbar} = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   const { register } = useAuthContext();
   const router = useRouter();
   const [errorMsg, setErrorMsg] = useState('');
@@ -39,6 +39,11 @@ export default function JwtRegisterView() {
   const searchParams = useSearchParams();
   const returnTo = searchParams.get('returnTo');
   const password = useBoolean();
+  const [checked, setChecked] = useState(false);
+
+  const handleCheckboxChange = (event) => {
+    setChecked(event.target.checked);
+  };
 
   const RegisterSchema = Yup.object().shape({
     name: Yup.string()
@@ -80,7 +85,7 @@ export default function JwtRegisterView() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       await register?.(data.email, data.password, data.name, data.phone);
-      enqueueSnackbar('Register success', {variant: 'success'});
+      enqueueSnackbar('Register success', { variant: 'success' });
       router.replace(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
@@ -89,12 +94,11 @@ export default function JwtRegisterView() {
     }
   });
 
-  const handleGoogleLogin = async() => {
+  const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
     window.location.href = `${process.env.REACT_APP_HOST_API}/auth/google`;
     setIsGoogleLoading(false);
-  }
-
+  };
 
   return (
     <Box
@@ -104,7 +108,6 @@ export default function JwtRegisterView() {
         alignItems: 'center',
         justifyContent: 'center',
         px: 2,
-        
       }}
     >
       <Box
@@ -114,7 +117,7 @@ export default function JwtRegisterView() {
           textAlign: 'center',
         }}
       >
-        <img src={altiv} alt="ALTIV Logo" style={{ marginBottom: 0}} />
+        <img src={altiv} alt="ALTIV Logo" style={{ marginBottom: 4 }} />
 
         <Typography variant="h5" fontWeight="bold" gutterBottom>
           Register
@@ -129,12 +132,13 @@ export default function JwtRegisterView() {
             {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
 
             <RHFTextField name="name" label="Full Name" required />
-            <RHFTextField name="email" label="Email"required />
+            <RHFTextField name="email" label="Email" required />
             <RHFTextField name="phone" label="Mobile number" />
 
             <RHFTextField
               name="password"
-              label="Password" required
+              label="Password"
+              required
               type={password.value ? 'text' : 'password'}
               InputProps={{
                 endAdornment: (
@@ -147,19 +151,42 @@ export default function JwtRegisterView() {
               }}
             />
 
-            <RHFTextField name="confirmPassword" label="Confirm Password " type="password" required />
+            <RHFTextField
+              name="confirmPassword"
+              label="Confirm Password "
+              type="password"
+              required
+            />
 
             <FormControlLabel
-              control={<Checkbox defaultChecked style={{ color: '#0040d8', mb: '2' }} />}
+              control={
+                <Checkbox
+                  checked={checked}
+                  onChange={handleCheckboxChange}
+                  sx={{ color: '#0040d8', mt: 0.10 }} // fine-tune vertical alignment
+                />
+              }
               label={
-                <Typography variant="body2">
+                <Typography variant="body2" component="span" sx={{ lineHeight: 1.6 }}>
                   I agree with the{' '}
-                  <Link underline="always" style={{ color: '#0040d8' }}>
+                  <Link
+                    underline="always"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      router.push(paths.TermsAndConditions);
+                    }}
+                    sx={{ color: '#0040d8', cursor: 'pointer' }}
+                  >
                     terms and conditions
                   </Link>
                 </Typography>
               }
-              sx={{ alignItems: 'flex-center', textAlign: 'left' }}
+              sx={{
+                alignItems: 'center', // aligns checkbox with text
+                textAlign: 'left',
+                mt: 1,
+              }}
             />
 
             <LoadingButton
@@ -183,7 +210,7 @@ export default function JwtRegisterView() {
 
             <LoadingButton
               fullWidth
-              variant="outlined"  
+              variant="outlined"
               loading={isGoogleLoading}
               startIcon={<Iconify icon="logos:google-icon" />}
               onClick={() => handleGoogleLogin()}
@@ -194,9 +221,13 @@ export default function JwtRegisterView() {
           </Stack>
         </FormProvider>
 
-        <Typography variant="body2" color="text.secondary" mt={3}>
+        <Typography variant="body2" color="text.secondary" mt={1}>
           Need help? Visit our{' '}
-          <Link underline="hover" style={{ color: '#0040d8' }}>
+          <Link
+            underline="hover"
+            onClick={() => router.push(paths.contact)}
+            sx={{ cursor: 'pointer' }}
+          >
             help center
           </Link>
         </Typography>

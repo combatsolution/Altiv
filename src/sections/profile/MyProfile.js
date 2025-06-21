@@ -448,7 +448,7 @@ export default function MyProfile() {
                       </Link>
                     </>,
                   ],
-                  ['Address:', profileData?.address || 'Not specified'],
+                  // ['Address:', profileData?.address || 'Not specified'],
                 ].map(([label, value]) => (
                   <Box key={label} display="flex" gap={1.5}>
                     <Typography sx={{ width: 90 }} color="text.secondary">
@@ -539,7 +539,7 @@ export default function MyProfile() {
                   Job Applications
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  No jobs found
+                 Coming Soon...
                 </Typography>
               </Box>
 

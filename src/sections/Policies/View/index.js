@@ -4,3 +4,4 @@
  export {default as ContactUsView} from './contactusView';
  export {default as AttributionsView} from './attributionsView';
  export {default as AitrainingpolicyView} from './AITrainingPolicyView';
+export {default as TermsAndConditionsView} from './termsAndConditionsView';

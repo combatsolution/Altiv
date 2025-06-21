@@ -7,9 +7,9 @@ export default function CareerPathResumePage()
     return(
         <>
             <Helmet>
-                <title> Career Details</title>
+                <title> Career Compass</title>
             </Helmet>
-            <SubHeader subtitle="career Details" />
+            <SubHeader subtitle="Career Compass" />
             <CareerPathProjection />
         </>
     )

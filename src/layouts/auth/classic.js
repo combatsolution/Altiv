@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 // @mui
@@ -24,7 +25,7 @@ import { bgGradient } from 'src/theme/css';
 // components
 import Logo from 'src/components/logo';
 import Header from '../main/header';
-import { useEffect } from 'react';
+
 
 
 // ----------------------------------------------------------------------
@@ -65,11 +66,12 @@ export default function AuthClassicLayout({ children, image, title, subtitle }) 
 
   const upMd = useResponsive('up', 'md');
 
-  useEffect(() => {
-    if (user) {
-      navigate('/', { replace: true });
-    }
-  }, [user])
+ useEffect(() => {
+  if (user) {
+    navigate('/', { replace: true });
+  }
+}, [user, navigate]); // ✅ added `navigate`
+
 
   const renderLogo = (
     <Logo

@@ -145,7 +145,7 @@ const FeatureSection = () => (
                                         height: {
                                             xs: 'auto',        // Auto height on mobile
                                             sm: 'auto',
-                                            md: '100',       // Fixed from tablet upward
+                                            md: '69px',       // Fixed from tablet upward
                                         },
                                         mt:'-3px'
 

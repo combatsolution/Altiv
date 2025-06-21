@@ -19,13 +19,17 @@ import PaymentNewCardDialog from './payment-new-card-dialog';
 
 const PAYMENT_OPTIONS = [
   {
-    value: 'paypal',
-    label: 'Paypal',
+    value: 'stripe',
+    label: 'Stripe',
   },
   {
-    value: 'credit',
-    label: 'Credit / Debit Card',
+    value: 'razerpay',
+    label: 'Razerpay',
   },
+  // {
+  //   value: 'credit',
+  //   label: 'Credit / Debit Card',
+  // },
 ];
 
 const CARD_OPTIONS = [
@@ -116,7 +120,17 @@ function OptionItem({ option, selected, isCredit, onOpen, ...other }) {
                   <Iconify icon="logos:visa" width={24} />
                 </>
               )}
-              {value === 'paypal' && <Iconify icon="logos:paypal" width={24} />}
+
+              {value === 'stripe' && <Iconify icon="logos:stripe" width={24} />}
+
+              {value === 'razerpay' && (
+                <Box
+                  component="img"
+                  src="/assets/images/razorpay-logo.svg"
+                  alt="Razorpay"
+                  sx={{ width: 44, height: 44 }}
+                />
+              )}
               {value === 'cash' && <Iconify icon="solar:wad-of-money-bold" width={24} />}
             </Stack>
           </Stack>

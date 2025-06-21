@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Grid, Box, Typography, Stack, useTheme, useMediaQuery } from '@mui/material';
 import { m } from 'framer-motion';
-import foboImage from 'src/Fogoimages/fobodefine.png';
+import foboImage from 'src/Fogoimages/fobodefine.webp';
 
 const MotionBox = m(Box);
 const MotionImage = m(Box);
@@ -110,7 +110,7 @@ function FoboDefineSection() {
                   fontSize: { xs: '16px', sm: '18px' },
                   lineHeight: { xs: '28px', sm: '30px' },
                   color: '#000',
-                  textAlign: { xs: 'center', md: 'left' },
+                  textAlign: { xs: 'left', md: 'left' },
                   px: { xs: 2, sm: 0 },
                   maxWidth: { xs: '100%', md: '620px' },
                   mx: { xs: 'auto', md: 0 },

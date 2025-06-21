@@ -11,19 +11,13 @@ import FoboHeroPage from '../FoboHeroPage';
 import FoboDefinepage from '../FoboDefinepage';
 import FoboImpactPage from '../FoboImpactPage';
 import WorkingProcessSection from '../WorkingProcessSection';
-// import Design from '../Design'
+
 import TestimonialCarousel from '../TestimonialCarousel'
 import FoboHeroSection from '../FoboHeroSection'
 import Datasecuritypage from '../Datasecuritypage'
+// import Design from '../Design'
 // import CareerCompass from '../CareerCompass'
-
-
-
-
-
-
 // import ComingSoon from '../ComingSoon'; 
-
 // import Dashboard from '../Dashboard'
 
 
@@ -64,7 +58,6 @@ export default function FoboView() {
       <FoboDefinepage/>
       <FoboImpactPage/>
       <WorkingProcessSection/>
-      {/* <Design/> */}
       <TestimonialCarousel/>
       <FoboHeroSection/>
       <Datasecuritypage/>

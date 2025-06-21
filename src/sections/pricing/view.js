@@ -45,7 +45,7 @@ export default function PricingView() {
       </Typography>
 
       <Box sx={{ mt: 9, mb: 5, position: 'relative' }}>
-        <Stack direction="row" alignItems="center" justifyContent="center">
+        {/* <Stack direction="row" alignItems="center" justifyContent="center">
           <Typography variant="overline">MONTHLY</Typography>
 
           <Switch sx={{ mx: 1 }} />
@@ -67,7 +67,7 @@ export default function PricingView() {
 
             <Typography variant="overline">YEARLY</Typography>
           </Box>
-        </Stack>
+        </Stack> */}
       </Box>
 
       <Box
