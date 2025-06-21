@@ -140,7 +140,7 @@
 // };
 
 
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
@@ -155,6 +155,7 @@ import {
   InputAdornment,
   Typography,
   Box,
+  Grid,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import CloseIcon from '@mui/icons-material/Close';
@@ -165,7 +166,8 @@ import axiosInstance from 'src/utils/axios';
 
 // Components
 import Iconify from 'src/components/iconify';
-import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import FormProvider, { RHFTextField, RHFUpload, RHFUploadAvatar } from 'src/components/hook-form';
+import { fData } from 'src/utils/format-number';
 
 // ----------------------------------------------------------------------
 
@@ -174,13 +176,12 @@ export default function ProfileUpdateModal({
   onClose,
   profileData,
   setProfileData,
-  onSubmit,
 }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const ProfileUpdateSchema = Yup.object().shape({
-    backgroundImage: Yup.mixed(),
-    avatar: Yup.mixed(),
+    backgroundImage: Yup.object(),
+    avatar: Yup.object(),
     fullName: Yup.string().required('Full Name is required'),
     phoneNumber: Yup.string()
       .required('Phone is required')
@@ -192,14 +193,14 @@ export default function ProfileUpdateModal({
   });
 
   const defaultValues = {
-    backgroundImage: '',
-    avatar: '',
-    fullName: '',
-    phoneNumber: '',
-    email: '',
-    address: '',
-    description: '',
-    designation: '',
+    backgroundImage: profileData?.backgroundImage || '',
+    avatar: profileData?.avatar || '',
+    fullName: profileData?.fullName || '',
+    phoneNumber: profileData?.phoneNumber || '',
+    email: profileData?.email || '',
+    address: profileData?.address || '',
+    description: profileData?.profileDescription || '',
+    designation: profileData?.designation || '',
   };
 
   const methods = useForm({
@@ -215,55 +216,78 @@ export default function ProfileUpdateModal({
     formState: { isSubmitting },
   } = methods;
 
-  const avatarFile = watch('avatar');
-  const backgroundImageFile = watch('backgroundImage');
-
   useEffect(() => {
     if (profileData) {
-      reset({
-        backgroundImage: '',
-        avatar: '',
-        fullName: profileData.fullName || '',
-        phoneNumber: profileData.phoneNumber || '',
-        email: profileData.email || '',
-        address: profileData.address || '',
-        description: profileData.description || '',
-        designation: profileData.designation || '',
-      });
+      reset();
     }
   }, [profileData, reset]);
 
-  const uploadFile = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    const response = await axiosInstance.post('/files', formData);
-    return response.data.fileUrl; // Adjust according to your backend response
-  };
-
   const formSubmit = handleSubmit(async (data) => {
     try {
-      const updatedData = { ...data };
-
-      if (data.backgroundImage instanceof File) {
-        updatedData.backgroundImage = await uploadFile(data.backgroundImage);
-      } else {
-        updatedData.backgroundImage = profileData?.backgroundImage || '';
+      const inputData = {
+        fullName: data.fullName,
+        phoneNumber: data.phoneNumber,
+        email: data.email,
+        profileDescription: data.profileDescription,
+        designation: data.designation,
+        avatar: data.avatar,
+        backgroundImage: data.backgroundImage,
+        fullAddress: data.address
       }
 
-      if (data.avatar instanceof File) {
-        updatedData.avatar = await uploadFile(data.avatar);
-      } else {
-        updatedData.avatar = profileData?.avatar || '';
+      const response = await axiosInstance.patch(`/api/users/${profileData?.id}`, inputData);
+      if(response?.data?.success){
+        setProfileData(response?.data?.data);
+        onClose();
+        reset();
+        enqueueSnackbar('Profile update success', {variant: 'success'});
       }
-
-      await onSubmit(updatedData);
-      enqueueSnackbar('Profile updated successfully', { variant: 'success' });
-      onClose();
     } catch (error) {
       console.error(error);
       enqueueSnackbar('Something went wrong', { variant: 'error' });
     }
   });
+
+  const handleAvatarDrop = useCallback(
+    async (acceptedFiles) => {
+      const file = acceptedFiles[0];
+
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        const response = await axiosInstance.post('/files', formData);
+        const { data } = response;
+        console.log(data);
+        setValue('avatar', data?.files[0], {
+          shouldValidate: true,
+        });
+      }
+    },
+    [setValue]
+  );
+
+  const handleBackgroundImageDrop = useCallback(
+    async (acceptedFiles) => {
+      const file = acceptedFiles[0];
+
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        const response = await axiosInstance.post('/files', formData);
+        const { data } = response;
+        console.log(data);
+        setValue('backgroundImage', data?.files[0], {
+          shouldValidate: true,
+        });
+      }
+    },
+    [setValue]
+  );
+
+
+  const handleRemoveFile = useCallback(() => {
+    setValue('backgroundImage', null);
+  }, [setValue]);
 
   return (
     <Dialog
@@ -282,51 +306,51 @@ export default function ProfileUpdateModal({
       <FormProvider methods={methods} onSubmit={formSubmit}>
         <Stack spacing={3} sx={{ p: 3 }}>
           {/* File upload preview section */}
-          <Box>
-            <Typography variant="subtitle2">Background Image</Typography>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setValue('backgroundImage', e.target.files[0])}
-            />
-            {backgroundImageFile && typeof backgroundImageFile === 'object' && (
-              <img
-                src={URL.createObjectURL(backgroundImageFile)}
-                alt="background preview"
-                style={{ width: '100%', height: 120, objectFit: 'cover', marginTop: 8 }}
-              />
-            )}
-          </Box>
+          <Grid container spacing={1}>
+            <Grid sx={{paddingTop: 0}} item xs={12} md={6}>
+              <Stack spacing={1} direction='column'>
+                <Typography sx={{ fontWeight: 'normal' }} variant='h6'>Upload Avatar</Typography>
+                  <RHFUploadAvatar
+                    name="avatar"
+                    maxSize={3145728}
+                    onDrop={handleAvatarDrop}
+                    helperText={
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          mt: 2,
+                          mx: 'auto',
+                          display: 'block',
+                          textAlign: 'center',
+                          color: 'text.disabled',
+                        }}
+                      >
+                        Allowed *.jpeg, *.jpg, *.png, *.gif
+                        <br /> max size of {fData(3145728)}
+                      </Typography>
+                    }
+                  />
+              </Stack>
+            </Grid>
 
-          <Box>
-            <Typography variant="subtitle2">Avatar</Typography>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setValue('avatar', e.target.files[0])}
-            />
-            {avatarFile && typeof avatarFile === 'object' && (
-              <img
-                src={URL.createObjectURL(avatarFile)}
-                alt="avatar preview"
-                style={{ width: 64, height: 64, borderRadius: '50%', marginTop: 8 }}
-              />
-            )}
-          </Box>
+            <Grid item xs={12} md={6}>
+              <Stack spacing={1} direction='column'>
+                <RHFTextField name="fullName" label="Full Name" />
+                <RHFTextField name="phoneNumber" label="Phone" />
+                <RHFTextField name="email" label="Email Address" type="email" />
+              </Stack>
+            </Grid>
+          </Grid>
 
-          <RHFTextField
-            name="fullName"
-            label="Full Name"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="solar:user-bold" />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <RHFTextField name="phoneNumber" label="Phone" />
-          <RHFTextField name="email" label="Email Address" type="email" />
+          <Stack sx={{width: '100%'}} spacing={1} direction='column'>
+            <Typography sx={{ fontWeight: 'normal' }} variant='h6'>Upload Background Image</Typography>
+            <RHFUpload
+              name="backgroundImage"
+              maxSize={3145728}
+              onDrop={handleBackgroundImageDrop}
+              onDelete={handleRemoveFile}
+            />
+          </Stack>
           <RHFTextField name="address" label="Address" />
           <RHFTextField name="designation" label="Designation" />
           <RHFTextField name="description" label="Description" multiline rows={3} />
@@ -350,5 +374,4 @@ ProfileUpdateModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   profileData: PropTypes.object,
   setProfileData: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
 };

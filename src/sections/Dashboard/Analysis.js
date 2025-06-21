@@ -1,28 +1,22 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-else-return */
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  Box,
-  Typography,
-  Grid,
-  Card,
-  Button,
-  Stack,
-  useTheme,
-  useMediaQuery,
-  FormControlLabel,
-  Switch,
-} from '@mui/material';
+import CryptoJS from 'crypto-js';
+import { m } from 'framer-motion';
+import { Box, Typography, Grid, Card, Button, Stack, useTheme, useMediaQuery, FormControlLabel, Switch } from '@mui/material';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import GaugeChart from 'react-gauge-chart';
 import { width } from '@mui/system';
-import { Navigate, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import axiosInstance from 'src/utils/axios';
 import { SplashScreen } from 'src/components/loading-screen';
 import CustomDonutChart from 'src/components/custom-charts/donutChart';
 import PropTypes from 'prop-types';
 import tinycolor from 'tinycolor2';
-import { useNavigate } from 'react-router-dom';
+import CompactLayout from 'src/layouts/compact';
+import { MotionContainer, varBounce } from 'src/components/animate';
+import SeverErrorIllustration from 'src/assets/illustrations/sever-error-illustration';
+import { RouterLink } from 'src/routes/components';
 import { paths } from 'src/routes/paths';
 
 export default function FoboLevelTaskDistribution() {
@@ -39,8 +33,9 @@ export default function FoboLevelTaskDistribution() {
   const [data, setData] = useState(null);
   const [pieData, setPieData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [viewDetails, setViewDetails] = useState(true);
-  const [smartInsights, setSmartInsights] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [viewDetails, setViewDetails] = useState(false);
+  const [smartInsights, setSmartInsights] = useState(true);
   const baseColor = pieData?.find((d) => d.name === selectedSection?.name)?.color || '#ccc';
 
   // Generate 4 shades (lighter to darker)
@@ -48,13 +43,13 @@ export default function FoboLevelTaskDistribution() {
     tinycolor(baseColor).setAlpha(opacity).toRgbString()
   );
 
-  const fetchProfileAnalyticsData = async () => {
+  const fetchProfileAnalyticsData = async (id) => {
     try {
       setIsLoading(true);
       setActiveIndex(null);
       setSelectedSection(null);
       const response = await axiosInstance.post(`/profile-analytics`, {
-        resumeId: Number(resumeId),
+        resumeId: Number(id),
         viewDetails,
       });
       if (response?.data.success) {
@@ -85,17 +80,22 @@ export default function FoboLevelTaskDistribution() {
         ];
 
         setPieData(newPieData);
+        if (response?.data?.data?.FOBO_Score === null) {
+          setIsError(true);
+        }
         setIsLoading(false);
       }
     } catch (error) {
       console.error('error', error);
+      setIsError(true);
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
     if (resumeId) {
-      fetchProfileAnalyticsData();
+      const decryptedId = CryptoJS.AES.decrypt(resumeId, process.env.REACT_APP_ENCRYPTION_KEY).toString(CryptoJS.enc.Utf8); 
+      fetchProfileAnalyticsData(decryptedId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resumeId, viewDetails, smartInsights]);
@@ -117,6 +117,10 @@ export default function FoboLevelTaskDistribution() {
   const handleMouseEnter = (_, index) => {
     setSelectedIndex(index);
   };
+
+  const onRetry = () => {
+    navigate('/?retry=true', {replace: true})
+  }
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, index }) => {
     const RADIAN = Math.PI / 180;
@@ -181,20 +185,20 @@ export default function FoboLevelTaskDistribution() {
   const getLabelStyles = () => {
     if (isMobile) {
       return {
-        good: { top: '20%', left: '10%', transform: 'rotate(-50deg)' },
-        moderate: { top: '-7%', right: '35%', transform: 'rotate(10deg)' },
-        bad: { top: '20%', right: '12%', transform: 'rotate(54deg)' },
+        good: { top: '20%', left: '11%', transform: 'rotate(-55deg)' },
+        moderate: { top: '-20%', right: '10%', transform: 'rotate(4deg)' },
+        bad: { top: '20%', right: '13%', transform: 'rotate(55deg)' },
       };
     } else if (isTablet) {
       return {
-        good: { top: '30%', left: '15%', transform: 'rotate(-50deg)' },
-        moderate: { top: '-2%', right: '40%', transform: 'rotate(10deg)' },
+        good: { top: '30%', left: '15%', transform: 'rotate(-55deg)' },
+        moderate: { top: '-12%', right: '26%', transform: 'rotate(5deg)' },
         bad: { top: '30%', right: '15%', transform: 'rotate(60deg)' },
       };
     } else {
       return {
         good: { top: '20%', left: '15%', transform: 'rotate(-50deg)' },
-        moderate: { top: '-3%', right: '35%', transform: 'rotate(10deg)' },
+        moderate: { top: '-17%', right: '16%', transform: 'rotate(4deg)' },
         bad: { top: '25%', right: '14%', transform: 'rotate(60deg)' },
       };
     }
@@ -203,21 +207,21 @@ export default function FoboLevelTaskDistribution() {
   const getCountStyles = () => {
     if (isMobile) {
       return {
-        good: { top: '29%', left: '18%', transform: 'rotate(-60deg)' },
-        moderate: { top: '7%', right: '38%', transform: 'rotate(10deg)' },
-        bad: { top: '27%', right: '18%', transform: 'rotate(54deg)' },
+        good: { top: '29%', left: '19%', transform: 'rotate(-61deg)' },
+        moderate: { top: '8%', right: '41%', transform: 'rotate(3deg)' },
+        bad: { top: '30%', right: '17%', transform: 'rotate(60deg)' },
       };
     } else if (isTablet) {
       return {
-        good: { top: '35%', left: '20%', transform: 'rotate(-50deg)' },
-        moderate: { top: '9%', right: '42%', transform: 'rotate(10deg)' },
+        good: { top: '35%', left: '21%', transform: 'rotate(-56deg)' },
+        moderate: { top: '10%', right: '43%', transform: 'rotate(5deg)' },
         bad: { top: '37%', right: '19%', transform: 'rotate(60deg)' },
       };
     } else {
       return {
         good: { top: '28%', left: '22%', transform: 'rotate(-50deg)' },
-        moderate: { top: '9%', right: '40%', transform: 'rotate(10deg)' },
-        bad: { top: '31%', right: '19%', transform: 'rotate(57deg)' },
+        moderate: { top: '10%', right: '42%', transform: 'rotate(4deg)' },
+        bad: { top: '32%', right: '19%', transform: 'rotate(57deg)' },
       };
     }
   };
@@ -276,16 +280,29 @@ export default function FoboLevelTaskDistribution() {
             <Typography variant="body1">Moderate</Typography>
           </div>
 
-          <div
-            style={{
-              position: 'absolute',
-              ...countStyles.moderate,
-            }}
-          >
-            <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
-              70 - 100
-            </Typography>
-          </div>
+        <div
+          style={{
+            position: 'absolute',
+            ...labelStyles.moderate,
+          }}
+        >
+          <svg width="300" height="150">
+            <defs>
+              <path
+                id="curve"
+                d="M 50,150
+         A 100,100 0 0,1 250,150"
+                fill="transparent"
+              />
+            </defs>
+
+            <text fill="#000" fontSize="16" fontFamily="Arial">
+              <textPath href="#curve" startOffset="50%" textAnchor="middle">
+                Moderate
+              </textPath>
+            </text>
+          </svg>
+        </div>
 
           <div
             style={{
@@ -439,20 +456,14 @@ export default function FoboLevelTaskDistribution() {
     );
   };
 
-  return !isLoading ? (
+
+  return (!isLoading && !isError) ? (
     <Box
       px={{ xs: 2, md: '12%' }}
       py={2}
       sx={{ position: 'relative', width: '100%', maxWidth: '100%' }}
     >
-      <Box
-        sx={{
-          width: '100%',
-          textAlign: isMobile ? 'left' : 'right',
-          position: 'relative',
-          zIndex: 1000,
-        }}
-      >
+      {/* <Box sx={{ width: '100%', textAlign: isMobile ? 'left' : 'right', position: 'relative', zIndex: 1000 }}>
         <FormControlLabel
           control={
             <Switch
@@ -463,7 +474,17 @@ export default function FoboLevelTaskDistribution() {
           }
           label={viewDetails ? 'Show Long Description' : 'Show Short Description'}
         />
-      </Box>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={smartInsights}
+              onChange={() => setSmartInsights((prev) => !prev)}
+              color="primary"
+            />
+          }
+          label='Smart Insight Mode'
+        />
+      </Box> */}
       <Grid container spacing={4}>
         {/* FOBO Level */}
         <Grid item xs={12} md={12} lg={6}>
@@ -507,7 +528,7 @@ export default function FoboLevelTaskDistribution() {
                 <CustomDonutChart
                   data={pieData}
                   size={isMobile ? 350 : 450}
-                  innerRadius={isMobile ? 70 : 90}
+                  innerRadius={isMobile ? 60 : 80}
                   outerRadius={isMobile ? 100 : 130}
                   onSliceClick={handlePieClick}
                 />
@@ -525,7 +546,7 @@ export default function FoboLevelTaskDistribution() {
                       color: '#090808',
                     }}
                   >
-                    <strong>Automation:</strong> {data?.Automated_Comment}
+                    <strong>Automation:</strong> AI can do these tasks by itself, replacing human work
                   </Typography>
                 </Box>
 
@@ -539,7 +560,7 @@ export default function FoboLevelTaskDistribution() {
                       color: '#090808',
                     }}
                   >
-                    <strong>Augmentation:</strong> {data?.Augmentation_Comment}
+                    <strong>Augmentation:</strong> AI works with you, like a smart assistant helping you do better work
                   </Typography>
                 </Box>
 
@@ -553,7 +574,7 @@ export default function FoboLevelTaskDistribution() {
                       color: '#090808',
                     }}
                   >
-                    <strong>Human:</strong> {data?.Human_Comment}
+                    <strong>Human:</strong> Tasks that AI can&apos;t likely replace
                   </Typography>
                 </Box>
               </Stack>
@@ -661,7 +682,37 @@ export default function FoboLevelTaskDistribution() {
         </Grid>
       </Grid>
     </Box>
-  ) : (
+  ) : isLoading ? (
     <SplashScreen />
+  ) : (
+    <CompactLayout>
+      <MotionContainer>
+        <m.div variants={varBounce().in}>
+          <Typography variant="h3" paragraph>
+            Sorry for the inconvenience
+          </Typography>
+        </m.div>
+
+        <m.div variants={varBounce().in}>
+          <Typography sx={{ color: 'text.secondary' }}>
+            Please try again after some time.
+          </Typography>
+        </m.div>
+
+        <m.div variants={varBounce().in}>
+          <SeverErrorIllustration sx={{ height: 260, my: { xs: 5, sm: 10 } }} />
+        </m.div>
+
+        <Box component='div' sx={{ display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'center' }}>
+          <Button color="primary" onClick={onRetry} size="large" variant="contained">
+            Retry
+          </Button>
+
+          <Button color="primary" onClick={() => navigate(-1, { replace: true })} size="large" variant="outlined">
+            Go to Home
+          </Button>
+        </Box>
+      </MotionContainer>
+    </CompactLayout>
   );
 }

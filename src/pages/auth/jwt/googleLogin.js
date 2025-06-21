@@ -4,7 +4,7 @@ import { GoogleLoginView } from 'src/sections/auth/jwt';
 
 // ----------------------------------------------------------------------
 
-export default function LoginPage() {
+export default function GoogleLoginPage() {
   return (
     <>
       <Helmet>
