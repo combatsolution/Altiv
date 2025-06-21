@@ -44,6 +44,7 @@ import { useSnackbar } from 'notistack';
 import { SplashScreen } from 'src/components/loading-screen';
 import ProfileChangePassword from './profile-change-password-modal';
 import ProfileUpdateModal from './profile-update-modal';
+import { format } from 'date-fns';
 
 const jobMatches = []; // You can populate this later
 
@@ -515,7 +516,7 @@ export default function MyProfile() {
                             {r.fileDetails?.fileName || 'Untitled Resume'}
                           </a>
                         }
-                        secondary={r.uploadedAt || 'No date'}
+                        secondary={r?.updatedAt ? format(r?.updatedAt, 'dd-MM-yyyy') : ''}
                       />
                     </ListItem>
                     <Divider />
