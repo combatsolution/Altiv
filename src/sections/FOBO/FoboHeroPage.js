@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import CryptoJS from 'crypto-js';
 import { useNavigate } from 'react-router-dom';
@@ -116,8 +117,8 @@ export default function FoboHeroPage() {
       );
 
       navigate(paths.dashboardPage(encryptedId));
-    } catch (err) {
-      console.error('Error during encryption or navigation:', err);
+    } catch (error) {
+      console.error('Error during encryption or navigation:', error);
     }
   };
 
@@ -171,7 +172,7 @@ export default function FoboHeroPage() {
         px: { xs: 2, sm: 3, md: 6, lg: 10 },
         py: { xs: 2, sm: 6, md: 8, lg: 5 },
         mx: 'auto',
-        maxWidth: { lg: 1400 },
+       width: '100%',
         my: { xs: 2, md: 5 }
 
       }}
@@ -179,9 +180,9 @@ export default function FoboHeroPage() {
       <Grid
         container
         spacing={{ xs: 4, sm: 6, md: 8 }}
-        alignItems="center"
+        alignItems="center" 
         justifyContent="center"
-        margintop='20px'
+        // marginTop='10px'
       >
         {/* Content Column */}
         <Grid
@@ -218,13 +219,13 @@ export default function FoboHeroPage() {
                 component="h1"
                 fontWeight={700}
                 color="text.primary"
-                
-                sx={{ 
-                  fontSize: { 
-                    xs: '36px', 
-                    sm: '3rem', 
-                    md: '3.5rem', 
-                    lg: '60px' 
+                sx={{
+                  width:'600px',
+                  fontSize: {
+                    xs: '2.25rem',
+                    sm: '3rem',
+                    md: '3.5rem',
+                    lg: '64px'
                   },
                   lineHeight: 1,
                   display: { xs: 'none', lg: 'block' }
@@ -319,7 +320,7 @@ export default function FoboHeroPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             sx={{
-              margintop: "50px",
+              marginTop: "10px",
               width: '100%',
               height: 'auto',
               maxWidth: { xs: '100%', sm: '80%', md: '100%' },

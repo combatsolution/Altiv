@@ -46,6 +46,7 @@ import { format } from 'date-fns';
 import ProfileChangePassword from './profile-change-password-modal';
 import ProfileUpdateModal from './profile-update-modal';
 
+
 const jobMatches = []; // You can populate this later
 
 export default function MyProfile() {
@@ -71,8 +72,13 @@ export default function MyProfile() {
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [resumeToDelete, setResumeToDelete] = useState(null);
 
-  const [profileData, setProfileData] = useState(null);
-  console.log('profileData',profileData)
+  const [profileData, setProfileData] = useState({
+    fullName: '',
+    phoneNumber: '',
+    email: '',
+    address: '',
+    description: '',
+  });
 
   const fetchLastFoboScore = async () => {
     try {
@@ -449,7 +455,7 @@ export default function MyProfile() {
                       </Link>
                     </>,
                   ],
-                  // ['Address:', profileData?.address || 'Not specified'],
+                  ['Address:', profileData.address || 'Not specified'],
                 ].map(([label, value]) => (
                   <Box key={label} display="flex" gap={1.5}>
                     <Typography sx={{ width: 90 }} color="text.secondary">
