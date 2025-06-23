@@ -15,6 +15,7 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Altivlogo from 'src/images/Altivlogo.png';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
@@ -118,8 +119,8 @@ export default function JwtRegisterView() {
           
         }}
       >
-        <img src={altiv} alt="ALTIV Logo" style={{marginBottom:10}}  
-         />
+        <img src={altiv} alt="ALTIV Logo" style={{marginBottom:10}}  />
+          {/* <img src={Altivlogo} alt="BigCo Inc. lo go" /> */}
 
         <Typography variant="h5" fontWeight="bold" gutterBottom  >
           Register

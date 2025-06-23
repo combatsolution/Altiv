@@ -329,7 +329,7 @@ export default function Footer() {
 
             {/* LinkedIn Icon */}
             <Link
-              href="https://linkedin.com/company/altiv-ai"
+              href="https://www.linkedin.com/company/altivai"
               target="_blank"
               rel="noopener noreferrer"
               sx={{

@@ -17,6 +17,7 @@ import CompactLayout from 'src/layouts/compact';
 import { MotionContainer, varBounce } from 'src/components/animate';
 import SeverErrorIllustration from 'src/assets/illustrations/sever-error-illustration';
 import { RouterLink } from 'src/routes/components';
+import { paths } from 'src/routes/paths';
 
 export default function FoboLevelTaskDistribution() {
   const navigate = useNavigate();
@@ -449,28 +450,7 @@ export default function FoboLevelTaskDistribution() {
       py={2}
       sx={{ position: 'relative', width: '100%', maxWidth: '100%' }}
     >
-      {/* <Box sx={{ width: '100%', textAlign: isMobile ? 'left' : 'right', position: 'relative', zIndex: 1000 }}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={viewDetails}
-              onChange={() => setViewDetails((prev) => !prev)}
-              color="primary"
-            />
-          }
-          label={viewDetails ? 'Show Long Description' : 'Show Short Description'}
-        />
-        <FormControlLabel
-          control={
-            <Switch
-              checked={smartInsights}
-              onChange={() => setSmartInsights((prev) => !prev)}
-              color="primary"
-            />
-          }
-          label='Smart Insight Mode'
-        />
-      </Box> */}
+     
       <Grid container spacing={4}>
         {/* FOBO Level */}
         <Grid item xs={12} md={12} lg={6}>
@@ -601,6 +581,7 @@ export default function FoboLevelTaskDistribution() {
         {/* CTA Button */}
         <Grid item xs={12} textAlign="left">
           <Button
+          // onClick={()=> navigate(paths.pricing)}
             variant="contained"
             sx={{
               backgroundColor: '#2C47D3',
