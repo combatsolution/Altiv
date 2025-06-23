@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import {
   Container,
@@ -19,7 +17,7 @@ import {
   Stack,
   useMediaQuery,
   useTheme,
-  Paper
+  Paper,
 } from '@mui/material';
 import {
   AutoAwesome as AIIcon,
@@ -102,7 +100,8 @@ export default function AboutUsPage() {
           About <span style={{ color: theme.palette.primary.main }}>Altiv.AI</span>
         </Typography>
         <Typography variant="h6" color="text.secondary" maxWidth="800px" mx="auto">
-          A career intelligence platform that turns uncertainty into opportunity through AI-powered insights and personalized career pathways.
+          In an era where AI is reshaping careers faster than ever, we are building something
+          different: a career intelligence platform that turns uncertainty into opportunity.
         </Typography>
       </MotionBox>
 
@@ -118,7 +117,7 @@ export default function AboutUsPage() {
           viewport={{ once: true }}
         >
           <Chip
-            label="Our Origin"
+            label="Our Story"
             color="secondary"
             size="small"
             sx={{ mb: 2 }}
@@ -132,8 +131,8 @@ export default function AboutUsPage() {
             it also creates unprecedented opportunities for those who can adapt.
           </Typography>
           <Typography>
-            Traditional career platforms haven&apos;t kept pace – they are still matching static skills to job descriptions,
-            while the nature of work itself is being transformed.
+            Traditional career platforms haven&apos;t kept pace – they are still matching static
+            skills to job descriptions, while the nature of work itself is being transformed.
           </Typography>
         </MotionGrid>
         <MotionGrid
@@ -150,16 +149,23 @@ export default function AboutUsPage() {
             whileHover={{ scale: 1.03 }}
             sx={{
               p: 3,
-              background: 'linear-gradient(135deg, rgba(101,78,163,0.1) 0%, rgba(234,67,53,0.1) 100%)',
+              background:
+                'linear-gradient(135deg, rgba(101,78,163,0.1) 0%, rgba(234,67,53,0.1) 100%)',
               borderLeft: `4px solid ${theme.palette.primary.main}`,
             }}
           >
-            <Box display="flex" alignItems="center" mb={2}>
-              <Avatar sx={{ bgcolor: theme.palette.primary.main, mr: 2 }}>
+            <Box display="flex" flexDirection="column" alignItems="center" mb={2}>
+              <Avatar sx={{ bgcolor: theme.palette.primary.main, mr: 2,  }}>
                 <AIIcon />
               </Avatar>
-              <Typography variant="h6" fontWeight={600}>
-                Navigating the AI Revolution
+              <Typography variant="h6" fontWeight={600} gutterBottom>
+                Navigate the AI revolution
+              </Typography>
+              
+              <Typography color="text.secondary" textAlign="center">
+                We help ambitious professionals navigate the AI revolution with clarity and
+                confidence. Our platform combines advanced AI analysis with practical career
+                guidance to:
               </Typography>
             </Box>
             <List>
@@ -169,12 +175,14 @@ export default function AboutUsPage() {
                     <CheckIcon color="primary" fontSize="small" />
                   </ListItemIcon>
                   <ListItemText
-                    primary={[
-                      'Mapping your current skills against emerging AI capabilities',
-                      'Identifying your unique opportunities for AI augmentation',
-                      'Creating personalized pathways for career evolution',
-                      'Connecting you with roles that maximize your potential',
-                    ][i]}
+                    primary={
+                      [
+                        'Mapping your current skills against emerging AI capabilities',
+                        'Identifying your unique opportunities for AI augmentation',
+                        'Creating personalized pathways for career evolution',
+                        'Connecting you with roles that maximize your potential',
+                      ][i]
+                    }
                     primaryTypographyProps={{ variant: 'body2' }}
                   />
                 </ListItem>
@@ -193,7 +201,13 @@ export default function AboutUsPage() {
         mb={8}
       >
         <MotionBox textAlign="center" mb={4} variants={fadeInUp}>
-          <Chip label="Why Choose Us" color="info" size="small" sx={{ mb: 2 }} icon={<InsightIcon />} />
+          <Chip
+            label="Why Choose Us"
+            color="info"
+            size="small"
+            sx={{ mb: 2 }}
+            icon={<InsightIcon />}
+          />
           <Typography variant="h4" fontWeight={600} gutterBottom>
             Why We are Different
           </Typography>
@@ -207,22 +221,22 @@ export default function AboutUsPage() {
             {
               icon: <InsightIcon color="secondary" fontSize="large" />,
               title: 'Task Analysis',
-              desc: 'We analyze tasks, not just skills, for precise career matching'
+              desc: 'We analyze tasks, not just skills, for precise career matching',
             },
             {
               icon: <AutoAwesome color="primary" fontSize="large" />,
               title: 'Augmentation Focus',
-              desc: 'Focus on augmentation opportunities, not just automation risks'
+              desc: 'Focus on augmentation opportunities, not just automation risks',
             },
             {
               icon: <DirectionsRun color="success" fontSize="large" />,
               title: 'Dynamic Pathways',
-              desc: 'Provide dynamic career pathways, not static job matches'
+              desc: 'Provide dynamic career pathways, not static job matches',
             },
             {
               icon: <Psychology color="warning" fontSize="large" />,
               title: 'Data-Driven',
-              desc: 'Offer data-driven insights, not generic advice'
+              desc: 'Offer data-driven insights, not generic advice',
             },
           ].map((item, i) => (
             <MotionGrid item xs={12} sm={6} md={3} key={i} variants={fadeInUp}>
@@ -302,4 +316,3 @@ export default function AboutUsPage() {
     </Container>
   );
 }
-
