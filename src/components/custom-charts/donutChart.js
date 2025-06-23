@@ -30,9 +30,9 @@ export default function CustomDonutChart({
   size = 700,
   innerRadius = 80,
   outerRadius = 120,
-  onSliceClick = () => {},
-  onSliceHover = () => {},
-  onSliceLeave = () => {},
+  onSliceClick = () => { },
+  onSliceHover = () => { },
+  onSliceLeave = () => { },
 }) {
   const [activeIndex, setActiveIndex] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -49,13 +49,26 @@ export default function CustomDonutChart({
       const progress = Math.min((timestamp - start) / duration, 1);
       setAnimationProgress(progress);
       if (progress < 1) frame = requestAnimationFrame(animate);
+      if (progress < 1) {
+        frame = requestAnimationFrame(animate);
+      }
     };
 
     frame = requestAnimationFrame(animate);
-
-    
     return () => cancelAnimationFrame(frame);
   }, []);
+
+  useEffect(() => {
+  if (data.length > 0) {
+    const timer = setTimeout(() => {
+      setSelectedIndex(0);
+      const item = data[0];
+      onSliceClick(0, item);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }
+}, [data]);
 
   const cx = size / 2;
   const cy = size / 2;
@@ -64,12 +77,12 @@ export default function CustomDonutChart({
   let angleStart = 0;
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%', maxWidth: size, aspectRatio: 1,  userSelect: 'none' }}>
-       <svg
-          width="100%"
-          height="100%"
-          viewBox={`${-size * 0.1} ${-size * 0.1} ${size * 1.2} ${size * 1.2}`}
-          preserveAspectRatio="xMidYMid meet"
+    <div style={{ position: 'relative', width: '100%', height: '100%', maxWidth: size, aspectRatio: 1, userSelect: 'none' }}>
+      <svg
+        width="100%"
+        height="100%"
+        viewBox={`${-size * 0.1} ${-size * 0.1} ${size * 1.2} ${size * 1.2}`}
+        preserveAspectRatio="xMidYMid meet"
       >
         {data.map((item, i) => {
           const targetAngle = (item.value / total) * 360;
@@ -123,24 +136,24 @@ export default function CustomDonutChart({
 
           const handleMouseEnter = () => {
             // if (selectedIndex === null) {
-              setActiveIndex(i);
-              const tooltipPoint = polarToCartesian(cx, cy, (outerRadius + innerRadius) / 2, midAngle);
-              // setTooltip({
-              //   show: true,
-              //   x: tooltipPoint.x,
-              //   y: tooltipPoint.y,
-              //   label: item.label,
-              //   value: item.value,
-              // });
-              onSliceHover(i, item);
+            setActiveIndex(i);
+            const tooltipPoint = polarToCartesian(cx, cy, (outerRadius + innerRadius) / 2, midAngle);
+            // setTooltip({
+            //   show: true,
+            //   x: tooltipPoint.x,
+            //   y: tooltipPoint.y,
+            //   label: item.label,
+            //   value: item.value,
+            // });
+            onSliceHover(i, item);
             // }
           };
 
           const handleMouseLeave = () => {
             // if (selectedIndex === null) {
-              setActiveIndex(null);
-              setTooltip({ show: false, x: 0, y: 0, label: '', value: 0 });
-              onSliceLeave();
+            setActiveIndex(null);
+            setTooltip({ show: false, x: 0, y: 0, label: '', value: 0 });
+            onSliceLeave();
             // }
           };
 
@@ -246,11 +259,11 @@ export default function CustomDonutChart({
 }
 
 CustomDonutChart.propTypes = {
-    data : PropTypes.array,
-    size : PropTypes.number,
-    innerRadius : PropTypes.number,
-    outerRadius : PropTypes.number,
-    onSliceClick : PropTypes.func,
-    onSliceHover : PropTypes.func,
-    onSliceLeave : PropTypes.func,
+  data: PropTypes.array,
+  size: PropTypes.number,
+  innerRadius: PropTypes.number,
+  outerRadius: PropTypes.number,
+  onSliceClick: PropTypes.func,
+  onSliceHover: PropTypes.func,
+  onSliceLeave: PropTypes.func,
 }
