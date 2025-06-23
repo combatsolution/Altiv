@@ -1,3 +1,4 @@
+ /* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import CryptoJS from 'crypto-js';
 import { useNavigate } from 'react-router-dom';
@@ -33,7 +34,6 @@ import { Upload } from 'src/components/upload';
 import { useSnackbar } from 'notistack';
 import { paths } from 'src/routes/paths';
 import { m } from 'framer-motion';
-import { display } from '@mui/system';
 import { useSearchParams } from 'src/routes/hook';
 import { trackEvent } from 'src/utils/google-analytics';
 
@@ -44,8 +44,11 @@ export default function FoboHeroPage() {
   const searchParams = useSearchParams();
   const { user: currentUser } = useAuthContext();
   const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   const [open, setOpen] = useState(false);
   const [existingResumes, setExistingResumes] = useState([]);
   const [docIsLoading, setDocIsLoading] = useState(false);
@@ -54,9 +57,6 @@ export default function FoboHeroPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [linkedInUrl, setLinkedInUrl] = useState('');
   const [error, setError] = useState('');
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
   useEffect(() => {
     if (currentUser) {
@@ -66,11 +66,8 @@ export default function FoboHeroPage() {
 
   useEffect(() => {
     const retry = searchParams.get('retry');
-
-    if (retry) {
-      handleOpenModal();
-    }
-  }, [searchParams])
+    if (retry) handleOpenModal();
+  }, [searchParams]);
 
   const handleOpenModal = () => {
     setOpen(true);
@@ -122,9 +119,7 @@ export default function FoboHeroPage() {
 
     try {
       const key = process.env.REACT_APP_ENCRYPTION_KEY;
-      if (!key) {
-        throw new Error('Encryption key not set');
-      }
+      if (!key) throw new Error('Encryption key not set');
 
       const encryptedId = encodeURIComponent(
         CryptoJS.AES.encrypt(String(selectedResumeId), key).toString()
@@ -163,6 +158,7 @@ export default function FoboHeroPage() {
       console.error('Error while uploading resume', uploadError);
       enqueueSnackbar(uploadError?.error?.message || 'Upload failed', { variant: 'error' });
       setSelectedFile(null);
+    } finally {
       setDocIsLoading(false);
       setIsLoading(false);
     }
@@ -180,86 +176,60 @@ export default function FoboHeroPage() {
     }
   };
 
-  const handleCloseModel = () => {
-    setOpen(false);
-    setSelectedFile(null);
-    setSelectedResumeId(null);
-    setLinkedInUrl('');
-    setDocIsLoading(false);
-    setIsLoading(false);
-    navigate('/', { replace: true });
-  }
-
-  console.log('selected file', selectedFile);
-
   return (
     <Box
       sx={{
-        px: { xs: 2, sm: 3, md: 6, lg: 10 },
-        py: { xs: 2, sm: 6, md: 8, lg: 5 },
+        px: { xs: 2, sm: 4, md: 8, lg: 12, xl: 16 },
+        py: { xs: 4, sm: 6, md: 12 },
+        maxWidth: '1440px',
         mx: 'auto',
-        maxWidth: { lg: 1400 },
-        my: { xs: 2, md: 5 }
-
+        width: '100%',
       }}
     >
       <Grid
         container
-        spacing={{ xs: 4, sm: 6, md: 8 }}
+        spacing={{ xs: 4, sm: 6, md:4 }}
         alignItems="center"
         justifyContent="center"
-        margintop='20px'
       >
-        {/* Content Column */}
+        {/* Text Column */}
         <Grid
           item
           xs={12}
           md={6}
           order={{ xs: 2, md: 1 }}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center'
-          }}
+          sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
         >
           <MotionBox
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
           >
-            <Stack spacing={{ xs: 1, sm: 3, md: 1 }}>
+            <Stack spacing={{ xs: 2, sm: 2 }} textAlign={{ xs: 'center', md: 'left' }}>
               <Typography
                 fontWeight="bold"
                 color="text.primary"
                 sx={{
                   fontSize: { xs: '1rem', sm: '1.2rem', md: '1.5rem' },
-                  textAlign: { xs: 'center', md: 'left' }
-
                 }}
               >
                 From AI Anxiety to AI Advantage
               </Typography>
 
-              {/* Main Heading */}
               <Typography
                 component="h1"
                 fontWeight={700}
                 color="text.primary"
                 sx={{
-                  fontSize: {
-                    xs: '2.25rem',
-                    sm: '3rem',
-                    md: '3.5rem',
-                    lg: '4rem'
-                  },
+                  fontSize: { xs: '2rem', sm: '3rem', md: '3.5rem', lg: '60px' },
+                  width: { xs: '100%', lg: '100%' },
                   lineHeight: 1,
-                  display: { xs: 'none', lg: 'block' }
+                  display: { xs: 'none', lg: 'block' },
                 }}
               >
                 Beat FOBO (Fear of Being Obsolete)
               </Typography>
 
-              {/* Mobile Heading */}
               <Typography
                 component="h1"
                 fontWeight={700}
@@ -268,7 +238,6 @@ export default function FoboHeroPage() {
                   fontSize: '2rem',
                   lineHeight: 1.3,
                   display: { xs: 'block', lg: 'none' },
-                  textAlign: { xs: 'center', md: 'left' }
                 }}
               >
                 Beat FOBO{' '}
@@ -278,29 +247,20 @@ export default function FoboHeroPage() {
               </Typography>
 
               <Typography
-                // color="text.secondary"
                 color="#000000"
                 sx={{
-                  display: 'flex',
-                  alignItems: 'center',
                   fontSize: { xs: '1rem', md: '1.125rem' },
                   lineHeight: 1.6,
-                  maxWidth: { xs: '90%', md: '90%', lg: '100%' },
-                  textAlign: { xs: 'left', md: 'left' },
-                  ml: { xs: 6, md: 0 }
+                  maxWidth: { xs: '90%', md: '100%' },
+                  textAlign: { xs: 'center', md: 'left' },
+                  mx: 'auto',
                 }}
               >
                 At Altiv, we help you beat decision paralysis with smarter tools and human-first
                 design.
               </Typography>
 
-              <Box
-                sx={{
-                  mt: { xs: 2, sm: 3 },
-                  display: 'flex',
-                  justifyContent: { xs: 'center', md: 'flex-start' }
-                }}
-              >
+              <Box sx={{ mt: 3, display: 'flex', justifyContent: { xs: 'center', md: 'flex-start' } }}>
                 <Button
                   variant="contained"
                   size="large"
@@ -310,9 +270,9 @@ export default function FoboHeroPage() {
                     '&:hover': { bgcolor: 'primary.dark' },
                     borderRadius: '29px',
                     px: 4,
-                    py: { xs: 1, sm: 1.5 },
+                    py: { xs: 1.5, sm: 2 },
                     textTransform: 'none',
-                    minWidth: { xs: '100%', sm: 'auto' }
+                    minWidth: { xs: '100%', sm: 'auto' },
                   }}
                 >
                   <Box display="flex" alignItems="center" gap={1}>
@@ -330,11 +290,7 @@ export default function FoboHeroPage() {
           xs={12}
           md={6}
           order={{ xs: 1, md: 2 }}
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
         >
           <MotionImage
             component="img"
@@ -347,26 +303,16 @@ export default function FoboHeroPage() {
             sx={{
               marginTop: "50px",
               width: '100%',
-              height: 'auto',
-              maxWidth: { xs: '100%', sm: '80%', md: '100%' },
-              maxHeight: { xs: '200px', sm: '300px', md: '400px', lg: '453px' },
-              objectFit: 'contain'
+              maxWidth: { xs: '100%', sm: '80%', md: '100%', xl: '90%' },
+              maxHeight: { xs: 250, sm: 300, md: 400, lg: 500, xl: 550 },
+              objectFit: 'contain',
             }}
           />
         </Grid>
       </Grid>
 
       {/* Modal */}
-      <Modal
-        open={open}
-        onClose={() => handleCloseModel()}
-        sx={{
-          overflowY: 'auto',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
+      <Modal open={open} onClose={handleCloseModel}>
         <Box
           sx={{
             width: { xs: '90%', sm: '80%', md: '550px' },
@@ -377,17 +323,15 @@ export default function FoboHeroPage() {
             borderRadius: 2,
             my: 4,
             mx: 'auto',
+            maxHeight: { xs: '90vh', sm: '85vh' },
+            overflowY: 'auto',
             position: 'relative',
-            maxHeight: '90vh',
-            overflowY: 'auto'
           }}
         >
-          <IconButton
-            onClick={() => handleCloseModel()}
-            sx={{ position: 'absolute', top: 8, right: 8 }}
-          >
+          <IconButton onClick={handleCloseModel} sx={{ position: 'absolute', top: 8, right: 8 }}>
             <CloseIcon />
           </IconButton>
+
           <Typography variant="h5" mb={1}>
             Magic happens many ways
           </Typography>
@@ -395,25 +339,14 @@ export default function FoboHeroPage() {
             Upload a resume, select an existing one, or add LinkedIn URL
           </Typography>
 
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
+          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
           <Typography variant="subtitle1" fontWeight={600} mb={1}>
             Select or Upload Resume
           </Typography>
 
           {existingResumes.length > 0 && (
-            <List sx={{
-              maxHeight: 180,
-              overflowY: 'auto',
-              mb: 2,
-              border: '1px solid',
-              borderColor: 'divider',
-              borderRadius: 1
-            }}>
+            <List sx={{ maxHeight: 180, overflowY: 'auto', mb: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
               {existingResumes.map((r) => (
                 <React.Fragment key={r.id}>
                   <ListItem
@@ -425,14 +358,8 @@ export default function FoboHeroPage() {
                     }}
                     secondaryAction={
                       <Box display="flex" alignItems="center">
-                        {selectedResumeId === r.id && (
-                          <CheckCircleIcon sx={{ color: green[600], mr: 1 }} />
-                        )}
-                        <IconButton
-                          edge="end"
-                          onClick={() => handleDeleteResume(r.id)}
-                          size="small"
-                        >
+                        {selectedResumeId === r.id && <CheckCircleIcon sx={{ color: green[600], mr: 1 }} />}
+                        <IconButton edge="end" onClick={() => handleDeleteResume(r.id)} size="small">
                           <DeleteIcon sx={{ color: 'error.main', fontSize: '1rem' }} />
                         </IconButton>
                       </Box>
@@ -440,16 +367,7 @@ export default function FoboHeroPage() {
                     sx={{ py: 1 }}
                   >
                     <ListItemText
-                      primary={
-                        <a
-                          href='#'
-                          // target="_blank"
-                          // rel="noopener noreferrer"
-                          style={{ textDecoration: 'none', color: 'inherit' }}
-                        >
-                          {r.fileDetails.fileName}
-                        </a>
-                      }
+                      primary={<a href="#" style={{ textDecoration: 'none', color: 'inherit' }}>{r.fileDetails.fileName}</a>}
                       secondary={r.uploadedAt}
                       primaryTypographyProps={{ noWrap: true }}
                       secondaryTypographyProps={{ noWrap: true }}
@@ -462,14 +380,7 @@ export default function FoboHeroPage() {
           )}
 
           {selectedFile?.fileUrl ? (
-            <Box sx={{
-              px: 2,
-              py: 2,
-              border: '1px dashed',
-              borderColor: 'divider',
-              borderRadius: 2,
-              mb: 2
-            }}>
+            <Box sx={{ px: 2, py: 2, border: '1px dashed', borderColor: 'divider', borderRadius: 2, mb: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <InsertDriveFileIcon sx={{ mr: 1 }} />
                 <Typography variant="body2" noWrap>
@@ -538,4 +449,4 @@ export default function FoboHeroPage() {
       </Modal>
     </Box>
   );
-}
+} 

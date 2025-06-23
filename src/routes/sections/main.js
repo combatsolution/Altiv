@@ -37,10 +37,9 @@ const CareerPathTitlePage = lazy(() => import('src/pages/career/CareerCompassTit
 const JobFeedPage = lazy(() => import('src/pages/job-feed/JobFeedPage'));
 
 // Payment
-const PaymentsuccessPage = lazy(() => import('src/pages/paymentpage'));
 const SubscriptionData = lazy(() => import('src/pages/subscription/SubscriptionHistory'));
-
 const Subscriptionsuccess = lazy(() => import('src/pages/subscription/SubscriptionSuccessPage'));
+
 
 // FOBO
 const FoboPage = lazy(() => import('src/pages/Fobo/fobo-view'));
@@ -78,7 +77,6 @@ export const mainRoutes = [
       { path: 'career-resume', element: <CareerPathResumePage /> },
       { path: 'career-title', element: <CareerPathTitlePage /> },
       { path: 'job-feed', element: <JobFeedPage /> },
-      { path: 'payment-success', element: <PaymentsuccessPage /> },
       { path: 'subscription', element: <SubscriptionData /> },
       { path: 'successpage', element: <Subscriptionsuccess /> },
       { path: 'termsandconditions', element: <TermsCondition /> },

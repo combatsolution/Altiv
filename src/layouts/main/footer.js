@@ -6,7 +6,7 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
-import { TextField, Button } from '@mui/material';
+import { TextField, Button, Modal, IconButton } from '@mui/material';
 import { FaXTwitter } from 'react-icons/fa6';
 import Altivlogo from 'src/images/Altivlogo.png';
 import linkedinlogo from 'src/images/linkedinlogo.png';
@@ -15,10 +15,12 @@ import { RouterLink } from 'src/routes/components';
 import axiosInstance from 'src/utils/axios';
 import Instagramlogo from 'src/images/Instagramlogo.png';
 import { useNavigate } from 'react-router-dom';
+import CloseIcon from '@mui/icons-material/Close';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const jobseekers = [
   { name: 'Search Jobs', href: paths.comingSoon },
-  { name: 'Register', href: paths.comingSoon },
+  { name: 'Register', href: paths.auth.jwt.register },
   { name: 'Job Alerts', href: paths.comingSoon },
   { name: 'Career Advice', href: paths.comingSoon },
 ];
@@ -54,8 +56,10 @@ const AboutAltiv = [
 
 export default function Footer() {
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState(false);
 
   const handleNavClick = (category, action, title, path) => {
     trackEvent({
@@ -182,7 +186,7 @@ export default function Footer() {
         </Grid>
 
         {/* Programs Column */}
-        <Grid xs={12} md={2} lg={2}>
+        <Grid xs={12} md={2} lg={1.6}>
           <Typography variant="subtitle1" fontWeight={700} gutterBottom>
             Programs
           </Typography>
@@ -303,28 +307,6 @@ export default function Footer() {
               }}
               fullWidth
             />
-            {/* <Button
-              variant="outlined" // Changed from "contained" to "outlined" for border visibility
-              onClick={handleSubscribe}
-              sx={{
-                height: '40px',
-                borderRadius: '4px',
-                backgroundColor: 'common.white',
-                color: 'primary.main', // Changed to primary.main for better contrast
-                border: '1px solid', // Explicit border declaration
-                borderColor: 'primary.main', // Border color
-                fontWeight: 600,
-                textTransform: 'none',
-                px: 3,
-                whiteSpace: 'nowrap',
-                '&:hover': {
-                  borderColor: 'primary.dark', // Darker border on hover
-                  color: 'primary.dark', // Darker text on hover
-                },
-              }}
-            >
-              Subscribe
-            </Button> */}
 
             <Button
               variant="outlined"
@@ -375,7 +357,7 @@ export default function Footer() {
 
             {/* LinkedIn Icon */}
             <Link
-              href="https://linkedin.com/company/altiv-ai"
+              href="https://www.linkedin.com/company/altivai"
               target="_blank"
               rel="noopener noreferrer"
               sx={{
@@ -411,6 +393,25 @@ export default function Footer() {
           </Box>
         </Grid>
       </Grid>
+
+      {/* ✅ Modal after successful subscription */}
+     <Modal open={openModal} onClose={() => setOpenModal(false)}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'background.paper', borderRadius: 2, boxShadow: 24, p: 4, textAlign: 'center', maxWidth: 400, width: '90%' }}>
+          <IconButton onClick={() => setOpenModal(false)} sx={{ position: 'absolute', top: 8, right: 8 }}>
+            <CloseIcon />
+          </IconButton>
+          <CheckCircleIcon sx={{ fontSize: 60, color: 'success.main', mb: 2 }} />
+          <Typography variant="h5" fontWeight="bold" gutterBottom>
+            Congratulations!
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            Your subscription has been added successfully.
+          </Typography>
+          <Button variant="contained" color='primary' halfWidth sx={{ mt: 3, borderRadius: 5, textTransform: 'none' }} onClick={() => setOpenModal(false)}>
+            Close
+          </Button>
+        </Box>
+      </Modal>
     </Box>
   );
 }

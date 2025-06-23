@@ -465,28 +465,7 @@ export default function FoboLevelTaskDistribution() {
       py={2}
       sx={{ position: 'relative', width: '100%', maxWidth: '100%' }}
     >
-      {/* <Box sx={{ width: '100%', textAlign: isMobile ? 'left' : 'right', position: 'relative', zIndex: 1000 }}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={viewDetails}
-              onChange={() => setViewDetails((prev) => !prev)}
-              color="primary"
-            />
-          }
-          label={viewDetails ? 'Show Long Description' : 'Show Short Description'}
-        />
-        <FormControlLabel
-          control={
-            <Switch
-              checked={smartInsights}
-              onChange={() => setSmartInsights((prev) => !prev)}
-              color="primary"
-            />
-          }
-          label='Smart Insight Mode'
-        />
-      </Box> */}
+     
       <Grid container spacing={4}>
         {/* FOBO Level */}
         <Grid item xs={12} md={12} lg={6}>

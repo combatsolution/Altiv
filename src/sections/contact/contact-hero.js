@@ -182,7 +182,7 @@ const CONTACT_SECTIONS = [
     icon: <LinkedInIcon sx={{ fontSize: 40, color: '#0a66c2' }} />,
     items: [
       {
-        href: 'https://linkedin.com/company/altiv-ai',
+        href: 'https://www.linkedin.com/company/altivai',
         icon: <LinkedInIcon sx={{ fontSize: 32, color: '#0a66c2' }} />,
       },
       {
