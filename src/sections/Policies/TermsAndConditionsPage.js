@@ -1,88 +1,146 @@
 import React from 'react';
-import {
-  Box,
-  Container,
-  Typography,
-  Button,
-  Divider,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Container, Typography, Divider, useMediaQuery, useTheme } from '@mui/material';
+import Link from '@mui/material/Link';
 
 export default function TermsAndConditionsPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const sections = [
+    {
+      title: '1. Using Our Platform',
+      content: [
+        'You must be at least 18 years old to use Altiv.AI.',
+        'Keep your account information accurate and up-to-date.',
+        "You're responsible for maintaining the confidentiality of your password.",
+        "Don't share your account with others - we take this very seriously.",
+      ],
+    },
+    {
+      title: '2. Your Content',
+      content: [
+        'You own your content (resumes, career information, etc.).',
+        'By uploading content, you give us permission to use it to provide our services.',
+        "We won't share your personal information without your consent.",
+        'You agree not to upload anything illegal or harmful.',
+      ],
+    },
+    {
+      title: '3. Our Services',
+      content: [
+        'We provide career intelligence and AI readiness assessment tools.',
+        'Services are provided "as is" and may be updated periodically.',
+        'We may modify or discontinue features with reasonable notice.',
+        'Program content is for your personal use only – do not share via any means including screenshots, recordings, or password/account sharing.',
+      ],
+    },
+    {
+      title: '4. Payment Terms',
+      content: [
+        'Prices are clearly displayed before purchase.',
+        'All payments are processed securely.',
+        'Refunds are available according to our refund policy.',
+        'We may change pricing with advance notice.',
+      ],
+    },
+    {
+      title: '5. Privacy',
+      content: [
+        'We protect your personal information.',
+        'We use data to improve your experience.',
+        'See our Privacy Policy for details.',
+        'We use cookies to enhance functionality.',
+      ],
+    },
+    {
+      title: '6. Acceptable Use',
+      content: [
+        "Don't violate any laws.",
+        "Don't share inappropriate content.",
+        "Don't try to break or hack the platform.",
+        "Don't resell or copy our content.",
+        "Don't harass others or spam.",
+      ],
+    },
+    {
+      title: '7. Cancellation',
+      content: [
+        'You can cancel your subscription anytime.',
+        'We may terminate accounts that violate these terms.',
+      ],
+    },
+    {
+      title: '8. Disclaimer',
+      content: [
+        "We work hard to provide accurate information but can't guarantee perfection.",
+        'Career outcomes depend on many factors beyond our control.',
+        "We're not responsible for third-party content or links.",
+      ],
+    },
+    {
+      title: '9. Changes to Terms',
+      content: [
+        'We may update these terms.',
+        'We’ll notify you of significant changes.',
+        'Continued use means you accept any changes.',
+      ],
+    },
+    {
+      title: '10. Contact Us',
+      content: [
+        <>
+          Questions? Contact us at{' '}
+          <Link href="mailto:legal@altiv.ai" color="primary" underline="hover">
+            legal@altiv.ai
+          </Link>
+          .
+        </>,
+      ],
+    },
+  ];
+
   return (
     <Container maxWidth="md" sx={{ py: 6 }}>
-      {/* Centered Headline */}
       <Typography
         variant="h4"
         fontWeight="bold"
-        gutterBottom
         align="center"
+        gutterBottom
         sx={{ color: '#2A4DD0' }}
       >
-        Terms and Conditions
+        Terms of Use
       </Typography>
 
-      <Typography
-        variant="subtitle1"
-        color="text.secondary"
-        mb={4}
-        align="center"
-      >
-        Last Updated: June 21, 2025
+      <Typography variant="subtitle1" color="text.secondary" mb={4} 
+      align="center">
+        Last Updated: June 2025
       </Typography>
 
       <Divider sx={{ mb: 4 }} />
 
-      {[
-        {
-          title: '1. Introduction',
-          content:
-            'Welcome to our application. By accessing or using our service, you agree to be bound by these terms.',
-        },
-        {
-          title: '2. Use of the Service',
-          content:
-            'You agree to use the service only for lawful purposes and in accordance with these Terms.',
-        },
-        {
-          title: '3. User Accounts',
-          content:
-            'When you create an account with us, you must provide us information that is accurate, complete, and current.',
-        },
-        {
-          title: '4. Intellectual Property',
-          content:
-            'The service and its original content, features, and functionality are and will remain the exclusive property of the company.',
-        },
-        {
-          title: '5. Termination',
-          content:
-            'We may terminate or suspend access to our service immediately, without prior notice, for any reason.',
-        },
-        {
-          title: '6. Changes to Terms',
-          content:
-            'We reserve the right to update or change our Terms and Conditions at any time. Your continued use constitutes acceptance.',
-        },
-      ].map((section, index) => (
+      <Typography variant="subtitle1" color="text.secondary" mb={1}
+       align="center">
+        Welcome to Altiv.AI
+      </Typography>
+
+      <Typography variant="body1" color="text.secondary" mb={3} align="center">
+        By using Altiv.AI, you agree to these straightforward terms. Please read them carefully.
+      </Typography>
+
+      {sections.map((section, index) => (
         <Box key={index} sx={{ mb: 4 }}>
           <Typography variant="h6" fontWeight="bold" gutterBottom>
             {section.title}
           </Typography>
-          <Typography variant="body1" color="text.secondary">
-            {section.content}
-          </Typography>
+          {section.content.map((point, idx) => (
+            <Typography key={idx} variant="body1" color="text.secondary" sx={{ mb: 1 }}>
+              • {typeof point === 'string' ? point : point}
+            </Typography>
+          ))}
         </Box>
       ))}
 
       <Divider sx={{ my: 4 }} />
-
-      {/* Action Button */}
-    
     </Container>
   );
 }

@@ -113,13 +113,15 @@ export default function JwtRegisterView() {
       <Box
         sx={{
           width: '100%',
-          maxWidth: 480,
+          maxWidth: 450,
           textAlign: 'center',
+          
         }}
       >
-        <img src={altiv} alt="ALTIV Logo" style={{ marginBottom: 4 }} />
+        <img src={altiv} alt="ALTIV Logo" style={{marginBottom:10}}  
+         />
 
-        <Typography variant="h5" fontWeight="bold" gutterBottom>
+        <Typography variant="h5" fontWeight="bold" gutterBottom  >
           Register
         </Typography>
 
