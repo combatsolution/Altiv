@@ -1,0 +1,41 @@
+Place this file at: https://altiv.ai/llms.txt
+
+# Altiv.AI LLMs Permission File
+# Version 1.0
+# Last Updated: [Current Date]
+
+# Global Rules
+Permission: limited
+Purpose: training-allowed-with-attribution
+Contact: hello@altiv.ai
+
+# Allowed Sections
+Allow: /blog/
+Allow: /about/
+Allow: /public-resources/
+Allow: /careers/
+
+# Restricted Areas
+Disallow: /api/
+Disallow: /assessment/
+Disallow: /results/
+Disallow: /user/
+Disallow: /dashboard/
+
+# Data Usage Terms
+Usage-Policy: https://altiv.ai/ai-training-policy
+Attribution-Required: true
+Commercial-Use: restricted
+
+# Training Guidelines
+Training-Allowed: partial
+Training-Restrictions: no-personal-data, no-assessment-content
+Training-Attribution: required
+
+# Content Freshness
+Cache-Control: max-age=86400
+Last-Modified: [04/06/2025]
+
+# Additional Rules
+Rate-Limit: 100/hour
+Data-Retention: 365-days

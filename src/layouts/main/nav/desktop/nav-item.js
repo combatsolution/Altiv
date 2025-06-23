@@ -10,8 +10,8 @@ import { RouterLink } from 'src/routes/components';
 // components
 import Iconify from 'src/components/iconify';
 //
-import { ListItem } from './styles';
 import { trackEvent } from 'src/utils/google-analytics';
+import { ListItem } from './styles';
 
 // ----------------------------------------------------------------------
 
