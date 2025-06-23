@@ -458,14 +458,21 @@ export default function FoboLevelTaskDistribution() {
     );
   };
 
-
+  const itemVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.2 }, // stagger by 0.2s per item
+    }),
+  };
   return (!isLoading && !isError) ? (
     <Box
       px={{ xs: 2, md: '12%' }}
       py={2}
       sx={{ position: 'relative', width: '100%', maxWidth: '100%' }}
     >
-     
+
       <Grid container spacing={4}>
         {/* FOBO Level */}
         <Grid item xs={12} md={12} lg={6}>
@@ -509,47 +516,44 @@ export default function FoboLevelTaskDistribution() {
             </Box>
             {!selectedSection ? (
               <Stack spacing={1.5} direction="column">
-                {/* Automation */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box sx={{ width: 20, height: 20, bgcolor: '#EF4444' }} />
-                  <Typography
-                    sx={{
-                      fontFamily: 'Roboto',
-                      fontSize: { xs: '12px', md: '12px', lg: '12px' },
-                      color: '#090808',
-                    }}
+                {[
+                  {
+                    color: '#EF4444',
+                    title: 'Automation',
+                    desc: 'AI can do these tasks by itself, replacing human work',
+                  },
+                  {
+                    color: '#FFB95A',
+                    title: 'Augmentation',
+                    desc: 'AI works with you, like a smart assistant helping you do better work',
+                  },
+                  {
+                    color: '#84CC16',
+                    title: 'Human',
+                    desc: "Tasks that AI can't likely replace",
+                  },
+                ].map((item, i) => (
+                  <m.div
+                    key={item.title}
+                    custom={i}
+                    initial="hidden"
+                    animate="visible"
+                    variants={itemVariants}
                   >
-                    <strong>Automation:</strong> AI can do these tasks by itself, replacing human work
-                  </Typography>
-                </Box>
-
-                {/* Augmentation */}
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
-                  <Box sx={{ width: 20, height: 20, bgcolor: '#FFB95A' }} />
-                  <Typography
-                    sx={{
-                      fontFamily: 'Roboto',
-                      fontSize: { xs: '12px', md: '12px' },
-                      color: '#090808',
-                    }}
-                  >
-                    <strong>Augmentation:</strong> AI works with you, like a smart assistant helping you do better work
-                  </Typography>
-                </Box>
-
-                {/* Human */}
-                <Box sx={{ display: 'flex', alignItems: 'left', gap: 1, mt: 1 }}>
-                  <Box sx={{ width: 20, height: 20, bgcolor: '#84CC16' }} />
-                  <Typography
-                    sx={{
-                      fontFamily: 'Roboto',
-                      fontSize: { xs: '12px', md: '12px' },
-                      color: '#090808',
-                    }}
-                  >
-                    <strong>Human:</strong> Tasks that AI can&apos;t likely replace
-                  </Typography>
-                </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Box sx={{ width: 20, height: 20, bgcolor: item.color }} />
+                      <Typography
+                        sx={{
+                          fontFamily: 'Roboto',
+                          fontSize: { xs: '12px', md: '12px', lg: '12px' },
+                          color: '#090808',
+                        }}
+                      >
+                        <strong>{item.title}:</strong> {item.desc}
+                      </Typography>
+                    </Box>
+                  </m.div>
+                ))}
               </Stack>
             ) : (
               <Box sx={{ width: '100%' }}>
