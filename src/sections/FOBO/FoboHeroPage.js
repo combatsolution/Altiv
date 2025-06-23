@@ -1,4 +1,4 @@
- /* eslint-disable no-shadow */
+/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import CryptoJS from 'crypto-js';
 import { useNavigate } from 'react-router-dom';
@@ -176,6 +176,11 @@ export default function FoboHeroPage() {
     }
   };
 
+
+  const handleCloseModel = () => {
+    setOpen(false);
+  }
+
   return (
     <Box
       sx={{
@@ -188,7 +193,7 @@ export default function FoboHeroPage() {
     >
       <Grid
         container
-        spacing={{ xs: 4, sm: 6, md:4 }}
+        spacing={{ xs: 4, sm: 6, md: 4 }}
         alignItems="center"
         justifyContent="center"
       >

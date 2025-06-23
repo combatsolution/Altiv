@@ -17,6 +17,7 @@ import Instagramlogo from 'src/images/Instagramlogo.png';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { trackEvent } from 'src/utils/google-analytics';
 
 const jobseekers = [
   { name: 'Search Jobs', href: paths.comingSoon },
@@ -63,8 +64,8 @@ export default function Footer() {
 
   const handleNavClick = (category, action, title, path) => {
     trackEvent({
-      category: category,
-      action: action,
+      category,
+      action,
       label: title,
       value: path
     });
