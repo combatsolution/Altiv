@@ -52,6 +52,8 @@ export default function CustomDonutChart({
     };
 
     frame = requestAnimationFrame(animate);
+
+    
     return () => cancelAnimationFrame(frame);
   }, []);
 
