@@ -283,7 +283,7 @@ export default function AboutUsPage() {
         </Typography>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
           <Button
-            onClick={() => navigate('/?retry=true')}
+            onClick={() => navigate('/')}
             variant="contained"
             color="primary"
             size="large"

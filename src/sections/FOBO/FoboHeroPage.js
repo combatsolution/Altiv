@@ -35,6 +35,7 @@ import { paths } from 'src/routes/paths';
 import { m } from 'framer-motion';
 import { display } from '@mui/system';
 import { useSearchParams } from 'src/routes/hook';
+import { trackEvent } from 'src/utils/google-analytics';
 
 const MotionBox = m(Box);
 const MotionImage = m(Box);
@@ -71,7 +72,15 @@ export default function FoboHeroPage() {
     }
   }, [searchParams])
 
-  const handleOpenModal = () => setOpen(true);
+  const handleOpenModal = () => {
+    setOpen(true);
+    trackEvent({
+      category: 'CTA Clicked',
+      action: 'button clicked',
+      label: 'Check your score',
+      value: 'resume upload popup'
+    });
+  }
 
   const handleFileChange = (e) => {
     const f = e.target.files?.[0];
@@ -93,6 +102,12 @@ export default function FoboHeroPage() {
       await axiosInstance.delete(`/resumes/${id}`);
       setExistingResumes((prev) => prev.filter((resume) => resume.id !== id));
       if (selectedResumeId === id) setSelectedResumeId(null);
+      trackEvent({
+        category: 'Resume Deleted',
+        action: 'resume deleted',
+        label: 'Delete Resume',
+        value: 'resume deleted'
+      });
     } catch (err) {
       console.error('Delete error:', err);
       setError('Failed to delete resume.');
@@ -116,6 +131,12 @@ export default function FoboHeroPage() {
       );
 
       navigate(paths.dashboardPage(encryptedId));
+      trackEvent({
+        category: 'Navigation',
+        action: 'Fobo score',
+        label: 'Continue to fobo score',
+        value: 'Fobo analysis page'
+      });
     } catch (err) {
       console.error('Error during encryption or navigation:', err);
     }
@@ -131,6 +152,12 @@ export default function FoboHeroPage() {
       if (response.data) {
         enqueueSnackbar('Upload successful', { variant: 'success' });
         setSelectedResumeId(response?.data?.id);
+        trackEvent({
+          category: 'Resume Uploaded',
+          action: 'Resume uploaded',
+          label: 'resume uploaded success',
+          value: 'resume uploaded'
+        });
       }
     } catch (uploadError) {
       console.error('Error while uploading resume', uploadError);
@@ -199,7 +226,7 @@ export default function FoboHeroPage() {
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
-          > 
+          >
             <Stack spacing={{ xs: 1, sm: 3, md: 1 }}>
               <Typography
                 fontWeight="bold"
@@ -207,7 +234,7 @@ export default function FoboHeroPage() {
                 sx={{
                   fontSize: { xs: '1rem', sm: '1.2rem', md: '1.5rem' },
                   textAlign: { xs: 'center', md: 'left' }
-                  
+
                 }}
               >
                 From AI Anxiety to AI Advantage

@@ -57,6 +57,15 @@ export default function Footer() {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
+  const handleNavClick = (category, action, title, path) => {
+    trackEvent({
+      category: category,
+      action: action,
+      label: title,
+      value: path
+    });
+  }
+
   // const handleSubscribe = async () => {
   //   try {
   //     const now = new Date().toISOString();
@@ -79,25 +88,29 @@ export default function Footer() {
 
 
   const handleSubscribe = async () => {
-  try {
-    const now = new Date().toISOString();
-    const payload = {
-      email,
-      createdAt: now,
-      updatedAt: now,
-      deletedAt: now,
-      isDeleted: false,
-    };
+    try {
+      const now = new Date().toISOString();
+      const payload = {
+        email,
+        createdAt: now,
+        updatedAt: now,
+        deletedAt: now,
+        isDeleted: false,
+      };
 
-    await axiosInstance.post('/wait-lists', payload);
-    // enqueueSnackbar('Subscription successful!', { variant: 'success' });
-    setEmail('');
-    navigate(paths.SubscriptionSuccess); // ✅ navigate after success
-  } catch (error) {
-    console.error('Subscription failed:', error);
-    enqueueSnackbar('Subscription failed. Please try again.', { variant: 'error' });
-  }
-};
+      await axiosInstance.post('/wait-lists', payload);
+      // enqueueSnackbar('Subscription successful!', { variant: 'success' });
+      if(email && email !== ''){
+        handleNavClick('Newsletter Subscription', 'Button clicked', 'Subscribed', email);
+      }
+      setEmail('');
+      handleNavClick('Newsletter Subscription', 'Button clicked', 'Subscribed', email);
+      navigate(paths.SubscriptionSuccess); // ✅ navigate after success
+    } catch (error) {
+      console.error('Subscription failed:', error);
+      enqueueSnackbar('Subscription failed. Please try again.', { variant: 'error' });
+    }
+  };
 
   return (
     <Box
@@ -127,6 +140,7 @@ export default function Footer() {
                 key={item.name}
                 component={RouterLink}
                 href={item.href}
+                onClick={() => handleNavClick('Navigation', 'Link clicked', item?.name, item?.href)}
                 color="text.secondary"
                 variant="body2"
                 sx={{
@@ -152,6 +166,7 @@ export default function Footer() {
                 key={item.name}
                 component={RouterLink}
                 href={item.href}
+                onClick={() => handleNavClick('Navigation', 'Link clicked', item?.name, item?.href)}
                 color="text.secondary"
                 variant="body2"
                 sx={{
@@ -177,6 +192,7 @@ export default function Footer() {
                 key={item.name}
                 component={RouterLink}
                 href={item.href}
+                onClick={() => handleNavClick('Navigation', 'Link clicked', item?.name, item?.href)}
                 color="text.secondary"
                 variant="body2"
                 sx={{
@@ -202,6 +218,7 @@ export default function Footer() {
                 key={item.name}
                 component={RouterLink}
                 href={item.href}
+                onClick={() => handleNavClick('Navigation', 'Link clicked', item?.name, item?.href)}
                 color="text.secondary"
                 variant="body2"
                 sx={{
@@ -227,6 +244,7 @@ export default function Footer() {
                 key={item.name}
                 component={RouterLink}
                 href={item.href}
+                onClick={() => handleNavClick('Navigation', 'Link clicked', item?.name, item?.href)}
                 color="text.secondary"
                 variant="body2"
                 sx={{
@@ -310,7 +328,7 @@ export default function Footer() {
 
             <Button
               variant="outlined"
-           onClick={handleSubscribe} 
+              onClick={handleSubscribe}
               sx={{
                 height: '40px',
                 borderRadius: '4px',
