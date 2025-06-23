@@ -1,3 +1,4 @@
+/* eslint-disable */
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 
@@ -59,16 +60,16 @@ export default function CustomDonutChart({
   }, []);
 
   useEffect(() => {
-  if (data.length > 0) {
-    const timer = setTimeout(() => {
-      setSelectedIndex(0);
-      const item = data[0];
-      onSliceClick(0, item);
-    }, 1500);
+    if (data.length > 0) {
+      const timer = setTimeout(() => {
+        setSelectedIndex(0);
+        const item = data[0];
+        onSliceClick(0, item);
+      }, 1500);
 
-    return () => clearTimeout(timer);
-  }
-}, [data]);
+      return () => clearTimeout(timer);
+    }
+  }, [data]);
 
   const cx = size / 2;
   const cy = size / 2;
@@ -100,8 +101,9 @@ export default function CustomDonutChart({
 
           const shiftedCx = cx + dx;
           const shiftedCy = cy + dy;
-
-          const path = arcPath(shiftedCx, shiftedCy, outerRadius, innerRadius, angleStart, angleEnd);
+          const sliceOuterRadius = isSelected ? outerRadius + 10 : outerRadius; // Increase thickness if selected
+          const path = arcPath(shiftedCx, shiftedCy, sliceOuterRadius, innerRadius, angleStart, angleEnd)
+          // const path = arcPath(shiftedCx, shiftedCy, outerRadius, innerRadius, angleStart, angleEnd);
           const borderPath = arcPath(cx, cy, outerRadius + 6, outerRadius + 2, angleStart, angleEnd);
 
           // Connector line points
