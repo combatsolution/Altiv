@@ -23,6 +23,7 @@ import { navConfig } from './config-navigation';
 import NavMobile from './nav/mobile';
 import NavDesktop from './nav/desktop';
 import { SettingsButton, HeaderShadow, LoginButton } from '../_common';
+import { trackEvent } from 'src/utils/google-analytics';
 
 export default function Header() {
   const { user, loading, logout } = useAuthContext(); // Assume logout is provided by useAuthContext
@@ -120,7 +121,7 @@ export default function Header() {
                   borderRadius: 2,
                 }}
               >
-               <Typography
+                <Typography
                   variant="body2"
                   sx={{
                     cursor: 'pointer',
@@ -133,7 +134,7 @@ export default function Header() {
                 </Typography>
 
 
-                
+
                 <Typography
                   variant="body2"
                   sx={{
@@ -146,7 +147,7 @@ export default function Header() {
                   My Jobs
                 </Typography>
 
-            
+
                 <Typography
                   variant="body2"
                   sx={{
@@ -182,6 +183,12 @@ export default function Header() {
                     target="_self"
                     rel="noopener"
                     href={paths.auth.jwt.register}
+                    onClick={() => trackEvent({
+                      category: 'Navigation',
+                      action: 'button clicked',
+                      label: 'Sign Up',
+                      value: 'sign-up-page'
+                    })}
                     sx={{
                       bgcolor: '#2A4DD0',
                       textTransform: 'none',
@@ -225,16 +232,16 @@ export default function Header() {
                         }}
                       />
                     </IconButton>
-                  ) 
-                  }
+                  )
+                }
 
-                  {isProfilePage && <Button variant="none" onClick={() => handleSignout()} sx={{ mr: 1,  color: "#0040D8", }}>
-                      Sign out
-                    </Button>}
+                {isProfilePage && <Button variant="none" onClick={() => handleSignout()} sx={{ mr: 1, color: "#0040D8", }}>
+                  Sign out
+                </Button>}
 
                 {!user && <LoginButton />}
 
-                {}
+                { }
 
                 {!mdUp && <NavMobile offsetTop={offsetTop} data={navConfig} />}
               </Stack>

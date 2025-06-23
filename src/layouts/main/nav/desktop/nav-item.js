@@ -11,12 +11,22 @@ import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
 //
 import { ListItem } from './styles';
+import { trackEvent } from 'src/utils/google-analytics';
 
 // ----------------------------------------------------------------------
 
 export const NavItem = forwardRef(
   ({ item, open, offsetTop, active, subItem, externalLink, ...other }, ref) => {
     const { title, path, children } = item;
+
+    const handleNavClick = () => {
+      trackEvent({
+        category: 'Navigation',
+        action: 'Link Click',
+        label: title,
+        value: path
+      });
+    }
 
     const renderContent = (
       <ListItem
@@ -50,7 +60,7 @@ export const NavItem = forwardRef(
 
     // Default
     return (
-      <Link component={RouterLink} href={path} underline="none">
+      <Link component={RouterLink} href={path} underline="none" onClick={() => handleNavClick()}>
         {renderContent}
       </Link>
     );

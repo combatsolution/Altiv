@@ -17,6 +17,7 @@ import Instagramlogo from 'src/images/Instagramlogo.png';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { trackEvent } from 'src/utils/google-analytics';
 
 const jobseekers = [
   { name: 'Search Jobs', href: paths.comingSoon },
@@ -61,18 +62,37 @@ export default function Footer() {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
 
-  const validateEmail = (value) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(value);
-  };
+  const handleNavClick = (category, action, title, path) => {
+    trackEvent({
+      category,
+      action,
+      label: title,
+      value: path
+    });
+  }
+
+  // const handleSubscribe = async () => {
+  //   try {
+  //     const now = new Date().toISOString();
+  //     const payload = {
+  //       email,
+  //       createdAt: now,
+  //       updatedAt: now,
+  //       deletedAt: now,
+  //       isDeleted: false,
+  //     };
+
+  //     await axiosInstance.post('/wait-lists', payload);
+  //     enqueueSnackbar('Subscription successful!', { variant: 'success' });
+  //     setEmail('');
+  //   } catch (error) {
+  //     console.error('Subscription failed:', error);
+  //     enqueueSnackbar('Subscription failed. Please try again.', { variant: 'error' });
+  //   }
+  // };
+
 
   const handleSubscribe = async () => {
-    if (!validateEmail(email)) {
-      setEmailError('Please enter a valid email address');
-      enqueueSnackbar('Please enter a valid email address.', { variant: 'error' });
-      return; 
-    }
-
     try {
       const now = new Date().toISOString();
       const payload = {
@@ -84,9 +104,13 @@ export default function Footer() {
       };
 
       await axiosInstance.post('/wait-lists', payload);
+      // enqueueSnackbar('Subscription successful!', { variant: 'success' });
+      if(email && email !== ''){
+        handleNavClick('Newsletter Subscription', 'Button clicked', 'Subscribed', email);
+      }
       setEmail('');
-      setEmailError('');
-      setOpenModal(true);
+      handleNavClick('Newsletter Subscription', 'Button clicked', 'Subscribed', email);
+      navigate(paths.SubscriptionSuccess); // ✅ navigate after success
     } catch (error) {
       console.error('Subscription failed:', error);
       enqueueSnackbar('Subscription failed. Please try again.', { variant: 'error' });
@@ -121,6 +145,7 @@ export default function Footer() {
                 key={item.name}
                 component={RouterLink}
                 href={item.href}
+                onClick={() => handleNavClick('Navigation', 'Link clicked', item?.name, item?.href)}
                 color="text.secondary"
                 variant="body2"
                 sx={{
@@ -146,6 +171,7 @@ export default function Footer() {
                 key={item.name}
                 component={RouterLink}
                 href={item.href}
+                onClick={() => handleNavClick('Navigation', 'Link clicked', item?.name, item?.href)}
                 color="text.secondary"
                 variant="body2"
                 sx={{
@@ -171,6 +197,7 @@ export default function Footer() {
                 key={item.name}
                 component={RouterLink}
                 href={item.href}
+                onClick={() => handleNavClick('Navigation', 'Link clicked', item?.name, item?.href)}
                 color="text.secondary"
                 variant="body2"
                 sx={{
@@ -196,6 +223,7 @@ export default function Footer() {
                 key={item.name}
                 component={RouterLink}
                 href={item.href}
+                onClick={() => handleNavClick('Navigation', 'Link clicked', item?.name, item?.href)}
                 color="text.secondary"
                 variant="body2"
                 sx={{
@@ -221,6 +249,7 @@ export default function Footer() {
                 key={item.name}
                 component={RouterLink}
                 href={item.href}
+                onClick={() => handleNavClick('Navigation', 'Link clicked', item?.name, item?.href)}
                 color="text.secondary"
                 variant="body2"
                 sx={{

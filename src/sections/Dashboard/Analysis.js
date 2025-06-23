@@ -18,6 +18,7 @@ import { MotionContainer, varBounce } from 'src/components/animate';
 import SeverErrorIllustration from 'src/assets/illustrations/sever-error-illustration';
 import { RouterLink } from 'src/routes/components';
 import { paths } from 'src/routes/paths';
+import { trackEvent } from 'src/utils/google-analytics';
 
 export default function FoboLevelTaskDistribution() {
   const navigate = useNavigate();
@@ -81,9 +82,23 @@ export default function FoboLevelTaskDistribution() {
         ];
 
         setPieData(newPieData);
+
         if (response?.data?.data?.FOBO_Score === null) {
           setIsError(true);
+          trackEvent({
+            category: 'FOBO score error',
+            action: 'FOBO score fetched failed',
+            label: 'FOBO page',
+            value: 'FOBO score is null'
+          });
         }
+
+        trackEvent({
+          category: 'FOBO score fetched',
+          action: 'FOBO score fetched successfully',
+          label: 'FOBO page',
+          value: 'FOBO fetched success'
+        });
         setIsLoading(false);
       }
     } catch (error) {
@@ -95,7 +110,7 @@ export default function FoboLevelTaskDistribution() {
 
   useEffect(() => {
     if (resumeId) {
-      const decryptedId = CryptoJS.AES.decrypt(resumeId, process.env.REACT_APP_ENCRYPTION_KEY).toString(CryptoJS.enc.Utf8); 
+      const decryptedId = CryptoJS.AES.decrypt(resumeId, process.env.REACT_APP_ENCRYPTION_KEY).toString(CryptoJS.enc.Utf8);
       fetchProfileAnalyticsData(decryptedId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -120,7 +135,7 @@ export default function FoboLevelTaskDistribution() {
   };
 
   const onRetry = () => {
-    navigate('/?retry=true', {replace: true})
+    navigate('/?retry=true', { replace: true })
   }
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, index }) => {
@@ -581,7 +596,15 @@ export default function FoboLevelTaskDistribution() {
         {/* CTA Button */}
         <Grid item xs={12} textAlign="left">
           <Button
-          // onClick={()=> navigate(paths.pricing)}
+            onClick={() => {
+              navigate(paths.comingSoon);
+              trackEvent({
+                category: 'CTA clicked',
+                action: 'button clicked',
+                label: 'Beat FOBO now',
+                value: 'beat foboo now'
+              });
+            }}
             variant="contained"
             sx={{
               backgroundColor: '#2C47D3',
