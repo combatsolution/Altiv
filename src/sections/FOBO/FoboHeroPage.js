@@ -28,7 +28,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import heroImg from 'src/Fogoimages/beatfobo.webp';
+import heroImg from 'src/Fogoimages/beatfobo2.webp';
 import axiosInstance from 'src/utils/axios';
 import { Upload } from 'src/components/upload';
 import { useSnackbar } from 'notistack';

@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { trackEvent } from 'src/utils/google-analytics';
+import { useForm } from 'react-hook-form';
 
 const jobseekers = [
   { name: 'Search Jobs', href: paths.comingSoon },
@@ -56,47 +57,47 @@ const AboutAltiv = [
 ];
 
 export default function Footer() {
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm();
+  const { enqueueSnackbar } = useSnackbar();
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
-  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
+
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleNavClick = (category, action, title, path) => {
     trackEvent({
       category,
       action,
       label: title,
-      value: path
+      value: path,
     });
-  }
+  };
 
-  // const handleSubscribe = async () => {
-  //   try {
-  //     const now = new Date().toISOString();
-  //     const payload = {
-  //       email,
-  //       createdAt: now,
-  //       updatedAt: now,
-  //       deletedAt: now,
-  //       isDeleted: false,
-  //     };
+  const onSubmit = async (data) => {
+   const { email: submittedEmail } = data;
 
-  //     await axiosInstance.post('/wait-lists', payload);
-  //     enqueueSnackbar('Subscription successful!', { variant: 'success' });
-  //     setEmail('');
-  //   } catch (error) {
-  //     console.error('Subscription failed:', error);
-  //     enqueueSnackbar('Subscription failed. Please try again.', { variant: 'error' });
-  //   }
-  // };
+   if (!submittedEmail || !validateEmail(submittedEmail)) {
+      enqueueSnackbar('Please enter a valid email address.', { variant: 'error' });
 
+      setError('email', {
+        type: 'manual',
+        message: 'Invalid email format',
+      });
 
-  const handleSubscribe = async () => {
+      return;
+    }
+
     try {
       const now = new Date().toISOString();
       const payload = {
-        email,
+       email: submittedEmail,
         createdAt: now,
         updatedAt: now,
         deletedAt: now,
@@ -104,16 +105,12 @@ export default function Footer() {
       };
 
       await axiosInstance.post('/wait-lists', payload);
-      // enqueueSnackbar('Subscription successful!', { variant: 'success' });
-      if(email && email !== ''){
-        handleNavClick('Newsletter Subscription', 'Button clicked', 'Subscribed', email);
-      }
-      setEmail('');
-      handleNavClick('Newsletter Subscription', 'Button clicked', 'Subscribed', email);
-      navigate(paths.SubscriptionSuccess); // ✅ navigate after success
+
+      enqueueSnackbar('Subscribed successfully!', { variant: 'success' });
+      setOpenModal(true); // ✅ Show modal instead of redirect
     } catch (error) {
-      console.error('Subscription failed:', error);
       enqueueSnackbar('Subscription failed. Please try again.', { variant: 'error' });
+      console.error(error);
     }
   };
 
@@ -287,8 +284,9 @@ export default function Footer() {
             <TextField
               placeholder="Email Address"
               size="small"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...register('email')}
+              error={Boolean(errors.email)}
+              helperText={errors.email?.message}
               sx={{
                 flexGrow: 1,
                 '& .MuiOutlinedInput-root': {
@@ -310,8 +308,8 @@ export default function Footer() {
             />
 
             <Button
+              onClick={handleSubmit(onSubmit)}
               variant="outlined"
-              onClick={handleSubscribe}
               sx={{
                 height: '40px',
                 borderRadius: '4px',
@@ -396,9 +394,26 @@ export default function Footer() {
       </Grid>
 
       {/* ✅ Modal after successful subscription */}
-     <Modal open={openModal} onClose={() => setOpenModal(false)}>
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'background.paper', borderRadius: 2, boxShadow: 24, p: 4, textAlign: 'center', maxWidth: 400, width: '90%' }}>
-          <IconButton onClick={() => setOpenModal(false)} sx={{ position: 'absolute', top: 8, right: 8 }}>
+      <Modal open={openModal} onClose={() => setOpenModal(false)}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper',
+            borderRadius: 2,
+            boxShadow: 24,
+            p: 4,
+            textAlign: 'center',
+            maxWidth: 400,
+            width: '90%',
+          }}
+        >
+          <IconButton
+            onClick={() => setOpenModal(false)}
+            sx={{ position: 'absolute', top: 8, right: 8 }}
+          >
             <CloseIcon />
           </IconButton>
           <CheckCircleIcon sx={{ fontSize: 60, color: 'success.main', mb: 2 }} />
@@ -408,7 +423,13 @@ export default function Footer() {
           <Typography variant="body1" gutterBottom>
             Your subscription has been added successfully.
           </Typography>
-          <Button variant="contained" color='primary' halfWidth sx={{ mt: 3, borderRadius: 5, textTransform: 'none' }} onClick={() => setOpenModal(false)}>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ mt: 3, borderRadius: 5, textTransform: 'none' }}
+            onClick={() => setOpenModal(false)}
+          >
             Close
           </Button>
         </Box>
