@@ -18,12 +18,13 @@ import { paths } from 'src/routes/paths';
 import { useAuthContext } from 'src/auth/hooks';
 import { varHover } from 'src/components/animate';
 import Altivlogo from 'src/images/Altivlogo.png';
+import { trackEvent } from 'src/utils/google-analytics';
 import { HEADER } from '../config-layout';
 import { navConfig } from './config-navigation';
 import NavMobile from './nav/mobile';
 import NavDesktop from './nav/desktop';
 import { SettingsButton, HeaderShadow, LoginButton } from '../_common';
-import { trackEvent } from 'src/utils/google-analytics';
+
 
 export default function Header() {
   const { user, loading, logout } = useAuthContext(); // Assume logout is provided by useAuthContext

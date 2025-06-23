@@ -16,29 +16,6 @@ import { MotionContainer, varFade } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 
-const CONTACTS = [
-  {
-    country: 'Bali',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(239) 555-0108',
-  },
-  {
-    country: 'London',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(319) 555-0115',
-  },
-  {
-    country: 'Prague',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(252) 555-0126',
-  },
-  {
-    country: 'Moscow',
-    address: '508 Bridle',
-    phoneNumber: '(307) 555-0133',
-  },
-];
-
 const CONTACT_SECTIONS = [
   {
     title: 'Connect With Us',
@@ -112,32 +89,55 @@ export default function ContactHero() {
             </m.div>
           </Stack>
 
-          {/* CONTACTS SECTION */}
-          <Stack
-            spacing={4}
-            direction={{ xs: 'column', sm: 'row' }}
-            justifyContent={{ xs: 'center', md: 'flex-start' }}
-            flexWrap="wrap"
-            sx={{ mt: 5, color: 'common.white' }}
-          >
-            {CONTACTS.map((contact) => (
-              <Stack key={contact.country} sx={{ maxWidth: 200 }}>
-                <m.div variants={varFade().in}>
-                  <Typography variant="h6" gutterBottom>
-                    {contact.country}
-                  </Typography>
-                </m.div>
+          {/* Media Inquiries Section */}
+          <m.div variants={varFade().inUp}>
+            <Stack
+              spacing={1}
+              sx={{
+                mt: 3,
+                px: { xs: 2, md: 0 },
+                textAlign: { xs: 'center', md: 'left' },
+                maxWidth: { md: 700 },
+                mx: { xs: 'auto', md: 0 },
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{ color: 'common.white', fontWeight: 600, opacity: 0.85 }}
+              >
+                Media Inquiries
+              </Typography>
 
-                <m.div variants={varFade().inRight}>
-                  <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                    {contact.address}
-                  </Typography>
-                </m.div>
-              </Stack>
-            ))}
-          </Stack>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'common.white',
+                  opacity: 0.8,
+                  fontSize: { xs: 14, md: 16 },
+                  lineHeight: 1.7,
+                }}
+              >
+                For press and media inquiries, please email us with <em>&quot;Media&quot;</em> in
+                the subject line.
+              </Typography>
 
-          {/* SOCIAL + EMAIL SECTION */}
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'common.white',
+                  opacity: 0.8,
+                  fontSize: { xs: 14, md: 16 },
+                  lineHeight: 1.7,
+                }}
+              >
+                Your success is our priority. Whether you have questions about our programs, want to
+                discuss your AI-readiness assessment, or need guidance on getting started, we&quot;
+                re here to help you navigate your career evolution in the AI era.{' '}
+              </Typography>
+            </Stack>
+          </m.div>
+
+          {/* CONTACTS + SOCIAL SECTION */}
           <Stack
             direction={{ xs: 'column', md: 'row' }}
             spacing={{ xs: 4, md: 6 }}
@@ -146,42 +146,6 @@ export default function ContactHero() {
             sx={{ mt: 6 }}
           >
             <Stack direction="column" spacing={2} sx={{ color: 'common.white' }}>
-              {/* Contact Us Heading */}
-              <m.div
-                initial={{ x: 100, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-              >
-                <Typography variant="h5" sx={{ opacity: 0.8 }}>
-                  Contact Us
-                </Typography>
-              </m.div>
-
-              {/* Social Icons */}
-              {CONTACT_SECTIONS.map((section) => (
-                <m.div key={section.title} variants={varFade().in}>
-                  <Stack direction="row" spacing={3} justifyContent={{ xs: 'center', md: 'flex-start' }}>
-                    {section.items.map((item, index) => (
-                      <Box
-                        key={index}
-                        component="a"
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          '&:hover': { opacity: 0.8 },
-                        }}
-                      >
-                        {item.icon}
-                      </Box>
-                    ))}
-                  </Stack>
-                </m.div>
-              ))}
-
               {/* Email */}
               <m.div
                 initial={{ x: 100, opacity: 0 }}
@@ -210,6 +174,46 @@ export default function ContactHero() {
                   📧 hello@altiv.ai
                 </Typography>
               </m.div>
+
+              {/* Contact Us Heading */}
+              <m.div
+                initial={{ x: 100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+              >
+                <Typography variant="h5" sx={{ opacity: 0.8 }}>
+                  Contact Us
+                </Typography>
+              </m.div>
+
+              {/* Social Icons */}
+              {CONTACT_SECTIONS.map((section) => (
+                <m.div key={section.title} variants={varFade().in}>
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    justifyContent={{ xs: 'center', md: 'flex-start' }}
+                  >
+                    {section.items.map((item, index) => (
+                      <Box
+                        key={index}
+                        component="a"
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          '&:hover': { opacity: 0.8 },
+                        }}
+                      >
+                        {item.icon}
+                      </Box>
+                    ))}
+                  </Stack>
+                </m.div>
+              ))}
             </Stack>
           </Stack>
         </Box>

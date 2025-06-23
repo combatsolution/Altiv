@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import Link from '@mui/material/Link';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import { trackEvent } from 'src/utils/google-analytics';
 // routes
 import { RouterLink } from 'src/routes/components';
 // components
 import Iconify from 'src/components/iconify';
 //
 import { ListItem } from './styles';
-import { trackEvent } from 'src/utils/google-analytics';
+
 
 // ----------------------------------------------------------------------
 
