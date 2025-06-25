@@ -574,7 +574,7 @@ export default function FoboLevelTaskDistribution() {
                       title: 'Human',
                       desc: "Tasks that AI can't likely replace",
                     },
-                  ].find((item) => item.title === selectedSection?.name);
+                  ].find((newItem) => newItem.title === selectedSection?.name);
 
                   return item ? (
                     <m.div
