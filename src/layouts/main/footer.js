@@ -30,7 +30,7 @@ const jobseekers = [
 
 const AICareerCoach = [
   { name: 'FOBO', href: paths.fobo },
-  { name: 'Career Compass', href: paths.careerResume },
+  { name: 'Career Compass', href: paths.comingSoon  },
   { name: 'Smart Job Feed', href: paths.comingSoon },
   { name: 'Job Match Boost', href: paths.comingSoon },
 ];
@@ -107,7 +107,7 @@ export default function Footer() {
 
       await axiosInstance.post('/wait-lists', payload);
 
-      enqueueSnackbar('Subscribed successfully!', { variant: 'success' });
+      // enqueueSnackbar('Subscribed successfully!', { variant: 'success' });
       setOpenModal(true);
       reset(); // ✅ Clear the input
     } catch (error) {
