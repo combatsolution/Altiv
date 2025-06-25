@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Card, CardContent, Avatar, useMediaQuery, useTheme } from '@mui/material';
 import { m } from 'framer-motion';
-
 import avt1 from 'src/Fogoimages/Aisha.webp';
 import avt2 from 'src/Fogoimages/David.webp';
 import avt3 from 'src/Fogoimages/Jennifer.webp';
@@ -54,8 +53,8 @@ function TestimonialCard({ testimonial, isWhite }) {
     <Card
       sx={{
         width: { xs: '340px', sm: 300, md: 360, lg: 400 },
-        minWidth: { xs: '90%', sm: 300 },
-        height: { xs: 'auto', sm: 450 },
+        minWidth: { xs: '90%', sm: 290 },
+        height: { xs: 'auto', sm: 390 },
         bgcolor: isWhite ? '#fff' : '#4F9CF9',
         color: isWhite ? '#000' : '#fff',
         boxShadow: isWhite ? 6 : 3,
@@ -77,7 +76,7 @@ function TestimonialCard({ testimonial, isWhite }) {
           alignItems: 'center',
         }}
       >
-        <Avatar src={testimonial.icon} sx={{ width: 70, height: 70 }} />
+        <Avatar src={testimonial.icon} sx={{ width: 90, height: 90 }} />
         <Typography
           variant="body2"
           sx={{
@@ -217,7 +216,7 @@ export default function TestimonialCarousel() {
         whileInView={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
         viewport={{ once: true }}
-        src="/assets/images/impact.svg"
+        src="/assets/images/impact.svg" 
         alt="impact"
         sx={{
            

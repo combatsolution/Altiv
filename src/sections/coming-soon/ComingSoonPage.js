@@ -22,13 +22,17 @@ export default function ComingSoonPage() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { enqueueSnackbar } = useSnackbar();
 
-  const methods = useForm();
+  const methods = useForm({
+    defaultValues: {
+      email: '',
+    },
+  });
   const { handleSubmit, reset, setError } = methods;
 
   const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
-
+  
   const validateEmail = (value) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(value);
@@ -59,11 +63,20 @@ export default function ComingSoonPage() {
       };
 
       await axiosInstance.post('/wait-lists', payload);
-      reset();
+
+      reset(); // ✅ Clear input after success
       setOpenModal(true);
     } catch (err) {
       console.error('Subscription failed', err);
-      enqueueSnackbar('Failed to subscribe. Please try again later.', { variant: 'error' });
+
+      // ✅ Handle email already exists
+      if (err.response && err.response.status === 409) {
+        enqueueSnackbar('Email already exists.', { variant: 'warning' });
+      } else {
+        enqueueSnackbar('Failed to subscribe. Please try again later.', { variant: 'error' });
+      }
+
+      reset(); // ✅ Also clear the input even if email already exists
     } finally {
       setLoading(false);
     }
@@ -136,7 +149,7 @@ export default function ComingSoonPage() {
             name="email"
             placeholder="Enter your email"
             fullWidth={isMobile}
-            sx={{
+            sx={{ 
               maxWidth: 500,
               height: 60,
               '& .MuiInputBase-input': {
@@ -210,11 +223,12 @@ export default function ComingSoonPage() {
             Congratulations!
           </Typography>
           <Typography variant="body1" gutterBottom>
-            Your subscription has been added successfully.
+            Thank you. Your registration for notifications was successful. You’ll be
+            the first to know about important updates.
           </Typography>
           <Button
             variant="contained"
-            color='primary'
+            color="primary"
             fullWidth
             sx={{ mt: 3, borderRadius: 5, textTransform: 'none' }}
             onClick={() => setOpenModal(false)}

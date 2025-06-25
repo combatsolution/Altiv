@@ -64,7 +64,7 @@ export default function Footer() {
     formState: { errors },
   } = useForm();
   const { enqueueSnackbar } = useSnackbar();
-  const [email, setEmail] = useState('');
+  // const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
