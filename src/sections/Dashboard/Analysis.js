@@ -581,9 +581,13 @@ export default function FoboLevelTaskDistribution() {
 
         {/* Recommendations */}
         <Grid item xs={12}>
-          <Typography variant="h6" fontWeight="bold" gutterBottom>
-            Recommended Growth Strategies {`${data?.user ? `For ${data?.user.fullName}` : ''}`}
-          </Typography>
+          {data.user ? <Typography variant="h6" fontWeight="bold" gutterBottom>
+            Recommended Growth Strategies for <span style={{ color: 'royalblue' }}>{data.user?.fullName}</span>
+          </Typography> :
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              Recommended Growth Strategies
+            </Typography>
+          }
           <Box mt={2} sx={{ backgroundColor: '#F5FAFF', borderRadius: 2, p: 2 }}>
             {data?.Strategy.length > 0 &&
               data?.Strategy.map((rec, i) => (
