@@ -557,6 +557,48 @@ export default function FoboLevelTaskDistribution() {
               </Stack>
             ) : (
               <Box sx={{ width: '100%' }}>
+                {(() => {
+                  const item = [
+                    {
+                      color: '#EF4444',
+                      title: 'Automation',
+                      desc: 'AI can do these tasks by itself, replacing human work',
+                    },
+                    {
+                      color: '#FFB95A',
+                      title: 'Augmentation',
+                      desc: 'AI works with you, like a smart assistant helping you do better work',
+                    },
+                    {
+                      color: '#84CC16',
+                      title: 'Human',
+                      desc: "Tasks that AI can't likely replace",
+                    },
+                  ].find((item) => item.title === selectedSection?.name);
+
+                  return item ? (
+                    <m.div
+                      key={item.title}
+                      custom={0}
+                      initial="hidden"
+                      animate="visible"
+                      variants={itemVariants}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, justifyContent: 'start' }}>
+                        <Box sx={{ width: 20, height: 20, bgcolor: item.color }} />
+                        <Typography
+                          sx={{
+                            fontFamily: 'Roboto',
+                            fontSize: { xs: '12px', md: '12px', lg: '12px' },
+                            color: '#090808',
+                          }}
+                        >
+                          <strong>{item.title}:</strong> {item.desc}
+                        </Typography>
+                      </Box>
+                    </m.div>
+                  ) : null;
+                })()}
                 <Typography variant="h6" fontWeight="bold" gutterBottom>
                   Tasks distribution for {selectedSection?.name}
                 </Typography>
