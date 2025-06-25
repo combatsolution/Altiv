@@ -190,7 +190,8 @@ export default function Datasecuritypage() {
               >
                 <Button
                   variant="contained"
-                  onClick={() => navigate('/?retry=true')}
+                  // onClick={() => navigate('/?retry=true')}
+                   onClick={() => navigate('/privacy-policy')}
                   size="large"
                   sx={{
                     px: { xs: 3, sm: 4 },

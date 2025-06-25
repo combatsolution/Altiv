@@ -11,13 +11,13 @@ function FoboDefineSection() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  return (
+  return (  
     <Box
       sx={{
         mx: 'auto',
         bgcolor: '#fff',
-        px: { xs: 2, sm: 4, md: 8 },
-        py: { xs: 6, sm: 8, md: 10 },
+        px: { xs: 2, sm: 4, md: 4 },
+        py: { xs: 6, sm: 8, md: 4 },
         maxWidth: '1400px',
         overflowX: 'hidden',
       }}

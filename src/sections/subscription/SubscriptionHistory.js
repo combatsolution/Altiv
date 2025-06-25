@@ -17,31 +17,31 @@ import {
 
 const subscriptionData = {
   sms: [
-    {
-      date: 'Nov 21, 2016',
-      amount: 'GHS 0.00',
-      volume: '1000.0 Units',
-      type: 'bonus',
-      description: 'Bonus',
-      status: 'Reconciled',
-    },
-    {
-      date: 'Dec 11, 2015',
-      amount: 'USD 0.00',
-      volume: '450.0 Units',
-      type: 'topup',
-      description: 'No remarks',
-      status: 'Reconciled',
-    },
+    // {
+    //   date: 'Nov 21, 2016',
+    //   amount: 'GHS 0.00',
+    //   volume: '1000.0 Units',
+    //   type: 'bonus',
+    //   description: 'Bonus',
+    //   status: 'Reconciled',
+    // },
+    // {
+    //   date: 'Dec 11, 2015',
+    //   amount: 'USD 0.00',
+    //   volume: '450.0 Units',
+    //   type: 'topup',
+    //   description: 'No remarks',
+    //   status: 'Reconciled',
+    // },
   ],
-  software: [
-    {
-      date: 'Jun 5, 2017',
-      amount: 'GHS 506.34',
-      duration: '3 Months',
-      description: 'No remarks',
-      status: 'Pending',
-    },
+  software: [   
+    // {
+    //   date: 'Jun 5, 2017',
+    //   amount: 'GHS 506.34',
+    //   duration: '3 Months',
+    //   description: 'No remarks',
+    //   status: 'Pending',
+    // },
   ],
 };
 

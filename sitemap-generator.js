@@ -2,9 +2,13 @@ import fs from 'fs';
 import { SitemapStream, streamToPromise } from 'sitemap';
 
 export const links = [
+
+
   { url: '/', changefreq: 'daily', priority: 1.0 },
   { url: '/about-us', changefreq: 'monthly', priority: 0.7 },
   { url: '/contact-us', changefreq: 'monthly', priority: 0.7 },
+
+  
   { url: '/faqs', changefreq: 'yearly', priority: 0.5 },
   
   // FOBO & Resume
