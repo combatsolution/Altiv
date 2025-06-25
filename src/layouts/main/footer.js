@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { alpha } from '@mui/material/styles';
+import { useForm, Controller } from 'react-hook-form';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
@@ -18,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { trackEvent } from 'src/utils/google-analytics';
-import { useForm } from 'react-hook-form';
+
 
 const jobseekers = [
   { name: 'Search Jobs', href: paths.comingSoon },
@@ -58,9 +59,11 @@ const AboutAltiv = [
 
 export default function Footer() {
   const {
+    control,
     register,
     handleSubmit,
     setError,
+    reset, // ✅ Add this
     formState: { errors },
   } = useForm();
   const { enqueueSnackbar } = useSnackbar();
@@ -81,23 +84,21 @@ export default function Footer() {
   };
 
   const onSubmit = async (data) => {
-   const { email: submittedEmail } = data;
+    const { email: submittedEmail } = data;
 
-   if (!submittedEmail || !validateEmail(submittedEmail)) {
+    if (!submittedEmail || !validateEmail(submittedEmail)) {
       enqueueSnackbar('Please enter a valid email address.', { variant: 'error' });
-
       setError('email', {
         type: 'manual',
         message: 'Invalid email format',
       });
-
       return;
     }
 
     try {
       const now = new Date().toISOString();
       const payload = {
-       email: submittedEmail,
+        email: submittedEmail,
         createdAt: now,
         updatedAt: now,
         deletedAt: now,
@@ -107,10 +108,18 @@ export default function Footer() {
       await axiosInstance.post('/wait-lists', payload);
 
       enqueueSnackbar('Subscribed successfully!', { variant: 'success' });
-      setOpenModal(true); // ✅ Show modal instead of redirect
+      setOpenModal(true);
+      reset(); // ✅ Clear the input
     } catch (error) {
-      enqueueSnackbar('Subscription failed. Please try again.', { variant: 'error' });
-      console.error(error);
+      console.error('Subscription failed', error);
+
+      if (error.response?.status === 409) {
+        enqueueSnackbar('Email already exists.', { variant: 'warning' });
+      } else {
+        enqueueSnackbar('Subscription failed. Please try again.', { variant: 'error' });
+      }
+
+      reset(); // ✅ Clear input even on failure
     }
   };
 
@@ -281,30 +290,37 @@ export default function Footer() {
               alignItems: 'flex-start',
             }}
           >
-            <TextField
-              placeholder="Email Address"
-              size="small"
-              {...register('email')}
-              error={Boolean(errors.email)}
-              helperText={errors.email?.message}
-              sx={{
-                flexGrow: 1,
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '4px',
-                  height: '40px',
-                },
-                '& fieldset': {
-                  borderColor: 'divider',
-                },
-                '&:hover fieldset': {
-                  borderColor: 'primary.main',
-                },
-                input: {
-                  py: 1,
-                  px: 2,
-                },
-              }}
-              fullWidth
+            <Controller
+              name="email"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  placeholder="Email Address"
+                  size="small"
+                  error={Boolean(errors.email)}
+                  helperText={errors.email?.message}
+                  sx={{
+                    flexGrow: 1,
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '4px',
+                      height: '40px',
+                    },
+                    '& fieldset': {
+                      borderColor: 'divider',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'primary.main',
+                    },
+                    input: {
+                      py: 1,
+                      px: 2,
+                    },
+                  }}
+                  fullWidth
+                />
+              )}
             />
 
             <Button
