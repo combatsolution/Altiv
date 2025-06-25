@@ -375,8 +375,8 @@ export default function MyProfile() {
             sx={{ width: '100%', height: 300, objectFit: 'cover' }}
           />
           {(
-            (profileData?.fullName && profileData?.fullName !== '') ||
-            (profileData?.designation && profileData?.designation !== '')
+            (profileData?.fullName && profileData?.fullName !== '') 
+            // (profileData?.designation && profileData?.designation !== '')
           ) && (
               <Paper
                 elevation={3}
@@ -398,11 +398,11 @@ export default function MyProfile() {
                   {(profileData?.fullName && profileData?.fullName !== '') && (
                     <Typography fontWeight="600">{profileData.fullName}</Typography>
                   )}
-                  {(profileData?.designation && profileData?.designation !== '') && (
+                  {/* {(profileData?.designation && profileData?.designation !== '') && (
                     <Typography fontSize="0.75rem" color="text.secondary">
                       {profileData.designation}
                     </Typography>
-                  )}
+                  )} */}
                 </Box>
               </Paper>
             )}

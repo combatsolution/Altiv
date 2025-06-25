@@ -34,7 +34,7 @@
     {
       title: 'Analyze Your Resume',
       icon: <Iconify icon="solar:notebook-bold-duotone" />,
-      path: `${paths.comingSoon}?type=analyze`,
+      path: `${paths.fobo}?type=analyze`,
       
     },
     
