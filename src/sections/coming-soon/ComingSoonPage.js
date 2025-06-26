@@ -31,6 +31,7 @@ export default function ComingSoonPage() {
 
   const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [modalMsg, setModalMsg] = useState('');
   const navigate = useNavigate();
   
   const validateEmail = (value) => {
