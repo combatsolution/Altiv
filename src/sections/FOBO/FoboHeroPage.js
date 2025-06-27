@@ -157,11 +157,6 @@ export default function FoboHeroPage() {
   };
 
 
-
-
-
-
-
   const handleUploadResume = async (file) => {
     try {
       setIsLoading(true);

@@ -18,7 +18,7 @@ import { paths } from 'src/routes/paths';
 // ----------------------------------------------------------------------
 
 export default function PricingCard({ card, sx, ...other }) {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const { subscription, price, caption, lists, labelAction } = card;
 
   const basic = subscription === 'basic';
@@ -26,7 +26,7 @@ export default function PricingCard({ card, sx, ...other }) {
   const starter = subscription === 'starter';
 
   const premium = subscription === 'premium';
-  
+
   const renderIcon = (
     <Stack direction="row" alignItems="center" justifyContent="space-between">
       <Box sx={{ width: 48, height: 48 }}>
@@ -34,7 +34,7 @@ export default function PricingCard({ card, sx, ...other }) {
         {starter && <PlanStarterIcon />}
         {premium && <PlanPremiumIcon />}
       </Box>
-    
+
       {starter && <Label color="info">POPULAR</Label>}
     </Stack>
   );
@@ -51,10 +51,12 @@ export default function PricingCard({ card, sx, ...other }) {
   const renderPrice = basic ? (
     <Typography variant="h2">Free</Typography>
   ) : (
-    <Stack direction="row">
+    <Stack direction="row" justifyContent="center" alignItems="flex-end">
       <Typography variant="h4">$</Typography>
 
-      <Typography variant="h2">{price}</Typography>
+      <Typography variant="h2" color="primary">
+        {price}
+      </Typography>
 
       <Typography
         component="span"
@@ -86,7 +88,57 @@ export default function PricingCard({ card, sx, ...other }) {
             typography: 'body2',
           }}
         >
-          <Iconify icon="eva:checkmark-fill" width={16} sx={{ mr: 1 }} />
+          <Iconify
+            icon="eva:checkmark-fill"
+            width={24}
+            sx={{
+              mr: 1,
+              color: 'green',
+              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.3) rotate(5deg)',
+                boxShadow: '0 0 8px rgba(0, 128, 0, 0.6)',
+              },
+            }}
+          />
+
+          {item}
+        </Stack>
+      ))}
+    </Stack>
+  );
+  const renderList2 = (
+    <Stack spacing={2}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Box component="span" sx={{ typography: 'overline' }}>
+          Outcomes
+        </Box>
+      </Stack>
+
+      {lists.map((item) => (
+        <Stack
+          key={item}
+          spacing={1}
+          direction="row"
+          alignItems="center"
+          sx={{
+            typography: 'body2',
+          }}
+        >
+          <Iconify
+            icon="eva:checkmark-fill"
+            width={24}
+            sx={{
+              mr: 1,
+              color: 'green',
+              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.3) rotate(5deg)',
+                boxShadow: '0 0 8px rgba(0, 128, 0, 0.6)',
+              },
+            }}
+          />
+
           {item}
         </Stack>
       ))}
@@ -96,8 +148,11 @@ export default function PricingCard({ card, sx, ...other }) {
   return (
     <Stack
       spacing={5}
+      alignItems="center"
+      textAlign="center"
       sx={{
         p: 5,
+        height: '100%',
         borderRadius: 2,
         boxShadow: (theme) => ({
           xs: theme.customShadows.card,
@@ -130,17 +185,55 @@ export default function PricingCard({ card, sx, ...other }) {
 
       {renderList}
 
-      <Button
-  onClick={() => navigate(paths.payment)}
-  fullWidth
-  size="large"
-  variant="contained"
-  disabled={basic}
-  color={starter ? 'primary' : 'inherit'}
->
-  {labelAction}
-</Button>
+      {/* Transparent Grey Divider */}
+      <Divider
+        sx={{
+          width: '100%',
+          maxWidth: 1000,
+          mx: 'auto',
+          borderColor: 'rgba(145, 158, 171, 0.2)', // transparent grey
+          mb: 1,
+        }}
+      />
 
+      {renderList2}
+
+      {/* Pay Now + Learn More buttons */}
+      <Stack spacing={2} sx={{ pt: 1 }}>
+        <Button
+          onClick={() => navigate(paths.payment)}
+          fullWidth
+          size="large"
+          variant="contained"
+          disabled={basic}
+          sx={{
+            backgroundColor: '#0040D8',
+            color: '#fff',
+            '&:hover': {
+              backgroundColor: '#0033aa',
+            },
+          }}
+        >
+          {labelAction}
+        </Button>
+
+        <Button
+          fullWidth
+          size="large"
+          variant="outlined"
+          onClick={() => navigate(`${paths.about}?plan=${subscription}`)}
+          sx={{
+            border: '1px solid #0040D8',
+            color: '#0040D8',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 64, 216, 0.04)', // light hover effect
+              borderColor: '#0040D8',
+            },
+          }}
+        >
+          Learn More
+        </Button>
+      </Stack>
     </Stack>
   );
 }

@@ -167,42 +167,163 @@ export const _homePlans = [...Array(3)].map((_, index) => ({
 
 // ----------------------------------------------------------------------
 
+// export const _pricingPlans = [
+//   {
+//     subscription: 'basic',
+//     price: 0,
+//     caption: 'Forever',
+//     lists: ['3 Prototypes', '3 Boards', 'Up To 5 Team Members'],
+//     labelAction: 'Current Plan',
+//   },
+//   {
+//     subscription: 'starter',
+//     price: 4.99,
+//     caption: 'Saving $24 a year',
+//     lists: [
+
+//       '3 Prototypes',
+//       '3 Boards',
+//       'Up To 5 Team Members',
+//       // 'Advanced Security',
+//       // 'Issue Escalation',
+//     ],
+//     labelAction: 'Choose Starter',
+//   },
+//   {
+//     subscription: 'premium',
+//     price: 9.99,
+//     caption: 'Saving $124 a year',
+//     lists: [
+//       '3 Prototypes',
+//       '3 Boards',
+//       'Up To 5 Team Members',
+//       // 'Advanced Security',
+//       // 'Issue Escalation',
+//       // 'Issue Development license',
+//       // 'Permissions & workflows',
+//     ],
+//     labelAction: 'Choose Premium',
+//   },
+// ];
+
 export const _pricingPlans = [
   {
-    subscription: 'basic',
+    subscription: 'Quick Start',
     price: 0,
-    caption: 'Forever',
-    lists: ['3 Prototypes', '3 Boards', 'Up To 5 Team Members'],
+    caption: 'AI Foundation Builder',
+    lists: ['3 Campaigns', 'Email Support', '5 Team Members'],
+    list: [
+      'Master 2 key AI marketing tools',
+      'Get comfortable with AI assisted workflows',
+      'Earn "AI Marketing Foundation" badge',
+    ],
     labelAction: 'Current Plan',
+    category: 'Marketing',
   },
   {
-    subscription: 'starter',
+    subscription: 'Transform',
     price: 4.99,
-    caption: 'Saving $24 a year',
-    lists: [
-      
-      '3 Prototypes',
-      '3 Boards',
-      'Up To 5 Team Members',
-      // 'Advanced Security',
-      // 'Issue Escalation',
+    caption: 'AI Implementation Accelerator',
+    lists: ['10 Campaigns', 'Analytics Dashboard', '10 Team Members'],
+    list: [
+      'Master 4 advanced AI marketing tools',
+      'Complete 1 workplace project',
+      'Lead 1 AI-driven initiative',
     ],
     labelAction: 'Choose Starter',
+    category: 'Marketing',
   },
   {
-    subscription: 'premium',
+    subscription: 'Edge',
     price: 9.99,
-    caption: 'Saving $124 a year',
-    lists: [
-      '3 Prototypes',
-      '3 Boards',
-      'Up To 5 Team Members',
-      // 'Advanced Security',
-      // 'Issue Escalation',
-      // 'Issue Development license',
-      // 'Permissions & workflows',
+    caption: 'AI Leadership Accelerator',
+    lists: ['Unlimited Campaigns', 'Dedicated Support', 'Unlimited Team Members'],
+     list: [
+      'Master comprehensive AI marketing stack',
+      'Lead department-wide AI initiatives',
+      'Build AI strategy roadmap',
     ],
     labelAction: 'Choose Premium',
+    category: 'Marketing',
+  },
+
+  {
+    subscription: 'Quick Start',
+    price: 0,
+    caption: 'AI Data Foundation Builder',
+    lists: ['3 Projects', 'Community Support', '5 Users'],
+    list: [
+      'Master 2 key AI marketing tools',
+      'Get comfortable with AI assisted workflows',
+      'Earn "AI Marketing Foundation" badge',
+    ],
+    labelAction: 'Current Plan',
+    category: 'Data Science',
+  },
+  {
+    subscription: 'Transform',
+    price: 5.99,
+    caption: 'AI Data Implementation Accelerator',
+    lists: ['10 Projects', 'Priority Support', '10 Users'],
+    list: [
+      'Master 4 advanced AI marketing tools',
+      'Complete 1 workplace project',
+      'Lead 1 AI-driven initiative',
+    ],
+    labelAction: 'Choose Starter',
+    category: 'Data Science',
+  },
+  {
+    subscription: 'Edge',
+    price: 12.99,
+    caption: 'AI Data Leadership Accelerator',
+    lists: ['All Features', '24/7 Support', 'Unlimited Users'],
+    list: [
+      'Master comprehensive AI marketing stack',
+      'Lead department-wide AI initiatives',
+      'Build AI strategy roadmap',
+    ],
+    labelAction: 'Choose Premium',
+    category: 'Data Science',
+  },
+
+  {
+    subscription: 'Quick Start',
+    price: 0,
+    caption: 'AI Product Foundation Builder',
+    lists: ['3 Products', 'Community Feedback', '5 Users'],
+    list: [
+      'Master 2 key AI marketing tools',
+      'Get comfortable with AI assisted workflows',
+      'Earn "AI Marketing Foundation" badge',
+    ],
+    labelAction: 'Current Plan',
+    category: 'Product Management',
+  },
+  {
+    subscription: 'Transform',
+    price: 6.99,
+    caption: 'AI Product Implementation Accelerator',
+    lists: ['10 Products', 'Advanced Feedback', '10 Users'],
+    list: [
+      'Master 4 advanced AI marketing tools',
+      'Complete 1 workplace project',
+      'Lead 1 AI-driven initiative',
+    ],
+    labelAction: 'Choose Starter',
+    category: 'Product Management',
+  },
+  {
+    subscription: 'Edge',
+    price: 13.99,
+    caption: 'AI Product Leadership Accelerator',
+    lists: ['Unlimited Products', 'Dedicated PM Tools', 'Unlimited Users'],
+     list: [
+      'Master comprehensive AI marketing stack',
+      'Lead department-wide AI initiatives',
+      'Build AI strategy roadmap',
+    ],
+    category: 'Product Management',
   },
 ];
 
