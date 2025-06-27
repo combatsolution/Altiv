@@ -19,6 +19,7 @@ import SeverErrorIllustration from 'src/assets/illustrations/sever-error-illustr
 import { RouterLink } from 'src/routes/components';
 import { paths } from 'src/routes/paths';
 import { trackEvent } from 'src/utils/google-analytics';
+import { id } from 'date-fns/locale';
 
 export default function FoboLevelTaskDistribution() {
   const navigate = useNavigate();
@@ -38,83 +39,89 @@ export default function FoboLevelTaskDistribution() {
   const [viewDetails, setViewDetails] = useState(false);
   const [smartInsights, setSmartInsights] = useState(true);
   const baseColor = pieData?.find((d) => d.name === selectedSection?.name)?.color || '#ccc';
+  const encryptedId = sessionStorage.getItem('xbszya');
+  const encryptedLinkedInUrl = sessionStorage.getItem('xbszyaef');
+  const [decryptedId, setDecryptedId] = useState('');
+  const [decryptedLinkedinUrl, setDecryptedLinkedinUrl] = useState('');
+
+  console.log('id details', encryptedId, decryptedId);
+  console.log('url details', decryptedLinkedinUrl, encryptedLinkedInUrl);
 
   // Generate 4 shades (lighter to darker)
   const shades = [0.4, 0.6, 0.8, 1].map(opacity =>
     tinycolor(baseColor).setAlpha(opacity).toRgbString()
   );
 
-  const fetchProfileAnalyticsData = async (id) => {
+  // Decryption
+  useEffect(() => {
     try {
-      setIsLoading(true);
-      setActiveIndex(null);
-      setSelectedSection(null);
-      const response = await axiosInstance.post(`/profile-analytics`, {
-        resumeId: Number(id),
-        viewDetails,
-        smartInsights
-      });
+      if (encryptedId) {
+        const decodedId = decodeURIComponent(encryptedId); // 👈 decode first
+        const bytes = CryptoJS.AES.decrypt(
+          decodedId,
+          process.env.REACT_APP_ENCRYPTION_KEY
+        );
+        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+        console.log('Decrypted ID:', decrypted);
+        if (decrypted) setDecryptedId(decrypted);
+      }
+
+      if (encryptedLinkedInUrl) {
+        const decodedUrl = decodeURIComponent(encryptedLinkedInUrl); // 👈 decode first
+        const bytes = CryptoJS.AES.decrypt(
+          decodedUrl,
+          process.env.REACT_APP_ENCRYPTION_KEY
+        );
+        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+        console.log('Decrypted URL:', decrypted);
+        if (decrypted) setDecryptedLinkedinUrl(decrypted);
+      }
+    } catch (error) {
+      console.error("Decryption failed:", error);
+    }
+  }, [encryptedId, encryptedLinkedInUrl]);
+
+
+  // API Call
+  useEffect(() => {
+    if (decryptedId || decryptedLinkedinUrl) {
+      fetchProfileAnalyticsData();
+    }
+  }, [decryptedId, decryptedLinkedinUrl]);
+
+  // API Function
+  const fetchProfileAnalyticsData = async () => {
+    if (!decryptedId && !decryptedLinkedinUrl) {
+      setIsError(true);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    setActiveIndex(null);
+    setSelectedSection(null);
+
+    const inputData = {
+      viewDetails,
+      smartInsights,
+      ...(decryptedId && { resumeId: Number(decryptedId) }),
+      ...(decryptedLinkedinUrl && { linkedInUrl: decryptedLinkedinUrl }),
+    };
+
+    try {
+      const response = await axiosInstance.post(`/profile-analytics`, inputData);
       if (response?.data.success) {
-        console.log('data', response?.data?.data);
-        setData(response?.data?.data);
-        const newPieData = [
-          {
-            name: 'Augmentation',
-            label: 'Augmentation',
-            value: response?.data?.data?.Augmented_Score,
-            color: '#FFB95A',
-            fieldName: 'Task_Distribution_Augmentation',
-          },
-          {
-            name: 'Automation',
-            label: 'Automation',
-            value: response?.data?.data?.Automated_Score,
-            color: '#EF4444',
-            fieldName: 'Task_Distribution_Automation',
-          },
-          {
-            name: 'Human',
-            label: 'Human',
-            value: response?.data?.data?.Human_Score,
-            color: '#84CC16',
-            fieldName: 'Task_Distribution_Human',
-          },
-        ];
-
-        setPieData(newPieData);
-
-        if (response?.data?.data?.FOBO_Score === null) {
-          setIsError(true);
-          trackEvent({
-            category: 'FOBO score error',
-            action: 'FOBO score fetched failed',
-            label: 'FOBO page',
-            value: 'FOBO score is null'
-          });
-        }
-
-        trackEvent({
-          category: 'FOBO score fetched',
-          action: 'FOBO score fetched successfully',
-          label: 'FOBO page',
-          value: 'FOBO fetched success'
-        });
-        setIsLoading(false);
+        // handle success
+      } else {
+        setIsError(true);
       }
     } catch (error) {
       console.error('error', error);
       setIsError(true);
+    } finally {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (resumeId) {
-      const decryptedId = CryptoJS.AES.decrypt(resumeId, process.env.REACT_APP_ENCRYPTION_KEY).toString(CryptoJS.enc.Utf8);
-      fetchProfileAnalyticsData(decryptedId);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resumeId, viewDetails, smartInsights]);
 
   const handlePieClick = (index, item) => {
     setSelectedSection(item);
@@ -251,7 +258,7 @@ export default function FoboLevelTaskDistribution() {
 
 
     return (
-      <Box sx={{ position: 'relative', width: '100%', maxWidth: {xs: '350px', md: '470px', sm: '300px'}, margin: 'auto' }}>
+      <Box sx={{ position: 'relative', width: '100%', maxWidth: { xs: '350px', md: '470px', sm: '300px' }, margin: 'auto' }}>
         {/* Gauge Chart */}
         <GaugeChart
           id="fobo-gauge"

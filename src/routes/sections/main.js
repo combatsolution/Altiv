@@ -90,7 +90,7 @@ export const mainRoutes = [
           </RolesAuthRoute>
         ),
       },
-      { path: 'dashboard-page/:resumeId', element: <DashboardPage /> },
+      { path: 'dashboard-page', element: <DashboardPage /> },
       { path: 'coming-soon', element: <Comingsoon /> },
       //  {path: 'resume-view', element: < ResumeViewPage/>},
       { path: 'privacy-policy', element: <Policy /> },

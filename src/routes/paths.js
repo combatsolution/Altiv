@@ -36,7 +36,7 @@ export const paths = {
 
   fobo:'/fobo',
   // comingsoonPage:'/comingsoon-Page',
-  dashboardPage:(resumeId) => `/dashboard-page/${resumeId}`, 
+  dashboardPage:`/dashboard-page`, 
   ResumeView: '/resume-view', 
   Profile:'/Profile',
   comingSoon: '/coming-soon',  

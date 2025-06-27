@@ -112,8 +112,12 @@ export default function FoboHeroPage() {
   };
 
   const handleContinue = () => {
-    if (!selectedResumeId && !selectedFile) {
-      enqueueSnackbar('Please select or upload a resume.', { variant: 'error' });
+    if (
+      !selectedFile &&
+      !selectedResumeId &&
+      (!linkedInUrl || linkedInUrl.trim() === '')
+    ) {
+      enqueueSnackbar('Please upload details.', { variant: 'error' });
       return;
     }
 
@@ -121,11 +125,26 @@ export default function FoboHeroPage() {
       const key = process.env.REACT_APP_ENCRYPTION_KEY;
       if (!key) throw new Error('Encryption key not set');
 
-      const encryptedId = encodeURIComponent(
-        CryptoJS.AES.encrypt(String(selectedResumeId), key).toString()
-      );
+      let encryptedId = '';
+      let encryptedLinkedInUrl = '';
 
-      navigate(paths.dashboardPage(encryptedId));
+      // Encrypt if selectedResumeId exists (regardless of file presence)
+      if (selectedResumeId) {
+        encryptedId = encodeURIComponent(
+          CryptoJS.AES.encrypt(String(selectedResumeId), key).toString()
+        );
+        sessionStorage.setItem('xbszya', encryptedId);
+      }
+
+      // Encrypt if LinkedIn URL is present and not empty
+      if (linkedInUrl && linkedInUrl.trim() !== '') {
+        encryptedLinkedInUrl = encodeURIComponent(
+          CryptoJS.AES.encrypt(linkedInUrl.trim(), key).toString()
+        );
+        sessionStorage.setItem('xbszyaef', encryptedLinkedInUrl);
+      }
+
+      navigate(paths.dashboardPage);
       trackEvent({
         category: 'Navigation',
         action: 'Fobo score',
@@ -438,7 +457,11 @@ export default function FoboHeroPage() {
             variant="contained"
             fullWidth
             onClick={handleContinue}
-            disabled={!selectedFile && !selectedResumeId}
+            disabled={
+              !selectedFile &&
+              !selectedResumeId &&
+              (!linkedInUrl || linkedInUrl.trim() === '')
+            }
             sx={{
               bgcolor: indigo[500],
               '&:hover': { bgcolor: indigo[700] },
