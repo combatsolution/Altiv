@@ -95,8 +95,8 @@ export const mainRoutes = [
           </RolesAuthRoute>
         ),
       },
-      { path: 'dashboard-page/:resumeId', element: <DashboardPage /> },
       { path: 'coming-soon/:type', element: <Comingsoon /> },
+      { path: 'dashboard-page', element: <DashboardPage /> },
       { path: 'coming-soon', element: <Comingsoon /> },
       //  {path: 'resume-view', element: < ResumeViewPage/>},
       { path: 'privacy-policy', element: <Policy /> },

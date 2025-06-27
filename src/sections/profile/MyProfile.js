@@ -375,7 +375,7 @@ export default function MyProfile() {
             sx={{ width: '100%', height: 300, objectFit: 'cover' }}
           />
           {(
-            (profileData?.fullName && profileData?.fullName !== '') 
+            (profileData?.fullName && profileData?.fullName !== '')
             // (profileData?.designation && profileData?.designation !== '')
           ) && (
               <Paper
@@ -539,7 +539,7 @@ export default function MyProfile() {
                   Job Applications
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                 Coming Soon...
+                  Coming Soon...
                 </Typography>
               </Box>
 
@@ -610,8 +610,30 @@ export default function MyProfile() {
                     variant="contained"
                     color="primary"
                     onClick={() => {
-                      const encryptedId = CryptoJS.AES.encrypt(String(lastFOBOData?.resumeId), process.env.REACT_APP_ENCRYPTION_KEY).toString();
-                      navigate(paths.dashboardPage(encryptedId));
+                      const key = process.env.REACT_APP_ENCRYPTION_KEY;
+                      if (!key) {
+                        console.error('Encryption key is missing');
+                        return;
+                      }
+
+                      // Clear old values first
+                      sessionStorage.removeItem('xbszya');
+                      sessionStorage.removeItem('xbszyaef');
+
+                      // Encrypt and store the appropriate value
+                      if (lastFOBOData?.resumeId) {
+                        const encryptedId = encodeURIComponent(
+                          CryptoJS.AES.encrypt(String(lastFOBOData.resumeId), key).toString()
+                        );
+                        sessionStorage.setItem('xbszya', encryptedId);
+                      } else if (lastFOBOData?.linkedInUrl) {
+                        const encryptedUrl = encodeURIComponent(
+                          CryptoJS.AES.encrypt(lastFOBOData.linkedInUrl.trim(), key).toString()
+                        );
+                        sessionStorage.setItem('xbszyaef', encryptedUrl);
+                      }
+
+                      navigate(paths.dashboardPage);
                     }}
                     sx={{
                       position: 'absolute',

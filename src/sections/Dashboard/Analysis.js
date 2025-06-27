@@ -19,6 +19,7 @@ import SeverErrorIllustration from 'src/assets/illustrations/sever-error-illustr
 import { RouterLink } from 'src/routes/components';
 import { paths } from 'src/routes/paths';
 import { trackEvent } from 'src/utils/google-analytics';
+import { id } from 'date-fns/locale';
 
 export default function FoboLevelTaskDistribution() {
   const navigate = useNavigate();
@@ -38,22 +39,78 @@ export default function FoboLevelTaskDistribution() {
   const [viewDetails, setViewDetails] = useState(false);
   const [smartInsights, setSmartInsights] = useState(true);
   const baseColor = pieData?.find((d) => d.name === selectedSection?.name)?.color || '#ccc';
+  const encryptedId = sessionStorage.getItem('xbszya');
+  const encryptedLinkedInUrl = sessionStorage.getItem('xbszyaef');
+  const [decryptedId, setDecryptedId] = useState('');
+  const [decryptedLinkedinUrl, setDecryptedLinkedinUrl] = useState('');
 
   // Generate 4 shades (lighter to darker)
   const shades = [0.4, 0.6, 0.8, 1].map(opacity =>
     tinycolor(baseColor).setAlpha(opacity).toRgbString()
   );
 
-  const fetchProfileAnalyticsData = async (id) => {
+  // Decryption
+  useEffect(() => {
     try {
-      setIsLoading(true);
-      setActiveIndex(null);
-      setSelectedSection(null);
-      const response = await axiosInstance.post(`/profile-analytics`, {
-        resumeId: Number(id),
-        viewDetails,
-        smartInsights
-      });
+      if (encryptedId) {
+        const decodedId = decodeURIComponent(encryptedId);
+        const bytes = CryptoJS.AES.decrypt(
+          decodedId,
+          process.env.REACT_APP_ENCRYPTION_KEY
+        );
+        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+        console.log('Decrypted ID:', decrypted);
+        if (decrypted) setDecryptedId(decrypted);
+      }
+
+      if (encryptedLinkedInUrl) {
+        const decodedUrl = decodeURIComponent(encryptedLinkedInUrl);
+        const bytes = CryptoJS.AES.decrypt(
+          decodedUrl,
+          process.env.REACT_APP_ENCRYPTION_KEY
+        );
+        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+        console.log('Decrypted URL:', decrypted);
+        if (decrypted) setDecryptedLinkedinUrl(decrypted);
+      }
+
+      if(!encryptedId && !encryptedLinkedInUrl){
+        navigate('/?retry=true', {replace: true})
+      }
+    } catch (error) {
+      console.error("Decryption failed:", error);
+    }
+  }, [encryptedId, encryptedLinkedInUrl]);
+
+
+  // API Call
+  useEffect(() => {
+    if (decryptedId || decryptedLinkedinUrl) {
+      fetchProfileAnalyticsData();
+    }
+  }, [decryptedId, decryptedLinkedinUrl]);
+
+  // API Function
+  const fetchProfileAnalyticsData = async () => {
+    if (!decryptedId && !decryptedLinkedinUrl) {
+      setIsError(true);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    setActiveIndex(null);
+    setSelectedSection(null);
+
+    const inputData = {
+      viewDetails,
+      smartInsights,
+      ...(decryptedId && { resumeId: Number(decryptedId) }),
+      ...(decryptedLinkedinUrl && { linkedInUrl: decryptedLinkedinUrl }),
+    };
+
+    try {
+      const response = await axiosInstance.post(`/profile-analytics`, inputData);
       if (response?.data.success) {
         console.log('data', response?.data?.data);
         setData(response?.data?.data);
@@ -99,22 +156,17 @@ export default function FoboLevelTaskDistribution() {
           label: 'FOBO page',
           value: 'FOBO fetched success'
         });
-        setIsLoading(false);
+
+      } else {
+        setIsError(true);
       }
     } catch (error) {
       console.error('error', error);
       setIsError(true);
+    } finally {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (resumeId) {
-      const decryptedId = CryptoJS.AES.decrypt(resumeId, process.env.REACT_APP_ENCRYPTION_KEY).toString(CryptoJS.enc.Utf8);
-      fetchProfileAnalyticsData(decryptedId);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resumeId, viewDetails, smartInsights]);
 
   const handlePieClick = (index, item) => {
     setSelectedSection(item);
@@ -202,7 +254,7 @@ export default function FoboLevelTaskDistribution() {
     if (isMobile) {
       return {
         good: { top: '20%', left: '11%', transform: 'rotate(-55deg)' },
-        moderate: { top: '-20%', right: '10%', transform: 'rotate(4deg)' },
+        moderate: { top: '-22%', right: '6%', transform: 'rotate(2deg)' },
         bad: { top: '20%', right: '13%', transform: 'rotate(55deg)' },
       };
     } else if (isTablet) {
@@ -251,7 +303,7 @@ export default function FoboLevelTaskDistribution() {
 
 
     return (
-      <div style={{ position: 'relative', width: '100%', margin: 'auto' }}>
+      <Box sx={{ position: 'relative', width: '100%', maxWidth: { xs: '350px', md: '470px', sm: '300px' }, margin: 'auto' }}>
         {/* Gauge Chart */}
         <GaugeChart
           id="fobo-gauge"
@@ -344,7 +396,7 @@ export default function FoboLevelTaskDistribution() {
             {score}
           </div>
         </div>
-      </div>
+      </Box>
     );
   }, (prev, next) => prev.score === next.score);
   MemoizedGaugeChart.propTypes = {
@@ -557,6 +609,48 @@ export default function FoboLevelTaskDistribution() {
               </Stack>
             ) : (
               <Box sx={{ width: '100%' }}>
+                {(() => {
+                  const item = [
+                    {
+                      color: '#EF4444',
+                      title: 'Automation',
+                      desc: 'AI can do these tasks by itself, replacing human work',
+                    },
+                    {
+                      color: '#FFB95A',
+                      title: 'Augmentation',
+                      desc: 'AI works with you, like a smart assistant helping you do better work',
+                    },
+                    {
+                      color: '#84CC16',
+                      title: 'Human',
+                      desc: "Tasks that AI can't likely replace",
+                    },
+                  ].find((newItem) => newItem.title === selectedSection?.name);
+
+                  return item ? (
+                    <m.div
+                      key={item.title}
+                      custom={0}
+                      initial="hidden"
+                      animate="visible"
+                      variants={itemVariants}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, justifyContent: 'start' }}>
+                        <Box sx={{ width: 20, height: 20, bgcolor: item.color }} />
+                        <Typography
+                          sx={{
+                            fontFamily: 'Roboto',
+                            fontSize: { xs: '12px', md: '12px', lg: '12px' },
+                            color: '#090808',
+                          }}
+                        >
+                          <strong>{item.title}:</strong> {item.desc}
+                        </Typography>
+                      </Box>
+                    </m.div>
+                  ) : null;
+                })()}
                 <Typography variant="h6" fontWeight="bold" gutterBottom>
                   Tasks distribution for {selectedSection?.name}
                 </Typography>
@@ -581,7 +675,7 @@ export default function FoboLevelTaskDistribution() {
 
         {/* Recommendations */}
         <Grid item xs={12}>
-          {data.user ? <Typography variant="h6" fontWeight="bold" gutterBottom>
+          {data?.user ? <Typography variant="h6" fontWeight="bold" gutterBottom>
             Recommended Growth Strategies for <span style={{ color: 'royalblue' }}>{data.user?.fullName}</span>
           </Typography> :
             <Typography variant="h6" fontWeight="bold" gutterBottom>

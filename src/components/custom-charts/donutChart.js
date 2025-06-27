@@ -65,7 +65,7 @@ export default function CustomDonutChart({
         setSelectedIndex(0);
         const item = data[0];
         onSliceClick(0, item);
-      }, 1500);
+      }, 1800);
 
       return () => clearTimeout(timer);
     }
