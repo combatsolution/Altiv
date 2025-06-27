@@ -44,9 +44,6 @@ export default function FoboLevelTaskDistribution() {
   const [decryptedId, setDecryptedId] = useState('');
   const [decryptedLinkedinUrl, setDecryptedLinkedinUrl] = useState('');
 
-  console.log('id details', encryptedId, decryptedId);
-  console.log('url details', decryptedLinkedinUrl, encryptedLinkedInUrl);
-
   // Generate 4 shades (lighter to darker)
   const shades = [0.4, 0.6, 0.8, 1].map(opacity =>
     tinycolor(baseColor).setAlpha(opacity).toRgbString()
@@ -56,7 +53,7 @@ export default function FoboLevelTaskDistribution() {
   useEffect(() => {
     try {
       if (encryptedId) {
-        const decodedId = decodeURIComponent(encryptedId); // 👈 decode first
+        const decodedId = decodeURIComponent(encryptedId);
         const bytes = CryptoJS.AES.decrypt(
           decodedId,
           process.env.REACT_APP_ENCRYPTION_KEY
@@ -67,7 +64,7 @@ export default function FoboLevelTaskDistribution() {
       }
 
       if (encryptedLinkedInUrl) {
-        const decodedUrl = decodeURIComponent(encryptedLinkedInUrl); // 👈 decode first
+        const decodedUrl = decodeURIComponent(encryptedLinkedInUrl);
         const bytes = CryptoJS.AES.decrypt(
           decodedUrl,
           process.env.REACT_APP_ENCRYPTION_KEY
@@ -75,6 +72,10 @@ export default function FoboLevelTaskDistribution() {
         const decrypted = bytes.toString(CryptoJS.enc.Utf8);
         console.log('Decrypted URL:', decrypted);
         if (decrypted) setDecryptedLinkedinUrl(decrypted);
+      }
+
+      if(!encryptedId && !encryptedLinkedInUrl){
+        navigate('/?retry=true', {replace: true})
       }
     } catch (error) {
       console.error("Decryption failed:", error);
@@ -111,7 +112,51 @@ export default function FoboLevelTaskDistribution() {
     try {
       const response = await axiosInstance.post(`/profile-analytics`, inputData);
       if (response?.data.success) {
-        // handle success
+        console.log('data', response?.data?.data);
+        setData(response?.data?.data);
+        const newPieData = [
+          {
+            name: 'Augmentation',
+            label: 'Augmentation',
+            value: response?.data?.data?.Augmented_Score,
+            color: '#FFB95A',
+            fieldName: 'Task_Distribution_Augmentation',
+          },
+          {
+            name: 'Automation',
+            label: 'Automation',
+            value: response?.data?.data?.Automated_Score,
+            color: '#EF4444',
+            fieldName: 'Task_Distribution_Automation',
+          },
+          {
+            name: 'Human',
+            label: 'Human',
+            value: response?.data?.data?.Human_Score,
+            color: '#84CC16',
+            fieldName: 'Task_Distribution_Human',
+          },
+        ];
+
+        setPieData(newPieData);
+
+        if (response?.data?.data?.FOBO_Score === null) {
+          setIsError(true);
+          trackEvent({
+            category: 'FOBO score error',
+            action: 'FOBO score fetched failed',
+            label: 'FOBO page',
+            value: 'FOBO score is null'
+          });
+        }
+
+        trackEvent({
+          category: 'FOBO score fetched',
+          action: 'FOBO score fetched successfully',
+          label: 'FOBO page',
+          value: 'FOBO fetched success'
+        });
+
       } else {
         setIsError(true);
       }
@@ -630,7 +675,7 @@ export default function FoboLevelTaskDistribution() {
 
         {/* Recommendations */}
         <Grid item xs={12}>
-          {data.user ? <Typography variant="h6" fontWeight="bold" gutterBottom>
+          {data?.user ? <Typography variant="h6" fontWeight="bold" gutterBottom>
             Recommended Growth Strategies for <span style={{ color: 'royalblue' }}>{data.user?.fullName}</span>
           </Typography> :
             <Typography variant="h6" fontWeight="bold" gutterBottom>
