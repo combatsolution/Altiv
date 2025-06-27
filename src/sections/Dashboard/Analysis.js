@@ -202,7 +202,7 @@ export default function FoboLevelTaskDistribution() {
     if (isMobile) {
       return {
         good: { top: '20%', left: '11%', transform: 'rotate(-55deg)' },
-        moderate: { top: '-20%', right: '10%', transform: 'rotate(4deg)' },
+        moderate: { top: '-22%', right: '6%', transform: 'rotate(2deg)' },
         bad: { top: '20%', right: '13%', transform: 'rotate(55deg)' },
       };
     } else if (isTablet) {
@@ -251,7 +251,7 @@ export default function FoboLevelTaskDistribution() {
 
 
     return (
-      <div style={{ position: 'relative', width: '100%', margin: 'auto' }}>
+      <Box sx={{ position: 'relative', width: '100%', maxWidth: {xs: '350px', md: '470px', sm: '300px'}, margin: 'auto' }}>
         {/* Gauge Chart */}
         <GaugeChart
           id="fobo-gauge"
@@ -344,7 +344,7 @@ export default function FoboLevelTaskDistribution() {
             {score}
           </div>
         </div>
-      </div>
+      </Box>
     );
   }, (prev, next) => prev.score === next.score);
   MemoizedGaugeChart.propTypes = {
