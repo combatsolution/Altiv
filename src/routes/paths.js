@@ -35,11 +35,14 @@ export const paths = {
   jobFeed:'/job-feed',
 
   fobo:'/fobo',
+
+
   // comingsoonPage:'/comingsoon-Page',
   dashboardPage:(resumeId) => `/dashboard-page/${resumeId}`, 
   ResumeView: '/resume-view', 
   Profile:'/Profile',
   comingSoon: '/coming-soon',  
+  comingSoonWithType: (type) => `/coming-soon/${type}`,
   maintenance: '/maintenance',
   pricing: '/pricing',
   payment: '/payment',

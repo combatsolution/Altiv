@@ -20,7 +20,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { trackEvent } from 'src/utils/google-analytics';
 
-
 const jobseekers = [
   { name: 'Search Jobs', href: paths.comingSoon },
   { name: 'Register', href: paths.auth.jwt.register },
@@ -67,10 +66,12 @@ export default function Footer() {
     formState: { errors },
   } = useForm();
   const { enqueueSnackbar } = useSnackbar();
-  // const [email, setEmail] = useState('');
+
+  const [loading, setLoading] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [modalMsg, setModalMsg] = useState('');
   const [emailError, setEmailError] = useState('');
   const navigate = useNavigate();
-  const [openModal, setOpenModal] = useState(false);
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -84,9 +85,9 @@ export default function Footer() {
   };
 
   const onSubmit = async (data) => {
-    const { email: submittedEmail } = data;
+    const email = data.email;
 
-    if (!submittedEmail || !validateEmail(submittedEmail)) {
+    if (!email || !validateEmail(email)) {
       enqueueSnackbar('Please enter a valid email address.', { variant: 'error' });
       setError('email', {
         type: 'manual',
@@ -96,20 +97,21 @@ export default function Footer() {
     }
 
     try {
-      const now = new Date().toISOString();
+      setLoading(true);
+
       const payload = {
-        email: submittedEmail,
-        createdAt: now,
-        updatedAt: now,
-        deletedAt: now,
+        email,
+        type: 'notification',
         isDeleted: false,
       };
 
-      await axiosInstance.post('/wait-lists', payload);
+      const response = await axiosInstance.post('/wait-lists', payload);
 
-      // enqueueSnackbar('Subscribed successfully!', { variant: 'success' });
-      setOpenModal(true);
-      reset(); // ✅ Clear the input
+      if (response.data?.success) {
+        setModalMsg(response.data?.message);
+        reset();
+        setOpenModal(true);
+      }
     } catch (error) {
       console.error('Subscription failed', error);
 
@@ -437,7 +439,7 @@ export default function Footer() {
             Congratulations!
           </Typography>
           <Typography variant="body1" gutterBottom>
-            Your subscription has been added successfully.
+            {modalMsg}
           </Typography>
           <Button
             variant="contained"

@@ -15,27 +15,25 @@
     },
     {
       title: 'AI Career Coach',
-    
       icon: <Iconify icon="solar:home-2-bold-duotone" />,
-      path: `${paths.comingSoon}?type=ai`,
+      path: `${paths.comingSoonWithType('ai')}`,
     },  
     {
       title: 'Programs',
       icon: <Iconify icon="solar:notebook-bold-duotone" />,
-      path:`${paths.comingSoon}?type=program`,
+      path:`${paths.comingSoonWithType('program')}`,
       // paths.docs
     },
     { 
-      title: 'Jobs',
+      title: 'Jobs',  
       icon: <Iconify icon="solar:atom-bold-duotone" />,
-      path:`${paths.comingSoon}?type=jobs`,
+      path:`${paths.comingSoonWithType('jobs')}`,
       // paths.components
     },
     {
       title: 'Analyze Your Resume',
       icon: <Iconify icon="solar:notebook-bold-duotone" />,
-      path: `${paths.fobo}?type=analyze`,
+      path: `${paths.comingSoonWithType('analyze')}`,
       
-    },
-    
+    }, 
   ];

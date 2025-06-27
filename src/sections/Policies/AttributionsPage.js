@@ -77,8 +77,8 @@
 //             {[
 //               'SOC Structure Analysis',
 //               'Automation vs Augmentation Patterns',
-//               'ONET Task Mappings', 
-//               'Employment Data',  
+//               'ONET Task Mappings',
+//               'Employment Data',
 //             ].map((item, idx) => (
 //               <ListItem key={idx} sx={{ py: 0.5 }}>
 //                 <ListItemText primary={item} />
@@ -202,21 +202,26 @@ const Attributions = () => {
       {/* Header */}
       <Box textAlign="center" mb={6}>
         <Typography variant="h3" sx={{ 
-          fontWeight: 800, 
-          mb: 2,
-          lineHeight: 1.2,
-          background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent'
-        }}>
+            fontWeight: 800,
+            mb: 2,
+            lineHeight: 1.2,
+            background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}
+        >
           Data Sources & Acknowledgments
         </Typography>
-        <Typography variant="subtitle1" sx={{ 
-          maxWidth: 700,
-          mx: 'auto',
-          color: theme.palette.text.secondary
-        }}>
-          We combine open datasets with proprietary models to deliver accurate career impact assessments
+        <Typography
+          variant="subtitle1"
+          sx={{
+            maxWidth: 700,
+            mx: 'auto',
+            color: theme.palette.text.secondary,
+          }}
+        >
+          We combine open datasets with proprietary models to deliver accurate career impact
+          assessments
         </Typography>
       </Box>
 
@@ -253,12 +258,14 @@ const Attributions = () => {
                     color: theme.palette.primary.main,
                     transition: 'all 0.3s ease',
                     '&:hover': {
-                      transform: 'translateX(4px)'
-                    }
+                      transform: 'translateX(4px)',
+                    },
                   }}
                 >
                   View Source
-                  <Box component="span" sx={{ ml: 1, fontSize: '0.8rem' }}>→</Box>
+                  <Box component="span" sx={{ ml: 1, fontSize: '0.8rem' }}>
+                    →
+                  </Box>
                 </Link>
               </Box>
             </CardContent>
@@ -275,27 +282,30 @@ const Attributions = () => {
               <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
                 Dataset Components
               </Typography>
-              <Box component="ul" sx={{ 
-                textAlign: 'left', 
-                pl: 2,
-                listStyleType: 'none',
-                '& li': {
-                  mb: 1,
-                  position: 'relative',
-                  pl: 3,
-                  '&:before': {
-                    content: '"•"',
-                    position: 'absolute',
-                    left: 0,
-                    color: theme.palette.primary.main
-                  }
-                }
-              }}>
+              <Box
+                component="ul"
+                sx={{
+                  textAlign: 'left',
+                  pl: 2,
+                  listStyleType: 'none',
+                  '& li': {
+                    mb: 1,
+                    position: 'relative',
+                    pl: 3,
+                    '&:before': {
+                      content: '"•"',
+                      position: 'absolute',
+                      left: 0,
+                      color: theme.palette.primary.main,
+                    },
+                  },
+                }}
+              >
                 {[
                   'SOC Structure Analysis',
                   'Automation vs Augmentation',
                   'ONET Task Mappings',
-                  'Employment Data Trends'
+                  'Employment Data Trends',
                 ].map((item) => (
                   <li key={item}>
                     <Typography variant="body1">{item}</Typography>
@@ -316,27 +326,30 @@ const Attributions = () => {
               <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
                 Proprietary Models
               </Typography>
-              <Box component="ul" sx={{ 
-                textAlign: 'left', 
-                pl: 2,
-                listStyleType: 'none',
-                '& li': {
-                  mb: 1,
-                  position: 'relative',
-                  pl: 3,
-                  '&:before': {
-                    content: '"▹"',
-                    position: 'absolute',
-                    left: 0,
-                    color: theme.palette.secondary.main
-                  }
-                }
-              }}>
+              <Box
+                component="ul"
+                sx={{
+                  textAlign: 'left',
+                  pl: 2,
+                  listStyleType: 'none',
+                  '& li': {
+                    mb: 1,
+                    position: 'relative',
+                    pl: 3,
+                    '&:before': {
+                      content: '"▹"',
+                      position: 'absolute',
+                      left: 0,
+                      color: theme.palette.secondary.main,
+                    },
+                  },
+                }}
+              >
                 {[
                   'AI Impact Assessment Models',
                   'Career Trajectory Analysis',
                   'Skill Evolution Frameworks',
-                  'Industry-specific Augmentation Patterns'
+                  'Industry-specific Augmentation Patterns',
                 ].map((item) => (
                   <li key={item}>
                     <Typography variant="body1">{item}</Typography>
@@ -348,13 +361,25 @@ const Attributions = () => {
         </Grid>
 
         {/* Additional feature cards */}
-        <Grid item xs={12} md={6}>
-          <FloatCard elevation={3} sx={{ 
-            height: '100%', 
-            borderRadius: 3,
-            background: `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`,
-            color: 'common.white'
-          }}>
+        <Grid
+          item
+          xs={12}
+          md={12}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          sx={{ height: '100%' }}
+        >
+          <FloatCard
+            elevation={3}
+            sx={{
+              maxWidth:500,
+              height: '100%',
+              borderRadius: 3,
+              background: `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`,
+              color: 'common.white',
+            }}
+          >
             <CardContent sx={{ p: 4, textAlign: 'center' }}>
               <IconAvatar sx={{ backgroundColor: 'rgba(255,255,255,0.2)', color: 'common.white' }}>
                 <TrendIcon fontSize="large" />
@@ -365,29 +390,37 @@ const Attributions = () => {
               <Typography variant="body1" sx={{ mb: 3 }}>
                 Our proprietary models analyze how careers evolve with AI integration, identifying:
               </Typography>
-              <Box sx={{ 
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                gap: 2
-              }}>
-                {['Growth Sectors', 'At-Risk Roles', 'Emerging Skills', 'Hybrid Careers'].map((item) => (
-                  <Paper key={item} elevation={0} sx={{
-                    px: 2,
-                    py: 1,
-                    borderRadius: 20,
-                    color:'#fff',
-                    backgroundColor: 'rgba(255,255,255,0.15)',
-                    backdropFilter: 'blur(5px)'
-                  }}>
-                    <Typography variant="body2">{item}</Typography>
-                  </Paper>
-                ))}
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                  gap: 2,
+                }}
+              >
+                {['Growth Sectors', 'At-Risk Roles', 'Emerging Skills', 'Hybrid Careers'].map(
+                  (item) => (
+                    <Paper
+                      key={item}
+                      elevation={0}
+                      sx={{
+                        px: 2,
+                        py: 1,
+                        borderRadius: 20,
+                        color: '#fff',
+                        backgroundColor: 'rgba(255,255,255,0.15)',
+                        backdropFilter: 'blur(5px)',
+                      }}
+                    >
+                      <Typography variant="body2">{item}</Typography>
+                    </Paper>
+                  )
+                )}
               </Box>
             </CardContent>
           </FloatCard>
         </Grid>
-
+        {/* 
         <Grid item xs={12} md={6}>
           <FloatCard elevation={3} sx={{ 
             height: '100%', 
@@ -424,7 +457,7 @@ const Attributions = () => {
               </Box>
             </CardContent>
           </FloatCard>
-        </Grid>
+        </Grid> */}
       </StaggerGrid>
     </AnimatedContainer>
   );

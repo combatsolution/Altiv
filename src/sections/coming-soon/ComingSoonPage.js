@@ -33,7 +33,7 @@ export default function ComingSoonPage() {
   const [openModal, setOpenModal] = useState(false);
   const [modalMsg, setModalMsg] = useState('');
   const navigate = useNavigate();
-  
+
   const validateEmail = (value) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(value);
@@ -53,28 +53,28 @@ export default function ComingSoonPage() {
 
     try {
       setLoading(true);
-      const now = new Date().toISOString();
 
       const payload = {
         email,
-        createdAt: now,
-        updatedAt: now,
-        deletedAt: now,
+        type: 'notification',
         isDeleted: false,
       };
 
-      await axiosInstance.post('/wait-lists', payload);
+      const response = await axiosInstance.post('/wait-lists', payload);
 
-      reset(); // ✅ Clear input after success
-      setOpenModal(true);
+      if(response.data?.success){ 
+        setModalMsg(response.data?.message);
+        reset();
+        setOpenModal(true);
+      }
     } catch (err) {
-      console.error('Subscription failed', err);
+      console.error('Notification failed', err);
 
-      // ✅ Handle email already exists
-      if (err.response && err.response.status === 409) {
+      if (err.response?.status === 409) {
         enqueueSnackbar('Email already exists.', { variant: 'warning' });
       } else {
-        enqueueSnackbar('Failed to subscribe. Please try again later.', { variant: 'error' });
+         enqueueSnackbar('Failed to notify. Please try again later.', { variant: 'error' });
+        
       }
 
       reset(); // ✅ Also clear the input even if email already exists
@@ -150,7 +150,7 @@ export default function ComingSoonPage() {
             name="email"
             placeholder="Enter your email"
             fullWidth={isMobile}
-            sx={{ 
+            sx={{
               maxWidth: 500,
               height: 60,
               '& .MuiInputBase-input': {
@@ -197,7 +197,7 @@ export default function ComingSoonPage() {
         </Box>
       </FormProvider>
 
-      <Modal open={openModal} onClose={() => setOpenModal(false)}>
+      <Modal open={openModal} onClose={() => {setOpenModal(false); setModalMsg('')}}>
         <Box
           sx={{
             position: 'absolute',
@@ -224,8 +224,7 @@ export default function ComingSoonPage() {
             Congratulations!
           </Typography>
           <Typography variant="body1" gutterBottom>
-            Thank you. Your registration for notifications was successful. You’ll be
-            the first to know about important updates.
+           {modalMsg}
           </Typography>
           <Button
             variant="contained"

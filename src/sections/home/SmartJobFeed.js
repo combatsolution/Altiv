@@ -77,7 +77,7 @@
                 }}  
 
               >
-                Jobs that just click Job <br/>Feed
+                Jobs that just click Job Feed
               </Typography>
 
               <Typography

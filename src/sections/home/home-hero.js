@@ -13,8 +13,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { paths } from 'src/routes/paths';
 import IconButton from '@mui/material/IconButton';
 
-
-
 function HomeHero() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -42,7 +40,16 @@ function HomeHero() {
   };
   return (
     <Box sx={{ px: { xs: 2, sm: 4, md: 12 }, py: { xs: 1, sm: 6, md: 6 } }}>
-      <Grid container spacing={4} alignItems="center">
+      <Grid
+        container
+        spacing={4}
+        alignItems="center"
+        sx={{
+          minHeight: { xs: 'auto', md: 'calc(100vh - 100px)' }, // Adjust this value to fit below your header
+        }}
+
+        
+      >
         <Grid xs={12} md={6} order={{ xs: 2, md: 1 }}>
           <Stack spacing={2}>
             <Typography
@@ -92,7 +99,12 @@ function HomeHero() {
               — all in one place.
             </Typography>
 
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={2}
+              flexWrap="wrap"
+              alignItems="flex-start"
+            >
               <Button
                 variant="contained"
                 size="large"
@@ -119,11 +131,14 @@ function HomeHero() {
               <Modal open={open} onClose={handleClose}>
                 <Box
                   display="flex"
-                  flexDirection="column"
-                  alignItems="center"
                   justifyContent="center"
-                  minHeight="100vh"
-                  px={2}
+                  alignItems="center"
+                  sx={{
+                    minHeight: '100vh',
+                    overflowY: 'auto',
+                    px: 2,
+                    py: 4,
+                  }}
                 >
                   <Box
                     sx={{
@@ -408,8 +423,8 @@ function HomeHero() {
             sx={{
               width: '100%',
               maxHeight: { xs: 'auto', md: '500px' },
-              objectFit: 'cover',
-              marginTop: {xs:'40px', lg:'80px'},
+              objectFit: 'contain',
+              marginTop: { xs: '40px', lg: '80px' },
             }}
           />
         </Grid>

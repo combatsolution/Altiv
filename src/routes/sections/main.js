@@ -36,13 +36,15 @@ const CareerPathTitlePage = lazy(() => import('src/pages/career/CareerCompassTit
 
 const JobFeedPage = lazy(() => import('src/pages/job-feed/JobFeedPage'));
 
+const JobBoosterpage =lazy(()=> import ('src/pages/job-booster/jobbooster') )
+
 // Payment
 const SubscriptionData = lazy(() => import('src/pages/subscription/SubscriptionHistory'));
 const Subscriptionsuccess = lazy(() => import('src/pages/subscription/SubscriptionSuccessPage'));
 
-
 // FOBO
 const FoboPage = lazy(() => import('src/pages/Fobo/fobo-view'));
+
 const ProfilePage = lazy(() => import('src/pages/profile/Profile-view'));
 
 const DashboardPage = lazy(() => import('src/pages/dashboard/dashboard-view'));
@@ -77,11 +79,14 @@ export const mainRoutes = [
       { path: 'career-resume', element: <CareerPathResumePage /> },
       { path: 'career-title', element: <CareerPathTitlePage /> },
       { path: 'job-feed', element: <JobFeedPage /> },
+      {path:'job-booster', element:<JobBoosterpage/>},
       { path: 'subscription', element: <SubscriptionData /> },
       { path: 'successpage', element: <Subscriptionsuccess /> },
       { path: 'termsandconditions', element: <TermsCondition /> },
 
       { path: 'fobo', element: <FoboPage /> },
+
+
       {
         path: 'Profile',
         element: (
@@ -91,6 +96,7 @@ export const mainRoutes = [
         ),
       },
       { path: 'dashboard-page/:resumeId', element: <DashboardPage /> },
+      { path: 'coming-soon/:type', element: <Comingsoon /> },
       { path: 'coming-soon', element: <Comingsoon /> },
       //  {path: 'resume-view', element: < ResumeViewPage/>},
       { path: 'privacy-policy', element: <Policy /> },

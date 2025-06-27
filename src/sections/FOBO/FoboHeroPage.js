@@ -111,7 +111,8 @@ export default function FoboHeroPage() {
     }
   };
 
-  const handleContinue = () => {
+  const handleContinue = () => 
+    {
     if (!selectedResumeId && !selectedFile) {
       enqueueSnackbar('Please select or upload a resume.', { variant: 'error' });
       return;
@@ -136,6 +137,12 @@ export default function FoboHeroPage() {
       console.error('Error during encryption or navigation:', err);
     }
   };
+
+
+
+
+
+
 
   const handleUploadResume = async (file) => {
     try {
@@ -390,7 +397,7 @@ export default function FoboHeroPage() {
                 <InsertDriveFileIcon sx={{ mr: 1 }} />
                 <Typography variant="body2" noWrap>
                   {selectedFile.fileName} ({(selectedFile.size / 1024).toFixed(1)} KB)
-                </Typography>
+                </Typography> 
               </Box>
               <Typography variant="body2">
                 <a href={selectedFile.fileUrl} target="_blank" rel="noopener noreferrer">
@@ -438,7 +445,8 @@ export default function FoboHeroPage() {
             variant="contained"
             fullWidth
             onClick={handleContinue}
-            disabled={!selectedFile && !selectedResumeId}
+             disabled={!selectedFile && !selectedResumeId}
+            
             sx={{
               bgcolor: indigo[500],
               '&:hover': { bgcolor: indigo[700] },

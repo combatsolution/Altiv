@@ -111,15 +111,13 @@ export default function TermsAndConditionsPage() {
         Terms of Use
       </Typography>
 
-      <Typography variant="subtitle1" color="text.secondary" mb={4} 
-      align="center">
+      <Typography variant="subtitle1" color="text.secondary" mb={4} align="center">
         Last Updated: June 2025
       </Typography>
 
       <Divider sx={{ mb: 4 }} />
 
-      <Typography variant="subtitle1" color="text.secondary" mb={1}
-       align="center">
+      <Typography variant="subtitle1" color="text.secondary" mb={1} align="center">
         Welcome to Altiv.AI
       </Typography>
 

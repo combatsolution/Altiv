@@ -34,7 +34,7 @@ export default function PricingCard({ card, sx, ...other }) {
         {starter && <PlanStarterIcon />}
         {premium && <PlanPremiumIcon />}
       </Box>
-
+    
       {starter && <Label color="info">POPULAR</Label>}
     </Stack>
   );

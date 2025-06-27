@@ -222,7 +222,6 @@ const WorkingProcessSection = () => {
                       sx={{
                         position: 'absolute',
                         top: 9,
-
                         left: { xs: '15px', md: '180px' },
                         width: { xs: '170px', md: '222px' },
                         display: { xs: 'none', sm: 'block' }, // Only show on desktop

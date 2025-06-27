@@ -36,8 +36,8 @@ export default function PricingView() {
       }}
     >
       <Typography variant="h3" align="center" paragraph>
-        Flexible plans for your
-        <br /> {`community's size and needs`}
+        Flexible plans for yourd
+        <br /> {`community's size and needs`} 
       </Typography>
 
       <Typography align="center" sx={{ color: 'text.secondary' }}>
