@@ -30,11 +30,11 @@ export default function PaymentView() {
       <Grid container rowSpacing={{ xs: 5, md: 0 }} columnSpacing={{ xs: 0, md: 5 }}>
         <Grid xs={12} md={8}>
           <Box
-            gap={5}
+            gap={5} 
             display="grid"
             gridTemplateColumns={{
               xs: 'repeat(1, 1fr)',
-              md: 'repeat(2, 1fr)',
+              md: 'repeat(1, 1fr)',
             }}
             sx={{
               p: { md: 5 },
@@ -46,7 +46,7 @@ export default function PaymentView() {
           >
             <PaymentBillingAddress />
 
-            <PaymentMethods />
+            {/* <PaymentMethods /> */}
           </Box>
         </Grid>
 

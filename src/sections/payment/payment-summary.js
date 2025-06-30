@@ -9,22 +9,47 @@ import Typography from '@mui/material/Typography';
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'src/routes/hook';
+import axiosInstance from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
 export default function PaymentSummary({ sx, ...other }) {
+  const params = useSearchParams();
+  const {planId} = params;
+  const [planData, setPlansData] = useState(null);
+
+  const fetchPlanData = async () => {
+    try {
+      const response = await axiosInstance.get(`/plans/${planId}`);
+      if (response && response.data) {
+        setPlansData(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching plan data:', error);
+    }
+  };
+
+  useEffect(() => {
+    if(planId !== null && planId !== undefined) {
+      fetchPlanData();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [planId])
+
   const renderPrice = (
     <Stack direction="row" justifyContent="flex-end">
-      <Typography variant="h4">$</Typography>
+      <Typography variant="h4">rs</Typography>
 
-      <Typography variant="h2">9.99</Typography>
+      <Typography variant="h2">{planData?.price}</Typography>
 
-      <Typography
+      {/* <Typography
         component="span"
         sx={{ alignSelf: 'center', color: 'text.disabled', ml: 1, typography: 'body2' }}
       >
         / mo
-      </Typography>
+      </Typography> */}
     </Stack>
   );
 
@@ -48,15 +73,15 @@ export default function PaymentSummary({ sx, ...other }) {
             Subscription
           </Typography>
 
-          <Label color="error">PREMIUM</Label>
+          <Label color="error">{planData?.planName}</Label>
         </Stack>
 
-        <Stack direction="row" justifyContent="space-between">
+        {/* <Stack direction="row" justifyContent="space-between">
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Billed Monthly
           </Typography>
           <Switch defaultChecked />
-        </Stack>
+        </Stack> */}
 
         {renderPrice}
 

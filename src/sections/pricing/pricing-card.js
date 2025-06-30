@@ -7,68 +7,85 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
+
 // assets
 import { PlanFreeIcon, PlanStarterIcon, PlanPremiumIcon } from 'src/assets/icons';
+
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import { useNavigate } from 'react-router-dom';
 import { paths } from 'src/routes/paths';
+import { List } from 'src/components/organizational-chart/organizational-chart';
+import axiosInstance from 'src/utils/axios';
+import { Category } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
 export default function PricingCard({ card, sx, ...other }) {
   const navigate = useNavigate();
-  const { subscription, price, caption, lists, labelAction } = card;
+  const { id, price, planName, subTitle, features, paymentType, isFreePlan, recurringPeriod} = card;
 
-  const basic = subscription === 'basic';
-
-  const starter = subscription === 'starter';
-
-  const premium = subscription === 'premium';
-
-  const renderIcon = (
-    <Stack direction="row" alignItems="center" justifyContent="space-between">
-      <Box sx={{ width: 48, height: 48 }}>
-        {basic && <PlanFreeIcon />}
-        {starter && <PlanStarterIcon />}
-        {premium && <PlanPremiumIcon />}
-      </Box>
-
-      {starter && <Label color="info">POPULAR</Label>}
-    </Stack>
-  );
+  // const renderIcon = (
+  //   <Stack direction="row" alignItems="center" justifyContent="space-between">
+  //     <Box sx={{ width: 48, height: 48 }}>
+  //       {basic && <PlanFreeIcon />}
+  //       {starter && <PlanStarterIcon />}
+  //       {premium && <PlanPremiumIcon />}
+  //     </Box>
+  //     {starter && <Label color="info">POPULAR</Label>}
+  //   </Stack>
+  // );
 
   const renderSubscription = (
-    <Stack spacing={1}>
+    <Stack spacing={1} display="flex" alignItems="center" width="100%">
       <Typography variant="h4" sx={{ textTransform: 'capitalize' }}>
-        {subscription}
+        {planName}
       </Typography>
-      <Typography variant="subtitle2">{caption}</Typography>
+      <Box width="100%" display="flex" justifyContent="center">
+        <Typography variant="subtitle2" align="center" color="success.lighter">
+          {subTitle}
+        </Typography>
+      </Box>
     </Stack>
   );
 
-  const renderPrice = basic ? (
+  const renderPrice = isFreePlan ? (
     <Typography variant="h2">Free</Typography>
   ) : (
-    <Stack direction="row" justifyContent="center" alignItems="flex-end">
-      <Typography variant="h4">$</Typography>
-
-      <Typography variant="h2" color="primary">
-        {price}
-      </Typography>
-
+    <Stack direction="column" justifyContent="center" alignItems="flex-end">
+      <Stack direction="row" justifyContent="center" alignItems="flex-end">
+        <Typography
+          variant="h4"
+          sx={{ alignSelf: 'center', mr: 1, color: 'text.disabled', ml: 1, typography: 'body2' }}
+        >
+          RS
+        </Typography>
+        <Typography variant="h2" color="primary">
+          {price}
+        </Typography>
+      </Stack>
       <Typography
         component="span"
         sx={{ alignSelf: 'center', color: 'text.disabled', ml: 1, typography: 'body2' }}
       >
-        / mo
+        {paymentType === 'oneTime' ? 'One Time Payment' : recurringPeriod}
       </Typography>
     </Stack>
   );
 
+  const commonListStyle = {
+    typography: 'body2',
+    alignItems: 'center',
+  };
+
+  const commonIconStyle = {
+    color: 'green',
+    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+  };
+
   const renderList = (
-    <Stack spacing={2}>
+    <Stack spacing={2} sx={{ width: '100%' }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Box component="span" sx={{ typography: 'overline' }}>
           Features
@@ -77,71 +94,28 @@ export default function PricingCard({ card, sx, ...other }) {
           All
         </Link>
       </Stack>
-
-      {lists.map((item) => (
-        <Stack
-          key={item}
-          spacing={1}
-          direction="row"
-          alignItems="center"
-          sx={{
-            typography: 'body2',
-          }}
-        >
-          <Iconify
-            icon="eva:checkmark-fill"
-            width={24}
-            sx={{
-              mr: 1,
-              color: 'green',
-              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-              '&:hover': {
-                transform: 'scale(1.3) rotate(5deg)',
-                boxShadow: '0 0 8px rgba(0, 128, 0, 0.6)',
-              },
-            }}
-          />
-
+      {/* {lists.map((item) => (
+        <Stack key={item} direction="row" spacing={1} sx={commonListStyle}>
+          <Iconify icon="eva:checkmark-fill" width={20} sx={commonIconStyle} />
           {item}
         </Stack>
-      ))}
+      ))} */}
     </Stack>
   );
+
   const renderList2 = (
-    <Stack spacing={2}>
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
+    <Stack spacing={2} sx={{ width: '100%' }}>
+      <Stack direction="row" alignItems="left" justifyContent="space-between">
         <Box component="span" sx={{ typography: 'overline' }}>
           Outcomes
         </Box>
       </Stack>
-
-      {lists.map((item) => (
-        <Stack
-          key={item}
-          spacing={1}
-          direction="row"
-          alignItems="center"
-          sx={{
-            typography: 'body2',
-          }}
-        >
-          <Iconify
-            icon="eva:checkmark-fill"
-            width={24}
-            sx={{
-              mr: 1,
-              color: 'green',
-              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-              '&:hover': {
-                transform: 'scale(1.3) rotate(5deg)',
-                boxShadow: '0 0 8px rgba(0, 128, 0, 0.6)',
-              },
-            }}
-          />
-
+      {/* {outcomes.map((item) => (
+        <Stack key={item} direction="row" spacing={1} sx={commonListStyle}>
+          <Iconify icon="eva:checkmark-fill" width={20} sx={commonIconStyle} />
           {item}
         </Stack>
-      ))}
+      ))} */}
     </Stack>
   );
 
@@ -149,7 +123,6 @@ export default function PricingCard({ card, sx, ...other }) {
     <Stack
       spacing={5}
       alignItems="center"
-      textAlign="center"
       sx={{
         p: 5,
         height: '100%',
@@ -158,11 +131,11 @@ export default function PricingCard({ card, sx, ...other }) {
           xs: theme.customShadows.card,
           md: 'none',
         }),
-        ...(starter && {
+        ...(isFreePlan && {
           borderTopRightRadius: { md: 0 },
           borderBottomRightRadius: { md: 0 },
         }),
-        ...((starter || premium) && {
+        ...((isFreePlan || !isFreePlan) && {
           boxShadow: (theme) => ({
             xs: theme.customShadows.card,
             md: `-40px 40px 80px 0px ${alpha(
@@ -175,37 +148,27 @@ export default function PricingCard({ card, sx, ...other }) {
       }}
       {...other}
     >
-      {renderIcon}
-
+      {/* {renderIcon} */}
       {renderSubscription}
-
       {renderPrice}
-
       <Divider sx={{ borderStyle: 'dashed' }} />
-
       {renderList}
-
-      {/* Transparent Grey Divider */}
       <Divider
         sx={{
           width: '100%',
           maxWidth: 1000,
           mx: 'auto',
-          borderColor: 'rgba(145, 158, 171, 0.2)', // transparent grey
+          borderColor: 'rgba(145, 158, 171, 0.2)',
           mb: 1,
         }}
       />
-
       {renderList2}
-
-      {/* Pay Now + Learn More buttons */}
       <Stack spacing={2} sx={{ pt: 1 }}>
         <Button
-          onClick={() => navigate(paths.payment)}
           fullWidth
           size="large"
           variant="contained"
-          disabled={basic}
+          disabled={isFreePlan}
           sx={{
             backgroundColor: '#0040D8',
             color: '#fff',
@@ -213,25 +176,9 @@ export default function PricingCard({ card, sx, ...other }) {
               backgroundColor: '#0033aa',
             },
           }}
+          onClick={() => navigate(paths.payment(id))}      
         >
-          {labelAction}
-        </Button>
-
-        <Button
-          fullWidth
-          size="large"
-          variant="outlined"
-          onClick={() => navigate(`${paths.about}?plan=${subscription}`)}
-          sx={{
-            border: '1px solid #0040D8',
-            color: '#0040D8',
-            '&:hover': {
-              backgroundColor: 'rgba(0, 64, 216, 0.04)', // light hover effect
-              borderColor: '#0040D8',
-            },
-          }}
-        >
-          Learn More
+          Pay Now
         </Button>
       </Stack>
     </Stack>

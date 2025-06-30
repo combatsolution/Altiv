@@ -107,7 +107,7 @@ export const mainRoutes = [
           { element: <ProductListPage />, index: true },
           { path: 'list', element: <ProductListPage /> },
           { path: ':id', element: <ProductDetailsPage /> },
-          { path: 'checkout', element: <ProductCheckoutPage /> },
+          { path: 'checkout/:planId', element: <ProductCheckoutPage /> },
         ],
       },
       {
@@ -130,7 +130,7 @@ export const mainRoutes = [
     ),
     children: [
       { path: 'pricing', element: <PricingPage /> },
-      { path: 'payment', element: <PaymentPage /> },
+      { path: 'payment/:planId', element: <PaymentPage /> },
     ],
   },
   {

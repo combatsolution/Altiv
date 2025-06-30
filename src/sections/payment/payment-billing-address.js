@@ -34,10 +34,12 @@ import {
   Alert,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { useAuthContext } from 'src/auth/hooks';
 
 // ----------------------------------------------------------------------
 
 export default function PaymentBillingAddress() {
+  const {user} = useAuthContext();
   const [serverError, setServerError] = useState('');
   const [serverSuccess, setServerSuccess] = useState('');
 
@@ -49,10 +51,10 @@ export default function PaymentBillingAddress() {
   });
 
   const defaultValues = {
-    name: '',
-    phone: '',
-    email: '',
-    address: '',
+    name: user?.fullName || '',
+    phone: user?.phoneNumber || '',
+    email: user?.email || '',
+    address: user?.fullAddress || '',
   };
 
   const methods = useForm({
@@ -72,11 +74,6 @@ export default function PaymentBillingAddress() {
     setServerSuccess('');
 
     try {
-      const response = await axios.post(
-   
-        data
-      );
-
       // Handle success
       setServerSuccess('Billing information submitted successfully!');
       reset(); // Reset form
@@ -116,6 +113,7 @@ export default function PaymentBillingAddress() {
                     {...field}
                     error={!!error}
                     helperText={error?.message}
+                    disabled
                   />
                 )}
               />
@@ -130,6 +128,7 @@ export default function PaymentBillingAddress() {
                     {...field}
                     error={!!error}
                     helperText={error?.message}
+                    disabled
                   />
                 )}
               />
@@ -144,6 +143,7 @@ export default function PaymentBillingAddress() {
                     {...field}
                     error={!!error}
                     helperText={error?.message}
+                    editable
                   />
                 )}
               />
@@ -158,11 +158,12 @@ export default function PaymentBillingAddress() {
                     {...field}
                     error={!!error}
                     helperText={error?.message}
+                    disabled
                   />
                 )}
               />
 
-              <LoadingButton
+              {/* <LoadingButton
                 type="submit"
                 variant="contained"
                 loading={isSubmitting}
@@ -173,7 +174,7 @@ export default function PaymentBillingAddress() {
                 }}
               >
                 Save Billing Info
-              </LoadingButton>
+              </LoadingButton> */}
             </Stack>
           </form>
         </RHFormProvider>

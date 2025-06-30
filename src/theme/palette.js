@@ -18,7 +18,7 @@ const GREY = {
 };
 
 const PRIMARY = {
-  lighter: '#7D9CEC',
+  lighter: '#7D9CEC', 
   light: '#5F85E5',
   main: '#2A4DD0',
   dark: '#1C3CA2' ,
@@ -45,7 +45,7 @@ const INFO = {
 };
 
 const SUCCESS = {
-  lighter: '#D3FCD2',
+  lighter: '#05d1f5',
   light: '#77ED8B',
   main: '#22C55E',
   dark: '#118D57',

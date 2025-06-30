@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // @mui
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -7,26 +7,34 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
+import axiosInstance from 'src/utils/axios';
 // mock
 import { _pricingPlans } from 'src/_mock';
 import PricingCard from './pricing-card';
 
 // ----------------------------------------------------------------------
 
-const planCategories = ['Marketing', 'Data Science', 'Product Management'];
+const planCategories = [
+  {label: 'Marketing', value: 0},
+  {label: 'Data Science', value: 1},  
+  {label: 'Product Management', value: 2},
+];
 
 const categoryHeadings = {
   Marketing: {
+    value: 0,
     title: 'AI Marketing Mastery',
     subtitle:
       'Accelerate your AI Marketing Evolution - Transform your marketing strategies with cutting-edge AI tools and frameworks',
   },
   'Data Science': {
+    value: 1,
     title: 'AI Data Science Leadership',
     subtitle:
       'Accelerate your AI-Driven Data Science Evolution - Master the implementation of AI solutions at scale',
   },
   'Product Management': {
+    value: 2,
     title: 'AI Product Innovation',
     subtitle:
       'Accelerate your AI-Enhanced Product Evolution - Build and scale AI-powered products that deliver real value',
@@ -34,11 +42,33 @@ const categoryHeadings = {
 };
 
 export default function PricingView() {
-  const [selectedCategory, setSelectedCategory] = useState('Marketing');
+  const [selectedCategory, setSelectedCategory] = useState(0);
+  const [plansData, setPlansData] = useState([]);
+  const [heading, setHeading] = useState('');
+  const [subHeading, setSubHeading] = useState('');
 
-  const filteredPlans = _pricingPlans.filter((plan) => plan.category === selectedCategory);
+  const fetchPlans = async () => {
+    try {
+      const response = await axiosInstance.get(`/plans/plan-by-type/${selectedCategory}`);
+      if (response && response.data) {
+        setPlansData(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching plans: error');
+    }
+  };
 
-  const { title, subtitle } = categoryHeadings[selectedCategory];
+  useEffect(() => {
+    if (selectedCategory !== null) {
+      fetchPlans();
+      const category = planCategories.find(cat => cat.value === selectedCategory);
+      const {title, subtitle} = categoryHeadings[category.label] || {};
+      setHeading(title);
+      setSubHeading(subtitle);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategory]);
+
 
   return (
     <Container
@@ -59,21 +89,23 @@ export default function PricingView() {
           <Button
             key={category}
             variant="contained"
-            onClick={() => setSelectedCategory(category)}
+            onClick={() => {
+              setSelectedCategory(category.value);
+            }}
             sx={{
-              fontSize:'17px',  
+              fontSize: '17px',
               px: 2,
               py: 1,
               textTransform: 'none',
-              backgroundColor: selectedCategory === category ? '#0040D8' : 'transparent',
+              backgroundColor: selectedCategory === category.value ? '#0040D8' : 'transparent',
               // border: '1px solid #0040D8',
-              color: selectedCategory === category ? '#fff' : '#0040D8',
+              color: selectedCategory === category.value ? '#fff' : '#0040D8',
               '&:hover': {
-                backgroundColor: selectedCategory === category ? '#0040D8' : '#e6e6e6',
+                backgroundColor: selectedCategory === category.value ? '#0040D8' : '#e6e6e6',
               },
             }}
           >
-            {category}
+            {category.label}
           </Button>
         ))}
       </Stack>
@@ -91,11 +123,11 @@ export default function PricingView() {
 
       {/* Dynamic Heading and Subheading */}
       <Typography variant="h3" align="center" paragraph color="primary">
-        {title}
+        {heading}
       </Typography>
 
       <Typography align="center" sx={{ color: 'text.secondary', mb: 4 }}>
-        {subtitle}
+        {subHeading}
       </Typography>
 
       {/* Pricing Cards */}
@@ -106,28 +138,32 @@ export default function PricingView() {
         gridTemplateColumns={{ xs: '1fr', md: 'repeat(3, 1fr)' }}
         alignItems="stretch"
       >
-        {filteredPlans.map((card, index) => (
-          <Paper
-            key={card.subscription}
-            elevation={2}
-            sx={{
-              px: 3,
-              borderRadius: 2,
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              transition: 'all 0.3s ease',
-              cursor: 'pointer',
-              '&:hover': {
-                boxShadow: 6, // increase elevation on hover
-                transform: 'scale(1.03)', // slight zoom effect
-                backgroundColor: '#f5f7ff', // optional light background on hover
-              },
-            }}
-          >
-            <PricingCard card={card} index={index} />
-          </Paper>
-        ))}
+        {plansData.length > 0 ? (
+          plansData.map((card, index) => (
+            <Paper
+              key={card.id}
+              elevation={2}
+              sx={{
+                px: 3,
+                borderRadius: 2,
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                transition: 'all 0.3s ease',
+                cursor: 'pointer',
+                '&:hover': {
+                  boxShadow: 6, // increase elevation on hover
+                  transform: 'scale(1.03)', // slight zoom effect
+                  backgroundColor: '#f5f7ff', // optional light background on hover
+                },
+              }}
+            >
+              <PricingCard card={card} index={index} />
+            </Paper>
+          ))
+        ) : (
+          <Typography variant="h6">No plans available</Typography>
+        )}
       </Box>
     </Container>
   );

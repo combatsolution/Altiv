@@ -1,9 +1,21 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-else-return */
+import { useAuthContext } from 'src/auth/hooks';
 import React, { useEffect, useMemo, useState } from 'react';
 import CryptoJS from 'crypto-js';
 import { m } from 'framer-motion';
-import { Box, Typography, Grid, Card, Button, Stack, useTheme, useMediaQuery, FormControlLabel, Switch } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Grid,
+  Card,
+  Button,
+  Stack,
+  useTheme,
+  useMediaQuery,
+  FormControlLabel,
+  Switch,
+} from '@mui/material';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import GaugeChart from 'react-gauge-chart';
 import { width } from '@mui/system';
@@ -43,9 +55,10 @@ export default function FoboLevelTaskDistribution() {
   const encryptedLinkedInUrl = sessionStorage.getItem('xbszyaef');
   const [decryptedId, setDecryptedId] = useState('');
   const [decryptedLinkedinUrl, setDecryptedLinkedinUrl] = useState('');
+  const { user } = useAuthContext();
 
   // Generate 4 shades (lighter to darker)
-  const shades = [0.4, 0.6, 0.8, 1].map(opacity =>
+  const shades = [0.4, 0.6, 0.8, 1].map((opacity) =>
     tinycolor(baseColor).setAlpha(opacity).toRgbString()
   );
 
@@ -54,10 +67,7 @@ export default function FoboLevelTaskDistribution() {
     try {
       if (encryptedId) {
         const decodedId = decodeURIComponent(encryptedId);
-        const bytes = CryptoJS.AES.decrypt(
-          decodedId,
-          process.env.REACT_APP_ENCRYPTION_KEY
-        );
+        const bytes = CryptoJS.AES.decrypt(decodedId, process.env.REACT_APP_ENCRYPTION_KEY);
         const decrypted = bytes.toString(CryptoJS.enc.Utf8);
         console.log('Decrypted ID:', decrypted);
         if (decrypted) setDecryptedId(decrypted);
@@ -65,23 +75,19 @@ export default function FoboLevelTaskDistribution() {
 
       if (encryptedLinkedInUrl) {
         const decodedUrl = decodeURIComponent(encryptedLinkedInUrl);
-        const bytes = CryptoJS.AES.decrypt(
-          decodedUrl,
-          process.env.REACT_APP_ENCRYPTION_KEY
-        );
+        const bytes = CryptoJS.AES.decrypt(decodedUrl, process.env.REACT_APP_ENCRYPTION_KEY);
         const decrypted = bytes.toString(CryptoJS.enc.Utf8);
         console.log('Decrypted URL:', decrypted);
         if (decrypted) setDecryptedLinkedinUrl(decrypted);
       }
 
-      if(!encryptedId && !encryptedLinkedInUrl){
-        navigate('/?retry=true', {replace: true})
+      if (!encryptedId && !encryptedLinkedInUrl) {
+        navigate('/?retry=true', { replace: true });
       }
     } catch (error) {
-      console.error("Decryption failed:", error);
+      console.error('Decryption failed:', error);
     }
   }, [encryptedId, encryptedLinkedInUrl]);
-
 
   // API Call
   useEffect(() => {
@@ -146,7 +152,7 @@ export default function FoboLevelTaskDistribution() {
             category: 'FOBO score error',
             action: 'FOBO score fetched failed',
             label: 'FOBO page',
-            value: 'FOBO score is null'
+            value: 'FOBO score is null',
           });
         }
 
@@ -154,9 +160,8 @@ export default function FoboLevelTaskDistribution() {
           category: 'FOBO score fetched',
           action: 'FOBO score fetched successfully',
           label: 'FOBO page',
-          value: 'FOBO fetched success'
+          value: 'FOBO fetched success',
         });
-
       } else {
         setIsError(true);
       }
@@ -187,8 +192,8 @@ export default function FoboLevelTaskDistribution() {
   };
 
   const onRetry = () => {
-    navigate('/?retry=true', { replace: true })
-  }
+    navigate('/?retry=true', { replace: true });
+  };
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, index }) => {
     const RADIAN = Math.PI / 180;
@@ -297,111 +302,123 @@ export default function FoboLevelTaskDistribution() {
   const labelStyles = getLabelStyles();
   const countStyles = getCountStyles();
 
-  const MemoizedGaugeChart = React.memo(({ score }) => {
-    const percent = score / 100;
-    const levelColor = useMemo(() => getLevelColor(score), [score]);
+  const MemoizedGaugeChart = React.memo(
+    ({ score }) => {
+      const percent = score / 100;
+      const levelColor = useMemo(() => getLevelColor(score), [score]);
 
-
-    return (
-      <Box sx={{ position: 'relative', width: '100%', maxWidth: { xs: '350px', md: '470px', sm: '300px' }, margin: 'auto' }}>
-        {/* Gauge Chart */}
-        <GaugeChart
-          id="fobo-gauge"
-          nrOfLevels={3}
-          arcsLength={[0.39, 0.3, 0.31]}
-          colors={['#00C853', '#FFB300', '#D32F2F']}
-          percent={percent}
-          arcPadding={0}
-          arcWidth={0.3} // <- Increase this value for thicker arcs (default is ~0.2)
-          needleColor="#424242"
-          textColor="transparent"
-          style={{ width: '100%' }}
-          animate
-        />
-
-        <div
-          style={{
-            position: 'absolute',
-            ...labelStyles.good,
+      return (
+        <Box
+          sx={{
+            position: 'relative',
+            width: '100%',
+            maxWidth: { xs: '350px', md: '470px', sm: '300px' },
+            margin: 'auto',
           }}
         >
-          <Typography variant='body1'>Good</Typography>
-        </div>
+          {/* Gauge Chart */}
+          <GaugeChart
+            id="fobo-gauge"
+            nrOfLevels={3}
+            arcsLength={[0.39, 0.3, 0.31]}
+            colors={['#00C853', '#FFB300', '#D32F2F']}
+            percent={percent}
+            arcPadding={0}
+            arcWidth={0.3} // <- Increase this value for thicker arcs (default is ~0.2)
+            needleColor="#424242"
+            textColor="transparent"
+            style={{ width: '100%' }}
+            animate
+          />
 
-        <div
-          style={{
-            position: 'absolute',
-            ...countStyles.good,
-          }}
-        >
-          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>0 - 39</Typography>
-        </div>
-
-        <div
-          style={{
-            position: 'absolute',
-            ...labelStyles.moderate,
-          }}
-        >
-          <svg width="300" height="150">
-            <defs>
-              <path
-                id="curve"
-                d="M 50,150
-         A 100,100 0 0,1 250,150"
-                fill="transparent"
-              />
-            </defs>
-
-            <text fill="#000" fontSize="16" fontFamily="Arial">
-              <textPath href="#curve" startOffset="50%" textAnchor="middle">
-                Moderate
-              </textPath>
-            </text>
-          </svg>
-        </div>
-
-        <div
-          style={{
-            position: 'absolute',
-            ...countStyles.moderate,
-          }}
-        >
-          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>40 - 69</Typography>
-        </div>
-
-        <div
-          style={{
-            position: 'absolute',
-            ...labelStyles.bad,
-          }}
-        >
-          <Typography variant='body1'>Bad</Typography>
-        </div>
-
-        <div
-          style={{
-            position: 'absolute',
-            ...countStyles.bad,
-          }}
-        >
-          <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>70 - 100</Typography>
-        </div>
-
-
-        {/* FOBO Label and Score */}
-        <div style={{ textAlign: 'center', marginTop: 10 }}>
-          <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO LEVEL</div>
-          <div style={{ fontWeight: 'bold', fontSize: 24, color: levelColor }}>
-            {score}
+          <div
+            style={{
+              position: 'absolute',
+              ...labelStyles.good,
+            }}
+          >
+            <Typography variant="body1">Good</Typography>
           </div>
-        </div>
-      </Box>
-    );
-  }, (prev, next) => prev.score === next.score);
+
+          <div
+            style={{
+              position: 'absolute',
+              ...countStyles.good,
+            }}
+          >
+            <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
+              0 - 39
+            </Typography>
+          </div>
+
+          <div
+            style={{
+              position: 'absolute',
+              ...labelStyles.moderate,
+            }}
+          >
+            <svg width="300" height="150">
+              <defs>
+                <path
+                  id="curve"
+                  d="M 50,150
+         A 100,100 0 0,1 250,150"
+                  fill="transparent"
+                />
+              </defs>
+
+              <text fill="#000" fontSize="16" fontFamily="Arial">
+                <textPath href="#curve" startOffset="50%" textAnchor="middle">
+                  Moderate
+                </textPath>
+              </text>
+            </svg>
+          </div>
+
+          <div
+            style={{
+              position: 'absolute',
+              ...countStyles.moderate,
+            }}
+          >
+            <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
+              40 - 69
+            </Typography>
+          </div>
+
+          <div
+            style={{
+              position: 'absolute',
+              ...labelStyles.bad,
+            }}
+          >
+            <Typography variant="body1">Bad</Typography>
+          </div>
+
+          <div
+            style={{
+              position: 'absolute',
+              ...countStyles.bad,
+            }}
+          >
+            <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
+              70 - 100
+            </Typography>
+          </div>
+
+          {/* FOBO Label and Score */}
+          <div style={{ textAlign: 'center', marginTop: 10 }}>
+            <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO LEVEL</div>
+            <div style={{ fontWeight: 'bold', fontSize: 24, color: levelColor }}>{score}</div>
+          </div>
+        </Box>
+      );
+    },
+    (prev, next) => prev.score === next.score
+  );
   MemoizedGaugeChart.propTypes = {
     score: PropTypes.number,
-  }
+  };
 
   const showDetailedDescription = (arrayData) => {
     if (!arrayData?.length) return null;
@@ -413,7 +430,17 @@ export default function FoboLevelTaskDistribution() {
     });
 
     return (
-      <Box component='div' sx={{ width: '100%', maxHeight: '350px', overflowY: 'scroll', '&::-webkit-scrollbar': { display: 'none', }, '-ms-overflow-style': 'none', 'scrollbar-width': 'none', }}>
+      <Box
+        component="div"
+        sx={{
+          width: '100%',
+          maxHeight: '350px',
+          overflowY: 'scroll',
+          '&::-webkit-scrollbar': { display: 'none' },
+          '-ms-overflow-style': 'none',
+          'scrollbar-width': 'none',
+        }}
+      >
         {groupedArrays.map((group, groupIndex) => {
           if (group.length === 0) return null;
 
@@ -480,7 +507,8 @@ export default function FoboLevelTaskDistribution() {
                     flex: 1,
                     height: '100%',
                     bgcolor: color,
-                    borderRadius: index === 0 ? '4px 0 0 4px' : index === shades.length - 1 ? '0 4px 4px 0' : 0,
+                    borderRadius:
+                      index === 0 ? '4px 0 0 4px' : index === shades.length - 1 ? '0 4px 4px 0' : 0,
                   }}
                 />
               ))}
@@ -518,13 +546,12 @@ export default function FoboLevelTaskDistribution() {
       transition: { delay: i * 0.2 }, // stagger by 0.2s per item
     }),
   };
-  return (!isLoading && !isError) ? (
+  return !isLoading && !isError ? (
     <Box
       px={{ xs: 2, md: '12%' }}
       py={2}
       sx={{ position: 'relative', width: '100%', maxWidth: '100%' }}
     >
-
       <Grid container spacing={4}>
         {/* FOBO Level */}
         <Grid item xs={12} md={12} lg={6}>
@@ -533,7 +560,13 @@ export default function FoboLevelTaskDistribution() {
               FOBO Level
             </Typography>
 
-            <Box sx={{ width: { md: '85%', xs: '100%', display: 'flex', justifyContent: 'center' }, mx: 'auto', mt: 2 }}>
+            <Box
+              sx={{
+                width: { md: '85%', xs: '100%', display: 'flex', justifyContent: 'center' },
+                mx: 'auto',
+                mt: 2,
+              }}
+            >
               <MemoizedGaugeChart score={data?.FOBO_Score} />
             </Box>
           </Stack>
@@ -546,7 +579,9 @@ export default function FoboLevelTaskDistribution() {
               Task Distribution
             </Typography>
 
-            <Box sx={{ position: 'relative', width: '100%', paddingTop: isMobile ? '250px' : '280px' }}>
+            <Box
+              sx={{ position: 'relative', width: '100%', paddingTop: isMobile ? '250px' : '280px' }}
+            >
               <Box
                 sx={{
                   position: 'absolute',
@@ -636,7 +671,15 @@ export default function FoboLevelTaskDistribution() {
                       animate="visible"
                       variants={itemVariants}
                     >
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, justifyContent: 'start' }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 1,
+                          mb: 1,
+                          justifyContent: 'start',
+                        }}
+                      >
                         <Box sx={{ width: 20, height: 20, bgcolor: item.color }} />
                         <Typography
                           sx={{
@@ -655,11 +698,9 @@ export default function FoboLevelTaskDistribution() {
                   Tasks distribution for {selectedSection?.name}
                 </Typography>
 
-                {viewDetails ? (
-                  showShortDescription(data[selectedSection?.fieldName] || [])
-                ) : (
-                  showDetailedDescription(data[selectedSection?.fieldName] || [])
-                )}
+                {viewDetails
+                  ? showShortDescription(data[selectedSection?.fieldName] || [])
+                  : showDetailedDescription(data[selectedSection?.fieldName] || [])}
               </Box>
             )}
           </Stack>
@@ -675,13 +716,16 @@ export default function FoboLevelTaskDistribution() {
 
         {/* Recommendations */}
         <Grid item xs={12}>
-          {data?.user ? <Typography variant="h6" fontWeight="bold" gutterBottom>
-            Recommended Growth Strategies for <span style={{ color: 'royalblue' }}>{data.user?.fullName}</span>
-          </Typography> :
+          {data?.user ? (
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              Recommended Growth Strategies for{' '}
+              <span style={{ color: 'royalblue' }}>{data.user?.fullName}</span>
+            </Typography>
+          ) : (
             <Typography variant="h6" fontWeight="bold" gutterBottom>
               Recommended Growth Strategies
             </Typography>
-          }
+          )}
           <Box mt={2} sx={{ backgroundColor: '#F5FAFF', borderRadius: 2, p: 2 }}>
             {data?.Strategy.length > 0 &&
               data?.Strategy.map((rec, i) => (
@@ -699,13 +743,19 @@ export default function FoboLevelTaskDistribution() {
         <Grid item xs={12} textAlign="left">
           <Button
             onClick={() => {
-              navigate(paths.comingSoon);
-              trackEvent({
-                category: 'CTA clicked',
-                action: 'button clicked',
-                label: 'Beat FOBO now',
-                value: 'beat foboo now'
-              });
+              if (user) {
+                // If logged in, go to pricing
+                navigate(paths.pricing);
+                trackEvent({
+                  category: 'CTA clicked',
+                  action: 'button clicked',
+                  label: 'Beat FOBO now',
+                  value: 'beat foboo now',
+                });
+              } else {
+                // If not logged in, go to login
+                navigate(paths.auth.jwt.login); // Or whatever your login route is
+              }
             }}
             variant="contained"
             sx={{
@@ -714,6 +764,10 @@ export default function FoboLevelTaskDistribution() {
               px: 4,
               textTransform: 'none',
               fontWeight: 'bold',
+              '&:hover': {
+                backgroundColor: '#2C47D3', // same as default to suppress hover color
+                boxShadow: 'none', // remove shadow on hover
+              },
             }}
           >
             Beat FOBO Now
@@ -742,12 +796,20 @@ export default function FoboLevelTaskDistribution() {
           <SeverErrorIllustration sx={{ height: 260, my: { xs: 5, sm: 10 } }} />
         </m.div>
 
-        <Box component='div' sx={{ display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'center' }}>
+        <Box
+          component="div"
+          sx={{ display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'center' }}
+        >
           <Button color="primary" onClick={onRetry} size="large" variant="contained">
             Retry
           </Button>
 
-          <Button color="primary" onClick={() => navigate(-1, { replace: true })} size="large" variant="outlined">
+          <Button
+            color="primary"
+            onClick={() => navigate(-1, { replace: true })}
+            size="large"
+            variant="outlined"
+          >
             Go to Home
           </Button>
         </Box>
