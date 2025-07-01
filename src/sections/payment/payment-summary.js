@@ -1,8 +1,8 @@
+
 import PropTypes from 'prop-types';
 // @mui
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -13,13 +13,15 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'src/routes/hook';
 import axiosInstance from 'src/utils/axios';
 
-// ----------------------------------------------------------------------
-
 export default function PaymentSummary({ sx, ...other }) {
   const params = useSearchParams();
-  const {planId} = params;
+  const { planId } = params;
   const [planData, setPlansData] = useState(null);
+ console.log('planId:', planId);
+  
 
+  useEffect(() => {
+  console.log('planId:', planId);
   const fetchPlanData = async () => {
     try {
       const response = await axiosInstance.get(`/plans/${planId}`);
@@ -31,25 +33,33 @@ export default function PaymentSummary({ sx, ...other }) {
     }
   };
 
-  useEffect(() => {
-    if(planId !== null && planId !== undefined) {
-      fetchPlanData();
+  if (planId !== null && planId !== undefined) {
+    fetchPlanData();
+  }
+}, [planId]);
+
+
+  const handleUpgrade = async () => {
+    try {
+      const payload = {
+        planid: 4,
+        paymentMethod: 1, // 1 for Indian payment
+      };
+
+      const response = await axiosInstance.post('/subscriptions', payload);
+      console.log('Subscription successful:', response.data);
+      console.log('planId successful:', planId);
+      // Optionally redirect or show success UI
+    } catch (error) {
+      console.error('Subscription failed:', error);
+      // Show error UI or snackbar
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [planId])
+  };
 
   const renderPrice = (
     <Stack direction="row" justifyContent="flex-end">
-      <Typography variant="h4">rs</Typography>
-
+      <Typography variant="h4">₹</Typography>
       <Typography variant="h2">{planData?.price}</Typography>
-
-      {/* <Typography
-        component="span"
-        sx={{ alignSelf: 'center', color: 'text.disabled', ml: 1, typography: 'body2' }}
-      >
-        / mo
-      </Typography> */}
     </Stack>
   );
 
@@ -76,13 +86,6 @@ export default function PaymentSummary({ sx, ...other }) {
           <Label color="error">{planData?.planName}</Label>
         </Stack>
 
-        {/* <Stack direction="row" justifyContent="space-between">
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Billed Monthly
-          </Typography>
-          <Switch defaultChecked />
-        </Stack> */}
-
         {renderPrice}
 
         <Divider sx={{ borderStyle: 'dashed' }} />
@@ -90,7 +93,7 @@ export default function PaymentSummary({ sx, ...other }) {
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="subtitle1">Total Billed</Typography>
 
-          <Typography variant="subtitle1">$9.99*</Typography>
+          <Typography variant="subtitle1">₹{planData?.price}</Typography>
         </Stack>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
@@ -100,7 +103,7 @@ export default function PaymentSummary({ sx, ...other }) {
         * Plus applicable taxes
       </Typography>
 
-      <Button fullWidth size="large" variant="contained" sx={{ mt: 5, mb: 3 }}>
+      <Button fullWidth size="large" variant="contained" sx={{ mt: 5, mb: 3 }} onClick={handleUpgrade}>
         Upgrade My Plan
       </Button>
 

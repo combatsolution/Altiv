@@ -47,6 +47,7 @@ export default function PaymentView() {
             <PaymentBillingAddress />
 
             {/* <PaymentMethods /> */}
+            
           </Box>
         </Grid>
 
