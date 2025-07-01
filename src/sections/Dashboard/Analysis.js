@@ -418,7 +418,7 @@ export default function FoboLevelTaskDistribution() {
           if (group.length === 0) return null;
 
           return (
-            <React.Fragment sx key={groupIndex}>
+            <React.Fragment key={groupIndex}>
               {/* Colored Bar */}
               <Box sx={{ width: '100%', height: 4, display: 'flex', gap: '2px', mb: 1 }}>
                 <Box
