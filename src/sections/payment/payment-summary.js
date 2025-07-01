@@ -1,78 +1,214 @@
-
 import PropTypes from 'prop-types';
-// @mui
+import { useEffect, useState } from 'react';
+import axiosInstance from 'src/utils/axios';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-// components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'src/routes/hook';
-import axiosInstance from 'src/utils/axios';
+import { useNavigate, useParams } from 'react-router';
+import { useAuthContext } from 'src/auth/hooks';
 
 export default function PaymentSummary({ sx, ...other }) {
-  const params = useSearchParams();
-  const { planId } = params;
-  const [planData, setPlansData] = useState(null);
- console.log('planId:', planId);
-  
+  const navigate = useNavigate();
+  const { planId } = useParams();
+  const { user } = useAuthContext();
+  const [planData, setPlanData] = useState(null);
 
   useEffect(() => {
-  console.log('planId:', planId);
-  const fetchPlanData = async () => {
-    try {
-      const response = await axiosInstance.get(`/plans/${planId}`);
-      if (response && response.data) {
-        setPlansData(response.data);
+    const fetchPlan = async () => {
+      try {
+        const response = await axiosInstance.get(`/plans/${planId}`);
+        setPlanData(response.data);
+      } catch (error) {
+        console.error('Error fetching plan:', error);
       }
-    } catch (error) {
-      console.error('Error fetching plan data:', error);
-    }
+    };
+
+    if (planId) fetchPlan();
+  }, [planId]);
+
+  const isValidIndianNumber = (number) => {
+    const cleanedNumber = number?.replace(/\D/g, '');
+    const regex = /^(?:\+91|91|0)?[6-9]\d{9}$/;
+    return regex.test(cleanedNumber);
   };
-
-  if (planId !== null && planId !== undefined) {
-    fetchPlanData();
-  }
-}, [planId]);
-
 
   const handleUpgrade = async () => {
     try {
+      const userPhone = user?.phoneNumber || '';
+      const isIndianUser = isValidIndianNumber(userPhone);
+
       const payload = {
-        planid: 4,
-        paymentMethod: 1, // 1 for Indian payment
+        planId: Number(planId),
+        paymentMethod: isIndianUser ? 1 : 0, // 1 = Razorpay (India), 0 = Stripe (International)
+        isDeleted: false,
       };
 
-      const response = await axiosInstance.post('/subscriptions', payload);
-      console.log('Subscription successful:', response.data);
-      console.log('planId successful:', planId);
-      // Optionally redirect or show success UI
-    } catch (error) {
-      console.error('Subscription failed:', error);
-      // Show error UI or snackbar
+      const res = await axiosInstance.post('/subscriptions', payload);
+      const { data } = res;
+      console.log('Subscription data:', res);
+      if (data.paymentMethod === 1) {
+        // Razorpay
+        launchRazorpay(data);
+      } else {
+        // Stripe
+        window.location.href = data.paymentObject.sessionUrl;
+      }
+    } catch (err) {
+      console.error('Subscription failed', err);
     }
   };
+  // const launchRazorpay = (data) => {
+  //   const payment = data.paymentObject;
 
-  const renderPrice = (
-    <Stack direction="row" justifyContent="flex-end">
-      <Typography variant="h4">₹</Typography>
-      <Typography variant="h2">{planData?.price}</Typography>
-    </Stack>
-  );
+  //   const options = {
+  //     key: payment.razorpayKeyId,
+  //     amount: payment.amount,
+  //     currency: payment.currency,
+  //     name: 'Altiv AI',
+  //     description: 'Plan Purchase',
+  //     order_id: payment.orderId,
+  //     handler: (response) => {
+  //       console.log('Razorpay Success:', response);
+
+  //       // You can also verify payment here before redirecting
+  //       navigate('/successpage'); // ✅ Correct usage
+  //     },
+  //     prefill: {
+  //       name: data.customerName || '',
+  //       email: data.customerEmail || '',
+  //       contact: data.customerPhone || '',
+  //     },
+  //     notes: {
+  //       planId,
+  //     },
+  //     theme: {
+  //       color: '#3399cc',
+  //     },
+  //   };
+
+  //   const razor = new window.Razorpay(options);
+  //   razor.open();
+  // };
+  
+  const launchRazorpay = (data) => {
+    const payment = data.paymentObject;
+  console.log('Launching Razorpay with:', payment);
+    const options = {
+      key: payment.razorpayKeyId,
+      amount: payment.amount,
+      currency: payment.currency,
+      name: 'Altiv AI',
+      description: 'Plan Purchase',
+      order_id: payment.orderId,
+      handler: async (response) => {
+        console.log('Razorpay Success:', response);
+
+        try {
+          const verifyRes = await axiosInstance.post('/subscriptions/callback/verify', {
+            subscription_id: payment.subscriptionId, // from backend
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+          });
+          console.log('Verification response:', verifyRes.data);
+          if (verifyRes.data.success) {
+            navigate('/successpage');
+            window.location.reload();
+          } else {
+            navigate('/successpage');
+          }
+        } catch (error) {
+          console.error('Verification failed:', error);
+          alert('Server error verifying payment.');
+        }
+      },
+      prefill: {
+        name: data.customerName || '',
+        email: data.customerEmail || '',
+        contact: data.customerPhone || '',
+      },
+      notes: {
+        planId,
+      },
+      theme: {
+        color: '#3399cc',
+      },
+    }; 
+
+    const razor = new window.Razorpay(options);
+    razor.open();
+  };
+
+  
+
+//  const launchRazorpay = (data) => {
+//   const payment = data.paymentObject;
+//   console.log('Launching Razorpay with:', payment);
+
+//   const options = {
+//     key: payment.razorpayKeyId,
+//     amount: payment.amount,
+//     currency: payment.currency,
+//     name: 'Altiv AI',
+//     description: 'Plan Purchase',
+//     order_id: payment.orderId,
+//     handler: async (response) => {
+//       console.log('Razorpay Success:', response);
+
+//       try {
+//         const verifyRes = await axiosInstance.post(
+//           '/subscriptions/callback/verify',
+// {
+//             subscription_id: payment.subscriptionId,
+//             razorpay_order_id: response.razorpay_order_id,
+//             razorpay_payment_id: response.razorpay_payment_id,
+//             razorpay_signature: response.razorpay_signature,
+//           }          
+//           // Optional: if you require token-based auth
+//           // {
+//           //   headers: {
+//           //     Authorization: `Bearer ${user?.accessToken}`,
+//           //   },
+//           // }
+//         );
+//         console.log('Razorpay Verification Response:', verifyRes);
+//         const resData = verifyRes?.data;
+//         console.log('Verification response:', resData);
+
+//         if (verifyRes.status === 200 && resData?.success) {
+//           navigate('/successpage');
+//           window.location.reload();
+//         } else {
+//           console.warn('Verification failed, redirecting anyway');
+//         }
+//       } catch (error) {
+//         console.error('Verification request failed:', error?.response || error);
+//         alert('Server error verifying payment. Redirecting...');
+//       }
+//     },
+//     prefill: {
+//       name: data.customerName || '',
+//       email: data.customerEmail || '',
+//       contact: data.customerPhone || '',
+//     },
+//     notes: {
+//       planId,
+//     },
+//     theme: {
+//       color: '#3399cc',
+//     },
+//   };
+
+//   const razor = new window.Razorpay(options);
+//   razor.open();
+// };
 
   return (
-    <Box
-      sx={{
-        p: 5,
-        borderRadius: 2,
-        bgcolor: 'background.neutral',
-        ...sx,
-      }}
-      {...other}
-    >
+    <Box sx={{ p: 5, borderRadius: 2, bgcolor: 'background.neutral', ...sx }} {...other}>
       <Typography variant="h6" sx={{ mb: 5 }}>
         Summary
       </Typography>
@@ -82,17 +218,18 @@ export default function PaymentSummary({ sx, ...other }) {
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Subscription
           </Typography>
-
           <Label color="error">{planData?.planName}</Label>
         </Stack>
 
-        {renderPrice}
+        <Stack direction="row" justifyContent="flex-end">
+          <Typography variant="h4">₹</Typography>
+          <Typography variant="h2">{planData?.price}</Typography>
+        </Stack>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="subtitle1">Total Billed</Typography>
-
           <Typography variant="subtitle1">₹{planData?.price}</Typography>
         </Stack>
 
@@ -103,7 +240,13 @@ export default function PaymentSummary({ sx, ...other }) {
         * Plus applicable taxes
       </Typography>
 
-      <Button fullWidth size="large" variant="contained" sx={{ mt: 5, mb: 3 }} onClick={handleUpgrade}>
+      <Button
+        fullWidth
+        size="large"
+        variant="contained"
+        sx={{ mt: 5, mb: 3 }}
+        onClick={handleUpgrade}
+      >
         Upgrade My Plan
       </Button>
 
@@ -112,7 +255,6 @@ export default function PaymentSummary({ sx, ...other }) {
           <Iconify icon="solar:shield-check-bold" sx={{ color: 'success.main' }} />
           <Typography variant="subtitle2">Secure credit card payment</Typography>
         </Stack>
-
         <Typography variant="caption" sx={{ color: 'text.disabled', textAlign: 'center' }}>
           This is a secure 128-bit SSL encrypted payment
         </Typography>

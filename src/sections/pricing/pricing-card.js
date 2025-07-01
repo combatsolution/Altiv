@@ -23,8 +23,13 @@ import { Category } from '@mui/icons-material';
 // ----------------------------------------------------------------------
 
 export default function PricingCard({ card, sx, ...other }) {
+  
   const navigate = useNavigate();
-  const { id, price, planName, subTitle, features, paymentType, isFreePlan, recurringPeriod} = card;
+  const { id, planName, price, paymentType, recurringPeriod, isFreePlan,  subTitle, features, } = card;
+
+  const userCountry = 'IN'; // Replace this with real logic from profile or IP geo lookup
+  const paymentMethod = userCountry === 'IN' ? 1 : 0;
+
 
   // const renderIcon = (
   //   <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -174,12 +179,26 @@ export default function PricingCard({ card, sx, ...other }) {
             color: '#fff',
             '&:hover': {
               backgroundColor: '#0033aa',
-            },
+            },  
           }}
           onClick={() => navigate(paths.payment(id))}      
         >
           Pay Now
         </Button>
+
+         {/* <Button
+      fullWidth
+      size="large"
+      variant="contained"
+      disabled={isFreePlan}
+      onClick={() =>
+        navigate(`/payment?planId=${id}`, {
+          state: { paymentMethod },
+        })
+      }
+    >
+      Pay Now
+    </Button> */}
       </Stack>
     </Stack>
   );

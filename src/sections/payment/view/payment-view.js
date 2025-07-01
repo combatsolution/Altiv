@@ -5,7 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 //
 import PaymentSummary from '../payment-summary';
-import PaymentMethods from '../payment-methods';
+// import PaymentMethods from '../payment-methods';
 import PaymentBillingAddress from '../payment-billing-address';
 
 // ----------------------------------------------------------------------
@@ -46,7 +46,7 @@ export default function PaymentView() {
           >
             <PaymentBillingAddress />
 
-            {/* <PaymentMethods /> */}
+             {/* <PaymentMethods />  */}
             
           </Box>
         </Grid>

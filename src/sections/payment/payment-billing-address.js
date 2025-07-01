@@ -29,7 +29,7 @@ export default function PaymentBillingAddress() {
     email: Yup.string().email('Enter a valid email').required('Email is required'),
     address: Yup.string().required('Address is required'),
   });
-
+  console.log('User data:', user);
   const defaultValues = {
     name: user?.fullName || '',
     phone: user?.phoneNumber || '',
