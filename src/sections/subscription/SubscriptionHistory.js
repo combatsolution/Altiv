@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -21,6 +20,7 @@ import axiosInstance from 'src/utils/axios';
 const statusColor = {
   SUCCESS: 'success',
   EXPIRED: 'warning',
+  PENDING: 'info',
 };
 
 // Component for loading state
@@ -47,7 +47,7 @@ const SubscriptionRows = ({ subscriptions, handleReverify }) => (
     {subscriptions.map((row, idx) => (
       <TableRow key={idx}>
         <TableCell>{row.date}</TableCell>
-        <TableCell>${row.price}</TableCell>
+        <TableCell>{row.price}</TableCell>
         <TableCell>{row.planname}</TableCell>
         <TableCell>{row.paymenttype}</TableCell>
         <TableCell>
@@ -60,7 +60,7 @@ const SubscriptionRows = ({ subscriptions, handleReverify }) => (
             >
               {row.status}
             </Button>
-            {row.status === 'EXPIRED' && (
+            {['EXPIRED', 'PENDING'].includes(row.status) && (
               <Button
                 variant="outlined"
                 size="small"
@@ -98,27 +98,44 @@ export default function SubscriptionHistory() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Plan categories for filtering
-  const planCategories = [
+  const planCategories = useMemo(() => [
     { label: 'Marketing', value: 0 },
     { label: 'Data Science', value: 1 },
     { label: 'Product Management', value: 2 },
-  ];
+  ], []); // Empty dependency array since planCategories is static
+
+  // Map planType to category label
+  const planTypeToLabel = useMemo(() => ({
+    0: 'Marketing',
+    1: 'Data Science',
+    2: 'Product Management',
+  }), []); // Empty dependency array since planTypeToLabel is static
 
   // Fetch subscription history using plans API
-  const fetchSubscriptionHistory = async (planType) => {
+  const fetchSubscriptionHistory = useCallback(async (planType) => {
     setIsLoading(true);
     try {
       const response = await axiosInstance.get(`/subscriptions/user`);
-      if (response && response.data) {  
-        const formattedData = response.data.map((plan, idx) => ({
-          id: plan.id,
+      if (response && response.data) {
+        // Handle both array and single object responses
+        const data = Array.isArray(response.data) ? response.data : [response.data];
+        const formattedData = data.map((plan) => ({
+          id: plan.id || `sub_${Date.now()}`, // Fallback ID
           date: plan.createdAt ? new Date(plan.createdAt).toLocaleDateString() : 'N/A',
-          price: plan.price || 'N/A',
-          planname: plan.planName || 'N/A',
-          paymenttype: plan.paymentType || 'Credit Card', // Default if not provided
-          // status: idx % 2 === 0 ? 'SUCCESS' : 'EXPIRED', // Mock status
+          price: plan.planData?.price ? `$${plan.planData.price}` : 'N/A',
+          planname: plan.planData?.planName || 'N/A',
+          paymenttype: plan.planData?.paymentType || 'N/A',
+          status: plan.status ? plan.status.toUpperCase() : 'UNKNOWN',
+          planType: plan.planData?.planType !== undefined ? plan.planData.planType : 0, // Store planType for filtering
         }));
-        setSubscriptions(formattedData);
+        // Filter by planType
+        const filteredData = formattedData.filter(
+          (sub) =>
+            (sub.planType !== undefined &&
+              planTypeToLabel[sub.planType] === planCategories[planType].label) ||
+            planType === 0
+        );
+        setSubscriptions(filteredData);
       } else {
         setSubscriptions([]);
       }
@@ -128,24 +145,22 @@ export default function SubscriptionHistory() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [planCategories, planTypeToLabel]); // Dependencies for useCallback
 
   // Handle re-verification (mock)
-  const handleReverify = async (subscriptionId) => {
+  const handleReverify = useCallback(async (subscriptionId) => {
     try {
       // Simulate re-verification
-      console.log(`Re-verifying subscription {subscriptionId}`);
+      console.log(`Re-verifying subscription ${subscriptionId}`);
       setSubscriptions((prev) =>
-        prev.map((sub) =>
-          sub.id === subscriptionId ? { ...sub, status: 'SUCCESS' } : sub
-        )
+        prev.map((sub) => (sub.id === subscriptionId ? { ...sub, status: 'SUCCESS' } : sub))
       );
       alert('Re-verification simulated successfully');
     } catch (error) {
       console.error('Error re-verifying subscription:', error);
       alert('Failed to re-verify subscription. Please try again.');
     }
-  };
+  }, [setSubscriptions]); // Dependency for useCallback
 
   // Render table content
   const renderTableContent = () => {
@@ -161,7 +176,7 @@ export default function SubscriptionHistory() {
   // Fetch subscriptions when component mounts or service changes
   useEffect(() => {
     fetchSubscriptionHistory(service);
-  }, [service]);
+  }, [service, fetchSubscriptionHistory]);
 
   const handleChange = (event) => {
     setService(event.target.value);
@@ -170,14 +185,27 @@ export default function SubscriptionHistory() {
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
       {/* Title */}
-      <Paper elevation={2} sx={{ p: 2, bgcolor: '#2196f3', color: 'white', mb: 3 }}>
+      <Paper
+        elevation={2}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          p: 2,
+          bgcolor: 'primary.main',
+          color: '#fff',
+          mb: 3,
+          width: '50%',
+          mx: 'auto',
+        }}
+      >
         <Typography variant="h6" align="center">
           Your Subscription History
         </Typography>
       </Paper>
 
       {/* Service Selection */}
-      <Box sx={{ mb: 2 }}>
+      <Box>
         <Select value={service} onChange={handleChange} size="small">
           {planCategories.map((category) => (
             <MenuItem key={category.value} value={category.value}>
@@ -197,7 +225,7 @@ export default function SubscriptionHistory() {
               <TableCell>Plan Name</TableCell>
               <TableCell>Payment Type</TableCell>
               <TableCell>Credit Status</TableCell>
-            </TableRow> 
+            </TableRow>
           </TableHead>
           <TableBody>{renderTableContent()}</TableBody>
         </Table>

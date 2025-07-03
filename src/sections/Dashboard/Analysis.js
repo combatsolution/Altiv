@@ -87,7 +87,7 @@ export default function FoboLevelTaskDistribution() {
     } catch (error) {
       console.error('Decryption failed:', error);
     }
-  }, [encryptedId, encryptedLinkedInUrl]);
+  }, [encryptedId, encryptedLinkedInUrl]);  
 
   // API Call
   useEffect(() => {

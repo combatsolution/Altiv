@@ -6,6 +6,7 @@ import { m } from 'framer-motion';
 import avt1 from 'src/Fogoimages/Aisha.webp';
 import avt2 from 'src/Fogoimages/David.webp';
 import avt3 from 'src/Fogoimages/Jennifer.webp';
+import { Grid } from 'lucide-react';
 
 const MotionTypography = m(Typography);
 
@@ -186,7 +187,7 @@ export default function TestimonialCarousel() {
       >
         Where Are They Now?
       </MotionTypography>
-  <grid>
+  <Grid>
       <MotionTypography
         
         initial={{ opacity: 0, y: 40 }}
@@ -227,7 +228,7 @@ export default function TestimonialCarousel() {
           
         }}
       />
-</grid>
+</Grid>
       <Box
         ref={scrollRef}
         onScroll={handleScroll}
