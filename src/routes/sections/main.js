@@ -78,7 +78,7 @@ export const mainRoutes = [
       { path: 'career-title', element: <CareerPathTitlePage /> },
       { path: 'job-feed', element: <JobFeedPage /> },
       { path: 'subscription', element: <SubscriptionData /> },
-      { path: 'successpage', element: <Subscriptionsuccess /> },
+      { path: 'payment/succes', element: <Subscriptionsuccess /> },
       { path: 'termsandconditions', element: <TermsCondition /> },
 
       { path: 'fobo', element: <FoboPage /> },
