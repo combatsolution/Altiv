@@ -18,7 +18,7 @@ export default function PaymentSummary({ sx, ...other }) {
   const [planData, setPlanData] = useState(null);
 
   useEffect(() => {
-    const fetchPlan = async () => {
+    const fetchPlan = async () => { 
       try {
         const response = await axiosInstance.get(`/plans/${planId}`);
         setPlanData(response.data);
@@ -106,20 +106,24 @@ export default function PaymentSummary({ sx, ...other }) {
       order_id: payment.orderId,
       handler: async (response) => {
         console.log('Razorpay Success:', response);
-
+        
         try {
-          const verifyRes = await axiosInstance.post('/subscriptions/callback/verify', {
-            subscription_id: payment.subscriptionId, // from backend
+          const inputData = {
+            subscription_id: payment.subscriptionId,
             razorpay_order_id: response.razorpay_order_id,
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_signature: response.razorpay_signature,
-          });
+          };
+
+          console.log('Verifying payment with data:', inputData);
+          const verifyRes = await axiosInstance.post('/subscriptions/callback/verify', inputData);
           console.log('Verification response:', verifyRes.data);
+           navigate(verifyRes);
           if (verifyRes.data.success) {
-            navigate('/successpage');
+            navigate('/payment/success');
             window.location.reload();
           } else {
-            navigate('/successpage');
+            navigate('/payment/success');
           }
         } catch (error) {
           console.error('Verification failed:', error);
@@ -223,7 +227,7 @@ export default function PaymentSummary({ sx, ...other }) {
 
         <Stack direction="row" justifyContent="flex-end">
           <Typography variant="h4">₹</Typography>
-          <Typography variant="h2">{planData?.price}</Typography>
+          <Typography variant="h2"  color="primary">{planData?.price}</Typography>
         </Stack>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
@@ -246,6 +250,7 @@ export default function PaymentSummary({ sx, ...other }) {
         variant="contained"
         sx={{ mt: 5, mb: 3 }}
         onClick={handleUpgrade}
+        color="primary"
       >
         Upgrade My Plan
       </Button>

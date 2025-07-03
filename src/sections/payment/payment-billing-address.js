@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { useForm, FormProvider as RHFormProvider, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
-import axios from 'axios';
+
 
 import {
   Typography,
@@ -67,7 +67,7 @@ export default function PaymentBillingAddress() {
   return (    
     <Box
       sx={{
-        minHeight: '80vh',
+        minHeight: '40vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -123,7 +123,7 @@ export default function PaymentBillingAddress() {
                     {...field}
                     error={!!error}
                     helperText={error?.message}
-                    editable
+                    
                   />
                 )}
               />

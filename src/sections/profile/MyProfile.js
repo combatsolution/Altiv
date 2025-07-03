@@ -500,7 +500,7 @@ export default function MyProfile() {
                             aria-label="delete"
                             disabled={isUploading}
                           >
-                            <DeleteIcon sx={{ color: 'red' }} />
+                            <DeleteIcon sx={{ color: 'red', mt:3, height:'18px' }} />
                           </IconButton>
                         </Box>
                       }

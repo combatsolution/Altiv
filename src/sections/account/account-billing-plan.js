@@ -116,7 +116,7 @@ export default function AccountBillingPlan({ cardList, addressBook, plans }) {
           {renderPlans}
         </Grid>
 
-        <Stack spacing={2} sx={{ p: 3, pt: 0, typography: 'body2' }}>
+        <Stack spacing={2} sx={{ p: 1, pt: 0, typography: 'body2' }}>
           <Grid container spacing={{ xs: 0.5, md: 2 }}>
             <Grid xs={12} md={4} sx={{ color: 'text.secondary' }}>
               Plan
@@ -133,7 +133,7 @@ export default function AccountBillingPlan({ cardList, addressBook, plans }) {
             <Grid xs={12} md={8}>
               <Button
                 onClick={openAddress.onTrue}
-                endIcon={<Iconify width={16} icon="eva:arrow-ios-downward-fill" />}
+                endIcon={<Iconify width={12} icon="eva:arrow-ios-downward-fill" />}
                 sx={{ typography: 'subtitle2', p: 0, borderRadius: 0 }}
               >
                 {selectedAddress?.name}

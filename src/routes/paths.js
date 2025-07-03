@@ -20,7 +20,8 @@ const ROOTS = {
 // ----------------------------------------------------------------------
 
 export const paths = {
-  SubscriptionSuccess:'/successpage',
+  SubscriptionSuccess:'/payment/success',
+  //  SubscriptionSuccess:'/successpage',
   subscription:'/subscription',
  
 

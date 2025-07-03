@@ -20,7 +20,7 @@ import Altivlogo from 'src/images/Altivlogo.png';
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+
 import { useSearchParams, useRouter } from 'src/routes/hook';
 
 import { useAuthContext } from 'src/auth/hooks';
@@ -132,7 +132,7 @@ export default function JwtRegisterView() {
 
         <FormProvider methods={methods} onSubmit={onSubmit}>
           <Stack spacing={2.5}>
-            {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
+            {!!errorMsg && <Alert severity="error"> {errorMsg} </Alert>}
 
             <RHFTextField name="name" label="Full Name" required />
             <RHFTextField name="email" label="Email" required />

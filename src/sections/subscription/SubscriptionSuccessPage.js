@@ -47,7 +47,7 @@ const SubscriptionSuccessCard = () => {
               gap: 1,
             }}
           >
-            🎉 Congratulations!
+             Congratulations!
           </Typography>
 
           {/* Icon */}

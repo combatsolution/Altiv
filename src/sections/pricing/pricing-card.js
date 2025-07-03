@@ -25,22 +25,11 @@ import { Category } from '@mui/icons-material';
 export default function PricingCard({ card, sx, ...other }) {
   
   const navigate = useNavigate();
-  const { id, planName, price, paymentType, recurringPeriod, isFreePlan,  subTitle, features, } = card;
+  const { id, planName, price, paymentType, recurringPeriod, isFreePlan, subTitle, features } = card;
 
   const userCountry = 'IN'; // Replace this with real logic from profile or IP geo lookup
   const paymentMethod = userCountry === 'IN' ? 1 : 0;
 
-
-  // const renderIcon = (
-  //   <Stack direction="row" alignItems="center" justifyContent="space-between">
-  //     <Box sx={{ width: 48, height: 48 }}>
-  //       {basic && <PlanFreeIcon />}
-  //       {starter && <PlanStarterIcon />}
-  //       {premium && <PlanPremiumIcon />}
-  //     </Box>
-  //     {starter && <Label color="info">POPULAR</Label>}
-  //   </Stack>
-  // );
 
   const renderSubscription = (
     <Stack spacing={1} display="flex" alignItems="center" width="100%">
@@ -62,9 +51,9 @@ export default function PricingCard({ card, sx, ...other }) {
       <Stack direction="row" justifyContent="center" alignItems="flex-end">
         <Typography
           variant="h4"
-          sx={{ alignSelf: 'center', mr: 1, color: 'text.disabled', ml: 1, typography: 'body2' }}
+          sx={{ alignSelf: 'center', mr: 1, ml: 1, typography: 'body2' }}
         >
-          RS
+          ₹
         </Typography>
         <Typography variant="h2" color="primary">
           {price}
@@ -111,9 +100,9 @@ export default function PricingCard({ card, sx, ...other }) {
   const renderList2 = (
     <Stack spacing={2} sx={{ width: '100%' }}>
       <Stack direction="row" alignItems="left" justifyContent="space-between">
-        <Box component="span" sx={{ typography: 'overline' }}>
+        {/* <Box component="span" sx={{ typography: 'overline' }}>
           Outcomes
-        </Box>
+        </Box> */}
       </Stack>
       {/* {outcomes.map((item) => (
         <Stack key={item} direction="row" spacing={1} sx={commonListStyle}>
@@ -186,19 +175,7 @@ export default function PricingCard({ card, sx, ...other }) {
           Pay Now
         </Button>
 
-         {/* <Button
-      fullWidth
-      size="large"
-      variant="contained"
-      disabled={isFreePlan}
-      onClick={() =>
-        navigate(`/payment?planId=${id}`, {
-          state: { paymentMethod },
-        })
-      }
-    >
-      Pay Now
-    </Button> */}
+        
       </Stack>
     </Stack>
   );

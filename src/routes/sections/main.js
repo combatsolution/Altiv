@@ -81,7 +81,9 @@ export const mainRoutes = [
       { path: 'job-feed', element: <JobFeedPage /> },
       {path:'job-booster', element:<JobBoosterpage/>},
       { path: 'subscription', element: <SubscriptionData /> },
-      { path: 'successpage', element: <Subscriptionsuccess /> },
+      // { path: 'successpage', element: <Subscriptionsuccess /> },
+       { path: 'payment/success', element: <Subscriptionsuccess /> },
+      
       { path: 'termsandconditions', element: <TermsCondition /> },
 
       { path: 'fobo', element: <FoboPage /> },

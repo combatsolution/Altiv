@@ -165,46 +165,6 @@ export const _homePlans = [...Array(3)].map((_, index) => ({
   ],
 }));
 
-// ----------------------------------------------------------------------
-
-// export const _pricingPlans = [
-//   {
-//     subscription: 'basic',
-//     price: 0,
-//     caption: 'Forever',
-//     lists: ['3 Prototypes', '3 Boards', 'Up To 5 Team Members'],
-//     labelAction: 'Current Plan',
-//   },
-//   {
-//     subscription: 'starter',
-//     price: 4.99,
-//     caption: 'Saving $24 a year',
-//     lists: [
-
-//       '3 Prototypes',
-//       '3 Boards',
-//       'Up To 5 Team Members',
-//       // 'Advanced Security',
-//       // 'Issue Escalation',
-//     ],
-//     labelAction: 'Choose Starter',
-//   },
-//   {
-//     subscription: 'premium',
-//     price: 9.99,
-//     caption: 'Saving $124 a year',
-//     lists: [
-//       '3 Prototypes',
-//       '3 Boards',
-//       'Up To 5 Team Members',
-//       // 'Advanced Security',
-//       // 'Issue Escalation',
-//       // 'Issue Development license',
-//       // 'Permissions & workflows',
-//     ],
-//     labelAction: 'Choose Premium',
-//   },
-// ];
 
 export const _pricingPlans = [
   {

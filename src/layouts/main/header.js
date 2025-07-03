@@ -122,7 +122,7 @@ export default function Header() {
                   borderRadius: 2,
                 }}
               >
-                {/* <Typography
+                <Typography
                   variant="body2"
                   sx={{
                     cursor: 'pointer',
@@ -132,7 +132,7 @@ export default function Header() {
                   onClick={() => navigate(paths.subscription)}
                 >
                   Subscriptions
-                </Typography> */}
+                </Typography>
 
 
 

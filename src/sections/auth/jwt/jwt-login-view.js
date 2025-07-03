@@ -200,7 +200,7 @@ export default function JwtLoginView() {
             Need help? Visit our{' '}
             <Link
               underline="hover"
-              onClick={() => router.push(paths.contact)}
+                
               sx={{ cursor: 'pointer' }}
             >
               help center
