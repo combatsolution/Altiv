@@ -352,6 +352,7 @@ export default function PaymentSummary({ sx, ...other }) {
       }
     } catch (err) {
       console.error('Subscription failed', err);
+       navigate('/pricing');
     }
   };
 
@@ -382,11 +383,12 @@ export default function PaymentSummary({ sx, ...other }) {
             navigate('/payment/success');
             window.location.reload();
           } else {
-            navigate('/payment/success');
+            navigate('/pricing');
           }
         } catch (err) { // Changed from 'error' to 'err' to avoid shadowing
           console.error('Verification failed:', err);
           alert('Server error verifying payment.');
+          navigate('/pricing');
         }
       },
       prefill: {

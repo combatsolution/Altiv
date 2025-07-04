@@ -1,34 +1,45 @@
 import PropTypes from 'prop-types';
-// @mui
+import { useEffect, useState } from 'react';
 import { alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
+import {
+  Box,
+  Link,
+  Stack,
+  Button,
+  Divider,
+  Typography,
+} from '@mui/material';
 
-// assets
-import { PlanFreeIcon, PlanStarterIcon, PlanPremiumIcon } from 'src/assets/icons';
-
-// components
-import Label from 'src/components/label';
-import Iconify from 'src/components/iconify';
 import { useNavigate } from 'react-router-dom';
 import { paths } from 'src/routes/paths';
-import { List } from 'src/components/organizational-chart/organizational-chart';
-import axiosInstance from 'src/utils/axios';
-import { Category } from '@mui/icons-material';
 
-// ----------------------------------------------------------------------
+import Label from 'src/components/label';
+import Iconify from 'src/components/iconify';
+import { useAuthContext } from 'src/auth/hooks';
 
 export default function PricingCard({ card, sx, ...other }) {
   const navigate = useNavigate();
-  const { id, planName, price, paymentType, recurringPeriod, isFreePlan, subTitle, features } =
-    card;
+  const { user } = useAuthContext();
 
-  const userCountry = 'IN'; // Replace this with real logic from profile or IP geo lookup
-  const paymentMethod = userCountry === 'IN' ? 1 : 0;
+  const [activePlan, setActivePlan] = useState(null);
+
+  useEffect(() => {
+    if (user?.activeSubscriptionId && user?.currentPlanId) {
+      setActivePlan(user.currentPlanId);
+    }
+  }, [user]);
+
+  const {
+    id,
+    planName,
+    price,
+    paymentType,
+    recurringPeriod,
+    isFreePlan,
+    subTitle,
+  } = card;
+
+  const isCurrentPlan = activePlan === id;
 
   const renderSubscription = (
     <Stack spacing={1} display="flex" alignItems="center" width="100%">
@@ -64,19 +75,8 @@ export default function PricingCard({ card, sx, ...other }) {
     </Stack>
   );
 
-  const commonListStyle = {
-    typography: 'body2',
-    alignItems: 'center',
-  };
-
-  const commonIconStyle = {
-    color: 'green',
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-  };
-
   const renderList = (
     <Stack spacing={2} sx={{ width: '100%' }}>
-      {/* Header */}
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Box component="span" sx={{ typography: 'overline' }}>
           Features
@@ -86,37 +86,20 @@ export default function PricingCard({ card, sx, ...other }) {
         </Link>
       </Stack>
 
-      {/* Demo features */}
       <Stack spacing={1}>
-        <Stack direction="row" spacing={1} sx={commonListStyle}>
-          <Iconify icon="eva:checkmark-fill" width={20} sx={commonIconStyle} />
+        <Stack direction="row" spacing={1}>
+          <Iconify icon="eva:checkmark-fill" width={20} sx={{ color: 'green' }} />
           <Typography variant="body2">Fast performance</Typography>
         </Stack>
-        <Stack direction="row" spacing={1} sx={commonListStyle}>
-          <Iconify icon="eva:checkmark-fill" width={20} sx={commonIconStyle} />
+        <Stack direction="row" spacing={1}>
+          <Iconify icon="eva:checkmark-fill" width={20} sx={{ color: 'green' }} />
           <Typography variant="body2">User-friendly interface</Typography>
         </Stack>
-        <Stack direction="row" spacing={1} sx={commonListStyle}>
-          <Iconify icon="eva:checkmark-fill" width={20} sx={commonIconStyle} />
+        <Stack direction="row" spacing={1}>
+          <Iconify icon="eva:checkmark-fill" width={20} sx={{ color: 'green' }} />
           <Typography variant="body2">Secure data handling</Typography>
         </Stack>
       </Stack>
-    </Stack>
-  );
-
-  const renderList2 = (
-    <Stack spacing={2} sx={{ width: '100%' }}>
-      <Stack direction="row" alignItems="left" justifyContent="space-between">
-        {/* <Box component="span" sx={{ typography: 'overline' }}>
-          Outcomes
-        </Box> */}
-      </Stack>
-      {/* {outcomes.map((item) => (
-        <Stack key={item} direction="row" spacing={1} sx={commonListStyle}>
-          <Iconify icon="eva:checkmark-fill" width={20} sx={commonIconStyle} />
-          {item}
-        </Stack>
-      ))} */}
     </Stack>
   );
 
@@ -130,30 +113,30 @@ export default function PricingCard({ card, sx, ...other }) {
         borderRadius: 2,
         boxShadow: (theme) => ({
           xs: theme.customShadows.card,
-          md: 'none',
-        }),
-        ...(isFreePlan && {
-          borderTopRightRadius: { md: 0 },
-          borderBottomRightRadius: { md: 0 },
-        }),
-        ...((isFreePlan || !isFreePlan) && {
-          boxShadow: (theme) => ({
-            xs: theme.customShadows.card,
-            md: `-40px 40px 80px 0px ${alpha(
-              theme.palette.mode === 'light' ? theme.palette.grey[500] : theme.palette.common.black,
-              0.16
-            )}`,
-          }),
+          md: `-40px 40px 80px 0px ${alpha(
+            theme.palette.mode === 'light'
+              ? theme.palette.grey[500]
+              : theme.palette.common.black,
+            0.16
+          )}`,
         }),
         ...sx,
       }}
       {...other}
     >
-      {/* {renderIcon} */}
+      {isCurrentPlan && (
+        <Label color="success" sx={{ mt:-3 , mb:-4}}>
+          Active Plan
+        </Label>
+      )}
+
       {renderSubscription}
       {renderPrice}
+
       <Divider sx={{ borderStyle: 'dashed' }} />
+
       {renderList}
+
       <Divider
         sx={{
           width: '100%',
@@ -163,23 +146,23 @@ export default function PricingCard({ card, sx, ...other }) {
           mb: 1,
         }}
       />
-      {renderList2}
+
       <Stack spacing={2} sx={{ pt: 1 }}>
         <Button
           fullWidth
           size="large"
           variant="contained"
-          disabled={isFreePlan}
+          disabled={isFreePlan || isCurrentPlan}
           sx={{
-            backgroundColor: '#0040D8',
+            backgroundColor: isCurrentPlan ? 'success.main' : '#0040D8',
             color: '#fff',
             '&:hover': {
-              backgroundColor: '#0033aa',
+              backgroundColor: isCurrentPlan ? 'success.dark' : '#0033aa',
             },
           }}
-          onClick={() => navigate(paths.payment(id))}
+          onClick={() => !isCurrentPlan && navigate(paths.payment(id))}
         >
-          Pay Now
+          {isCurrentPlan ? 'Current Plan' : 'Pay Now'}
         </Button>
       </Stack>
     </Stack>

@@ -968,6 +968,7 @@ export default function FoboLevelTaskDistribution() {
     if (decryptedId || decryptedLinkedinUrl) {
       fetchProfileAnalyticsData();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [decryptedId, decryptedLinkedinUrl, viewDetails, smartInsights]);
 
   // API Function
@@ -1572,7 +1573,7 @@ export default function FoboLevelTaskDistribution() {
         <Grid item xs={12} textAlign="left">
           <Button
             onClick={() => {
-              if (user) {
+              if (!user) {
                 navigate(paths.auth.jwt.login);
               } else if (hasActiveSubscription === true) {
                 enqueueSnackbar('You already have an active subscription!', { variant: 'info' });

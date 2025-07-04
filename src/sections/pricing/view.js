@@ -12,6 +12,7 @@ import axiosInstance from 'src/utils/axios';
 import { _pricingPlans } from 'src/_mock';
 import PricingCard from './pricing-card';
 
+
 // ----------------------------------------------------------------------
 
 const planCategories = [

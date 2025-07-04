@@ -219,7 +219,7 @@ export default function SubscriptionHistory() {
               <TableCell>Plan Name</TableCell>
               <TableCell>Payment Type</TableCell>
               <TableCell>Credit Status</TableCell>
-              {/* <TableCell>Invoice</TableCell>               */}
+              {/* <TableCell>Invoice</TableCell>  */}
             </TableRow>
           </TableHead>
           <TableBody>{renderTableContent()}</TableBody>
