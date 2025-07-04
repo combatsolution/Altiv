@@ -73,9 +73,10 @@ export default function JwtRegisterView() {
   };
 
   const methods = useForm({
-    resolver: yupResolver(RegisterSchema),
-    defaultValues,
-  });
+  resolver: yupResolver(RegisterSchema),
+  defaultValues,
+  mode: 'onSubmit', // optional, default is already 'onSubmit'
+});
 
   const {
     reset,
@@ -116,7 +117,7 @@ export default function JwtRegisterView() {
           width: '100%',
           maxWidth: 450,
           textAlign: 'center',
-          
+
         }}
       >
         <img src={altiv} alt="ALTIV Logo" style={{marginBottom:10}}  />

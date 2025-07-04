@@ -15,6 +15,7 @@ import WorkingProcessSection from '../WorkingProcessSection';
 import TestimonialCarousel from '../TestimonialCarousel'
 import FoboHeroSection from '../FoboHeroSection'
 import Datasecuritypage from '../Datasecuritypage'
+
 // import Design from '../Design'
 // import CareerCompass from '../CareerCompass'
 // import ComingSoon from '../ComingSoon'; 
@@ -61,6 +62,7 @@ export default function FoboView() {
       <TestimonialCarousel/>
       <FoboHeroSection/>
       <Datasecuritypage/>
+      {/* <Design/> */}
       {/* <CareerCompass/> */}
       {/* <ComingSoon/> */}
     

@@ -60,23 +60,16 @@ const SubscriptionRows = ({ subscriptions, handleReverify }) => (
             >
               {row.status}
             </Button>
-            {['EXPIRED', 'PENDING'].includes(row.status) && (
-              <Button
-                variant="outlined"
-                size="small"
-                color="success"
-                sx={{ textTransform: 'none', minWidth: 80 }}
-                onClick={() => handleReverify(row.id)}
-              >
-                Re-verify
-              </Button>
-            )}
+            
           </Stack>
         </TableCell>
+        {/* <TableCell>{row.paymenttype}</TableCell> */}
+
       </TableRow>
     ))}
   </>
 );
+            
 
 SubscriptionRows.propTypes = {
   subscriptions: PropTypes.arrayOf(
@@ -117,12 +110,13 @@ export default function SubscriptionHistory() {
     try {
       const response = await axiosInstance.get(`/subscriptions/user`);
       if (response && response.data) {
+        console.log('Fetched plans:', response);
         // Handle both array and single object responses
         const data = Array.isArray(response.data) ? response.data : [response.data];
         const formattedData = data.map((plan) => ({
           id: plan.id || `sub_${Date.now()}`, // Fallback ID
           date: plan.createdAt ? new Date(plan.createdAt).toLocaleDateString() : 'N/A',
-          price: plan.planData?.price ? `$${plan.planData.price}` : 'N/A',
+          price: plan.planData?.price ? `₹${plan.planData.price}` : 'N/A',
           planname: plan.planData?.planName || 'N/A',
           paymenttype: plan.planData?.paymentType || 'N/A',
           status: plan.status ? plan.status.toUpperCase() : 'UNKNOWN',
@@ -205,7 +199,7 @@ export default function SubscriptionHistory() {
       </Paper>
 
       {/* Service Selection */}
-      <Box>
+      <Box sx={{mb:2}}>
         <Select value={service} onChange={handleChange} size="small">
           {planCategories.map((category) => (
             <MenuItem key={category.value} value={category.value}>
@@ -225,6 +219,7 @@ export default function SubscriptionHistory() {
               <TableCell>Plan Name</TableCell>
               <TableCell>Payment Type</TableCell>
               <TableCell>Credit Status</TableCell>
+              {/* <TableCell>Invoice</TableCell>               */}
             </TableRow>
           </TableHead>
           <TableBody>{renderTableContent()}</TableBody>

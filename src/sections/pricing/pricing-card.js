@@ -23,13 +23,12 @@ import { Category } from '@mui/icons-material';
 // ----------------------------------------------------------------------
 
 export default function PricingCard({ card, sx, ...other }) {
-  
   const navigate = useNavigate();
-  const { id, planName, price, paymentType, recurringPeriod, isFreePlan, subTitle, features } = card;
+  const { id, planName, price, paymentType, recurringPeriod, isFreePlan, subTitle, features } =
+    card;
 
   const userCountry = 'IN'; // Replace this with real logic from profile or IP geo lookup
   const paymentMethod = userCountry === 'IN' ? 1 : 0;
-
 
   const renderSubscription = (
     <Stack spacing={1} display="flex" alignItems="center" width="100%">
@@ -49,10 +48,7 @@ export default function PricingCard({ card, sx, ...other }) {
   ) : (
     <Stack direction="column" justifyContent="center" alignItems="flex-end">
       <Stack direction="row" justifyContent="center" alignItems="flex-end">
-        <Typography
-          variant="h4"
-          sx={{ alignSelf: 'center', mr: 1, ml: 1, typography: 'body2' }}
-        >
+        <Typography variant="h4" sx={{ alignSelf: 'center', mr: 1, ml: 1, typography: 'body2' }}>
           ₹
         </Typography>
         <Typography variant="h2" color="primary">
@@ -80,6 +76,7 @@ export default function PricingCard({ card, sx, ...other }) {
 
   const renderList = (
     <Stack spacing={2} sx={{ width: '100%' }}>
+      {/* Header */}
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Box component="span" sx={{ typography: 'overline' }}>
           Features
@@ -88,12 +85,22 @@ export default function PricingCard({ card, sx, ...other }) {
           All
         </Link>
       </Stack>
-      {/* {lists.map((item) => (
-        <Stack key={item} direction="row" spacing={1} sx={commonListStyle}>
+
+      {/* Demo features */}
+      <Stack spacing={1}>
+        <Stack direction="row" spacing={1} sx={commonListStyle}>
           <Iconify icon="eva:checkmark-fill" width={20} sx={commonIconStyle} />
-          {item}
+          <Typography variant="body2">Fast performance</Typography>
         </Stack>
-      ))} */}
+        <Stack direction="row" spacing={1} sx={commonListStyle}>
+          <Iconify icon="eva:checkmark-fill" width={20} sx={commonIconStyle} />
+          <Typography variant="body2">User-friendly interface</Typography>
+        </Stack>
+        <Stack direction="row" spacing={1} sx={commonListStyle}>
+          <Iconify icon="eva:checkmark-fill" width={20} sx={commonIconStyle} />
+          <Typography variant="body2">Secure data handling</Typography>
+        </Stack>
+      </Stack>
     </Stack>
   );
 
@@ -168,14 +175,12 @@ export default function PricingCard({ card, sx, ...other }) {
             color: '#fff',
             '&:hover': {
               backgroundColor: '#0033aa',
-            },  
+            },
           }}
-          onClick={() => navigate(paths.payment(id))}      
+          onClick={() => navigate(paths.payment(id))}
         >
           Pay Now
         </Button>
-
-        
       </Stack>
     </Stack>
   );

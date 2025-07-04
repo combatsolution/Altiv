@@ -86,7 +86,7 @@ export default function MyProfile() {
     } catch (error) {
       console.log('Error while fetching last fobo score', error);
     }
-  }
+  };
 
   useEffect(() => {
     if (user) {
@@ -103,7 +103,6 @@ export default function MyProfile() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [existingResumes]);
-
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -242,118 +241,124 @@ export default function MyProfile() {
   const labelStyles = getLabelStyles();
   const countStyles = getCountStyles();
 
-  const MemoizedGaugeChart = React.memo(({ score }) => {
-    const percent = score / 100;
-    const levelColor = useMemo(() => getLevelColor(score), [score]);
+  const MemoizedGaugeChart = React.memo(
+    ({ score }) => {
+      const percent = score / 100;
+      const levelColor = useMemo(() => getLevelColor(score), [score]);
 
+      return (
+        <div style={{ position: 'relative', width: '100%', margin: 'auto', marginTop: '20px' }}>
+          <Grid container spacing={1} alignItems="center">
+            <Grid item xs={12} md={8}>
+              {/* Gauge Chart */}
+              <GaugeChart
+                id="fobo-gauge"
+                nrOfLevels={3}
+                arcsLength={[0.39, 0.3, 0.31]}
+                colors={['#00C853', '#FFB300', '#D32F2F']}
+                percent={percent}
+                arcPadding={0}
+                arcWidth={0.3} // <- Increase this value for thicker arcs (default is ~0.2)
+                needleColor="#424242"
+                textColor="transparent"
+                style={{ width: '100%' }}
+                animate
+              />
 
-    return (
-      <div style={{ position: 'relative', width: '100%', margin: 'auto', marginTop: '20px' }}>
-        <Grid container spacing={1} alignItems='center'>
-          <Grid item xs={12} md={8}>
-            {/* Gauge Chart */}
-            <GaugeChart
-              id="fobo-gauge"
-              nrOfLevels={3}
-              arcsLength={[0.39, 0.3, 0.31]}
-              colors={['#00C853', '#FFB300', '#D32F2F']}
-              percent={percent}
-              arcPadding={0}
-              arcWidth={0.3} // <- Increase this value for thicker arcs (default is ~0.2)
-              needleColor="#424242"
-              textColor="transparent"
-              style={{ width: '100%' }}
-              animate
-            />
-
-            <div
-              style={{
-                position: 'absolute',
-                ...labelStyles.good,
-              }}
-            >
-              <Typography variant='body1'>Good</Typography>
-            </div>
-
-            <div
-              style={{
-                position: 'absolute',
-                ...countStyles.good,
-              }}
-            >
-              <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>0 - 39</Typography>
-            </div>
-
-            <div
-              style={{
-                position: 'absolute',
-                ...labelStyles.moderate,
-              }}
-            >
-              <svg width="300" height="150">
-                <defs>
-                  <path
-                    id="curve"
-                    d="M 50,150
-                       A 100,100 0 0,1 250,150"
-                    fill="transparent"
-                  />
-                </defs>
-
-                <text fill="#000" fontSize="16" fontFamily="Arial">
-                  <textPath href="#curve" startOffset="50%" textAnchor="middle">
-                    Moderate
-                  </textPath>
-                </text>
-              </svg>
-            </div>
-
-            <div
-              style={{
-                position: 'absolute',
-                ...countStyles.moderate,
-              }}
-            >
-              <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>40 - 69</Typography>
-            </div>
-
-            <div
-              style={{
-                position: 'absolute',
-                ...labelStyles.bad,
-              }}
-            >
-              <Typography variant='body1'>Bad</Typography>
-            </div>
-
-            <div
-              style={{
-                position: 'absolute',
-                ...countStyles.bad,
-              }}
-            >
-              <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant='body1'>70 - 100</Typography>
-            </div>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            {/* FOBO Label and Score */}
-            <div style={{ textAlign: 'center', marginTop: 10 }}>
-              <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO SCORE</div>
-              <div style={{ fontWeight: 'bold', fontSize: 24, color: levelColor }}>
-                {score}
+              <div
+                style={{
+                  position: 'absolute',
+                  ...labelStyles.good,
+                }}
+              >
+                <Typography variant="body1">Good</Typography>
               </div>
-            </div>
+
+              <div
+                style={{
+                  position: 'absolute',
+                  ...countStyles.good,
+                }}
+              >
+                <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
+                  0 - 39
+                </Typography>
+              </div>
+
+              <div
+                style={{
+                  position: 'absolute',
+                  ...labelStyles.moderate,
+                }}
+              >
+                <svg width="300" height="150">
+                  <defs>
+                    <path
+                      id="curve"
+                      d="M 50,150
+                       A 100,100 0 0,1 250,150"
+                      fill="transparent"
+                    />
+                  </defs>
+
+                  <text fill="#000" fontSize="16" fontFamily="Arial">
+                    <textPath href="#curve" startOffset="50%" textAnchor="middle">
+                      Moderate
+                    </textPath>
+                  </text>
+                </svg>
+              </div>
+
+              <div
+                style={{
+                  position: 'absolute',
+                  ...countStyles.moderate,
+                }}
+              >
+                <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
+                  40 - 69
+                </Typography>
+              </div>
+
+              <div
+                style={{
+                  position: 'absolute',
+                  ...labelStyles.bad,
+                }}
+              >
+                <Typography variant="body1">Bad</Typography>
+              </div>
+
+              <div
+                style={{
+                  position: 'absolute',
+                  ...countStyles.bad,
+                }}
+              >
+                <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
+                  70 - 100
+                </Typography>
+              </div>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              {/* FOBO Label and Score */}
+              <div style={{ textAlign: 'center', marginTop: 10 }}>
+                <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO SCORE</div>
+                <div style={{ fontWeight: 'bold', fontSize: 24, color: levelColor }}>{score}</div>
+              </div>
+            </Grid>
           </Grid>
-        </Grid>
-      </div>
-    );
-  }, (prev, next) => prev.score === next.score);
+        </div>
+      );
+    },
+    (prev, next) => prev.score === next.score
+  );
   MemoizedGaugeChart.propTypes = {
     score: PropTypes.number,
-  }
+  };
 
-  return (
-    !isLoading ? (<Box sx={{ backgroundColor: '#F5F9FF', minHeight: '100vh' }}>
+  return !isLoading ? (
+    <Box sx={{ backgroundColor: '#F5F9FF', minHeight: '100vh' }}>
       {error && (
         <Alert severity="error" sx={{ position: 'fixed', top: 16, right: 16, zIndex: 9999 }}>
           {error}
@@ -374,38 +379,65 @@ export default function MyProfile() {
             alt="Banner"
             sx={{ width: '100%', height: 300, objectFit: 'cover' }}
           />
-          {(
-            (profileData?.fullName && profileData?.fullName !== '')
+          {profileData?.fullName && profileData?.fullName !== '' && (
             // (profileData?.designation && profileData?.designation !== '')
-          ) && (
-              <Paper
-                elevation={3}
-                sx={{
-                  position: 'relative',
-                  p: 2,
-                  display: 'flex',
-                  gap: 2,
-                  alignItems: 'center',
-                  bgcolor: 'rgba(255,255,255,0.9)',
-                  backdropFilter: 'blur(6px)',
-                  borderRadius: 2,
-                  mt: -6,
-                  mx: 2,
-                }}
-              >
+            <Paper
+              elevation={3}
+              sx={{
+                position: 'relative',
+                p: 2,
+                display: 'flex',
+                gap: 2,
+                alignItems: 'center',
+                justifyContent: 'space-between', // added
+                bgcolor: 'rgba(255,255,255,0.9)',
+                backdropFilter: 'blur(6px)',
+                borderRadius: 2,
+                mt: -6,
+                mx: 2,
+              }}
+            >
+              {/* Left: Avatar + name */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Avatar src={profileData?.avatar?.fileUrl || ''} sx={{ width: 48, height: 48 }} />
                 <Box>
-                  {(profileData?.fullName && profileData?.fullName !== '') && (
+                  {profileData?.fullName && (
                     <Typography fontWeight="600">{profileData.fullName}</Typography>
                   )}
-                  {/* {(profileData?.designation && profileData?.designation !== '') && (
-                    <Typography fontSize="0.75rem" color="text.secondary">
-                      {profileData.designation}
-                    </Typography>
-                  )} */}
+                  {/* Uncomment if needed */}
+                  {/* {profileData?.designation && (
+        <Typography fontSize="0.75rem" color="text.secondary">
+          {profileData.designation}
+        </Typography>
+      )} */}
                 </Box>
-              </Paper>
-            )}
+              </Box>
+
+              {/* Right: Button */}
+              <Button
+                onClick={() => navigate(paths.pricing)}
+                variant="outlined"
+                sx={{
+                  height: '40px',
+                  borderRadius: '100px',
+                  backgroundColor: 'common.white',
+                  color: 'primary.main',
+                  border: '1px solid',
+                  borderColor: 'primary.main',
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  px: 3,
+                  whiteSpace: 'nowrap',
+                  '&:hover': {
+                    borderColor: 'primary.dark',
+                    color: 'primary.dark',
+                  },
+                }}
+              >
+                Upgrade Plan
+              </Button>
+            </Paper>
+          )}
         </Box>
 
         {/* Profile Info and Resume Section */}
@@ -432,7 +464,7 @@ export default function MyProfile() {
                       <Typography>
                         {selectedResumeId
                           ? existingResumes.find((r) => r.id === selectedResumeId)?.fileDetails
-                            ?.fileName || 'Selected resume'
+                              ?.fileName || 'Selected resume'
                           : 'Select a resume below'}
                       </Typography>
                     ) : (
@@ -500,7 +532,7 @@ export default function MyProfile() {
                             aria-label="delete"
                             disabled={isUploading}
                           >
-                            <DeleteIcon sx={{ color: 'red', mt:3, height:'18px' }} />
+                            <DeleteIcon sx={{ color: 'red', mt: 3, height: '18px' }} />
                           </IconButton>
                         </Box>
                       }
@@ -542,115 +574,122 @@ export default function MyProfile() {
                   Coming Soon...
                 </Typography>
               </Box>
-
-
-
             </Paper>
           </Grid>
 
           {/* Profile analytics section */}
-          {lastFOBOData && <Grid item xs={12} lg={8}>
-            {lastFOBOData ? (
-              <Paper
-                elevation={3}
-                sx={{
-                  position: 'relative',
-                  p: 2,
-                  bgcolor: 'rgba(255,255,255,0.9)',
-                  backdropFilter: 'blur(6px)',
-                  borderRadius: 2,
-                }}
-              >
-                <Box sx={{ width: '100%' }}>
-                  <MemoizedGaugeChart score={lastFOBOData?.FOBO_Score} />
-                </Box>
-                <Box sx={{ width: '100%', position: 'relative', p: 2 }}>
-                  <Typography sx={{ textAlign: 'center' }} variant="h6" fontWeight="bold" gutterBottom>
-                    Strategies to Improve FOBO
-                  </Typography>
+          {lastFOBOData && (
+            <Grid item xs={12} lg={8}>
+              {lastFOBOData ? (
+                <Paper
+                  elevation={3}
+                  sx={{
+                    position: 'relative',
+                    p: 2,
+                    bgcolor: 'rgba(255,255,255,0.9)',
+                    backdropFilter: 'blur(6px)',
+                    borderRadius: 2,
+                  }}
+                >
+                  <Box sx={{ width: '100%' }}>
+                    <MemoizedGaugeChart score={lastFOBOData?.FOBO_Score} />
+                  </Box>
+                  <Box sx={{ width: '100%', position: 'relative', p: 2 }}>
+                    <Typography
+                      sx={{ textAlign: 'center' }}
+                      variant="h6"
+                      fontWeight="bold"
+                      gutterBottom
+                    >
+                      Strategies to Improve FOBO
+                    </Typography>
 
-                  <Typography sx={{ textAlign: 'center' }} variant="body2" gutterBottom>
-                    Reduce your hesitation by practicing mindful decision-making, limiting options,
-                    and focusing on long-term satisfaction instead of perfect outcomes. <span style={{ filter: 'blur(2px)' }}>Reduce your hesitation
-                      by practicing mindful decision-making, limiting options, and focusing on long-term satisfaction
-                      instead of perfect outcomes. Reduce your hesitation by practicing mindful decision-making,
-                      limiting options, and focusing on long-term satisfaction instead of perfect outcomes.</span>
-                  </Typography>
+                    <Typography sx={{ textAlign: 'center' }} variant="body2" gutterBottom>
+                      Reduce your hesitation by practicing mindful decision-making, limiting
+                      options, and focusing on long-term satisfaction instead of perfect outcomes.{' '}
+                      <span style={{ filter: 'blur(2px)' }}>
+                        Reduce your hesitation by practicing mindful decision-making, limiting
+                        options, and focusing on long-term satisfaction instead of perfect outcomes.
+                        Reduce your hesitation by practicing mindful decision-making, limiting
+                        options, and focusing on long-term satisfaction instead of perfect outcomes.
+                      </span>
+                    </Typography>
 
-                  {/* Optional blue glow lines */}
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      bottom: isMobile ? '90px' : '80px',
-                      left: '10%',
-                      width: '80%',
-                      height: 4,
-                      bgcolor: 'primary.main',
-                      borderRadius: 2,
-                      boxShadow: '0 0 15px rgba(33,150,243,0.8)',
-                      animation: 'pulse 2s infinite ease-in-out',
-                    }}
-                  />
+                    {/* Optional blue glow lines */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        bottom: isMobile ? '90px' : '80px',
+                        left: '10%',
+                        width: '80%',
+                        height: 4,
+                        bgcolor: 'primary.main',
+                        borderRadius: 2,
+                        boxShadow: '0 0 15px rgba(33,150,243,0.8)',
+                        animation: 'pulse 2s infinite ease-in-out',
+                      }}
+                    />
 
-                  {/* White faded overlay */}
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      bottom: 0,
-                      width: '100%',
-                      height: isMobile ? '200px' : '110px',
-                      bgcolor: 'white',
-                      opacity: 0.85,
-                      zIndex: 1,
-                    }}
-                  />
+                    {/* White faded overlay */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        bottom: 0,
+                        width: '100%',
+                        height: isMobile ? '200px' : '110px',
+                        bgcolor: 'white',
+                        opacity: 0.85,
+                        zIndex: 1,
+                      }}
+                    />
 
-                  {/* Analyze Again Button */}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      const key = process.env.REACT_APP_ENCRYPTION_KEY;
-                      if (!key) {
-                        console.error('Encryption key is missing');
-                        return;
-                      }
+                    {/* Analyze Again Button */}
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        const key = process.env.REACT_APP_ENCRYPTION_KEY;
+                        if (!key) {
+                          console.error('Encryption key is missing');
+                          return;
+                        }
 
-                      // Clear old values first
-                      sessionStorage.removeItem('xbszya');
-                      sessionStorage.removeItem('xbszyaef');
+                        // Clear old values first
+                        sessionStorage.removeItem('xbszya');
+                        sessionStorage.removeItem('xbszyaef');
 
-                      // Encrypt and store the appropriate value
-                      if (lastFOBOData?.resumeId) {
-                        const encryptedId = encodeURIComponent(
-                          CryptoJS.AES.encrypt(String(lastFOBOData.resumeId), key).toString()
-                        );
-                        sessionStorage.setItem('xbszya', encryptedId);
-                      } else if (lastFOBOData?.linkedInUrl) {
-                        const encryptedUrl = encodeURIComponent(
-                          CryptoJS.AES.encrypt(lastFOBOData.linkedInUrl.trim(), key).toString()
-                        );
-                        sessionStorage.setItem('xbszyaef', encryptedUrl);
-                      }
+                        // Encrypt and store the appropriate value
+                        if (lastFOBOData?.resumeId) {
+                          const encryptedId = encodeURIComponent(
+                            CryptoJS.AES.encrypt(String(lastFOBOData.resumeId), key).toString()
+                          );
+                          sessionStorage.setItem('xbszya', encryptedId);
+                        } else if (lastFOBOData?.linkedInUrl) {
+                          const encryptedUrl = encodeURIComponent(
+                            CryptoJS.AES.encrypt(lastFOBOData.linkedInUrl.trim(), key).toString()
+                          );
+                          sessionStorage.setItem('xbszyaef', encryptedUrl);
+                        }
 
-                      navigate(paths.dashboardPage);
-                    }}
-                    sx={{
-                      position: 'absolute',
-                      bottom: isMobile ? '40px' : '30px',
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      zIndex: 2,
-                    }}
-                  >
-                    Analyze Again
-                  </Button>
-                </Box>
-              </Paper>
-            ) : (
-              <Typography variant='body1'>No Data</Typography>
-            )}
-          </Grid>}
+                        navigate(paths.dashboardPage);
+                      }}
+                      sx={{
+                        position: 'absolute',
+                        bottom: isMobile ? '40px' : '30px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        zIndex: 2,
+                      }}
+                    >
+                      Analyze Again
+                    </Button>
+                  </Box>
+                </Paper>
+              ) : (
+                <Typography variant="body1">No Data</Typography>
+              )}
+            </Grid>
+          )}
         </Grid>
 
         {/* Job Section (Placed Below Resume Section) */}
@@ -692,8 +731,8 @@ export default function MyProfile() {
 
       {/* Password Change Modal */}
       <ProfileChangePassword open={openPasswordModal} onClose={() => setOpenPasswordModal(false)} />
-    </Box>) : (
-      <SplashScreen />
-    )
+    </Box>
+  ) : (
+    <SplashScreen />
   );
 }
