@@ -39,13 +39,20 @@ function HomeHero() {
     }
   };
   return (
-    <Box sx={{ px: { xs: 2, sm: 4, md: 12 }, py: { xs: 1, sm: 6, md: 6 } }}>
+      <Box
+      sx={{
+        px: { xs: 2, md: 4 },
+        py: { xs: 4, md: 2 },
+        maxWidth: 1200,
+        mx: 'auto', // 👈 center horizontally
+      }}
+    >
       <Grid
         container
         spacing={4}
         alignItems="center"
         sx={{
-          minHeight: { xs: 'auto', md: 'calc(100vh - 100px)' }, // Adjust this value to fit below your header
+          minHeight: { xs: 'auto', md: '515px' }, // Adjust this value to fit below your header
         }}
 
         

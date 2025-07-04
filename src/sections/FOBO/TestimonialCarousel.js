@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Card, CardContent, Avatar, useMediaQuery, useTheme } from '@mui/material';
@@ -62,7 +61,7 @@ function TestimonialCard({ testimonial, isWhite }) {
         borderRadius: '10px',
         display: 'flex',
         flexDirection: 'column',
-        mx:{xs:2},
+        mx: { xs: 2 },
         transition: 'all 0.3s',
         flexShrink: 0,
       }}
@@ -98,9 +97,8 @@ function TestimonialCard({ testimonial, isWhite }) {
             justifyContent: 'space-between',
             alignItems: { xs: 'center', sm: 'center' },
             mt: 'auto',
-           width:{xs:'350px', md:'350px'},
+            width: { xs: '350px', md: '350px' },
             gap: { xs: 1, sm: 14 },
-            
           }}
         >
           <Typography
@@ -187,48 +185,44 @@ export default function TestimonialCarousel() {
       >
         Where Are They Now?
       </MotionTypography>
-  <Grid>
-      <MotionTypography
-        
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        whileHover={{ y: 4 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-        component="h1"
-        sx={{
-          position:'relative',
-          fontWeight: 700,
-          fontSize: { xs: '32px', sm: '48px', md: '64px' },
-          color: '#212529',
-          lineHeight: 1.2,
-          maxWidth: { xs: '264px', sm: '100%' },
-          mx: 'auto',
-          mt: 2,
-        }}
-      >
-        Real People, Real Progress
-      </MotionTypography>
+      <Box sx={{ position: 'relative', textAlign: 'center', mt: 2 }}>
+        <MotionTypography
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          whileHover={{ y: 4 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          component="h1"
+          sx={{
+            fontWeight: 700,
+            fontSize: { xs: '32px', sm: '48px', md: '64px' },
+            color: '#212529',
+            lineHeight: 1.2,
+            maxWidth: { xs: '264px', sm: '100%' },
+            mx: 'auto',
+          }}
+        >
+          Real People, Real Progress
+        </MotionTypography>
 
-      {/* SVG Image positioned below the text */}
-      <Box
-        component={m.img}
-        initial={{ opacity: 0, scale: 0.8 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        viewport={{ once: true }}
-        src="/assets/images/impact.svg" 
-        alt="impact"
-        sx={{
-           
-         position: 'absolute',
+        <Box
+          component={m.img}
+          initial={{ opacity: 0, scale: 0.8 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          src="/assets/images/impact.svg"
+          alt="impact"
+          sx={{
+            position: 'absolute',
             width: { xs: 150, sm: 200, md: 250 },
-           right: { xs: 100, sm: 60, md: 230 },
+            right: { xs: 10, sm: 60, md: 210 },
+            top: { xs: 0, sm: 10, md: 50 },
             zIndex: -1,
-          
-        }}
-      />
-</Grid>
+          }}
+        />
+      </Box>
+
       <Box
         ref={scrollRef}
         onScroll={handleScroll}

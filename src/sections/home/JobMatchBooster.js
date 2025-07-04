@@ -8,11 +8,12 @@ import { paths } from "src/routes/paths";
 function JobMatchBooster() {
   const navigate = useNavigate();
   return (
-    <Box
+     <Box
       sx={{
-        bgcolor: "#fff",  
-        px: { xs: 2, sm: 3, md: 6 },
-        py: { xs: 3, sm: 4, md: 8 },
+        px: { xs: 2, md: 4 },
+        py: { xs: 4, md: 8 },
+        maxWidth: 1200,
+        mx: 'auto', // 👈 center horizontally
       }}
     >
       <Grid
