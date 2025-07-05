@@ -328,11 +328,11 @@ export default function Footer() {
             <Button
               onClick={handleSubmit(onSubmit)}
               variant="outlined"
-              sx={{
+              sx={{ 
                 height: '40px',
                 borderRadius: '4px',
                 backgroundColor: 'common.white',
-                color: 'primary.main',
+                color: 'primary.dark',
                 border: '1px solid',
                 borderColor: 'primary.main',
                 fontWeight: 600,

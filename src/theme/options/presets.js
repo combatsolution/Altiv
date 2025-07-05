@@ -30,6 +30,9 @@ export const primaryPresets = [
     name: 'default',
     ...palette.primary,
   },
+
+
+
   // CYAN
   {
     name: 'cyan',
