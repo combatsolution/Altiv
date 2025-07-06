@@ -35,7 +35,7 @@ import { useAuthContext } from 'src/auth/hooks';
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { useSnackbar } from 'notistack';
-import axios from 'axios';
+import axiosInstance from 'src/utils/axios';
 
 export default function JwtLoginView() {
   const { enqueueSnackbar } = useSnackbar();
@@ -225,10 +225,9 @@ function ForgotPasswordModal({ open, onClose }) {
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log("data is ",data);
     try {
       // await axios.post('/sendResetPasswordLink', { email: data.email });
-      await axios.post(`${process.env.REACT_APP_HOST_API}sendResetPasswordLink`, {
+      await axiosInstance.post(`/sendResetPasswordLink`, {
         email: data.email,
       });
       enqueueSnackbar('Reset password link sent to your email', { variant: 'success' });

@@ -18,11 +18,14 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { paths } from 'src/routes/paths'; // adjust import path as per your project structure
 import Iconify from 'src/components/iconify';
+import axiosInstance from 'src/utils/axios';
 
 export default function UpdatePasswordModal() {
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token');
   const [apiError, setApiError] = useState('');
   const [apiSuccess, setApiSuccess] = useState('');
   const [open, setOpen] = useState(true);
@@ -52,9 +55,10 @@ export default function UpdatePasswordModal() {
     setApiError('');
     setApiSuccess('');
     try {
-      await axios.post(`${process.env.REACT_APP_HOST_API}setNewPassword`, data, {
+      await axiosInstance.post(`/setNewPassword`, data, {
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
       });
 
