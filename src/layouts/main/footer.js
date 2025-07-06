@@ -35,12 +35,19 @@ const AICareerCoach = [
 ];
 
 const Programs = [
-  { name: 'Marketing Track', href: paths.comingSoon },
-  { name: 'Data Science Track', href: paths.comingSoon },
-  { name: 'Product Track', href: paths.comingSoon },
-  { name: 'Software Eng. Track', href: paths.comingSoon },
+  { name: 'Marketing Track', href: paths.pricings('MT')  },
+  { name: 'Data Science Track', href: paths.pricings('DS') },
+  { name: 'Product Track', href: paths.pricings('PM') },
+  { name: 'Software Eng. Track', href: paths.pricing },
 ];
 
+
+// const Programs = [
+//   { name: 'Marketing Track', href: paths.pricing  },
+//   { name: 'Data Science Track', href: paths.pricing },
+//   { name: 'Product Track', href: paths.pricing },
+//   { name: 'Software Eng. Track', href: paths.pricing },
+// ];
 const Recruiters = [
   { name: 'Post Jobs', href: paths.comingSoon },
   { name: 'Register', href: paths.comingSoon },
@@ -57,6 +64,16 @@ const AboutAltiv = [
 ];
 
 export default function Footer() {
+
+  <div>
+      {Programs.map((program) => (
+        <Link key={program.name} to={program.href}>
+          {program.name}
+        </Link>
+      ))}
+    </div>
+
+
   const {
     control,
     register,

@@ -159,18 +159,18 @@ function HomeHero() {
                       position: 'relative',
                     }}
                   >
-                    <IconButton
-                      onClick={handleClose}
-                      size="small"
-                      sx={{
-                        position: 'absolute',
-                        top: 8,
-                        right: 8,
-                        color: 'grey.500',
-                      }}
-                    >
-                      <CloseIcon fontSize="small" />
-                    </IconButton>
+                        <IconButton
+                          onClick={handleClose}
+                          size="small"
+                          sx={{
+                            position: 'absolute',
+                            top: 8,
+                            right: 8,
+                            color: 'grey.500',
+                          }}
+                        >
+                          <CloseIcon fontSize="small" />
+                        </IconButton>
 
                     <Typography variant="h5" fontWeight="bold" mb={1}>
                       Magic happens either ways

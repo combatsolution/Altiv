@@ -839,11 +839,6 @@
 //   );
 // }
 
-
-
-
-
-
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-else-return */
 import { useAuthContext } from 'src/auth/hooks';
@@ -903,7 +898,6 @@ export default function FoboLevelTaskDistribution() {
   const [decryptedId, setDecryptedId] = useState('');
   const [decryptedLinkedinUrl, setDecryptedLinkedinUrl] = useState('');
   const { user } = useAuthContext();
-  
 
   // Generate 4 shades (lighter to darker)
   const shades = [0.4, 0.6, 0.8, 1].map((opacity) =>
@@ -968,7 +962,7 @@ export default function FoboLevelTaskDistribution() {
     if (decryptedId || decryptedLinkedinUrl) {
       fetchProfileAnalyticsData();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [decryptedId, decryptedLinkedinUrl, viewDetails, smartInsights]);
 
   // API Function
@@ -1215,11 +1209,7 @@ export default function FoboLevelTaskDistribution() {
           <div style={{ position: 'absolute', ...labelStyles.moderate }}>
             <svg width="300" height="150">
               <defs>
-                <path
-                  id="curve"
-                  d="M 50,150 A 100,100 0 0,1 250,150"
-                  fill="transparent"
-                />
+                <path id="curve" d="M 50,150 A 100,100 0 0,1 250,150" fill="transparent" />
               </defs>
               <text fill="#000" fontSize="16" fontFamily="Arial">
                 <textPath href="#curve" startOffset="50%" textAnchor="middle">
@@ -1572,6 +1562,33 @@ export default function FoboLevelTaskDistribution() {
         {/* CTA Button */}
         <Grid item xs={12} textAlign="left">
           <Button
+            variant="contained"
+            sx={{
+              backgroundColor: '#2C47D3',
+              borderRadius: 10,
+              px: 4,
+              textTransform: 'none',
+              fontWeight: 'bold',
+              '&:hover': {
+                backgroundColor: '#2C47D3',
+                boxShadow: 'none',
+              },
+            }}
+            onClick={() => {
+              trackEvent({
+                category: 'CTA clicked',
+                action: 'button clicked',
+                label: 'Beat FOBO now',
+                value: 'Navigate to pricing',
+              });
+              navigate(paths.pricing);
+            }}
+            aria-label="Navigate to pricing page"
+          >
+            Beat FOBO Now
+          </Button>
+
+          {/* <Button
             onClick={() => {
               if (!user) {
                 navigate(paths.auth.jwt.login);
@@ -1610,41 +1627,7 @@ export default function FoboLevelTaskDistribution() {
             aria-label={isCheckingSubscription ? 'Checking subscription status' : 'Beat FOBO Now'}
           >
             {isCheckingSubscription ? 'Checking...' : 'Beat FOBO Now'}
-          </Button>
-          {/* <Button
-            onClick={() => {
-              if (user) {
-                // If logged in, go to pricing
-                navigate(paths.pricing);
-                trackEvent({
-                  category: 'CTA clicked',
-                  action: 'button clicked',
-                  label: 'Beat FOBO now',
-                  value: 'beat foboo now',
-                });
-              } else {
-                // If not logged in, go to login
-                navigate(paths.auth.jwt.login); // Or whatever your login route is
-              }
-            }}
-            variant="contained"
-            sx={{
-              backgroundColor: '#2C47D3',
-              borderRadius: 10,
-              px: 4,
-              textTransform: 'none',
-              fontWeight: 'bold',
-              '&:hover': {
-                backgroundColor: '#2C47D3', // same as default to suppress hover color
-                boxShadow: 'none', // remove shadow on hover
-              },
-            }}
-          >
-            Beat FOBO Now
           </Button> */}
-
-
-           
         </Grid>
       </Grid>
     </Box>

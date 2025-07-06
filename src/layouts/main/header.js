@@ -92,7 +92,7 @@ export default function Header() {
               }}
               sx={{
                 cursor: 'pointer',
-                display: 'inline-block',
+                display: 'inline-block',  
                 width: { xs: '114px', lg: '128px' },
               }}
               aria-label="Go to home"

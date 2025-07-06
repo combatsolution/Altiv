@@ -1,7 +1,9 @@
+
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { useState, useCallback, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import PropTypes from 'prop-types';
 
 import {
   Box,
@@ -13,30 +15,27 @@ import {
   InputAdornment,
   Divider,
   Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import altiv from 'src/images/altiv.svg';
 
-// routes
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 import { useSearchParams, useRouter } from 'src/routes/hook';
-
-// config
 import { PATH_AFTER_LOGIN } from 'src/config-global';
 
-// hooks
 import { useBoolean } from 'src/hooks/use-boolean';
-
-// auth
 import { useAuthContext } from 'src/auth/hooks';
 
-// components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { useSnackbar } from 'notistack';
-import { Navigate } from 'react-router';  
+import axios from 'axios';
 
 export default function JwtLoginView() {
   const { enqueueSnackbar } = useSnackbar();
@@ -44,6 +43,7 @@ export default function JwtLoginView() {
   const router = useRouter();
   const [errorMsg, setErrorMsg] = useState('');
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const forgotPasswordModal = useBoolean(); // ⬅️ New
   const searchParams = useSearchParams();
   const returnTo = searchParams.get('returnTo');
   const password = useBoolean();
@@ -51,14 +51,11 @@ export default function JwtLoginView() {
   useEffect(() => {
     const googleError = searchParams.get('googleError');
     const errorMessage = searchParams.get('errorMessage');
-
     if (googleError && errorMessage) {
       enqueueSnackbar(errorMessage, { variant: 'error' });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [searchParams, enqueueSnackbar]);
 
-  // Redirect helper for social buttons
   const handleRedirect = useCallback((url) => {
     window.location.href = url;
   }, []);
@@ -92,7 +89,7 @@ export default function JwtLoginView() {
     } catch (error) {
       console.error(error);
       reset();
-      setErrorMsg(typeof error === 'string' ? error : error.error.message);
+      setErrorMsg(typeof error === 'string' ? error : error?.error?.message);
     }
   });
 
@@ -146,6 +143,14 @@ export default function JwtLoginView() {
                 }}
               />
             </Box>
+             <Typography
+              variant="body2"
+              color="primary"
+              sx={{ cursor: 'pointer', textAlign: 'right' }}
+              onClick={forgotPasswordModal.onTrue} // ⬅️ Open modal
+            >
+              Forgot Password?
+            </Typography>
 
             <LoadingButton
               fullWidth
@@ -163,6 +168,8 @@ export default function JwtLoginView() {
               Login
             </LoadingButton>
 
+           
+
             <Divider>Or</Divider>
 
             <LoadingButton
@@ -175,18 +182,6 @@ export default function JwtLoginView() {
             >
               Sign in with Google
             </LoadingButton>
-
-            {/* <Button
-              fullWidth
-              variant="outlined"
-              startIcon={<Iconify icon="logos:linkedin-icon" />}
-              onClick={() =>
-                handleRedirect('https://www.linkedin.com')
-              }
-              sx={{ textTransform: 'none', mt: 0 }}
-            >
-              Sign in with LinkedIn
-            </Button> */}
           </Stack>
 
           <Stack direction="row" spacing={1} justifyContent="center" mt={3}>
@@ -198,16 +193,73 @@ export default function JwtLoginView() {
 
           <Typography variant="body2" color="text.secondary" mt={1}>
             Need help? Visit our{' '}
-            <Link
-              underline="hover"
-                
-              sx={{ cursor: 'pointer' }}
-            >
+            <Link underline="hover" sx={{ cursor: 'pointer' }}>
               help center
             </Link>
           </Typography>
         </FormProvider>
+
+        {/* Forgot Password Modal */}
+        <ForgotPasswordModal open={forgotPasswordModal.value} onClose={forgotPasswordModal.onFalse} />
       </Box>
     </Box>
   );
 }
+
+// Separate Forgot Password Modal Component
+function ForgotPasswordModal({ open, onClose }) {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const ForgotPasswordSchema = Yup.object().shape({
+    email: Yup.string().required('Email is required').email('Enter a valid email'),
+  });
+
+  const methods = useForm({
+    resolver: yupResolver(ForgotPasswordSchema),
+    defaultValues: { email: '' },
+  });
+
+  const {
+    handleSubmit, 
+    formState: { isSubmitting },
+  } = methods;
+
+  const onSubmit = handleSubmit(async (data) => {
+    console.log("data is ",data);
+    try {
+      // await axios.post('/sendResetPasswordLink', { email: data.email });
+      await axios.post(`${process.env.REACT_APP_HOST_API}sendResetPasswordLink`, {
+        email: data.email,
+      });
+      enqueueSnackbar('Reset password link sent to your email', { variant: 'success' });
+      onClose();
+    } catch (err) {
+      enqueueSnackbar(err?.response?.data?.message || 'Failed to send reset link', { variant: 'error' });
+    }
+  }); 
+
+  return (
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
+      <DialogTitle>Forgot Password</DialogTitle>
+      <FormProvider methods={methods} onSubmit={onSubmit}>
+        <DialogContent>
+          <Typography variant="body2" mb={2}>
+            Enter your email address to receive a password reset link.
+          </Typography>
+          <RHFTextField name="email" label="Email Address" />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={onClose}>Cancel</Button>
+          <LoadingButton type="submit" variant="contained"  loading={isSubmitting} color='primary'>
+            Send Link
+          </LoadingButton>
+        </DialogActions>
+      </FormProvider>
+    </Dialog>
+  );
+}
+
+ForgotPasswordModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+};

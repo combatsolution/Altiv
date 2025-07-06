@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -20,7 +20,6 @@ import Altivlogo from 'src/images/Altivlogo.png';
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { paths } from 'src/routes/paths';
-
 import { useSearchParams, useRouter } from 'src/routes/hook';
 
 import { useAuthContext } from 'src/auth/hooks';
@@ -45,24 +44,37 @@ export default function JwtRegisterView() {
   const handleCheckboxChange = (event) => {
     setChecked(event.target.checked);
   };
+const RegisterSchema = Yup.object().shape({
+  name: Yup.string()
+    .required('Full name is required')
+    .test('full-name', 'Full name is required (e.g., First Last)', (value) => {
+      if (!value) return false;
+      const parts = value.trim().split(/\s+/);
+      return parts.length >= 2;
+    }),
+  email: Yup.string()
+    .required('Email is required')
+    .email('Email must be a valid email address'),
+  phone: Yup.string()
+    .notRequired()
+    .test(
+      'is-valid-or-empty',
+      'Mobile number must be 10-15 digits',
+      (value) => {
+        if (!value) return true;
+        return /^\d{10,15}$/.test(value);
+      }
+    ),
+  password: Yup.string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters'),
+  confirmPassword: Yup.string()
+    .required('Confirm password is required')
+    .oneOf([Yup.ref('password')], 'Passwords must match'),
+  terms: Yup.boolean()
+    .oneOf([true], 'You must accept the terms and conditions'),
+});
 
-  const RegisterSchema = Yup.object().shape({
-    name: Yup.string()
-      .required('Name is required')
-      .test('full-name', 'Full name is required (e.g., First Last)', (value) => {
-        if (!value) return false;
-        const parts = value.trim().split(/\s+/);
-        return parts.length >= 2;
-      }),
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    phone: Yup.string().required('Mobile number is required'),
-    password: Yup.string()
-      .required('Password is required')
-      .min(6, 'Password must be at least 6 characters'),
-    confirmPassword: Yup.string()
-      .required('Confirm password is required')
-      .oneOf([Yup.ref('password')], 'Passwords must match'),
-  });
 
   const defaultValues = {
     name: '',
@@ -70,13 +82,14 @@ export default function JwtRegisterView() {
     phone: '',
     password: '',
     confirmPassword: '',
+    terms: false,
   };
 
   const methods = useForm({
-  resolver: yupResolver(RegisterSchema),
-  defaultValues,
-  mode: 'onSubmit', // optional, default is already 'onSubmit'
-});
+    resolver: yupResolver(RegisterSchema),
+    defaultValues,
+    mode: 'onSubmit', // optional, default is already 'onSubmit'
+  });
 
   const {
     reset,
@@ -117,13 +130,12 @@ export default function JwtRegisterView() {
           width: '100%',
           maxWidth: 450,
           textAlign: 'center',
-
         }}
       >
-        <img src={altiv} alt="ALTIV Logo" style={{marginBottom:10}}  />
-          {/* <img src={Altivlogo} alt="BigCo Inc. lo go" /> */}
+        <img src={altiv} alt="ALTIV Logo" style={{ marginBottom: 10 }} />
+        {/* <img src={Altivlogo} alt="BigCo Inc. lo go" /> */}
 
-        <Typography variant="h5" fontWeight="bold" gutterBottom  >
+        <Typography variant="h5" fontWeight="bold" gutterBottom>
           Register
         </Typography>
 
@@ -161,7 +173,7 @@ export default function JwtRegisterView() {
               type="password"
               required
             />
-
+            {/* 
             <FormControlLabel
               control={
                 <Checkbox
@@ -191,7 +203,45 @@ export default function JwtRegisterView() {
                 textAlign: 'left',
                 mt: 1,
               }}
+            /> */}
+
+            <Controller
+              name="terms"
+              control={methods.control}
+              render={({ field, fieldState }) => (
+                <FormControlLabel
+                  control={
+                    <Checkbox {...field} checked={field.value} sx={{ color: '#0040d8', mt: 0.1 }} />
+                  }
+                  label={
+                    <Typography variant="body2" component="span" sx={{ lineHeight: 1.6 }}>
+                      I agree with the{' '}
+                      <Link
+                        underline="always"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          router.push(paths.TermsAndConditions);
+                        }}
+                        sx={{ color: '#0040d8', cursor: 'pointer' }}
+                      >
+                        terms and conditions
+                      </Link>
+                    </Typography>
+                  }
+                  sx={{
+                    alignItems: 'center',
+                    textAlign: 'left',
+                    mt: 1,
+                  }}
+                />
+              )}
             />
+            {errors.terms && (
+              <Typography variant="caption" color="error" sx={{ ml: 1 }}>
+                {errors.terms.message}
+              </Typography>
+            )}
 
             <LoadingButton
               fullWidth

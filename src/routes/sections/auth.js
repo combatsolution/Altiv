@@ -21,7 +21,7 @@ import { SplashScreen } from 'src/components/loading-screen';
 const JwtLoginPage = lazy(() => import('src/pages/auth/jwt/login'));
 const JwtRegisterPage = lazy(() => import('src/pages/auth/jwt/register'));
 const GoogleLoginPage = lazy(() => import('src/pages/auth/jwt/googleLogin'));
-
+const NewPassword  = lazy(() => import('src/pages/auth/admin/newPassword'));
 // FIREBASE
 // const FirebaseLoginPage = lazy(() => import('src/pages/auth/firebase/login'));
 // const FirebaseRegisterPage = lazy(() => import('src/pages/auth/firebase/register'));
@@ -84,7 +84,7 @@ const authJwt = {
       </Suspense>
     </GuestGuard>
   ),
-  children: [
+  children: [ 
     {
       path: 'login',
       element: (
@@ -103,6 +103,27 @@ const authJwt = {
     },
   ],
 };
+const authresetPassword = {
+  path: 'admin',
+  element: (
+    <GuestGuard>
+      <Suspense fallback={<SplashScreen />}>
+        <Outlet />
+      </Suspense>
+    </GuestGuard>
+  ),
+  children: [
+    {
+      path: 'new-password',
+      element: (
+        <AuthClassicLayout subtitle="new-password">
+          <NewPassword/>
+        </AuthClassicLayout>
+      ),
+    },
+  ],
+};
+
 
 const authGoogle = {
   path: 'google',
@@ -116,8 +137,5 @@ const authGoogle = {
 };
 
 export const authRoutes = [
-  {
-    path: 'auth',
-    children: [authJwt, authGoogle],
-  },
+  { path: 'auth', children: [authJwt, authGoogle,authresetPassword] },
 ];

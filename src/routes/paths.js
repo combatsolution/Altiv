@@ -13,7 +13,8 @@ const MOCK_TITLE = _postTitles[2];
 const ROOTS = {
   AUTH: '/auth',
   AUTH_DEMO: '/auth-demo',
-  GOOGLE_LOGIN: '/auth/google'
+  GOOGLE_LOGIN: '/auth/google',
+  admin: '/admin/new-password'
   // DASHBOARD: '/dashboard',
 };
 
@@ -44,8 +45,11 @@ export const paths = {
   Profile:'/Profile',
   comingSoon: '/coming-soon',  
   comingSoonWithType: (type) => `/coming-soon/${type}`,
+  // pricing:(type) => `/pricing/${type}`,
+  pricings: (type) => `/pricing?type=${type}`,
   maintenance: '/maintenance',
   pricing: '/pricing',
+
   payment: (planId) => `/payment/${planId}`,
   about: '/about-us',
   contact: '/contact-us',
@@ -78,6 +82,8 @@ export const paths = {
   },
   // AUTH
   auth: {
+    
+
     amplify: {
       login: `${ROOTS.AUTH}/amplify/login`,
       verify: `${ROOTS.AUTH}/amplify/verify`,
@@ -89,6 +95,10 @@ export const paths = {
       login: `${ROOTS.AUTH}/jwt/login`,
       register: `${ROOTS.AUTH}/jwt/register`,
     },
+    admin: {
+      admin: `${ROOTS.AUTH}/admin/new-password`,
+    },
+
     firebase: {
       login: `${ROOTS.AUTH}/firebase/login`,
       verify: `${ROOTS.AUTH}/firebase/verify`,

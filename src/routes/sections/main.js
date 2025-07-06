@@ -57,6 +57,8 @@ const FaqPage = lazy(() => import('src/pages/Policies/faq-view'));
 const AttributionsView = lazy(() => import('src/pages/Policies/attributions-view'));
 const AitrainingpolicyView = lazy(() => import('src/pages/Policies/aItrainingpolicyview'));
 const TermsCondition = lazy(() => import('src/pages/Policies/Terms&ConditionsPage'));
+const Paymentdetails = lazy(() => import('src/sections/payment/view/payment-view'));
+const ProductPricing = lazy(() => import('src/sections/pricing/view'));
 
 // ---------------------------- -----------------------------------------
 
@@ -70,6 +72,7 @@ export const mainRoutes = [
       </MainLayout>
     ),
     children: [
+
       { path: 'attributions', element: <AttributionsView /> },
       { path: 'ai-training-policy', element: <AitrainingpolicyView /> },
       { path: 'about-us', element: <AboutUsPage /> },
@@ -97,6 +100,7 @@ export const mainRoutes = [
           </RolesAuthRoute>
         ),
       },
+  
       { path: 'coming-soon/:type', element: <Comingsoon /> },
       { path: 'dashboard-page', element: <DashboardPage /> },
       { path: 'coming-soon', element: <Comingsoon /> },
@@ -120,7 +124,23 @@ export const mainRoutes = [
           { path: ':title', element: <PostDetailsPage /> },
         ],
       },
+      {
+        children: [
+          { path: 'payment', element: <Paymentdetails /> },
+          { path: 'payment/:planId', element: <PaymentPage /> },   // ⬅︎ move it here
+        ],
+      },
+      {
+        children: [
+          { path: 'pricing', element: <ProductPricing /> },
+          { path: 'pricing/:type', element: <ProductPricing /> },   // ⬅︎ move it here
+        ],
+      }
     ],
+
+    
+      
+    
   },
   {
     element: (
@@ -144,6 +164,7 @@ export const mainRoutes = [
       </CompactLayout>
     ),
     children: [
+     
       { path: 'maintenance', element: <MaintenancePage /> },
       { path: '500', element: <Page500 /> },
       { path: '404', element: <Page404 /> },
