@@ -72,10 +72,10 @@ export default function Header() {
           }),
         }}
       >
-        <Container sx={{ height: 1, display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
+        <Container sx={{ height: 1, display: 'flex', alignItems: 'center', marginLeft: 'auto',  }}>
           <Badge
             sx={{
-              [`& .${badgeClasses.badge}`]: {
+              [`& .${badgeClasses.badge}`]: { 
                 top: 10,
                 left: 15,
               },
@@ -94,7 +94,7 @@ export default function Header() {
                 cursor: 'pointer',
                 display: 'inline-block',  
                 width: { xs: '114px', lg: '128px' },
-                r:3,
+                mr:3,
               }}
               aria-label="Go to home"
             >
