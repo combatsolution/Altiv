@@ -1,4 +1,4 @@
-  import PropTypes from 'prop-types';
+ import PropTypes from 'prop-types';
   import { useEffect, useState } from 'react';
   import { alpha } from '@mui/material/styles';
   import { Box, Link, Stack, Button, Divider, Typography } from '@mui/material';
@@ -148,6 +148,8 @@
             onClick={() => {
               if (!isCurrentPlan) {
                 if (!user) {
+                  console.log("dasdaas->",id);
+                  sessionStorage.setItem('redirectAfterLogin', paths.payment(id));
                   navigate(paths.auth.jwt.login);
                 } else {
                   navigate(paths.payment(id));

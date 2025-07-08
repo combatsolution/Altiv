@@ -61,11 +61,16 @@ export default function ContactHero() {
             textAlign: { xs: 'center', md: 'left' },
           }}
         >
-          <TextAnimate
+          {/* <TextAnimate
             text="Contact Us"
             sx={{ color: '#fff', letterSpacing: '0.1em' }}
             variants={varFade().inRight}
-          />
+          /> */}
+
+          <Box display="flex" gap={2} color="#fff">
+            <TextAnimate text="Contact" />
+            <TextAnimate text="Us" />
+          </Box>
 
           <Stack
             spacing={2}
