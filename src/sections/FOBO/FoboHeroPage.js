@@ -222,6 +222,7 @@ export default function FoboHeroPage() {
           item
           xs={12}
           md={6}
+         
           order={{ xs: 2, md: 1 }}
           sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
         >
@@ -235,6 +236,7 @@ export default function FoboHeroPage() {
                 fontWeight="bold"
                 color="text.primary"
                 sx={{
+                  mt:2,
                   fontSize: { xs: '1rem', sm: '1.2rem', md: '1.5rem' },
                 }}
               >

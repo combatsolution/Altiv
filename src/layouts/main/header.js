@@ -94,6 +94,7 @@ export default function Header() {
                 cursor: 'pointer',
                 display: 'inline-block',  
                 width: { xs: '114px', lg: '128px' },
+                r:3,
               }}
               aria-label="Go to home"
             >

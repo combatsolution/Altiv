@@ -14,7 +14,7 @@ export default function PaymentView() {
   return (
     <Container
       sx={{
-        pt: 15,
+        pt: 1,
         pb: 10,
         minHeight: 1,
       }}
