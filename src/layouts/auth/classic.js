@@ -12,6 +12,8 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { Container } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useOffSetTop } from 'src/hooks/use-off-set-top';
+
 
 // auth
 import { useAuthContext } from 'src/auth/hooks';
@@ -58,6 +60,7 @@ const METHODS = [
 ];
 
 export default function AuthClassicLayout({ children, image, title, subtitle }) {
+  const offsetTop = useOffSetTop(100);
   const { user } = useAuthContext();
   const navigate = useNavigate();
   const { method } = useAuthContext();

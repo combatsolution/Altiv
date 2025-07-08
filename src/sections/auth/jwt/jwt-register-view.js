@@ -556,7 +556,7 @@ export default function JwtRegisterView() {
               onClick={() => handleGoogleLogin()}
               sx={{ textTransform: 'none' }}
             >
-              Sign in with Google
+              Sign Up with Google
             </LoadingButton>
           </Stack>
         </FormProvider>

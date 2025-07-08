@@ -7,6 +7,8 @@ import CompactLayout from 'src/layouts/compact';
 import AuthClassicLayout from 'src/layouts/auth/classic';
 // components
 import { SplashScreen } from 'src/components/loading-screen';
+import { useOffSetTop } from 'src/hooks/use-off-set-top';
+
 
 // ----------------------------------------------------------------------
 
@@ -22,6 +24,10 @@ const JwtLoginPage = lazy(() => import('src/pages/auth/jwt/login'));
 const JwtRegisterPage = lazy(() => import('src/pages/auth/jwt/register'));
 const GoogleLoginPage = lazy(() => import('src/pages/auth/jwt/googleLogin'));
 const NewPassword  = lazy(() => import('src/pages/auth/admin/newPassword'));
+// eslint-disable-next-line react-hooks/rules-of-hooks
+const offsetTop = useOffSetTop(100); // or your preferred scroll threshold
+
+
 // FIREBASE
 // const FirebaseLoginPage = lazy(() => import('src/pages/auth/firebase/login'));
 // const FirebaseRegisterPage = lazy(() => import('src/pages/auth/firebase/register'));
@@ -86,7 +92,7 @@ const authJwt = {
   ),
   children: [ 
     {
-      path: 'login',
+      path: 'login',  
       element: (
         <AuthClassicLayout subtitle='Login'>
           <JwtLoginPage />
