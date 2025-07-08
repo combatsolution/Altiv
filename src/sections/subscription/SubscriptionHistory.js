@@ -189,7 +189,7 @@ export default function SubscriptionHistory() {
           bgcolor: 'primary.main',
           color: '#fff',
           mb: 3,
-          width: '50%',
+          width: '80%',
           mx: 'auto',
         }}
       >
