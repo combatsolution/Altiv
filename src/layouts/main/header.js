@@ -77,7 +77,7 @@ export default function Header() {
             sx={{
               [`& .${badgeClasses.badge}`]: {
                 top: 10,
-                left: 30,
+                left: 15,
               },
             }}
           >
@@ -116,7 +116,7 @@ export default function Header() {
                   justifyContent: 'space-between',
                   flexDirection: { xs: 'row', lg: 'row' }, // Row on all screens
                   width: '100%',
-                  p: 2,
+                  p: 1,
                   gap: 2,
                   // backgroundColor: '#fff',
                   borderRadius: 2,
