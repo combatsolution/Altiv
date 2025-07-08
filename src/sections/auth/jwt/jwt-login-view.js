@@ -95,7 +95,7 @@ export default function JwtLoginView() {
 
   const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);
-    window.location.href = `${process.env.REACT_APP_HOST_API}/auth/google`;
+    window.location.href = `${process.env.REACT_APP_HOST_API}auth/google`;
     setIsGoogleLoading(false);
   };
 
