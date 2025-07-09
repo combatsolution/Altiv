@@ -82,7 +82,6 @@ export default function JwtRegisterView() {
     terms: Yup.boolean().oneOf([true], 'You must accept the terms and conditions'),
   });
 
-  
   const storedData = JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || {
     name: '',
     email: '',
@@ -91,14 +90,20 @@ export default function JwtRegisterView() {
     confirmPassword: '',
     terms: false,
   };
- 
 
   const methods = useForm({
-    resolver: yupResolver(RegisterSchema),
+    resolver: yupResolver(RegisterSchema),  
     defaultValues: storedData,
+    mode: 'onSubmit',
   });
+const { reset, watch, handleSubmit, formState: { errors, isSubmitting } } = methods;
 
-  const { watch } = methods;
+  // ✅ clear sessionStorage if user refreshed page
+  useEffect(() => {
+    if (performance.getEntriesByType('navigation')[0]?.type === 'reload') {
+      sessionStorage.removeItem(STORAGE_KEY);
+    }
+  }, []);
 
   useEffect(() => {
     const subscription = watch((value) => {
@@ -106,18 +111,14 @@ export default function JwtRegisterView() {
     });
     return () => subscription.unsubscribe();
   }, [watch]);
-  const {
-    reset,
-    handleSubmit,
-    formState: { isSubmitting, errors },
-  } = methods;
-  const PATH_AFTER_REGISTER = '/auth/jwt/login';
-  const onSubmit = handleSubmit(async (data) => {
+
+
+   const onSubmit = handleSubmit(async (data) => {
     try {
       await register?.(data.email, data.password, data.name, data.phone);
-
       enqueueSnackbar('Register success', { variant: 'success' });
-      router.replace(PATH_AFTER_REGISTER);
+      sessionStorage.removeItem(STORAGE_KEY); // clear after success
+      router.replace('/auth/jwt/login');
     } catch (error) {
       console.error(error);
       reset();
@@ -190,37 +191,8 @@ export default function JwtRegisterView() {
               type="password"
               required
             />
-            {/*
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={checked}
-                  onChange={handleCheckboxChange}
-                  sx={{ color: '#0040d8', mt: 0.10 }} // fine-tune vertical alignment
-                />
-              }
-              label={
-                <Typography variant="body2" component="span" sx={{ lineHeight: 1.6 }}>
-                  I agree with the{' '}
-                  <Link
-                    underline="always"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      router.push(paths.TermsAndConditions);
-                    }}
-                    sx={{ color: '#0040d8', cursor: 'pointer' }}
-                  >
-                    terms and conditions
-                  </Link>
-                </Typography>
-              }
-              sx={{
-                alignItems: 'center', // aligns checkbox with text
-                textAlign: 'left',
-                mt: 1,
-              }}
-            /> */}
+           
+           
 
             <Controller
               name="terms"
