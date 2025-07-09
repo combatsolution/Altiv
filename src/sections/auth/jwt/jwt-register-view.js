@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { Controller, useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import {
@@ -32,6 +32,7 @@ import { Navigate } from 'react-router';
 import { PATH_AFTER_LOGIN } from 'src/config-global';
 
 export default function JwtRegisterView() {
+  const STORAGE_KEY = 'registerFormData';
   const { enqueueSnackbar } = useSnackbar();
   const { register } = useAuthContext();
   const router = useRouter();
@@ -81,7 +82,15 @@ export default function JwtRegisterView() {
     terms: Yup.boolean().oneOf([true], 'You must accept the terms and conditions'),
   });
 
-  const defaultValues = {
+  // const defaultValues = {
+  //   name: '',
+  //   email: '',
+  //   phone: '',
+  //   password: '',
+  //   confirmPassword: '',
+  //   terms: false,
+  // };
+  const storedData = JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || {
     name: '',
     email: '',
     phone: '',
@@ -89,13 +98,25 @@ export default function JwtRegisterView() {
     confirmPassword: '',
     terms: false,
   };
+  // const methods = useForm({
+  //   resolver: yupResolver(RegisterSchema),
+  //   defaultValues,
+  //   mode: 'onSubmit', // optional, default is already 'onSubmit'
+  // });
 
   const methods = useForm({
     resolver: yupResolver(RegisterSchema),
-    defaultValues,
-    mode: 'onSubmit', // optional, default is already 'onSubmit'
+    defaultValues: storedData,
   });
 
+  const { watch } = methods;
+
+  useEffect(() => {
+    const subscription = watch((value) => {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(value));
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
   const {
     reset,
     handleSubmit,
