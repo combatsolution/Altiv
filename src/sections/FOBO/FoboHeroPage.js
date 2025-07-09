@@ -98,7 +98,10 @@ export default function FoboHeroPage() {
     try {
       await axiosInstance.delete(`/resumes/${id}`);
       setExistingResumes((prev) => prev.filter((resume) => resume.id !== id));
-      if (selectedResumeId === id) setSelectedResumeId(null);
+      if (selectedResumeId === id) {
+        setSelectedResumeId(null);
+        setSelectedFile(null);
+      };
       trackEvent({
         category: 'Resume Deleted',
         action: 'resume deleted',
@@ -198,6 +201,10 @@ export default function FoboHeroPage() {
 
 
   const handleCloseModel = () => {
+    setSelectedResumeId(false);
+    setSelectedFile(null);
+    setError('');
+     setDocIsLoading(false);
     setOpen(false);
   }
 
@@ -424,6 +431,7 @@ export default function FoboHeroPage() {
                 size="small"
                 sx={{ mt: 2 }}
                 onClick={() => {
+                  setSelectedResumeId(null);
                   setSelectedFile(null);
                   setDocIsLoading(false);
                 }}
