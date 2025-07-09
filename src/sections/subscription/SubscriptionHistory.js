@@ -106,40 +106,36 @@ export default function SubscriptionHistory() {
 
   // Fetch subscription history using plans API
   const fetchSubscriptionHistory = useCallback(async (planType) => {
-    setIsLoading(true);
-    try {
-      const response = await axiosInstance.get(`/subscriptions/user`);
-      if (response && response.data) {
-        console.log('Fetched plans:', response);
-        // Handle both array and single object responses
-        const data = Array.isArray(response.data) ? response.data : [response.data];
-        const formattedData = data.map((plan) => ({
-          id: plan.id || `sub_${Date.now()}`, // Fallback ID
-          date: plan.createdAt ? new Date(plan.createdAt).toLocaleDateString() : 'N/A',
-          price: plan.planData?.price ? `₹${plan.planData.price}` : 'N/A',
-          planname: plan.planData?.planName || 'N/A',
-          paymenttype: plan.planData?.paymentType || 'N/A',
-          status: plan.status ? plan.status.toUpperCase() : 'UNKNOWN',
-          planType: plan.planData?.planType !== undefined ? plan.planData.planType : 0, // Store planType for filtering
-        }));
-        // Filter by planType
-        const filteredData = formattedData.filter(
-          (sub) =>
-            (sub.planType !== undefined &&
-              planTypeToLabel[sub.planType] === planCategories[planType].label) ||
-            planType === 0
-        );
-        setSubscriptions(filteredData);
-      } else {
-        setSubscriptions([]);
-      }
-    } catch (error) {
-      console.error('Error fetching plans:', error);
+  setIsLoading(true);
+  try {
+    const response = await axiosInstance.get(`/subscriptions/user`);
+    if (response && response.data) {
+      console.log('Fetched plans:', response);
+      const data = Array.isArray(response.data) ? response.data : [response.data];
+      const formattedData = data.map((plan) => ({
+        id: plan.id || `sub_${Date.now()}`,
+        date: plan.createdAt ? new Date(plan.createdAt).toLocaleDateString() : 'N/A',
+        price: plan.planData?.price ? `₹${plan.planData.price}` : 'N/A',
+        planname: plan.planData?.planName || 'N/A',
+        paymenttype: plan.planData?.paymentType || 'N/A',
+        status: plan.status ? plan.status.toUpperCase() : 'UNKNOWN',
+        planType: plan.planData?.planType !== undefined ? plan.planData.planType : 0,
+      }));
+
+      const filteredData = formattedData.filter((sub) => sub.planType === planType);
+
+      setSubscriptions(filteredData);
+    } else {
       setSubscriptions([]);
-    } finally {
-      setIsLoading(false);
     }
-  }, [planCategories, planTypeToLabel]); // Dependencies for useCallback
+  } catch (error) {
+    console.error('Error fetching plans:', error);
+    setSubscriptions([]);
+  } finally {
+    setIsLoading(false);
+  }
+}, []);
+
 
   // Handle re-verification (mock)
   const handleReverify = useCallback(async (subscriptionId) => {

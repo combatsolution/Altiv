@@ -14,7 +14,6 @@ import { Container } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useOffSetTop } from 'src/hooks/use-off-set-top';
 
-
 // auth
 import { useAuthContext } from 'src/auth/hooks';
 // routes
@@ -23,12 +22,10 @@ import { RouterLink } from 'src/routes/components';
 // hooks
 import { useResponsive } from 'src/hooks/use-responsive';
 // theme
-import { bgGradient } from 'src/theme/css';
+import { bgBlur, bgGradient } from 'src/theme/css';
 // components
 import Logo from 'src/components/logo';
 import Header from '../main/header';
-
-
 
 // ----------------------------------------------------------------------
 
@@ -69,12 +66,11 @@ export default function AuthClassicLayout({ children, image, title, subtitle }) 
 
   const upMd = useResponsive('up', 'md');
 
- useEffect(() => {
-  if (user) {
-    navigate('/', { replace: true });
-  }
-}, [user, navigate]); // ✅ added `navigate`
-
+  useEffect(() => {
+    if (user) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]); // ✅ added `navigate`
 
   const renderLogo = (
     <Logo
@@ -158,11 +154,28 @@ export default function AuthClassicLayout({ children, image, title, subtitle }) 
         maxHeight: '70vh',
       }}
     >
-
       <Header />
-      <Box sx={{ backgroundColor: '#E9F4FF', py: 1.5, px: 1, mt: 9, width: "100%" }}>
+      <Box
+        sx={{
+          py: 1.5,
+          px: 1,
+          mt: 9,
+          width: '100%',
+          ...(offsetTop
+            ? bgBlur({ color: alpha('#E9F4FF', 0.72) })
+            : { backgroundColor: '#E9F4FF' }),
+          transition: theme.transitions.create(['background-color', 'backdrop-filter'], {
+            duration: theme.transitions.duration.shorter,
+          }),
+        }}
+      >
         <Container sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
-          <img src="/assets/home.svg" style={{ width: "25px", cursor: 'pointer' }} alt="homesvg" onClick={() => navigate('/', { replace: true })} />
+          <img
+            src="/assets/home.svg"
+            style={{ width: '25px', cursor: 'pointer' }}
+            alt="homesvg"
+            onClick={() => navigate('/', { replace: true })}
+          />
           <ArrowForwardIosIcon fontSize="small" sx={{ fontSize: '12px' }} />
           <Typography variant="body2">{subtitle}</Typography>
         </Container>
@@ -178,5 +191,5 @@ AuthClassicLayout.propTypes = {
   children: PropTypes.node,
   image: PropTypes.string,
   title: PropTypes.string,
-  subtitle: PropTypes.string
+  subtitle: PropTypes.string,
 };

@@ -33,3 +33,6 @@ export const MAPBOX_API = process.env.REACT_APP_MAPBOX_API;
 
 // ROOT PATH AFTER LOGIN SUCCESSFUL
 export const PATH_AFTER_LOGIN = '/'; // as '/dashboard'
+export const PATH_AFTER_REGISTRATION ='/auth/jwt/login';
+
+
