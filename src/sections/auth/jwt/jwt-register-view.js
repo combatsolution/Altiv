@@ -82,14 +82,7 @@ export default function JwtRegisterView() {
     terms: Yup.boolean().oneOf([true], 'You must accept the terms and conditions'),
   });
 
-  // const defaultValues = {
-  //   name: '',
-  //   email: '',
-  //   phone: '',
-  //   password: '',
-  //   confirmPassword: '',
-  //   terms: false,
-  // };
+  
   const storedData = JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || {
     name: '',
     email: '',
@@ -98,11 +91,7 @@ export default function JwtRegisterView() {
     confirmPassword: '',
     terms: false,
   };
-  // const methods = useForm({
-  //   resolver: yupResolver(RegisterSchema),
-  //   defaultValues,
-  //   mode: 'onSubmit', // optional, default is already 'onSubmit'
-  // });
+ 
 
   const methods = useForm({
     resolver: yupResolver(RegisterSchema),
