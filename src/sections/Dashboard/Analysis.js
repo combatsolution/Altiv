@@ -1,11 +1,10 @@
-
-
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-else-return */
 import { useAuthContext } from 'src/auth/hooks';
 import React, { useEffect, useMemo, useState } from 'react';
 import CryptoJS from 'crypto-js';
 import { m } from 'framer-motion';
+
 import {
   Box,
   Typography,
@@ -223,6 +222,22 @@ export default function FoboLevelTaskDistribution() {
 
   const onRetry = () => {
     navigate('/?retry=true', { replace: true });
+  };
+
+  const handleSSOLogin = async () => {
+    try {
+      const response = await axiosInstance.get('/sso/sso-login');
+      console.log('SSO Login Success:', response.data);
+
+      if (response.data.success && response.data.url) {
+        // Open in a new tab
+        window.open(response.data.url, '_blank');
+      } else {
+        console.error('SSO Login failed: no URL returned');
+      }
+    } catch (error) {
+      console.error('SSO Login Failed:', error);
+    }
   };
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, index }) => {
@@ -749,34 +764,14 @@ export default function FoboLevelTaskDistribution() {
             Beat FOBO Now
           </Button>
 
-          {/* <Button
-            onClick={() => {
-              if (!user) {
-                navigate(paths.auth.jwt.login);
-              } else if (hasActiveSubscription === true) {
-                enqueueSnackbar('You already have an active subscription!', { variant: 'info' });
-                navigate(paths.dashboard.root);
-                trackEvent({
-                  category: 'CTA clicked',
-                  action: 'button clicked',
-                  label: 'Redirect to dashboard',
-                  value: 'User already subscribed',
-                });
-              } else {
-                navigate(paths.pricing);
-                trackEvent({
-                  category: 'CTA clicked',
-                  action: 'button clicked',
-                  label: 'Beat FOBO now',
-                  value: 'beat foboo now',
-                });
-              }
-            }}
+          <Button
             variant="contained"
-            disabled={isCheckingSubscription}
+            onClick={handleSSOLogin}
+            disabled={!user}
             sx={{
               backgroundColor: '#2C47D3',
               borderRadius: 10,
+              mx: 2,
               px: 4,
               textTransform: 'none',
               fontWeight: 'bold',
@@ -785,10 +780,11 @@ export default function FoboLevelTaskDistribution() {
                 boxShadow: 'none',
               },
             }}
-            aria-label={isCheckingSubscription ? 'Checking subscription status' : 'Beat FOBO Now'}
           >
-            {isCheckingSubscription ? 'Checking...' : 'Beat FOBO Now'}
-          </Button> */}
+            SSO
+          </Button>
+
+        
         </Grid>
       </Grid>
     </Box>

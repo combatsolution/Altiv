@@ -40,7 +40,8 @@ const similarJobs = [
     company: 'Amazon',
     salary: '50L - 80L',
     experience: '8-10 years',
-    logo: 'https://logo.clearbit.com/amazon.com'
+    logo: 'https://logo.clearbit.com/google.com'
+    // logo: 'https://logo.clearbit.com/amazon.com'
   },
   {
     id: 3,
@@ -48,7 +49,8 @@ const similarJobs = [
     company: 'Microsoft',
     salary: '30L - 50L',
     experience: '5-7 years',
-    logo: 'https://logo.clearbit.com/microsoft.com'
+    logo: 'https://logo.clearbit.com/google.com'
+    // logo: 'https://logo.clearbit.com/microsoft.com'
   },
   {
     id: 4,
@@ -56,7 +58,8 @@ const similarJobs = [
     company: 'Meta',
     salary: '80L - 1.2Cr',
     experience: '10-12 years',
-    logo: 'https://logo.clearbit.com/meta.com'
+    logo: 'https://logo.clearbit.com/google.com'
+    // logo: 'https://logo.clearbit.com/meta.com'
   }
 ];
 
@@ -111,8 +114,8 @@ export default function JobDetailPage() {
                           <Typography
                             variant="body2"
                             color="primary.main"
-                            bgcolor="primary.light"
-                            px={1}
+                            bgcolor="#7D5AE21A"
+                            px={1}  
                             py={0.5}
                             borderRadius={1}
                           >
@@ -127,7 +130,7 @@ export default function JobDetailPage() {
                   <Grid item xs={12} md="auto" textAlign={{ xs: 'left', md: 'center' }}>
                     <Box
                       sx={{
-                        bgcolor: 'success.light',
+                        bgcolor: '#E9FFE9',
                         borderRadius: '50%',
                         width: 80,
                         height: 80,
@@ -139,7 +142,7 @@ export default function JobDetailPage() {
                         mt: { xs: 2, md: 0 }
                       }}
                     >
-                      <Typography variant="caption" color="success.dark" fontWeight={500}>
+                      <Typography variant="caption" fontSize='10px' color="success.dark" fontWeight={400}>
                         Match Score
                       </Typography>
                       <Typography variant="h6" color="success.dark">

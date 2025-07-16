@@ -82,22 +82,34 @@ const CareerCard = ({ title, match, rate, salary, experience }) => {
   else if (match < 80) variant = matchStyles.warning;
 
   return (
-    <Paper variant="outlined" sx={{ p: 2, position: 'relative', width: '100%' }}>
-      <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 1 }}>
+    <Paper
+      variant="outlined"
+      sx={{
+        p: 2,
+        position: 'relative',
+        width: { xs: '100%', sm: 360 },
+        height: 127,
+        borderRadius: 2,
+      }}
+    >
+      <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 0.5 }}>
         {title}
       </Typography>
+
       <Box component="span" sx={badgeStyles}>
         {rate} Transition rate
       </Box>
+      <br />
       <Typography variant="caption" color="grey.600" sx={{ lineHeight: 1.4 }}>
         Salary: {salary}
         <br />
         Experience: {experience}
       </Typography>
-      <Box component="span" sx={{ ...matchStyles.base, ...variant }}>
+
+      {/* <Box component="span" sx={{ ...matchStyles.base, ...variant }}>
         {match}%<br />
         Match
-      </Box>
+      </Box> */}
     </Paper>
   );
 };
@@ -110,14 +122,26 @@ CareerCard.propTypes = {
   experience: PropTypes.string.isRequired,
 };
 
-export default function CareerCompassTitle() {
+export default function CareerPathProjection() {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
+   const [jobTitle1, setJobTitle1] = useState('Data Scientist');
 
   const [jobTitle, setJobTitle] = useState('Lead Data Scientist');
   const [expYears, setExpYears] = useState(5);
 
   const paths = {
+
+
+    Entry: {
+      title: ' Data Scientist',
+      match: 95,
+      rate: '18%',
+      salary: '$50L - $55L',
+      experience: '8-12 years',
+    },
+
+
     current: {
       title: 'Lead Data Scientist',
       match: 95,
@@ -125,13 +149,36 @@ export default function CareerCompassTitle() {
       salary: '$50L - $55L',
       experience: '8-12 years',
     },
-    next: Array(4).fill({
-      title: 'Senior Data Scientist',
-      match: 80,
-      rate: '18%',
-      salary: '$50L - $55L',
-      experience: '8-12 years',
-    }),
+    next: [
+      {
+        title: 'Senior Data Scientist',
+        match: 80,
+        rate: '18%',
+        salary: '$50L - $55L',
+        experience: '8-12 years',
+      },
+      {
+        title: 'Senior Data Scientist 1',
+        match: 80,
+        rate: '18%',
+        salary: '$50L - $55L',
+        experience: '8-12 years',
+      },
+      {
+        title: 'Senior Data Scientist 2',
+        match: 80,
+        rate: '18%',
+        salary: '$50L - $55L',
+        experience: '8-12 years',
+      },
+      {
+        title: 'Senior Data Scientist 3',
+        match: 80,
+        rate: '18%',
+        salary: '$50L - $55L',
+        experience: '8-12 years',
+      },
+    ],
     executive: [
       {
         title: 'Director Data Science',
@@ -174,37 +221,111 @@ export default function CareerCompassTitle() {
   };
 
   return (
-    <Box sx={{ bgcolor: 'white', p: { xs: 2, sm: 3, md: 5 } }}>
+    <Box sx={{ bgcolor: 'white', p: { xs: 2, sm: 3 } }}>
       <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
         {/* Title & Filters */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, float: 'right' }}>
           <Button variant="outlined">Upload resume to unlock your potential</Button>
         </Box>
 
-        <Grid container spacing={2} alignItems="center" sx={{ mb: 2 }}>
-          <Grid item>
-            <Typography fontSize={14}>Lead Data Scientist</Typography>
-          </Grid>
-          <Grid item>
-            <Select size="small" value={expYears} onChange={(e) => setExpYears(e.target.value)}>
-              <MenuItem value={5}>5 Years</MenuItem>
-              <MenuItem value={10}>10 Years</MenuItem>
-            </Select>
-          </Grid>
-          <Grid item>
-            <Button variant="outlined">Modify</Button>
-          </Grid>
-        </Grid>
+        <Box sx={{ bgcolor: 'white', p: { xs: 2, sm: 3, md: 4 } }}>
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="space-between"
+            spacing={2}
+            sx={{ mb: 1 }}
+          >
+            {/* Left: Job Title */}
+            <Grid item sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <FaClipboardList size={16} />
 
-        <Typography variant="body2" color="text.secondary" mb={2}>
-          Popular: <b>Senior Data Scientist, Director Data Science</b>
-        </Typography>
+              <Box
+                sx={{
+                  minWidth: 450,
+                  borderBottom: '1px solid #ccc', // light grey line
+                  pb: 0.5, // some padding below text
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  color="text.primary"
+                  sx={{
+                    px: 1,
+                    py: 0.5,
+                    display: 'inline-block',
+                  }}
+                >
+                  Lead Data Scientist
+                </Typography>
+              </Box>
+            </Grid>
 
-        {/* Graph Area */}
-        <Grid container alignItems="flex-start" spacing={2} sx={{ position: 'relative', mb: 4 }}>
-          {/* Vertical labels */}
-          <Grid item xs="auto">
+            {/* Center: Years Dropdown */}
+            <Grid item sx={{ display: 'flex', alignItems: 'center', gap: 1, }}>
+              <FaClipboardList size={16} />
+              <Select
+                size="small"
+                value={expYears}
+                onChange={(e) => setExpYears(e.target.value)}
+                variant="standard"
+                sx={{ minWidth: 450 }}
+              >
+                <MenuItem value={5}>5 Years</MenuItem>
+                <MenuItem value={10}>10 Years</MenuItem>
+              </Select>
+            </Grid>
+
+            {/* Right: Modify Button */}
+            <Grid item>
+              <Button
+                variant="outlined"
+                sx={{
+                  borderRadius: '100px',
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  px: 6,
+                  py: 1,
+                  color: 'primary.main',
+                  borderColor: 'primary.main',
+                }}
+              >
+                Modify
+              </Button>
+            </Grid>
+          </Grid>
+                
+          {/* Popular text */}
+          <Typography variant="caption" color="text.secondary" sx={{ ml:{xs:1, md:4}, mt: 1 }}>
+            Popular: <b>Senior Data Scientist, Director Data Science</b>
+          </Typography>
+        </Box>
+
+        <Grid container alignItems="flex-start" spacing={2} sx={{ mb: 4, position: 'relative' }}>
+          {/* Vertical line */}
+          <Box
+            aria-hidden
+            sx={{
+              position: 'absolute',
+              left: { xs: 42, md: 50 },
+              top: 0,
+              bottom: 0,
+              width: 10,
+              bgcolor: '#F0F0F0',
+              zIndex: 0,
+              marginLeft: '-1px', // center it behind circles
+            }}
+          />
+
+          {/* Left column with labels */}
+          <Grid item xs="auto" sx={{ position: 'relative', zIndex: 1 ,mt:4 }}>
             <Stack spacing={isMdUp ? 15 : 4} alignItems="center">
+              <Box sx={labelStyles.secondary}>
+                Entry
+                <br />
+                level
+              </Box>
+
               <Box sx={labelStyles.primary}>Current Role</Box>
               <Box sx={labelStyles.secondary}>
                 Next Level
@@ -224,41 +345,68 @@ export default function CareerCompassTitle() {
             </Stack>
           </Grid>
 
-          {/* Cards */}
+          {/* Right column with cards */}
           <Grid item xs>
             <Stack spacing={6}>
+              
+              <CareerCard {...paths.Entry} />
               <CareerCard {...paths.current} />
-              <Grid container spacing={2}>
-                {paths.next.map((p, i) => (
-                  <Grid item xs={12} sm={6} md={3} key={i}>
-                    <CareerCard {...p} />
-                  </Grid>
-                ))}
-              </Grid>
-              <Grid container spacing={2}>
-                {paths.executive.map((p, i) => (
-                  <Grid item xs={12} sm={6} md={4} key={i}>
-                    <CareerCard {...p} />
-                  </Grid>
-                ))}
-              </Grid>
-              <Grid container spacing={2}>
-                {paths.alternate.map((p, i) => (
-                  <Grid item xs={12} sm={6} md={6} key={i}>
-                    <CareerCard {...p} />
-                  </Grid>
-                ))}
-              </Grid>
+
+              {[paths.next, paths.executive, paths.alternate].map((group, index) => (
+                <Grid
+                  container
+                  spacing={2}
+                  key={index}
+                  justifyContent={{ xs: 'center', md: 'flex-start' }}
+                >
+                  {group.map((p, i) => (
+                    <Grid item key={i} sx={{ flex: '0 0 auto' }}>
+                      <CareerCard {...p} />
+                    </Grid>
+                  ))}
+                </Grid>
+              ))}
             </Stack>
           </Grid>
         </Grid>
 
-        {/* Bottom Buttons */}
-        <Box sx={{ textAlign: 'center' }}>
-          <Button variant="outlined" sx={{ mx: 1 }}>
+        <Box
+          sx={{
+            textAlign: 'center',
+            mt: 4,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'row',
+            gap: 2,
+          }}
+        >
+          <Button
+            sx={{
+              borderRadius: 5,
+              px: 4,
+              bgcolor: 'primary.main',
+              color: '#fff',
+              '&:hover': {
+                boxshadow: 'none',
+                bgcolor: 'primary.main',
+                color: '#fff',
+              },
+            }}
+          >
             Modify designation
           </Button>
-          <Button variant="outlined" sx={{ mx: 1 }}>
+
+          <Button
+            sx={{
+              borderRadius: 5,
+              px: 4,
+              bgcolor: '#fff',
+              color: 'primary.main',
+              border: '2px solid ',
+              bordercolor: 'primary.main',
+            }}
+          >
             Upload your resume
           </Button>
         </Box>

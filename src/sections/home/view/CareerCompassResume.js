@@ -1,5 +1,3 @@
-
-
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -92,20 +90,34 @@ const CareerCard = ({ title, match, rate, salary, experience }) => {
         flex: 1,
       }}
     >
+      {/* Title */}
       <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 1 }}>
         {title}
       </Typography>
 
-      <Box component="span" sx={badgeStyles}>
-        {rate} Transition rate
+      {/* Transition Rate */}
+      <Box sx={{ mb: 1 }}>
+        <Box
+          component="span"
+          sx={{
+            ...badgeStyles,
+            display: 'inline-block',
+          }}
+        >
+          {rate} Transition rate
+        </Box>
       </Box>
 
-      <Typography variant="caption" color="grey.600" sx={{ lineHeight: 1.4 }}>
-        Salary: {salary}
-        <br />
-        Experience: {experience}
-      </Typography>
+      {/* Salary & Experience */}
+      <Box sx={{ mb: 1 }}>
+        <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.4 }}>
+          Salary: <strong>{salary}</strong>
+          <br />
+          Experience: <strong>{experience}</strong>
+        </Typography>
+      </Box>
 
+      {/* Match */}
       <Box component="span" sx={{ ...matchStyles.base, ...variant }}>
         {match}%
         <br />
@@ -147,13 +159,43 @@ export default function CareerPathProjection() {
       experience: '8-12 years',
     }),
     executive: [
-      { title: 'Director Data Science', match: 74, rate: '18%', salary: '$50L - $55L', experience: '8-12 years' },
-      { title: 'Sr Director Data Science', match: 74, rate: '18%', salary: '$50L - $55L', experience: '8-12 years' },
-      { title: 'VP Data Science', match: 74, rate: '18%', salary: '$50L - $55L', experience: '8-12 years' },
+      {
+        title: 'Director Data Science',
+        match: 74,
+        rate: '18%',
+        salary: '$50L - $55L',
+        experience: '8-12 years',
+      },
+      {
+        title: 'Sr Director Data Science',
+        match: 74,
+        rate: '18%',
+        salary: '$50L - $55L',
+        experience: '8-12 years',
+      },
+      {
+        title: 'VP Data Science',
+        match: 74,
+        rate: '18%',
+        salary: '$50L - $55L',
+        experience: '8-12 years',
+      },
     ],
     alternate: [
-      { title: 'Venture Partner', match: 45, rate: '18%', salary: '$50L - $55L', experience: '8-12 years' },
-      { title: 'Independent Board Advisor', match: 45, rate: '18%', salary: '$50L - $55L', experience: '8-12 years' },
+      {
+        title: 'Venture Partner',
+        match: 45,
+        rate: '18%',
+        salary: '$50L - $55L',
+        experience: '8-12 years',
+      },
+      {
+        title: 'Independent Board Advisor',
+        match: 45,
+        rate: '18%',
+        salary: '$50L - $55L',
+        experience: '8-12 years',
+      },
     ],
   };
 
@@ -243,7 +285,9 @@ export default function CareerPathProjection() {
           <Box component="span" fontWeight={600} display="inline">
             Job designation
           </Box>
-          <FaInfoCircle style={{ marginLeft: 4, color: theme.palette.primary.main, fontSize: 14 }} />
+          <FaInfoCircle
+            style={{ marginLeft: 4, color: theme.palette.primary.main, fontSize: 14 }}
+          />
         </Typography>
 
         {/* Career Path Layout */}
@@ -252,72 +296,98 @@ export default function CareerPathProjection() {
             position: 'relative',
             border: 1,
             borderColor: 'grey.300',
-            borderRadius: "",
+            borderRadius: '',
             p: 2,
             mb: 4,
           }}
         >
-          {/* Vertical Line */}
-          <Box
-            aria-hidden
-            sx={{
-              position: 'absolute',
-              top: 72,
-              bottom: 80,
-              left: { xs: 40, md: 64 },
-              width: 2,
-              bgcolor: 'primary.main',
-              borderRadius: 1,
-            }}
-          />
-
-          {/* Labels */}
-          <Stack
-            spacing={isMdUp ? 6 : 4}
-            sx={{ position: 'absolute', left: 25, top: 70 }}
-          >
-            <Box sx={labelStyles.primary}>Current Role</Box>
-            <Box sx={labelStyles.secondary}>Next Level<br />2-4 yrs</Box>
-            <Box sx={labelStyles.secondary}>Executive<br />Level</Box>
-            <Box sx={labelStyles.secondary}>Alternate<br />Path</Box>
-          </Stack>
-
-          {/* Cards */}
-          <Stack spacing={6} sx={{ ml: { xs: 72, md: 120 } }}>
-            <CareerCard {...paths.current} />
-
-            <Grid container spacing={2}>
-              {paths.next.map((p, i) => (
-                <Grid item xs={12} sm={6} md={3} key={i}>
-                  <CareerCard {...p} />
-                </Grid>
-              ))}
+          <Grid container spacing={2}>
+            {/* Left labels and vertical line */}
+            <Grid item xs={2} md={1} sx={{ position: 'relative' }}>
+              {/* Vertical Line */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  left: '50%',
+                  width: 2,
+                  bgcolor: 'primary.main',
+                  zIndex: 0,
+                }}
+              />
+              <Stack
+                spacing={6}
+                sx={{
+                  alignItems: 'center',
+                  position: 'relative',
+                  zIndex: 1,
+                }}
+              >
+                <Box sx={labelStyles.primary}>Current Role</Box>
+                <Box sx={labelStyles.secondary}>
+                  Next Level
+                  <br />
+                  2-4 yrs
+                </Box>
+                <Box sx={labelStyles.secondary}>
+                  Executive
+                  <br />
+                  Level
+                </Box>
+                <Box sx={labelStyles.secondary}>
+                  Alternate
+                  <br />
+                  Path
+                </Box>
+              </Stack>
             </Grid>
 
-            <Grid container spacing={2}>
-              {paths.executive.map((p, i) => (
-                <Grid item xs={12} sm={6} md={4} key={i}>
-                  <CareerCard {...p} />
-                </Grid>
-              ))}
-            </Grid>
+            {/* Right content */}
+            <Grid item xs={10} md={11}>
+              <Stack spacing={6}>
+                <CareerCard {...paths.current} />
 
-            <Grid container spacing={2}>
-              {paths.alternate.map((p, i) => (
-                <Grid item xs={12} sm={6} md={6} key={i}>
-                  <CareerCard {...p} />
+                <Grid container spacing={2}>
+                  {paths.next.map((p, i) => (
+                    <Grid item xs={12} sm={6} md={3} key={i}>
+                      <CareerCard {...p} />
+                    </Grid>
+                  ))}
                 </Grid>
-              ))}
+
+                <Grid container spacing={2}>
+                  {paths.executive.map((p, i) => (
+                    <Grid item xs={12} sm={6} md={4} key={i}>
+                      <CareerCard {...p} />
+                    </Grid>
+                  ))}
+                </Grid>
+
+                <Grid container spacing={2}>
+                  {paths.alternate.map((p, i) => (
+                    <Grid item xs={12} sm={6} md={6} key={i}>
+                      <CareerCard {...p} />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Stack>
             </Grid>
-          </Stack>
+          </Grid>
         </Box>
 
         {/* Bottom Button */}
         <Box sx={{ textAlign: 'center' }}>
           <Button
             variant="contained"
-            
-            sx={{ textTransform: 'none', borderRadius: 999, px: 1, py: 1.5, color:"#ffff", bgcolor:"#0040D8" }}
+            sx={{
+              textTransform: 'none',
+              borderRadius: 999,
+              px: 1,
+              py: 1.5,
+              color: '#ffff',
+              bgcolor: '#0040D8',
+            }}
           >
             Show job match
           </Button>

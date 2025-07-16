@@ -3,7 +3,6 @@ import { useScroll } from 'framer-motion';
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
 
-
 // components
 import ScrollProgress from 'src/components/scroll-progress';
 import HomeHero from '../home-hero';
@@ -17,9 +16,6 @@ import JobBoard from '../JobBoard';
 import WorkingProcessSection1 from '../WorkingProcessSection1';
 
 
-
-
-
 // import HomeMinimal from '../home-minimal';
 // import HomePricing from '../home-pricing';
 // import HomeDarkMode from '../home-dark-mode';
@@ -29,8 +25,6 @@ import WorkingProcessSection1 from '../WorkingProcessSection1';
 // import HomeAdvertisement from '../home-advertisement';
 // import HomeCleanInterfaces from '../home-clean-interfaces';
 // import HomeHugePackElements from '../home-hugepack-elements';
-
-
 
 // ----------------------------------------------------------------------
 
@@ -63,20 +57,26 @@ export default function HomeView() {
     <>
       <ScrollProgress scrollYProgress={scrollYProgress} />
 
-
       <HomeHero />
       <FeatureSection />
       <TestimonialSection />
       <CareerToolkitHero />
-      <CareerCompass /> 
-      <SmartJobFeed />
-      <JobMatchBooster />
-      <WorkingProcessSection1/>
+      <Box
+        src="/assets/images/line.svg"
+        alt="img decorative"
+        sx={{
+       
+        
+          display: { xs: 'none', sm: 'block' }, // Only show on desktop
+        }}
+      >
+        <CareerCompass />
+        <SmartJobFeed />
+        <JobMatchBooster />
+      </Box>
+
+      <WorkingProcessSection1 />
       <JobBoard />
-      
-     
-
-
 
       {/* <Box
         sx={{

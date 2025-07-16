@@ -117,8 +117,14 @@ const { reset, watch, handleSubmit, formState: { errors, isSubmitting } } = meth
     try {
       await register?.(data.email, data.password, data.name, data.phone);
       enqueueSnackbar('Register success', { variant: 'success' });
+      const redirectPath = sessionStorage.getItem('redirectAfterLogin');
+      if (redirectPath) {
+        sessionStorage.removeItem('redirectAfterLogin');
+      }
+       router.replace(redirectPath || returnTo || PATH_AFTER_LOGIN);
+      // router.replace(redirectPath );
       sessionStorage.removeItem(STORAGE_KEY); // clear after success
-      router.replace('/auth/jwt/login');
+      // router.push('/auth/jwt/login');
     } catch (error) {
       console.error(error);
       reset();

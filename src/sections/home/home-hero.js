@@ -27,19 +27,32 @@ function HomeHero() {
   };
 
   const handleClose = () => {
+    setSelectedFile(null);
+    setError('');
+    setUploadType('resume');
+    onclose?.();
     setOpen(false);
+    //  sessionStorage.removeItem('uploadedFile');
   };
-  const [selectedFile, setSelectedFile] = useState(null);
-  const fileInputRef = useRef();
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file.name);
+  const fileInputRef = useRef();
+  const [error, setError] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setSelectedFile(file.name);
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError('This document is too large. Please only upload files less than 5MB.');
+    } else {
+      setError('');
     }
   };
   return (
-      <Box
+    <Box
       sx={{
         px: { xs: 2, md: 4 },
         py: { xs: 4, md: 2 },
@@ -54,8 +67,6 @@ function HomeHero() {
         sx={{
           minHeight: { xs: 'auto', md: '515px' }, // Adjust this value to fit below your header
         }}
-
-        
       >
         <Grid xs={12} md={6} order={{ xs: 2, md: 1 }}>
           <Stack spacing={2}>
@@ -159,18 +170,18 @@ function HomeHero() {
                       position: 'relative',
                     }}
                   >
-                        <IconButton
-                          onClick={handleClose}
-                          size="small"
-                          sx={{
-                            position: 'absolute',
-                            top: 8,
-                            right: 8,
-                            color: 'grey.500',
-                          }}
-                        >
-                          <CloseIcon fontSize="small" />
-                        </IconButton>
+                    <IconButton
+                      onClick={handleClose}
+                      size="small"
+                      sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        color: 'grey.500',
+                      }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
 
                     <Typography variant="h5" fontWeight="bold" mb={1}>
                       Magic happens either ways
@@ -283,26 +294,58 @@ function HomeHero() {
                         {selectedFile && (
                           <Box
                             border="1px solid #ccc"
-                            borderRadius={1}
+                            borderRadius={2}
                             px={2}
                             py={1.5}
                             textAlign="left"
                             fontSize="0.9rem"
                             mb={2}
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="space-between"
                           >
-                            Selected file: <strong>{selectedFile}</strong>
+                            <Box>
+                              Selected file: <strong>{selectedFile}</strong>
+                            </Box>
+
+                            <IconButton 
+                            size="small"
+                            onClick={()=> {
+                              setSelectedFile(null);
+                              setError(''); 
+                            } }
+                            >
+                              <CloseIcon fontsize='small'/>
+                            </IconButton>
                           </Box>
+                        )}
+
+                        {error && (
+                          <Typography
+                            variant="caption"
+                            color="error"
+                            display="block"
+                            textAlign="left"
+                            mb={1}
+                          >
+                            {error}
+                          </Typography>
                         )}
 
                         <Button
                           variant="contained"
                           fullWidth
+                          disabled={!!error || !selectedFile}
                           onClick={() => {
                             if (!selectedFile) {
                               fileInputRef.current.click();
                             } else {
-                              navigate(paths.jobDetails);
+                             
+                              navigate(paths.careerTitle);
+                              
                             }
+
+                             // navigate(paths.careerResume);
                           }}
                           sx={{
                             backgroundColor: '#3f51b5',

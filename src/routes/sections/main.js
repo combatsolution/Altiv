@@ -79,7 +79,7 @@ export const mainRoutes = [
       { path: 'contact-us', element: <ContactPage /> },
       { path: 'faqs', element: <FaqPage /> },
       { path: 'job-details', element: <JobDetailsPage /> },
-      { path: 'career-resume', element: <CareerPathResumePage /> },
+      { path: 'career-campass', element: <CareerPathResumePage /> },
       { path: 'career-title', element: <CareerPathTitlePage /> },
       { path: 'job-feed', element: <JobFeedPage /> },
       {path:'job-booster', element:<JobBoosterpage/>},
@@ -124,12 +124,14 @@ export const mainRoutes = [
           { path: ':title', element: <PostDetailsPage /> },
         ],
       },
+
       {
         children: [
-          { path: 'payment', element: <Paymentdetails /> },
-          { path: 'payment/:planId', element: <PaymentPage /> },   // ⬅︎ move it here
+           { path: 'payment', element: <Paymentdetails /> },
+           { path: 'payment/:planId', element: <PaymentPage /> },   // ⬅︎ move it here
         ],
       },
+
       {
         children: [
           { path: 'pricing', element: <ProductPricing /> },
