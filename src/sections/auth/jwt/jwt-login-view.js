@@ -85,11 +85,12 @@ export default function JwtLoginView() {
     try {
       await login?.(data.email, data.password);
       enqueueSnackbar('Login success', { variant: 'success' });
-      const redirectPath = sessionStorage.getItem('');
-      if (redirectPath) {
+      const redirectAfterLogin = sessionStorage.getItem('redirectAfterLogin');
+      if (redirectAfterLogin) {
         sessionStorage.removeItem('redirectAfterLogin');
       }
-      router.replace(redirectPath || returnTo || PATH_AFTER_LOGIN);
+      console.log("hdsahdu",redirectAfterLogin)
+      router.replace(redirectAfterLogin || returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
       reset();
