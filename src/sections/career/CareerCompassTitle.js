@@ -256,7 +256,7 @@ export default function CareerPathProjection() {
                     display: 'inline-block',
                   }}
                 >
-                  Lead Data Scientist
+                  Lead Data Scientist 
                 </Typography>
               </Box>
             </Grid>
