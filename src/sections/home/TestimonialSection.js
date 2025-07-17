@@ -46,13 +46,11 @@ function TestimonialSection() {
   const [index, setIndex] = useState(0);
   const t = testimonials[index];
   const theme = useTheme();
-const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const carousel = useCarousel({
     autoplay: false,
     slidesToShow: isMobile ? 1 : 3,
   });
-
-
 
   const handleNext = () => {
     setIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
@@ -142,7 +140,7 @@ const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
               <Typography
                 sx={{
                   fontSize: { xs: 18, md: 20 },
-                  fontWeight: 300,
+                  fontWeight: 600,
                   fontFamily: 'Roboto, sans-serif',
                   mb: 2,
                   ml: 2,
@@ -152,30 +150,77 @@ const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
                 {t.quote}
               </Typography>
             </Grid>
-            <Grid
-            sx={{
-               width:'50px',
-               display: { xs: 'Block', md: 'none' },
-            }} >
-              <Carousel ref={carousel.carouselRef} {...carousel.carouselSettings}>
-                {testimonials.map((item, i) => (
-                  <Box
-                    component="img"
-                    src={item.image}
-                    onClick={() => setIndex(i)}
-                    alt={`Person ${i + 1}`}
-                    sx={{
-                  
-                     height: '44px',
-                      // objectFit: "contain",
-                      cursor: 'pointer',
-                      borderRadius: '50%',
-                      display: { xs: 'Block', md: 'none' },
-                    }}
-                  />
-                ))}
-              </Carousel>
+
+            {/* Small image */}
+            <Grid sx={{ display: 'flex', flexDirection: 'row' }}>
+              <Grid
+                sx={{
+                  ml: 2,
+                  my: 1,
+                  width: '60px',
+                 
+                  display: { xs: 'Block', md: 'none' },
+                }}
+              >
+                <Carousel ref={carousel.carouselRef} {...carousel.carouselSettings}>
+                  {testimonials.map((item, i) => (
+                    <Box
+                      component="img"
+                      src={item.image}
+                      onClick={() => setIndex(i)}
+                      alt={`Person ${i + 1}`}
+                      sx={{
+                        height: '60px',
+                        cursor: 'pointer',
+                        borderRadius: '50%',
+                        display: { xs: 'Block', md: 'none' },
+                      }}
+                    />
+                  ))}
+                </Carousel>
+              </Grid>
+
+              <Grid
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  ml: 1,
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontWeight: 400,
+                    fontFamily: 'Inter, sans-serif',
+                    display: { xs: 'block', md: 'none' },
+                    fontSize: '16px',
+                  }}
+                >
+                  {t.name}
+                </Typography>
+
+                <Typography
+                  sx={{
+                    fontWeight: 300,
+                    fontFamily: 'Inter, sans-serif',
+                    display: { xs: 'block', md: 'none' },
+                    fontSize: '14px',
+                    color: 'text.secondary',
+                  }}
+                >
+                  {/* Random date example */}
+                  {new Date(
+                    Date.now() - Math.floor(Math.random() * 10000000000)
+                  ).toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
+                </Typography>
+              </Grid>
             </Grid>
+
+
 
             <Grid marginLeft="30px">
               <Typography
@@ -189,16 +234,29 @@ const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
               >
                 {t.content}
               </Typography>
-              <Typography sx={{ fontWeight: 800, fontFamily: 'Inter, sans-serif' }}>
+              <Typography
+                sx={{
+                  fontWeight: 800,
+                  fontFamily: 'Inter, sans-serif',
+                  display: { xs: 'None', md: 'block' },
+                }}
+              >
                 {t.name}
               </Typography>
-              <Typography sx={{ fontSize: 14, color: 'black', fontFamily: 'Roboto, sans-serif' }}>
+              <Typography
+                sx={{
+                  fontSize: 14,
+                  color: 'black',
+                  fontFamily: 'Roboto, sans-serif',
+                  display: { xs: 'None', md: 'block' },
+                }}
+              >
                 {t.title}
               </Typography>
 
               <Box mt={2}>
                 <Link
-                  href="https://www.google.com"
+                  // href="https://www.google.com"
                   underline="hover"
                   sx={{
                     fontSize: 14,
@@ -230,7 +288,7 @@ const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
                 sx={{
                   // width: { xs: 80, md: 100 },
                   // height: { xs: 80, md: 100 },
-                  width: 'auto',  
+                  width: 'auto',
                   height: '393px',
                   // objectFit: "contain",
                   cursor: 'pointer',

@@ -92,7 +92,7 @@ export default function SubscriptionHistory() {
 
   // Plan categories for filtering
   const planCategories = useMemo(() => [
-    { label: 'Marketing', value: 0 },
+    { label: 'Marketing', value: 0 }, 
     { label: 'Data Science', value: 1 },
     { label: 'Product Management', value: 2 },
   ], []); // Empty dependency array since planCategories is static

@@ -212,7 +212,7 @@ export default function FoboHeroPage() {
     <Box
       sx={{
         px: { xs: 2, sm: 4, md: 8, lg: 12, xl: 14 },
-        py: { xs: 4, sm: 6, md: 4 },
+        py: { xs: 4, sm: 6, md: 2 },
         maxWidth: '1440px',
         mx: 'auto',
         width: '100%',
@@ -243,7 +243,7 @@ export default function FoboHeroPage() {
                 fontWeight="bold"
                 color="text.primary"
                 sx={{
-                  mt:1.5,
+                  mt:0,
                   fontSize: { xs: '1rem', sm: '1.2rem', md: '1.5rem' },
                 }}
               >
@@ -335,7 +335,7 @@ export default function FoboHeroPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             sx={{
-              marginTop: "60px",
+              marginTop: "30px",
               width: '100%',
               maxWidth: { xs: '100%', sm: '80%', md: '100%', xl: '90%' },
               maxHeight: { xs: 250, sm: 300, md: 400, lg: 500, xl: 550 },

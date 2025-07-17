@@ -224,21 +224,21 @@ export default function FoboLevelTaskDistribution() {
     navigate('/?retry=true', { replace: true });
   };
 
-  const handleSSOLogin = async () => {
-    try {
-      const response = await axiosInstance.get('/sso/sso-login');
-      console.log('SSO Login Success:', response.data);
+  // const handleSSOLogin = async () => {
+  //   try {
+  //     const response = await axiosInstance.get('/sso/sso-login');
+  //     console.log('SSO Login Success:', response.data);
 
-      if (response.data.success && response.data.url) {
-        // Open in a new tab
-        window.open(response.data.url, '_blank');
-      } else {
-        console.error('SSO Login failed: no URL returned');
-      }
-    } catch (error) {
-      console.error('SSO Login Failed:', error);
-    }
-  };
+  //     if (response.data.success && response.data.url) {
+  //       // Open in a new tab
+  //       window.open(response.data.url, '_blank');
+  //     } else {
+  //       console.error('SSO Login failed: no URL returned');
+  //     }
+  //   } catch (error) {
+  //     console.error('SSO Login Failed:', error);
+  //   }
+  // };
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, index }) => {
     const RADIAN = Math.PI / 180;
@@ -764,7 +764,7 @@ export default function FoboLevelTaskDistribution() {
             Beat FOBO Now
           </Button>
 
-          <Button
+          {/* <Button
             variant="contained"
             onClick={handleSSOLogin}
             disabled={!user}
@@ -782,7 +782,7 @@ export default function FoboLevelTaskDistribution() {
             }}
           >
             SSO
-          </Button>
+          </Button> */}
 
         
         </Grid>

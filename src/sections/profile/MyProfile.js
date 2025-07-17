@@ -1,5 +1,5 @@
 /* eslint-disable no-else-return */
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import CryptoJS from 'crypto-js';
 import PropTypes from 'prop-types';
 import GaugeChart from 'react-gauge-chart';
@@ -48,6 +48,13 @@ import ProfileUpdateModal from './profile-update-modal';
 
 const jobMatches = []; // You can populate this later
 
+// Add planTypeToLabel for mapping
+const planTypeToLabel = {
+  0: 'Marketing',
+  1: 'Data Science',
+  2: 'Product Management',
+};
+
 export default function MyProfile() {
   const { user, loading } = useAuthContext();
   const navigate = useNavigate();
@@ -72,6 +79,44 @@ export default function MyProfile() {
   const [resumeToDelete, setResumeToDelete] = useState(null);
 
   const [profileData, setProfileData] = useState(null);
+
+  const [subscriptions, setSubscriptions] = useState([]); // New state for subscriptions
+  const [isSubscriptionsLoading, setIsSubscriptionsLoading] = useState(false);
+
+  // Fetch subscription history
+  const fetchSubscriptionHistory = useCallback(async () => {
+    setIsSubscriptionsLoading(true);
+    try {
+      const response = await axiosInstance.get('/subscriptions/user');
+      if (response && response.data) {
+        const data = Array.isArray(response.data) ? response.data : [response.data];
+        const formattedData = data.map((plan) => ({
+          id: plan.id || `sub_${Date.now()}`,
+          planname: plan.planData?.planName || 'N/A',
+          planType: plan.planData?.planType ?? 0,
+        }));
+        setSubscriptions(formattedData);
+      } else {
+        setSubscriptions([]);
+      }
+    } catch (err) {
+      console.error('Error fetching subscriptions:', err);
+      setSubscriptions([]);
+      setError('Failed to load subscriptions. Please try again.');
+    } finally {
+      setIsSubscriptionsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      setProfileData(user);
+      setExistingResumes(user?.resumes || []);
+      setSelectedResumeId(null);
+      fetchSubscriptionHistory(); // Fetch subscriptions on mount
+    }
+    setIsLoading(false);
+  }, [user, fetchSubscriptionHistory]);
 
   const fetchLastFoboScore = async () => {
     try {
@@ -187,6 +232,95 @@ export default function MyProfile() {
       </Box>
     );
   }
+
+  const renderRegisteredCourses = () => {
+    if (isSubscriptionsLoading) {
+      return (
+        <Typography variant="body2" color="text.secondary">
+          Loading courses...
+        </Typography>
+      );
+    }
+    
+    if (subscriptions.length === 0) {
+      return (
+        <Typography variant="body2" color="text.secondary" width='650px'display='flex-start'>
+          No registered courses found
+        </Typography>
+      );
+    }
+
+    const categoryColors = {
+      Marketing: 'primary.main',
+      'Data Science': 'success.main',
+      'Product Management': 'warning.main',
+    };
+
+    const categoryBgColors = {
+      Marketing: '#fff',
+      'Data Science': '#fff',
+      'Product Management': '#fff',
+    };
+
+    const categoryIcons = {
+      Marketing: '📈',
+      'Data Science': '🧪',
+      'Product Management': '📊',
+    };
+
+    return (
+      <Stack spacing={1.5}>
+        {subscriptions.map((sub) => {
+          const categoryLabel = planTypeToLabel[sub.planType];
+          const icon = categoryIcons[categoryLabel] || '🎓';
+
+          return (
+            <Card
+              key={sub.id}
+              sx={{
+                borderRadius: 2,
+                px: 2,
+                py: 1,
+                bgcolor: categoryBgColors[categoryLabel] || 'grey.50',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+              elevation={0}
+            >
+              <Box display="flex" alignItems="center" gap={1}>
+                <Box
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    bgcolor: categoryColors[categoryLabel] || 'grey.300',
+                    color: 'common.white',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 18,
+                  }}
+                >
+                  {icon}
+                </Box>
+                <Typography
+                  variant="body2"
+                  sx={{ color: categoryColors[categoryLabel] || 'text.primary', fontWeight: 600 }}
+                >
+                  {categoryLabel}
+                </Typography>
+              </Box>
+
+              <Typography variant="body2" color="text.primary" sx={{ fontWeight: 500 }}>
+                {sub.planname}
+              </Typography>
+            </Card>
+          );
+        })}
+      </Stack>
+    );
+  };
 
   const getLevelColor = () => {
     if (lastFOBOData?.FOBO_Score <= 39) return '#00C853';
@@ -404,12 +538,6 @@ export default function MyProfile() {
                   {profileData?.fullName && (
                     <Typography fontWeight="600">{profileData.fullName}</Typography>
                   )}
-                  {/* Uncomment if needed */}
-                  {/* {profileData?.designation && (
-        <Typography fontSize="0.75rem" color="text.secondary">
-          {profileData.designation}
-        </Typography>
-      )} */}
                 </Box>
               </Box>
 
@@ -564,145 +692,140 @@ export default function MyProfile() {
                 style={{ display: 'none' }}
               />
             </Paper>
-
-            <Paper sx={{ p: 3, borderRadius: 2, mt: 2 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="subtitle1" fontWeight="600">
-                  Job Applications
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Coming Soon...
-                </Typography>
-              </Box>
-            </Paper>
           </Grid>
 
-          {/* Profile analytics section */}
-          {lastFOBOData && (
-            <Grid item xs={12} lg={8}>
-              {lastFOBOData ? (
-                <Paper
-                  elevation={3}
-                  sx={{
-                    position: 'relative',
-                    p: 2,
-                    bgcolor: 'rgba(255,255,255,0.9)',
-                    backdropFilter: 'blur(6px)',
-                    borderRadius: 2,
-                  }}
-                >
-                  <Box sx={{ width: '100%' }}>
-                    <MemoizedGaugeChart score={lastFOBOData?.FOBO_Score} />
-                  </Box>
-                  <Box sx={{ width: '100%', position: 'relative', p: 2 }}>
-                    <Typography
-                      sx={{ textAlign: 'center' }}
-                      variant="h6"
-                      fontWeight="bold"
-                      gutterBottom
-                    >
-                      Strategies to Improve FOBO
-                    </Typography>
+          <Grid sx={{ display: 'flex', flexDirection: 'row', mt: 2, ml: 2 }}>
+            {/* Profile analytics section */}
+            {lastFOBOData && (
+              <Grid item xs={12} lg={8}>
+                {lastFOBOData ? (
+                  <Paper
+                    elevation={3}
+                    sx={{
+                      position: 'relative',
+                      p: 2,
+                      bgcolor: 'rgba(255,255,255,0.9)',
+                      backdropFilter: 'blur(6px)',
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Box sx={{ width: '100%' }}>
+                      <MemoizedGaugeChart score={lastFOBOData?.FOBO_Score} />
+                    </Box>
+                    <Box sx={{ width: '100%', position: 'relative', p: 2 }}>
+                      <Typography
+                        sx={{ textAlign: 'center' }}
+                        variant="h6"
+                        fontWeight="bold"
+                        gutterBottom
+                      >
+                        Strategies to Improve FOBO
+                      </Typography>
 
-                    <Typography sx={{ textAlign: 'center' }} variant="body2" gutterBottom>
-                      Reduce your hesitation by practicing mindful decision-making, limiting
-                      options, and focusing on long-term satisfaction instead of perfect outcomes.{' '}
-                      <span style={{ filter: 'blur(2px)' }}>
+                      <Typography sx={{ textAlign: 'center' }} variant="body2" gutterBottom>
                         Reduce your hesitation by practicing mindful decision-making, limiting
-                        options, and focusing on long-term satisfaction instead of perfect outcomes.
-                        Reduce your hesitation by practicing mindful decision-making, limiting
-                        options, and focusing on long-term satisfaction instead of perfect outcomes.
-                      </span>
-                    </Typography>
+                        options, and focusing on long-term satisfaction instead of perfect outcomes.{' '}
+                        <span style={{ filter: 'blur(2px)' }}>
+                          Reduce your hesitation by practicing mindful decision-making, limiting
+                          options, and focusing on long-term satisfaction instead of perfect
+                          outcomes. Reduce your hesitation by practicing mindful decision-making,
+                          limiting options, and focusing on long-term satisfaction instead of
+                          perfect outcomes.
+                        </span>
+                      </Typography>
 
-                    {/* Optional blue glow lines */}
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        bottom: isMobile ? '90px' : '80px',
-                        left: '10%',
-                        width: '80%',
-                        height: 4,
-                        bgcolor: 'primary.main',
-                        borderRadius: 2,
-                        boxShadow: '0 0 15px rgba(33,150,243,0.8)',
-                        animation: 'pulse 2s infinite ease-in-out',
-                      }}
-                    />
+                      {/* Optional blue glow lines */}
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          bottom: isMobile ? '90px' : '80px',
+                          left: '10%',
+                          width: '80%',
+                          height: 4,
+                          bgcolor: 'primary.main',
+                          borderRadius: 2,
+                          boxShadow: '0 0 15px rgba(33,150,243,0.8)',
+                          animation: 'pulse 2s infinite ease-in-out',
+                        }}
+                      />
 
-                    {/* White faded overlay */}
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        bottom: 0,
-                        width: '100%',
-                        height: isMobile ? '200px' : '110px',
-                        bgcolor: 'white',
-                        opacity: 0.85,
-                        zIndex: 1,
-                      }}
-                    />
+                      {/* White faded overlay */}
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          bottom: 0,
+                          width: '100%',
+                          height: isMobile ? '200px' : '110px',
+                          bgcolor: 'white',
+                          opacity: 0.85,
+                          zIndex: 1,
+                        }}
+                      />
 
-                    {/* Analyze Again Button */}
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => {
-                        const key = process.env.REACT_APP_ENCRYPTION_KEY;
-                        if (!key) {
-                          console.error('Encryption key is missing');
-                          return;
-                        }
+                      {/* Analyze Again Button */}
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                          const key = process.env.REACT_APP_ENCRYPTION_KEY;
+                          if (!key) {
+                            console.error('Encryption key is missing');
+                            return;
+                          }
 
-                        // Clear old values first
-                        sessionStorage.removeItem('xbszya');
-                        sessionStorage.removeItem('xbszyaef');
+                          // Clear old values first
+                          sessionStorage.removeItem('xbszya');
+                          sessionStorage.removeItem('xbszyaef');
 
-                        // Encrypt and store the appropriate value
-                        if (lastFOBOData?.resumeId) {
-                          const encryptedId = encodeURIComponent(
-                            CryptoJS.AES.encrypt(String(lastFOBOData.resumeId), key).toString()
-                          );
-                          sessionStorage.setItem('xbszya', encryptedId);
-                        } else if (lastFOBOData?.linkedInUrl) {
-                          const encryptedUrl = encodeURIComponent(
-                            CryptoJS.AES.encrypt(lastFOBOData.linkedInUrl.trim(), key).toString()
-                          );
-                          sessionStorage.setItem('xbszyaef', encryptedUrl);
-                        }
+                          // Encrypt and store the appropriate value
+                          if (lastFOBOData?.resumeId) {
+                            const encryptedId = encodeURIComponent(
+                              CryptoJS.AES.encrypt(String(lastFOBOData.resumeId), key).toString()
+                            );
+                            sessionStorage.setItem('xbszya', encryptedId);
+                          } else if (lastFOBOData?.linkedInUrl) {
+                            const encryptedUrl = encodeURIComponent(
+                              CryptoJS.AES.encrypt(lastFOBOData.linkedInUrl.trim(), key).toString()
+                            );
+                            sessionStorage.setItem('xbszyaef', encryptedUrl);
+                          }
 
-                        navigate(paths.dashboardPage);
-                      }}
-                      sx={{
-                        position: 'absolute',
-                        bottom: isMobile ? '40px' : '30px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        zIndex: 2,
-                      }}
-                    >
-                      Analyze Again
-                    </Button>
-                  </Box>
-                </Paper>
-              ) : (
-                <Typography variant="body1">No Data</Typography>
-              )}
+                          navigate(paths.dashboardPage);
+                        }}
+                        sx={{
+                          position: 'absolute',
+                          bottom: isMobile ? '40px' : '30px',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          zIndex: 2,
+                        }}
+                      >
+                        Analyze Again
+                      </Button>
+                    </Box>
+                  </Paper>
+                ) : (
+                  <Typography variant="body1">No Data</Typography>
+                )}
+              </Grid>
+            )}
+
+            {/* Right Column: Resume and Registered Courses */}
+            <Grid item xs={12} lg={4}>
+              {/* Registered Courses Section */}
+              <Paper sx={{ p: 3, borderRadius: 2, mt: 0, ml: 2 }}>
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                  <Typography variant="subtitle1" fontWeight="600">
+                    Registered Courses
+                  </Typography>
+                </Box>
+                {renderRegisteredCourses()}
+              </Paper>
             </Grid>
-          )}
+          </Grid>
         </Grid>
-
         {/* Job Section (Placed Below Resume Section) */}
-        {/* <Grid container spacing={3} mt={1} >
-
-     <Grid item xs={12} lg={5} ml={98} mt={-12}>
-      <Paper sx={{ p: 3 }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography fontWeight="600">NO Jobs Found</Typography>
-        </Box>
-      </Paper>
-    </Grid>
-  </Grid> */}
+        {/* <Grid container spacing={3} mt={1} ></Grid> */}
       </Container>
 
       {/* Confirm Delete Dialog */}
