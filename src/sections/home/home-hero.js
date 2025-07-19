@@ -12,6 +12,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
 import { paths } from 'src/routes/paths';
 import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function HomeHero() {
   const [open, setOpen] = useState(false);
@@ -19,6 +20,27 @@ function HomeHero() {
   const [uploadType, setUploadType] = useState('resume');
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [experience, setExperience] = useState(0);
+  const [designation, setDesignation] = useState('');
+
+  const handleContinue = () => {
+    if (!designation.trim()) {
+      setError('Please enter your designation');
+      return;
+    }
+    setError('');
+    navigate('/job-details');
+  };
+
+  const handleOperation = (op) => {
+    setExperience((prev) => {
+      const newVal = op === 'inc' ? prev + 1 : prev - 1;
+      if (newVal < 0) return 0;
+      if (newVal > 30) return 30;
+      return newVal;
+    });
+  };
 
   const handleChange = (event, newType) => {
     if (newType !== null) {
@@ -129,8 +151,8 @@ function HomeHero() {
                 sx={{
                   bgcolor: '#0040D8',
                   '&:hover': { bgcolor: blue[700] },
-                  width: { xs: '100%', sm: '100%', md: '100%', lg: '194px' },
-                  height: '48px',
+                  width: { xs: '100%', sm: '100%', md: '100%', lg: '210px' },
+                  height: '46px',
                   borderRadius: '29px',
                   padding: '12px 24px',
                   textTransform: 'none',
@@ -308,14 +330,14 @@ function HomeHero() {
                               Selected file: <strong>{selectedFile}</strong>
                             </Box>
 
-                            <IconButton 
-                            size="small"
-                            onClick={()=> {
-                              setSelectedFile(null);
-                              setError(''); 
-                            } }
+                            <IconButton
+                              size="small"
+                              onClick={() => {
+                                setSelectedFile(null);
+                                setError('');
+                              }}
                             >
-                              <CloseIcon fontsize='small'/>
+                              <DeleteIcon fontSize="small" />
                             </IconButton>
                           </Box>
                         )}
@@ -340,12 +362,10 @@ function HomeHero() {
                             if (!selectedFile) {
                               fileInputRef.current.click();
                             } else {
-                             
                               navigate(paths.careerTitle);
-                              
                             }
 
-                             // navigate(paths.careerResume);
+                            // navigate(paths.careerResume);
                           }}
                           sx={{
                             backgroundColor: '#3f51b5',
@@ -368,30 +388,54 @@ function HomeHero() {
                           <Box
                             component="input"
                             placeholder="Enter Designation"
+                            value={designation}
+                            onChange={(e) => setDesignation(e.target.value)}
                             sx={{
                               width: '100%',
                               mt: 1,
                               px: 2,
                               py: 1.5,
-                              border: '1px solid #3f51b5',
+                              border: error ? '1px solid red' : '1px solid #3f51b5',
                               borderRadius: 1,
                               fontSize: '0.9rem',
                             }}
                           />
+                          {error && (
+                            <Typography variant="caption" color="error" ml={1}>
+                              {error}
+                            </Typography>
+                          )}
                         </Box>
 
                         <Box width="100%" textAlign="left" mb={4}>
                           <Typography variant="caption" sx={{ color: '#0040D8' }} ml={1}>
                             Experience
                           </Typography>
-                          <Box display="flex" alignItems="center" mt={1}>
+                          <Box display="flex" alignItems="center" mt={1} gap={1}>
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              onClick={() => handleOperation('dec')}
+                              disabled={experience <= 0}
+                            >
+                              -
+                            </Button>
                             <input
                               type="range"
                               min={0}
                               max={30}
-                              defaultValue={0}
+                              value={experience}
+                              onChange={(e) => setExperience(Number(e.target.value))}
                               style={{ flex: 1 }}
                             />
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              onClick={() => handleOperation('inc')}
+                              disabled={experience >= 30}
+                            >
+                              +
+                            </Button>
                             <Box
                               ml={2}
                               px={2}
@@ -399,8 +443,10 @@ function HomeHero() {
                               border="1px solid #ccc"
                               borderRadius={1}
                               fontSize="0.9rem"
+                              minWidth="40px"
+                              textAlign="center"
                             >
-                              0
+                              {experience}
                             </Box>
                           </Box>
                         </Box>
@@ -416,7 +462,7 @@ function HomeHero() {
                             fontWeight: 500,
                             '&:hover': { backgroundColor: '#2f3da3' },
                           }}
-                          onClick={() => navigate(paths.jobDetails)}
+                          onClick={handleContinue}
                         >
                           Continue
                         </Button>
@@ -440,13 +486,10 @@ function HomeHero() {
                   borderRadius: '29px',
 
                   // Padding
-                  padding: '20px 24px',
+                  padding: '10px 14px',
 
                   // Gap between elements
-                  gap: '8px',
-
-                  // Margin left
-                  marginLeft: '12px',
+                  gap: '4px',
 
                   // Hover effect
                   '&:hover': {
@@ -456,7 +499,7 @@ function HomeHero() {
                   },
 
                   // Optional: position shift on breakpoints
-                  ml: { xs: 0, sm: '100px', md: '42px' },
+                  ml: { xs: 0, sm: '100px', md: '2px' },
                 }}
               >
                 Know How it Works

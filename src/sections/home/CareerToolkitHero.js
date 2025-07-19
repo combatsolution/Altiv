@@ -29,8 +29,8 @@ const CareerToolkitHero = () => {
         color="black" 
         sx={
           {
-           fontsize:{xs:'40px', md:'54px'}
-
+           fontSize:{xs:'40px', md:'54px'}, 
+           textAlign:{xs:'left',md:'center'}
           }
         }
       >
@@ -41,14 +41,14 @@ const CareerToolkitHero = () => {
         color="text.secondary"
         mt={2}
         maxWidth="700px"
-         sx={
+         sx={ 
           {
-           fontsize:{xs:'16px', md:'20px'}
-           
+           fontsize:{xs:'16px', lg:'55px'},
+           fontWeight:400
           }
         }
       >
-      
+
         Transform your career journey from guesswork to strategy with AI-powered tools from Altiv.AI
       </Typography>
     </Box>

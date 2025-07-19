@@ -576,9 +576,7 @@ export default function FoboLevelTaskDistribution() {
             <Typography variant="h5" fontWeight="bold" gutterBottom sx={{ textAlign: 'left' }}>
               Task Distribution
             </Typography>
-            <Box
-              sx={{ position: 'relative', width: '100%', paddingTop: isMobile ? '250px' : '280px' }}
-            >
+             <Box sx={{ position: 'relative', width: '100%', paddingTop: isMobile ? '250px' : '280px' }}>
               <Box
                 sx={{
                   position: 'absolute',
@@ -764,27 +762,7 @@ export default function FoboLevelTaskDistribution() {
             Beat FOBO Now
           </Button>
 
-          {/* <Button
-            variant="contained"
-            onClick={handleSSOLogin}
-            disabled={!user}
-            sx={{
-              backgroundColor: '#2C47D3',
-              borderRadius: 10,
-              mx: 2,
-              px: 4,
-              textTransform: 'none',
-              fontWeight: 'bold',
-              '&:hover': {
-                backgroundColor: '#2C47D3',
-                boxShadow: 'none',
-              },
-            }}
-          >
-            SSO
-          </Button> */}
-
-        
+         
         </Grid>
       </Grid>
     </Box>

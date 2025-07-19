@@ -70,7 +70,7 @@ export default function JobDetailPage() {
   return (
     <Box>
       {/* Search Bar */}
-      <Container sx={{ py: 3 }}>
+      <Container sx={{ py: 3  }}>
         <TextField
           fullWidth
           placeholder="Show me product manager jobs in Bengaluru with a CTC of 35L and above"

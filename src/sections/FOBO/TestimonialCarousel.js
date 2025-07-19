@@ -216,8 +216,8 @@ export default function TestimonialCarousel() {
           sx={{
             position: 'absolute',
             width: { xs: 150, sm: 200, md: 250 },
-            right: { xs: 10, sm: 60, md: 210 },
-            top: { xs: 0, sm: 10, md: 50 },
+            right: { xs: 'auto', sm: 60, md: 210 },
+            top: { xs: 60, sm: 10, md: 50 },
             zIndex: -1,
           }}
         />

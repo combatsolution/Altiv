@@ -67,7 +67,7 @@ function TestimonialSection() {
             textAlign: { xs: 'left', md: 'center' },
             fontFamily: 'Inter, sans-serif',
             fontWeight: 400,
-            lineHeight: '160%',
+            lineHeight: '124%',
           }}
         >
           Career Navigation: Expert Takes
@@ -222,7 +222,7 @@ function TestimonialSection() {
 
 
 
-            <Grid marginLeft="30px">
+            <Grid sx={{ml:{xs:2, md:'30px'}}}>
               <Typography
                 sx={{
                   fontSize: 14,
@@ -230,6 +230,7 @@ function TestimonialSection() {
                   fontweight: 400,
                   fontFamily: 'Roboto, sans-serif',
                   mb: 4,
+                  
                 }}
               >
                 {t.content}
@@ -264,6 +265,7 @@ function TestimonialSection() {
                     color: 'black',
                     display: 'inline-flex',
                     alignItems: 'center',
+                     ml:{xs:'10px', md:'0px'}
                   }}
                 >
                   Read more{' '}
@@ -277,7 +279,9 @@ function TestimonialSection() {
         </Grid>
 
         {/* Right images */}
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={3} sx={{
+         display:{xs:'none', md:'block'}
+          }}>
           <Carousel ref={carousel.carouselRef} {...carousel.carouselSettings}>
             {testimonials.map((item, i) => (
               <Box
