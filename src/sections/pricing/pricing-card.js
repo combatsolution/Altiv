@@ -21,7 +21,8 @@ export default function PricingCard({ card, sx, ...other }) {
     }
   }, [user]);
 
-  const { id, planName, price, paymentType, recurringPeriod, isFreePlan, subTitle } = card;
+  const { id, title, final_price, paymentType, recurringPeriod, access , subTitle } = card;
+  const isFreePlan = access === "free";
 
   const isCurrentPlan = activePlan === id;
 
@@ -36,11 +37,11 @@ export default function PricingCard({ card, sx, ...other }) {
   const renderSubscription = (
     <Stack spacing={1} display="flex" alignItems="center" width="100%">
       <Typography variant="h4" sx={{ textTransform: 'capitalize' }}>
-        {planName}
+        {title}
       </Typography>
       <Box width="100%" display="flex" justifyContent="center">
         <Typography variant="subtitle2" align="center" color="success.lighter">
-          {subTitle}
+          {title}
         </Typography>
       </Box>
     </Stack>
@@ -57,8 +58,9 @@ export default function PricingCard({ card, sx, ...other }) {
           ₹
         </Typography>
         <Typography variant="h2" color="primary">
-          {price}
+          {final_price}
         </Typography>
+        
       </Stack>
       <Typography
         component="span"

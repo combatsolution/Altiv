@@ -9,6 +9,7 @@ import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import axiosInstance from 'src/utils/axios';
 import { _pricingPlans } from 'src/_mock';
+import axios from 'axios';
 import PricingCard from './pricing-card';
 
 // Category configuration
@@ -51,9 +52,10 @@ export default function PricingView() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState(0);
-  const [plansData, setPlansData] = useState([]);
+  // const [plansData, setPlansData] = useState([]);
   const [heading, setHeading] = useState('');
   const [subHeading, setSubHeading] = useState('');
+  const [plansData, setCourses] = useState([]);
 
   // Map type from query parameter to category value
   const typeToCategory = (type) => {
@@ -62,15 +64,51 @@ export default function PricingView() {
   };
 
   // Fetch plans based on selected category
-  const fetchPlans = async (categoryValue) => {
+  // const fetchPlans = async (categoryValue) => {
+  //   try {
+  //     const response = await axiosInstance.get(`/plans/plan-by-type/${categoryValue}`);
+  //     if (response && response.data) {
+  //       setPlansData(response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching plans:', error);
+  //   }
+  // };
+
+  const fetchCourses = async (categoryValue) => {
+    console.log('Fetching LearnWorlds courses for category:', categoryValue);
+
     try {
-      const response = await axiosInstance.get(`/plans/plan-by-type/${categoryValue}`);
-      if (response && response.data) {
-        setPlansData(response.data);
+      const response = await axios.get(
+        'https://altiv.learnworlds.com/admin/api/v2/courses',
+        {
+          headers: {
+            'Lw-Client': process.env.REACT_APP_LEARNWORLDS_CLIENT_ID,
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.REACT_APP_LEARNWORLDS_TOKEN}`,
+          },
+        }
+      );
+    const allCourses = response.data?.data || [];
+
+        let filteredCourses = [];
+
+        if (categoryValue === 0) {
+          filteredCourses = allCourses.filter(course => course.id.startsWith('marketing-'));
+        } else if (categoryValue === 1) {
+          filteredCourses = allCourses.filter(course =>
+            course.id.startsWith('datascience-') || course.id.startsWith('data-science-')
+          );
+        } else if (categoryValue === 2) {
+          filteredCourses = allCourses.filter(course => course.id.startsWith('prodmgmt-') || course.title.startsWith('prodMgmt-'));
+        }
+
+        setCourses(filteredCourses);
+        console.log('Filtered Courses:', filteredCourses);
+
+      } catch (error) {
+        console.error('Error fetching LearnWorlds courses:', error?.response || error);
       }
-    } catch (error) {
-      console.error('Error fetching plans:', error);
-    }
   };
 
   // Handle initial load and query parameter changes
@@ -80,7 +118,9 @@ export default function PricingView() {
     setSelectedCategory(categoryValue);
 
     // Fetch plans and update headings
-    fetchPlans(categoryValue);
+    // fetchPlans(categoryValue);
+    fetchCourses(categoryValue);
+
     const category = planCategories.find((cat) => cat.value === categoryValue);
     const { title, subtitle } = categoryHeadings[category.label] || {};
     setHeading(title);
@@ -162,7 +202,7 @@ export default function PricingView() {
         alignItems="stretch"
       >
         {plansData.length > 0 ? (
-          plansData.map((card, index) => (
+          plansData.map(( card, index) => (
             <Paper
               key={card.id}
               elevation={2}
