@@ -11,11 +11,11 @@ const FeatureSection = () => (
       width: '100%',
     }}
   >
-    <Box sx={{ px: { xs: 2, md: 6 }, py: { xs: 4, md: 8 }, maxWidth: '1197px', mx: 'auto' }}>
+    <Box sx={{ px: { xs: 2, md: 3 }, py: { xs: 4, md: 8 }, maxWidth: '1197px', mx: 'auto' }}>
       <Grid
         container
         spacing={4}
-        alignItems="center"
+        alignItems="center" 
         sx={{
           height: {
             xs: '937px', // Auto height for mobile
@@ -102,20 +102,20 @@ const FeatureSection = () => (
               {
                 title: 'Future-Proof Your Career',
                 body: `See around corners with AI-powered career predictions.
-                                Understand upcoming trends, identify growth opportunities,
-                                and plan your next moves with precision.`,
+                       Understand upcoming trends, identify growth opportunities,
+                       and plan your next moves with precision.`,
               },
               {
                 title: 'Apply Smarter, Not Harder',
                 body: `Focus on opportunities that matter. Get matched to roles that
-                                 fit your profile with insights on your match strength and
-                                  tips to improve your chances.`,
+                       fit your profile with insights on your match strength and
+                        tips to improve your chances.`,
               },
               {
                 title: 'Master Your Career Journey',
                 body: `Transform uncertainty into opportunity with your AI career
-                                partner. Get personalized guidance for everything from skill
-                                development to salary negotiations.`,
+                       partner. Get personalized guidance for everything from skill
+                       development to salary negotiations.`,
               },
             ].map((item, index) => (
               <Box key={index} marginTop={1}>
@@ -151,7 +151,7 @@ const FeatureSection = () => (
                     width: {
                       xs: '100%', // Responsive on mobile
                       sm: '100%',
-                      md: '489px', // Fixed from tablet upward
+                      md: '500px', // Fixed from tablet upward
                     },
                     height: {
                       xs: 'auto', // Auto height on mobile

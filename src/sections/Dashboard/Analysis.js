@@ -144,34 +144,107 @@ export default function FoboLevelTaskDistribution() {
       ...(decryptedLinkedinUrl && { linkedInUrl: decryptedLinkedinUrl }),
     };
 
+    // try {
+    //   const response = await axiosInstance.post(`/profile-analytics`, inputData);
+    //   if (response?.data.success) {
+    //     console.log('data', response?.data?.data);
+    //     setData(response?.data?.data);
+    //     const newPieData = [
+    //       {
+    //         name: 'Augmentation',
+    //         label: 'Augmentation',
+    //         value: response?.data?.data?.Augmented_Score,
+    //         color: '#FFB95A',
+    //         fieldName: 'Task_Distribution_Augmentation',
+    //       },
+    //       {
+    //         name: 'Automation',
+    //         label: 'Automation',
+    //         value: response?.data?.data?.Automated_Score,
+    //         color: '#EF4444',
+    //         fieldName: 'Task_Distribution_Automation',
+    //       },
+    //       {
+    //         name: 'Human',
+    //         label: 'Human',
+    //         value: response?.data?.data?.Human_Score,
+    //         color: '#84CC16',
+    //         fieldName: 'Task_Distribution_Human',
+    //       },
+    //     ];
+
+    //     setPieData(newPieData);
+
+    //     if (response?.data?.data?.FOBO_Score === null) {
+    //       setIsError(true);
+    //       trackEvent({
+    //         category: 'FOBO score error',
+    //         action: 'FOBO score fetched failed',
+    //         label: 'FOBO page',
+    //         value: 'FOBO score is null',
+    //       });
+    //     }
+
+    //     trackEvent({
+    //       category: 'FOBO score fetched',
+    //       action: 'FOBO score fetched successfully',
+    //       label: 'FOBO page',
+    //       value: 'FOBO fetched success',
+    //     });
+    //   } else {
+    //     setIsError(true);
+    //   }
+    // } catch (error) {
+    //   console.error('error', error);
+    //   setIsError(true);
+    // } finally {
+    //   setIsLoading(false);
+    // }
+
     try {
       const response = await axiosInstance.post(`/profile-analytics`, inputData);
-      if (response?.data.success) {
+
+      if (response?.data?.success) {
         console.log('data', response?.data?.data);
         setData(response?.data?.data);
-        const newPieData = [
-          {
-            name: 'Augmentation',
-            label: 'Augmentation',
-            value: response?.data?.data?.Augmented_Score,
-            color: '#FFB95A',
-            fieldName: 'Task_Distribution_Augmentation',
-          },
-          {
-            name: 'Automation',
-            label: 'Automation',
-            value: response?.data?.data?.Automated_Score,
-            color: '#EF4444',
-            fieldName: 'Task_Distribution_Automation',
-          },
-          {
-            name: 'Human',
-            label: 'Human',
-            value: response?.data?.data?.Human_Score,
-            color: '#84CC16',
-            fieldName: 'Task_Distribution_Human',
-          },
-        ];
+
+        let newPieData = [];
+
+        if (response?.data?.data?.FOBO_Score === 0) {
+          newPieData = [
+            {
+              name: 'Augmentation',
+              label: 'Augmentation',
+              value: 100, // explicitly 100%
+              color: '#D3D3D3',
+              fieldName: 'Task_Distribution_Augmentation',
+            },
+          ];
+        } else {
+          newPieData = [
+            {
+              name: 'Augmentation',
+              label: 'Augmentation',
+              value: response?.data?.data?.Augmented_Score,
+              color: '#FFB95A',
+              fieldName: 'Task_Distribution_Augmentation',
+            },
+            {
+              name: 'Automation',
+              label: 'Automation',
+              value: response?.data?.data?.Automated_Score,
+              color: '#EF4444',
+              fieldName: 'Task_Distribution_Automation',
+            },
+            {
+              name: 'Human',
+              label: 'Human',
+              value: response?.data?.data?.Human_Score,
+              color: '#84CC16',
+              fieldName: 'Task_Distribution_Human',
+            },
+          ];
+        }
 
         setPieData(newPieData);
 
@@ -576,7 +649,9 @@ export default function FoboLevelTaskDistribution() {
             <Typography variant="h5" fontWeight="bold" gutterBottom sx={{ textAlign: 'left' }}>
               Task Distribution
             </Typography>
-             <Box sx={{ position: 'relative', width: '100%', paddingTop: isMobile ? '250px' : '280px' }}>
+            <Box
+              sx={{ position: 'relative', width: '100%', paddingTop: isMobile ? '250px' : '280px' }}
+            >
               <Box
                 sx={{
                   position: 'absolute',
@@ -761,8 +836,6 @@ export default function FoboLevelTaskDistribution() {
           >
             Beat FOBO Now
           </Button>
-
-         
         </Grid>
       </Grid>
     </Box>

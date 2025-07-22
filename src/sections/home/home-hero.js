@@ -473,7 +473,7 @@ function HomeHero() {
               </Modal>
 
               <Button
-                variant="outlined"
+                variant="outlined"  
                 onClick={() => navigate(paths.comingSoon)}
                 sx={{
                   textTransform: 'none',
@@ -498,8 +498,7 @@ function HomeHero() {
                     color: blue[700],
                   },
 
-                  // Optional: position shift on breakpoints
-                  ml: { xs: 0, sm: '100px', md: '2px' },
+                  
                 }}
               >
                 Know How it Works
@@ -514,6 +513,7 @@ function HomeHero() {
             src={heroImg}
             alt="AI Coach"
             sx={{
+              ml:{ sm:6, lg:0},
               width: '100%',
               maxHeight: { xs: 'auto', md: '500px' },
               objectFit: 'contain',

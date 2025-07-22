@@ -14,6 +14,8 @@ export default function PricingCard({ card, sx, ...other }) {
   const { user } = useAuthContext();
 
   const [activePlan, setActivePlan] = useState(null);
+  const [priceid , setpriceid] = useState();
+
 
   useEffect(() => {
     if (user?.activeSubscriptionId && user?.currentPlanId) {
@@ -23,6 +25,15 @@ export default function PricingCard({ card, sx, ...other }) {
 
   const { id, title, final_price, paymentType, recurringPeriod, access , subTitle } = card;
   const isFreePlan = access === "free";
+  useEffect(() => {
+    const ide = id.split('-')[1];
+    
+    if (ide === "499") {
+      setpriceid(4);
+    } else if(ide === "1199"){
+      setpriceid(7);
+    }
+  }, [id]);
 
   const isCurrentPlan = activePlan === id;
 
@@ -41,7 +52,7 @@ export default function PricingCard({ card, sx, ...other }) {
       </Typography>
       <Box width="100%" display="flex" justifyContent="center">
         <Typography variant="subtitle2" align="center" color="success.lighter">
-          {title}
+          {title} 
         </Typography>
       </Box>
     </Stack>
@@ -159,10 +170,10 @@ export default function PricingCard({ card, sx, ...other }) {
           onClick={() => {
             if (!isCurrentPlan && !isFreePlan) {
               if (!user) {
-                sessionStorage.setItem('redirectAfterLogin', paths.payment(id));
+                sessionStorage.setItem('redirectAfterLogin', paths.payment(priceid));
                 navigate(paths.auth.jwt.login);
               } else {
-                navigate(paths.payment(id));
+                navigate(paths.payment(priceid));
               }
             }
           }}

@@ -26,7 +26,7 @@ function CareerCompass() {
             alt="Career Compass Illustration"
             sx={{
               width: '100%',
-              maxWidth: { xs: 300, sm: 400, md: 500 },
+              maxWidth: { xs: 300, sm: 450, md: 500 },
               height: 'auto',
               mx: 'auto',
               display: 'block',
@@ -41,7 +41,7 @@ function CareerCompass() {
             sx={{
               textAlign: { xs: 'center', sm: 'left' },
               maxWidth: { sm: 500, md: 600 },
-              mx: { xs: 'auto', sm: 0 },
+              mx: { xs: 'auto', sm: 'auto' },
             }}
           >
             {/* Title with Logo */}
@@ -73,7 +73,7 @@ function CareerCompass() {
                   lineHeight: '30px', // or '64px' if specific line-height is needed
                   letterSpacing: '1%',
                   display: 'flex', // alignItems: 'center',
-                  justifyContent: { xs: 'left', md: 'flex-start' },
+                  justifyContent: { xs: 'left', sm:'flex-start', md: 'flex-start' },
                   // gap: 1,
                   color: '#0040D8',
                 }}

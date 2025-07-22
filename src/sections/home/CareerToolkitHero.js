@@ -44,7 +44,8 @@ const CareerToolkitHero = () => {
          sx={ 
           {
            fontsize:{xs:'16px', lg:'55px'},
-           fontWeight:400
+           fontWeight:400,
+           textAlign:{xs:'left',md:'center'}
           }
         }
       >
