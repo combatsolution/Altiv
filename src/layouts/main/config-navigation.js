@@ -13,28 +13,28 @@
       icon: <Iconify icon="solar:home-2-bold-duotone" />,
       path: paths.fobo,
     },
-    {
-      title: 'AI Career Coach',
+    // {
+    //   title: 'AI Career Coach',
     
-      icon: <Iconify icon="solar:home-2-bold-duotone" />,
-      path: `${paths.comingSoon}?type=ai`,
-    },  
-    {
-      title: 'Programs',
-      icon: <Iconify icon="solar:notebook-bold-duotone" />,
-      path:`${paths.comingSoon}?type=program`,
-      // paths.docs
-    },
-    { 
-      title: 'Jobs',
-      icon: <Iconify icon="solar:atom-bold-duotone" />,
-      path:`${paths.comingSoon}?type=jobs`,
-      // paths.components
-    },
+    //   icon: <Iconify icon="solar:home-2-bold-duotone" />,
+    //   path: `${paths.comingSoon}?type=ai`,
+    // },  
+    // {
+    //   title: 'Programs',
+    //   icon: <Iconify icon="solar:notebook-bold-duotone" />,
+    //   path:`${paths.comingSoon}?type=program`,
+    //   // paths.docs
+    // },
+    // { 
+    //   title: 'Jobs',
+    //   icon: <Iconify icon="solar:atom-bold-duotone" />,
+    //   path:`${paths.comingSoon}?type=jobs`,
+    //   // paths.components
+    // },
     {
       title: 'Analyze Your Resume',
       icon: <Iconify icon="solar:notebook-bold-duotone" />,
-      path: `${paths.fobo}?type=analyze`,
+      path: `${paths.fobo}?retry=true`,
       
     },
     

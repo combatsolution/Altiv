@@ -21,17 +21,17 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { trackEvent } from 'src/utils/google-analytics';
 
 const jobseekers = [
-  { name: 'Search Jobs', href: paths.comingSoon },
+  // { name: 'Search Jobs', href: paths.comingSoon },
   { name: 'Register', href: paths.auth.jwt.register },
-  { name: 'Job Alerts', href: paths.comingSoon },
-  { name: 'Career Advice', href: paths.comingSoon },
+  // { name: 'Job Alerts', href: paths.comingSoon },
+  // { name: 'Career Advice', href: paths.comingSoon },
 ];
 
 const AICareerCoach = [
   { name: 'FOBO', href: paths.fobo },
-  { name: 'Career Compass', href: paths.comingSoon  },
-  { name: 'Smart Job Feed', href: paths.comingSoon },
-  { name: 'Job Match Boost', href: paths.comingSoon },
+  // { name: 'Career Compass', href: paths.comingSoon  },
+  // { name: 'Smart Job Feed', href: paths.comingSoon },
+  // { name: 'Job Match Boost', href: paths.comingSoon },
 ];
 
 const Programs = [
@@ -134,7 +134,7 @@ export default function Footer() {
         px: { xs: 2, sm: 3, md: 4, lg: 8 },
       }}
     >
-      <Grid container spacing={4}>
+      <Grid container spacing={3}>
         {/* Mobile Logo */}
         <Grid xs={12} sx={{ display: { xs: 'block', md: 'none' } }}>
           <Box sx={{ width: '120px', mb: 1 }}>
@@ -143,7 +143,7 @@ export default function Footer() {
         </Grid>
 
         {/* Jobseekers Column */}
-        <Grid xs={12} md={2} lg={1.5}>
+        <Grid xs={12} md={2} lg={2}>
           <Typography variant="subtitle1" fontWeight={700} gutterBottom>
             Jobseekers
           </Typography>
@@ -169,7 +169,7 @@ export default function Footer() {
         </Grid>
 
         {/* AI Career Coach Column */}
-        <Grid xs={12} md={2} lg={1.5}>
+        <Grid xs={12} md={2} lg={2}>
           <Typography variant="subtitle1" fontWeight={700} gutterBottom>
             AI Career Coach
           </Typography>
@@ -188,14 +188,14 @@ export default function Footer() {
                   },
                 }}
               >
-                {item.name}
+                  {item.name}
               </Link>
             ))}
           </Stack>
         </Grid>
 
         {/* Programs Column */}
-        <Grid xs={12} md={2} lg={1.6}>
+        {/* <Grid xs={12} md={2} lg={1.6}>
           <Typography variant="subtitle1" fontWeight={700} gutterBottom>
             Programs
           </Typography>
@@ -218,10 +218,10 @@ export default function Footer() {
               </Link>
             ))}
           </Stack>
-        </Grid>
+        </Grid> */}
 
         {/* Recruiters Column */}
-        <Grid xs={12} md={2} lg={1.5}>
+        {/* <Grid xs={12} md={2} lg={1.5}>
           <Typography variant="subtitle1" fontWeight={700} gutterBottom>
             Recruiters
           </Typography>
@@ -244,10 +244,10 @@ export default function Footer() {
               </Link>
             ))}
           </Stack>
-        </Grid>
+        </Grid> */}
 
         {/* About Altiv Column */}
-        <Grid xs={12} md={2} lg={1.5}>
+        <Grid xs={12} md={2} lg={2}>
           <Typography variant="subtitle1" fontWeight={700} gutterBottom>
             About Altiv
           </Typography>
@@ -273,7 +273,7 @@ export default function Footer() {
         </Grid>
 
         {/* Newsletter Column */}
-        <Grid xs={12} md={4} lg={4} sx={{ pl: { md: 2 } }}>
+        <Grid xs={12} md={4} lg={6} sx={{ pl: { md: 2 } }}>
           {/* Desktop Logo */}
           <Box sx={{ display: { xs: 'none', md: 'block' }, width: '140px', mb: 3 }}>
             <img src={Altivlogo} alt="Altiv Logo" style={{ width: '100%', height: 'auto' }} />

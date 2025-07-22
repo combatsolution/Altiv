@@ -103,7 +103,7 @@ const FoboHeroSection = () => {
       </Typography>
 
       {/* Call-to-Action Button */}
-      <Button
+      {/* <Button
         onClick={() => navigate(paths.comingSoon)}
         sx={{
           mt: 5,
@@ -124,7 +124,7 @@ const FoboHeroSection = () => {
         }}
       >
         Boost My Application <ArrowForwardIcon />
-      </Button>
+      </Button> */}
     </Box>
   );
 };
