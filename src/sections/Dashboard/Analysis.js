@@ -699,7 +699,7 @@ export default function FoboLevelTaskDistribution() {
         <Grid item xs={12} textAlign="left">
           <Button
             onClick={() => {
-              navigate(paths.comingSoon);
+              // navigate(paths.comingSoon);
               trackEvent({
                 category: 'CTA clicked',
                 action: 'button clicked',
