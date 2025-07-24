@@ -10,7 +10,7 @@ const COLORS = ['primary', 'secondary', 'info', 'success', 'warning', 'error'];
 export default function Pagination(theme) {
   const isLight = theme.palette.mode === 'light';
 
-  const rootStyles = (ownerState) => {
+    const rootStyles = (ownerState) => {
     const defaultColor = ownerState.color === 'standard';
 
     const filledVariant = ownerState.variant === 'text';

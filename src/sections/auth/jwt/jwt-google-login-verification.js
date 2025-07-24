@@ -80,6 +80,7 @@ export default function GoogleLoginView() {
     }
 
     if (accessToken && userProfile) {
+       console.log("sddassdad->userProfile",userProfile);
       setUserData({ accessToken, userProfile });
     } else {
       // Missing or bad params → return to login with error flag

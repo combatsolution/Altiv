@@ -56,6 +56,10 @@ export function AuthProvider({ children }) {
         const response = await axios.get(endpoints.auth.me);
         console.log('Initialize API response:', response.data);
         const user = response.data;
+        console.log('Initialize API response:', response.data);
+        console.log('Initialize API response_id:', response.data.id);
+
+        localStorage.setItem("User_id",response.data.id);
 
         dispatch({
           type: 'INITIAL',

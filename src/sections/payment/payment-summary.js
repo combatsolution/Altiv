@@ -10,6 +10,7 @@ import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import { useNavigate, useParams } from 'react-router';
 import { useAuthContext } from 'src/auth/hooks';
+import planStarterIcon from 'src/assets/icons/plan-starter-icon';
 
 export default function PaymentSummary({ sx, ...other }) {
   const navigate = useNavigate();
@@ -24,7 +25,9 @@ export default function PaymentSummary({ sx, ...other }) {
   useEffect(() => {
     const fetchPlan = async () => {
       try {
-        const response = await axiosInstance.get(`/plans/${planId}`);
+        // const response = await axiosInstance.get(`/plans/${planId}`);
+         const response = await axiosInstance.get(`/plans/${planId}`);
+        
         setPlanData(response.data);
       } catch (err) {
         console.error('Error fetching plan:', err);
@@ -105,7 +108,7 @@ export default function PaymentSummary({ sx, ...other }) {
           const verifyRes = await axiosInstance.post('/subscriptions/callback/verify', inputData);
           console.log('Verification response:', verifyRes.data);
           if (verifyRes.data.success) {
-            navigate('/payment/success',{replace: true});
+            navigate(`/payment/success?subscriptionId=${payment.subscriptionId}`,{replace: true});
             window.location.reload();
           } else {
             navigate('/pricing');
@@ -133,6 +136,7 @@ export default function PaymentSummary({ sx, ...other }) {
     razor.open();
   };
 
+
   return (
     <Box sx={{ p: 5, borderRadius: 2, bgcolor: 'background.neutral', ...sx }} {...other}>
       <Typography variant="h6" sx={{ mb: 5 }}>
@@ -144,7 +148,7 @@ export default function PaymentSummary({ sx, ...other }) {
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Subscription
           </Typography>
-          <Label color="error">{planData?.planName}</Label>
+          <Label color="error">  {planData?.courses?.courseName || 'Marketing-1199'}</Label>
         </Stack>
 
         <Stack direction="row" justifyContent="flex-end">

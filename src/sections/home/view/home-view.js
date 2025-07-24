@@ -61,7 +61,7 @@ export default function HomeView() {
       <FeatureSection />
       <TestimonialSection />
       <CareerToolkitHero />
-      <Box
+      {/* <Box
         src="/assets/images/line.svg"
         alt="img decorative"
         sx={{
@@ -69,11 +69,11 @@ export default function HomeView() {
         
           display: { xs: 'none', sm: 'block' }, // Only show on desktop
         }}
-      >
+      > */}
         <CareerCompass />
         <SmartJobFeed />
         <JobMatchBooster />
-      </Box>
+      {/* </Box> */}
 
       <WorkingProcessSection1 />
       <JobBoard />

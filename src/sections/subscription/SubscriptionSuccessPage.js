@@ -12,33 +12,76 @@ import {
   CircularProgress,
 } from '@mui/material';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import axios from 'axios';
+import { useSearchParams } from 'react-router-dom';
 
 const SubscriptionSuccessCard = () => {
+  const [searchParams] = useSearchParams();
+  const subscriptionId = searchParams.get('subscriptionId');
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  console.log('subscriptionId', subscriptionId);
   const [loading, setLoading] = useState(true);
+  const [ssoResponse, setSsoResponse] = useState(null);
+  const [subscriptionData, setSubscriptionData] = useState(null);
 
   const handleSSOLogin = async () => {
     try {
-      const response = await axiosInstance.get('/sso/sso-login');
-      console.log('SSO Login Success:', response.data);
+      const ssoRes = await axiosInstance.get('/sso/sso-login');
+      console.log('SSO Login Success:', ssoRes.data);
+      setSsoResponse(ssoRes.data);
 
-      if (response.data.success && response.data.url) {
-        window.open(response.data.url, '_blank');
+      const userId = localStorage.getItem('User_id');
+      if (!userId) {
+        console.error('User_id not found in localStorage');
+        return;
+      }
+
+      const subscriptionRes = await axiosInstance.get(`/subscriptions/${subscriptionId}`);
+      const planData = subscriptionRes.data.planData;
+      setSubscriptionData(planData);
+      console.log('Subscription Data:', planData);
+
+      if (ssoRes.data?.token && planData?.courses?.lmsId && planData?.price) {
+        const courses_userId = ssoRes.data.user_id;
+        const normalizedProductId =
+          planData.courses.lmsId.charAt(0).toLowerCase() + planData.courses.lmsId.slice(1);
+
+        const enrollRes = await axios.post(
+          `https://altiv.learnworlds.com/admin/api/v2/users/${courses_userId}/enrollment`,
+          {
+            productId: normalizedProductId,
+            productType: 'course',
+            justification: 'Purchased by Altiv.Ai',
+            price: 0,
+            send_enrollment_email: true,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${ssoRes.data.token}`,
+              'Content-Type': 'application/json',
+              'lw-client': process.env.REACT_APP_LEARNWORLDS_CLIENT_ID,
+            },
+          }
+        );
+        console.log('Enrollment Success:', enrollRes);
+
+        if (ssoRes.data.success && ssoRes.data.url) {
+          window.open(ssoRes.data.url, '_blank');
+        } else {
+          console.error('SSO Login failed: no URL returned');
+        }
       } else {
-        console.error('SSO Login failed: no URL returned');
+        console.error('Missing data for enrollment');
       }
     } catch (error) {
-      console.error('SSO Login Failed:', error);
+      console.error('SSO or Enrollment Failed:', error.response?.data || error.message);
     }
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 5000); // 10 seconds
-
+    const timer = setTimeout(() => setLoading(false), 5000); // simulate loading
     return () => clearTimeout(timer);
   }, []);
 
@@ -75,12 +118,7 @@ const SubscriptionSuccessCard = () => {
             Congratulations!
           </Typography>
 
-          <Box
-            sx={{
-              display: 'inline-flex',
-              mb: 2,
-            }}
-          >
+          <Box sx={{ display: 'inline-flex', mb: 2 }}>
             <CheckCircleRoundedIcon
               sx={{
                 fontSize: { xs: 64, sm: 80 },
@@ -92,10 +130,7 @@ const SubscriptionSuccessCard = () => {
           <Typography
             variant="h5"
             fontWeight={700}
-            sx={{
-              color: '#2A4DD0',
-              mb: 1,
-            }}
+            sx={{ color: '#2A4DD0', mb: 1 }}
             gutterBottom
           >
             Payment Processed Successfully!
@@ -131,15 +166,13 @@ const SubscriptionSuccessCard = () => {
                 Adding you to your courses...
               </Typography>
 
-              <CircularProgress
-                size={28}
-                sx={{ mt: 1, color: '#2A4DD0' }}
-              />
+              <CircularProgress size={28} sx={{ mt: 1, color: '#2A4DD0' }} />
             </>
           ) : (
             <Button
               variant="contained"
               size="large"
+              onClick={handleSSOLogin}
               sx={{
                 mt: 2,
                 borderRadius: 2,
@@ -157,7 +190,6 @@ const SubscriptionSuccessCard = () => {
                   boxShadow: '0 6px 16px rgba(42, 77, 208, 0.3)',
                 },
               }}
-              onClick={handleSSOLogin}
             >
               Start Learning
             </Button>
@@ -169,3 +201,4 @@ const SubscriptionSuccessCard = () => {
 };
 
 export default SubscriptionSuccessCard;
+

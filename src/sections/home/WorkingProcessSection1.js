@@ -244,7 +244,7 @@ const WorkingProcessSection1 = () => {
                 fontSize: isMobile ? '16px' : '16px',
                 textTransform: 'none',
                 bgcolor: '#0A65CC',
-                borderRadius: isMobile ? '4px' : '24px',
+                borderRadius: isMobile ? '24px' : '24px',
                 px: isMobile ? 3 : 4,
                 py: 1.5,
                 minWidth: isMobile ? '100%' : 'auto',

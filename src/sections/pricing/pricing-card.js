@@ -14,8 +14,7 @@ export default function PricingCard({ card, sx, ...other }) {
   const { user } = useAuthContext();
 
   const [activePlan, setActivePlan] = useState(null);
-  const [priceid , setpriceid] = useState();
-
+  const [priceid, setpriceid] = useState();
 
   useEffect(() => {
     if (user?.activeSubscriptionId && user?.currentPlanId) {
@@ -23,17 +22,7 @@ export default function PricingCard({ card, sx, ...other }) {
     }
   }, [user]);
 
-  const { id, title, final_price, paymentType, recurringPeriod, access , subTitle } = card;
-  const isFreePlan = access === "free";
-  useEffect(() => {
-    const ide = id.split('-')[1];
-    
-    if (ide === "499") {
-      setpriceid(4);
-    } else if(ide === "1199"){
-      setpriceid(7);
-    }
-  }, [id]);
+  const { id, courses, price, paymentType, recurringPeriod, access, features } = card;
 
   const isCurrentPlan = activePlan === id;
 
@@ -41,37 +30,36 @@ export default function PricingCard({ card, sx, ...other }) {
   let buttonLabel = 'Pay Now';
   if (isCurrentPlan) {
     buttonLabel = 'Current Plan';
-  } else if (isFreePlan) {
+  } else if (access) {
     buttonLabel = 'Free';
   }
 
   const renderSubscription = (
     <Stack spacing={1} display="flex" alignItems="center" width="100%">
       <Typography variant="h4" sx={{ textTransform: 'capitalize' }}>
-        {title}
+        {courses.courseName}
       </Typography>
       <Box width="100%" display="flex" justifyContent="center">
         <Typography variant="subtitle2" align="center" color="success.lighter">
-          {title} 
+          {courses.courseName}
         </Typography>
       </Box>
     </Stack>
   );
 
-  const renderPrice = isFreePlan ? (
+  const renderPrice = access ? (
     <Typography variant="h2" sx={{ mb: 0 }}>
       Free
     </Typography>
   ) : (
     <Stack direction="column" justifyContent="center" alignItems="flex-end">
-      <Stack direction="row" justifyContent="center" alignItems="flex-end">
-        <Typography variant="h4" sx={{ alignSelf: 'center', mr: 1, ml: 1, typography: 'body2' }}>
+      <Stack direction="row" justifyContent="center" alignItems="center">
+        <Typography variant="h4" sx={{ mr: 1 }}>
           ₹
         </Typography>
-        <Typography variant="h2" color="primary">
-          {final_price}
+        <Typography variant="h2" color="primary" sx={{ mr: 2}}> 
+          {price}
         </Typography>
-        
       </Stack>
       <Typography
         component="span"
@@ -88,12 +76,15 @@ export default function PricingCard({ card, sx, ...other }) {
   );
 
   const renderList = (
-    <Stack spacing={2} sx={{ width: '100%', mt:-3}}>
+    <Stack spacing={2} sx={{ width: '100%', mt: -3 }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Box component="span" sx={{ typography: 'overline' }}>
           Features
         </Box>
       </Stack>
+       {/* <Typography variant="h2" color="primary" sx={{ mr: 2}}> 
+          {courses.features}
+        </Typography> */}
 
       <Stack spacing={1}>
         <Stack direction="row" spacing={1}>
@@ -159,7 +150,7 @@ export default function PricingCard({ card, sx, ...other }) {
           fullWidth
           size="large"
           variant="contained"
-          disabled={isCurrentPlan || isFreePlan} // ⬅️ here
+          disabled={isCurrentPlan || access} // ⬅️ here
           sx={{
             backgroundColor: isCurrentPlan ? 'success.main' : '#0040D8',
             color: '#fff',
@@ -168,12 +159,12 @@ export default function PricingCard({ card, sx, ...other }) {
             },
           }}
           onClick={() => {
-            if (!isCurrentPlan && !isFreePlan) {
+            if (!isCurrentPlan && !access) {
               if (!user) {
-                sessionStorage.setItem('redirectAfterLogin', paths.payment(priceid));
+                sessionStorage.setItem('redirectAfterLogin', paths.payment(id));
                 navigate(paths.auth.jwt.login);
               } else {
-                navigate(paths.payment(priceid));
+                navigate(paths.payment(id));
               }
             }
           }}

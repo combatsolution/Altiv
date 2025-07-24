@@ -14,27 +14,27 @@ import PricingCard from './pricing-card';
 
 // Category configuration
 const planCategories = [
-  { label: 'Marketing', value: 0, type: 'MT' },
-  { label: 'Data Science', value: 1, type: 'DS' },
-  { label: 'Product Management', value: 2, type: 'PM' },
-  // { label: 'Software Engineering', value: 3, type: 'SE' },
+  { label: 'Marketing', value: 1, type: 'MT' },
+  { label: 'Data Science', value: 2, type: 'DS' },
+  { label: 'Product Management', value: 3, type: 'PM' },
+  // { label: 'Software Engineering', value: 4, type: 'SE' },
 ];
 
 const categoryHeadings = {
-  Marketing: {
-    value: 0,
+  'Marketing': {
+    value: 1,
     title: ' Marketing Mastery',
     subtitle:
       'Accelerate your AI Marketing Evolution - Transform your marketing strategies with cutting-edge AI tools and frameworks',
   },
   'Data Science': {
-    value: 1,
+    value: 2,
     title: ' Data Science Leadership',
     subtitle:
       'Accelerate your AI-Driven Data Science Evolution - Master the implementation of AI solutions at scale',
   },
   'Product Management': {
-    value: 2,
+    value: 3,
     title: 'AI Product Innovation',
     subtitle:
       'Accelerate your AI-Enhanced Product Evolution - Build and scale AI-powered products that deliver real value',
@@ -52,64 +52,30 @@ export default function PricingView() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState(0);
-  // const [plansData, setPlansData] = useState([]);
+   const [plansData, setPlansData] = useState([]);
   const [heading, setHeading] = useState('');
   const [subHeading, setSubHeading] = useState('');
-  const [plansData, setCourses] = useState([]);
+  // const [plansData, setCourses] = useState([]);
 
   // Map type from query parameter to category value
   const typeToCategory = (type) => {
     const category = planCategories.find((cat) => cat.type === type);
-    return category ? category.value : 0; // Default to Marketing (0) if type is invalid
+    return category ? category.value : 1; // Default to Marketing (0) if type is invalid
   };
 
   // Fetch plans based on selected category
-  // const fetchPlans = async (categoryValue) => {
-  //   try {
-  //     const response = await axiosInstance.get(`/plans/plan-by-type/${categoryValue}`);
-  //     if (response && response.data) {
-  //       setPlansData(response.data);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching plans:', error);
-  //   }
-  // };
-
-  const fetchCourses = async (categoryValue) => {
-    console.log('Fetching LearnWorlds courses for category:', categoryValue);
-
+  const fetchPlans = async (categoryValue) => {
     try {
-      const response = await axios.get(
-        'https://altiv.learnworlds.com/admin/api/v2/courses',
-        {
-          headers: {
-            'Lw-Client': process.env.REACT_APP_LEARNWORLDS_CLIENT_ID,
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.REACT_APP_LEARNWORLDS_TOKEN}`,
-          },
-        }
-      );
-    const allCourses = response.data?.data || [];
-
-        let filteredCourses = [];
-
-        if (categoryValue === 0) {
-          filteredCourses = allCourses.filter(course => course.id.startsWith('marketing-'));
-        } else if (categoryValue === 1) {
-          filteredCourses = allCourses.filter(course =>
-            course.id.startsWith('datascience-') || course.id.startsWith('data-science-')
-          );
-        } else if (categoryValue === 2) {
-          filteredCourses = allCourses.filter(course => course.id.startsWith('prodmgmt-') || course.title.startsWith('prodMgmt-'));
-        }
-
-        setCourses(filteredCourses);
-        console.log('Filtered Courses:', filteredCourses);
-
-      } catch (error) {
-        console.error('Error fetching LearnWorlds courses:', error?.response || error);
+      const response = await axiosInstance.get(`/plans/plan-by-type/${categoryValue}`);
+      if (response && response.data) {
+        setPlansData(response.data);
       }
-  };
+    } catch (error) {
+      console.error('Error fetching plans:', error);
+    }
+  }; 
+
+ 
 
   // Handle initial load and query parameter changes
   useEffect(() => {
@@ -118,8 +84,8 @@ export default function PricingView() {
     setSelectedCategory(categoryValue);
 
     // Fetch plans and update headings
-    // fetchPlans(categoryValue);
-    fetchCourses(categoryValue);
+    fetchPlans(categoryValue);
+    // fetchCourses(categoryValue);
 
     const category = planCategories.find((cat) => cat.value === categoryValue);
     const { title, subtitle } = categoryHeadings[category.label] || {};

@@ -362,7 +362,7 @@ function HomeHero() {
                             if (!selectedFile) {
                               fileInputRef.current.click();
                             } else {
-                              navigate(paths.careerTitle);
+                              navigate(paths.careerResume);
                             }
 
                             // navigate(paths.careerResume);

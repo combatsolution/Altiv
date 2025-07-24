@@ -229,9 +229,14 @@ const JobBoard = () => (
               sx={{
                 borderRadius: 999,
                 px: 4,
-                bgcolor: "#0040D8",
+                bgcolor: "primary.main",
                 fontSize: { xs: 14, sm: 16 },
                 textTransform: 'none',
+                '&:hover':{
+                  bgcolor:'primary.dark',  
+                  boxShadow:'none'
+                }
+                
               }}
             >
               Apply →

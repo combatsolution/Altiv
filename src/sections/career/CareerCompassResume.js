@@ -88,7 +88,7 @@ const CareerCard = ({ title, match, rate, salary, experience }) => {
         p: 2,
         position: 'relative',
         width: { xs: '100%', sm: 360 },
-        height: 127,
+        height: 140,
         borderRadius: 2,
       }}
     >
@@ -302,7 +302,7 @@ export default function CareerPathProjection() {
             aria-hidden
             sx={{
               position: 'absolute',
-              left: { xs: 72, md: 50 },
+              left: { xs: 42, md: 50 },
               top: 0,
               bottom: 0,
               width: 10,
