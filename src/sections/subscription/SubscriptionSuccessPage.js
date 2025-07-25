@@ -70,7 +70,7 @@ const SubscriptionSuccessCard = () => {
         if (ssoRes.data.success && ssoRes.data.url) {
           const redirectUrl = ssoRes.data.url;
           console.log('Redirect URL:', redirectUrl);
-          if (redirectUrl.success=== true) {
+         if (redirectUrl) {
             const courseUrl = `https://altiv.learnworlds.com/course/${normalizedProductId}`;
             window.open(courseUrl, '_blank');
           }
