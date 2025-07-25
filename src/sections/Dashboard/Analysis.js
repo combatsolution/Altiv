@@ -213,10 +213,10 @@ export default function FoboLevelTaskDistribution() {
         if (response?.data?.data?.FOBO_Score === 0) {
           newPieData = [
             {
-              name: 'Augmentation',
+              name: 'Augmentation', 
               label: 'Augmentation',
               value: 100, // explicitly 100%
-              color: '#D3D3D3',
+              color: '#cf1b1bff',
               fieldName: 'Task_Distribution_Augmentation',
             },
           ];
