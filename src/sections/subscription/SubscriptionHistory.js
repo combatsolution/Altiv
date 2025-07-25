@@ -86,22 +86,22 @@ SubscriptionRows.propTypes = {
 };
 
 export default function SubscriptionHistory() {
-  const [service, setService] = useState(0); // Default to 0 (Marketing)
+  const [service, setService] = useState(1); // Default to 0 (Marketing)
   const [subscriptions, setSubscriptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   // Plan categories for filtering
   const planCategories = useMemo(() => [
-    { label: 'Marketing', value: 0 }, 
-    { label: 'Data Science', value: 1 },
-    { label: 'Product Management', value: 2 },
+    { label: 'Marketing', value: 1}, 
+    { label: 'Data Science', value: 2 },
+    { label: 'Product Management', value: 3 },
   ], []); // Empty dependency array since planCategories is static
 
   // Map planType to category label
   const planTypeToLabel = useMemo(() => ({
-    0: 'Marketing',
-    1: 'Data Science',
-    2: 'Product Management',
+    1: 'Marketing',
+    2: 'Data Science',
+    3: 'Product Management',
   }), []); // Empty dependency array since planTypeToLabel is static
 
   // Fetch subscription history using plans API

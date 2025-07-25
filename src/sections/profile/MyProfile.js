@@ -50,9 +50,9 @@ const jobMatches = []; // You can populate this later
 
 // Add planTypeToLabel for mapping
 const planTypeToLabel = {
-  0: 'Marketing',
-  1: 'Data Science',
-  2: 'Product Management',
+  1: 'Marketing',
+  2: 'Data Science',
+  3: 'Product Management',
 };
 
 export default function MyProfile() {
@@ -92,7 +92,8 @@ export default function MyProfile() {
         const data = Array.isArray(response.data) ? response.data : [response.data];
         const formattedData = data.map((plan) => ({
           id: plan.id || `sub_${Date.now()}`,
-          planname: plan.planData?.planName || 'N/A',
+          planname: plan.planData?.courses?.courseName || 'N/A',
+          price: `₹${plan.planData?.price ?? 'N/A'}`,
           planType: plan.planData?.planType ?? 0,
         }));
         setSubscriptions(formattedData);
@@ -241,10 +242,10 @@ export default function MyProfile() {
         </Typography>
       );
     }
-    
+
     if (subscriptions.length === 0) {
       return (
-        <Typography variant="body2" color="text.secondary" width='650px'display='flex-start'>
+        <Typography variant="body2" color="text.secondary" width="650px" display="flex-start">
           No registered courses found
         </Typography>
       );

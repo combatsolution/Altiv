@@ -213,10 +213,10 @@ export default function FoboLevelTaskDistribution() {
         if (response?.data?.data?.FOBO_Score === 0) {
           newPieData = [
             {
-              name: 'Augmentation', 
+              name: 'Augmentation',
               label: 'Augmentation',
               value: 100, // explicitly 100%
-              color: '#cf1b1bff',
+              color: '#D3D3D3',
               fieldName: 'Task_Distribution_Augmentation',
             },
           ];
@@ -640,7 +640,7 @@ export default function FoboLevelTaskDistribution() {
             >
               <MemoizedGaugeChart score={data?.FOBO_Score} />
             </Box>
-          </Stack>
+          </Stack>z
         </Grid>
 
         {/* Task Distribution Pie */}
