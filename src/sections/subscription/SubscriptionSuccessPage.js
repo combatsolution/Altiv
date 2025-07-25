@@ -140,7 +140,7 @@ const SubscriptionSuccessCard = () => {
             sx={{ color: '#2A4DD0', mb: 1 }}
             gutterBottom
           >
-            Payment Processed Successfully!cxcx
+            Payment Processed Successfully!
           </Typography>
 
           {loading ? (
