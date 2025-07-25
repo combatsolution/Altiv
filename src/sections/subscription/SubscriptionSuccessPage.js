@@ -54,7 +54,7 @@ const SubscriptionSuccessCard = () => {
             productId: normalizedProductId,
             productType: 'course',
             justification: 'Purchased by Altiv.Ai',
-            price: 0,
+            price: planData.price,
             send_enrollment_email: true,
           },
           {
@@ -68,7 +68,10 @@ const SubscriptionSuccessCard = () => {
         console.log('Enrollment Success:', enrollRes);
 
         if (ssoRes.data.success && ssoRes.data.url) {
-          window.open(ssoRes.data.url, '_blank');
+          const courseUrl = `https://altiv.learnworlds.com/course/${normalizedProductId}`;
+          // Open course page in new tab
+          window.open(courseUrl, '_blank');
+          // window.open(ssoRes.data.url, '_blank');
         } else {
           console.error('SSO Login failed: no URL returned');
         }
@@ -133,7 +136,7 @@ const SubscriptionSuccessCard = () => {
             sx={{ color: '#2A4DD0', mb: 1 }}
             gutterBottom
           >
-            Payment Processed Successfully!
+            Payment Processed Successfully!cxcx
           </Typography>
 
           {loading ? (
@@ -201,4 +204,3 @@ const SubscriptionSuccessCard = () => {
 };
 
 export default SubscriptionSuccessCard;
-
