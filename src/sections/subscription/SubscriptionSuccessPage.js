@@ -68,17 +68,16 @@ const SubscriptionSuccessCard = () => {
         console.log('Enrollment Success:', enrollRes);
 
         if (ssoRes.data.success && ssoRes.data.url) {
-             const redirectUrl = ssoRes.data.url;
-            if(redirectUrl){
-              const courseUrl = `https://altiv.learnworlds.com/course/${normalizedProductId}`;
-              // Open course page in new tab
-              window.open(courseUrl, '_blank');
-            }
-
-          // window.open(ssoRes.data.url, '_blank');
+          const redirectUrl = ssoRes.data.url;
+          console.log('Redirect URL:', redirectUrl);
+          if (redirectUrl.success=== true) {
+            const courseUrl = `https://altiv.learnworlds.com/course/${normalizedProductId}`;
+            window.open(courseUrl, '_blank');
+          }
         } else {
           console.error('SSO Login failed: no URL returned');
         }
+
       } else {
         console.error('Missing data for enrollment');
       }
@@ -140,7 +139,7 @@ const SubscriptionSuccessCard = () => {
             sx={{ color: '#2A4DD0', mb: 1 }}
             gutterBottom
           >
-            Payment Processed Successfully!
+            Payment Processed Successfully!cxcx
           </Typography>
 
           {loading ? (
