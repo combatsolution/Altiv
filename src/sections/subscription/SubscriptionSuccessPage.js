@@ -70,9 +70,12 @@ const SubscriptionSuccessCard = () => {
         if (ssoRes.data.success && ssoRes.data.url) {
           const redirectUrl = ssoRes.data.url;
           console.log('Redirect URL:', redirectUrl);
-         if (redirectUrl) {
-            const courseUrl = `https://altiv.learnworlds.com/course/${normalizedProductId}`;
-            window.open(courseUrl, '_blank');
+        if (redirectUrl) {
+            setTimeout(() => {
+              const courseUrl = `https://altiv.learnworlds.com/course/${normalizedProductId}`;
+              window.open(courseUrl, '_blank');
+            }, 1000); // Optional delay before redirect
+
           }
         } else {
           console.error('SSO Login failed: no URL returned');
