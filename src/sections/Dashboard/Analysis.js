@@ -213,11 +213,11 @@ export default function FoboLevelTaskDistribution() {
         if (response?.data?.data?.FOBO_Score === 0) {
           newPieData = [
             {
-              name: 'Augmentation',
-              label: 'Augmentation',
-              value: 100, // explicitly 100%
-              color: '#D3D3D3',
-              fieldName: 'Task_Distribution_Augmentation',
+              name: 'NO DATA',
+              label: 'NO DATA',
+              value: 100,
+              color: '#D3D3D3', // Grey color
+              fieldName: 'Task_Distribution_NoData',
             },
           ];
         } else {
@@ -271,7 +271,7 @@ export default function FoboLevelTaskDistribution() {
       console.error('error', error);
       setIsError(true);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false);  
     }
   };
 
@@ -312,6 +312,8 @@ export default function FoboLevelTaskDistribution() {
   //     console.error('SSO Login Failed:', error);
   //   }
   // };
+
+  
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, index }) => {
     const RADIAN = Math.PI / 180;
@@ -434,7 +436,7 @@ export default function FoboLevelTaskDistribution() {
           <GaugeChart
             id="fobo-gauge"
             nrOfLevels={3}
-            arcsLength={[0.39, 0.3, 0.31]}
+            arcsLength={[0.39, 0.3, 0.31]}  
             colors={['#00C853', '#FFB300', '#D32F2F']}
             percent={percent}
             arcPadding={0}
@@ -640,7 +642,7 @@ export default function FoboLevelTaskDistribution() {
             >
               <MemoizedGaugeChart score={data?.FOBO_Score} />
             </Box>
-          </Stack>z
+          </Stack>
         </Grid>
 
         {/* Task Distribution Pie */}

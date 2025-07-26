@@ -93,8 +93,8 @@ export default function MyProfile() {
         const formattedData = data.map((plan) => ({
           id: plan.id || `sub_${Date.now()}`,
           planname: plan.planData?.courses?.courseName || 'N/A',
-          price: `₹${plan.planData?.price ?? 'N/A'}`,
-          planType: plan.planData?.planType ?? 0,
+          // price: `₹${plan.planData?.price ?? 'N/A'}`,
+           planType: plan.planData?.planType ?? 0,
         }));
         setSubscriptions(formattedData);
       } else {
@@ -205,7 +205,7 @@ export default function MyProfile() {
       setExistingResumes((prev) => prev.filter((resume) => resume.id !== id));
       if (selectedResumeId === id) setSelectedResumeId(null);
       setSuccess('Resume deleted successfully');
-    } catch (err) {
+    } catch (err) { 
       console.error(err);
       setError('Failed to delete resume. Please try again.');
     } finally {
@@ -695,10 +695,11 @@ export default function MyProfile() {
             </Paper>
           </Grid>
 
-          <Grid sx={{ display: 'flex', flexDirection: 'row', mt: 2, ml: 2 }}>
+          <Grid sx={{ display: 'flex', flexDirection: 'row', mt: 2, ml:2 }}>
+            
             {/* Profile analytics section */}
             {lastFOBOData && (
-              <Grid item xs={12} lg={8}>
+              <Grid item xs={12} lg={8}   >
                 {lastFOBOData ? (
                   <Paper
                     elevation={3}
@@ -772,7 +773,7 @@ export default function MyProfile() {
                           if (!key) {
                             console.error('Encryption key is missing');
                             return;
-                          }
+                          }   
 
                           // Clear old values first
                           sessionStorage.removeItem('xbszya');
@@ -806,15 +807,15 @@ export default function MyProfile() {
                     </Box>
                   </Paper>
                 ) : (
-                  <Typography variant="body1">No Data</Typography>
+                  <Typography variant="body1"> No Data</Typography>
                 )}
               </Grid>
             )}
 
-            {/* Right Column: Resume and Registered Courses */}
+             {/* Right Column: Resume and Registered Courses */}  
             <Grid item xs={12} lg={4}>
               {/* Registered Courses Section */}
-              <Paper sx={{ p: 3, borderRadius: 2, mt: 0, ml: 2 }}>
+              <Paper sx={{ p: 3, borderRadius: 2, mt: 0,  ml:2  }}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                   <Typography variant="subtitle1" fontWeight="600">
                     Registered Courses
@@ -823,9 +824,11 @@ export default function MyProfile() {
                 {renderRegisteredCourses()}
               </Paper>
             </Grid>
-          </Grid>
         </Grid>
-        {/* Job Section (Placed Below Resume Section) */}
+       </Grid>
+
+          
+            
         {/* <Grid container spacing={3} mt={1} ></Grid> */}
       </Container>
 

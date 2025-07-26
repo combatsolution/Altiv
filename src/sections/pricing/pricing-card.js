@@ -8,40 +8,80 @@ import { paths } from 'src/routes/paths';
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import { useAuthContext } from 'src/auth/hooks';
+import axiosInstance from 'src/utils/axios';
+import { status } from 'nprogress';
 
 export default function PricingCard({ card, sx, ...other }) {
   const navigate = useNavigate();
   const { user } = useAuthContext();
 
   const [activePlan, setActivePlan] = useState(null);
-  const [priceid, setpriceid] = useState();
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [courseData, setCourseData] = useState([]);
 
   useEffect(() => {
-    if (user?.activeSubscriptionId && user?.currentPlanId) {
+    if (user?.currentPlanId) {
       setActivePlan(user.currentPlanId);
     }
   }, [user]);
 
-  const { id, courses, price, paymentType, recurringPeriod, access, features } = card;
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const response = await axiosInstance.get(`/subscriptions/user`);
+        console.log('Fetched Plans:', response.data);
+        if (response?.data) {
+          // Filter subscriptions with status === 'success' and extract course names
+          const courseNames = response.data
+            .filter((sub) => sub?.status === 'success')
+            .map((sub) => sub?.planData?.courses?.courseName)
+            .filter(Boolean); // removes undefined/null course names
+
+          setSubscriptions(response.data); // keep all subscriptions if needed
+          setCourseData(courseNames); // save only course names with 'success' status
+        }
+      } catch (error) {
+        console.error('Error fetching plans:', error);
+      }
+    };
+    fetchPlans();
+  }, []);
+
+  useEffect(() => {
+    if (subscriptions?.length > 0) {
+      const courses = subscriptions
+        .map((sub) => sub?.planData?.courses?.courseName)
+        .filter(Boolean);
+      setCourseData(courses);
+    }
+  }, [subscriptions]);
+  console.log('Course Data:', courseData);
+
+  const { id, courses = {}, price, paymentType, recurringPeriod, access, features } = card;
 
   const isCurrentPlan = activePlan === id;
+  const isAlreadyPurchased = courseData.includes(courses?.courseName);
 
-  // 👇 Clean, ESLint-friendly label logic
   let buttonLabel = 'Pay Now';
+
   if (isCurrentPlan) {
     buttonLabel = 'Current Plan';
   } else if (access) {
+    buttonLabel = 'Free';
+  } else if (isAlreadyPurchased) {
+    buttonLabel = 'Already Purchased';
+  } else if (price === 0) {
     buttonLabel = 'Free';
   }
 
   const renderSubscription = (
     <Stack spacing={1} display="flex" alignItems="center" width="100%">
       <Typography variant="h4" sx={{ textTransform: 'capitalize' }}>
-        {courses.courseName}
+        {courses?.courseName || 'Course'}
       </Typography>
       <Box width="100%" display="flex" justifyContent="center">
         <Typography variant="subtitle2" align="center" color="success.lighter">
-          {courses.courseName}
+          {courses?.courseName}
         </Typography>
       </Box>
     </Stack>
@@ -57,7 +97,7 @@ export default function PricingCard({ card, sx, ...other }) {
         <Typography variant="h4" sx={{ mr: 1 }}>
           ₹
         </Typography>
-        <Typography variant="h2" color="primary" sx={{ mr: 2}}> 
+        <Typography variant="h2" color="primary" sx={{ mr: 2 }}>
           {price}
         </Typography>
       </Stack>
@@ -82,23 +122,30 @@ export default function PricingCard({ card, sx, ...other }) {
           Features
         </Box>
       </Stack>
-       {/* <Typography variant="h2" color="primary" sx={{ mr: 2}}> 
-          {courses.features}
-        </Typography> */}
-
       <Stack spacing={1}>
-        <Stack direction="row" spacing={1}>
-          <Iconify icon="eva:checkmark-fill" width={20} sx={{ color: 'green' }} />
-          <Typography variant="body2">Fast performance</Typography>
-        </Stack>
-        <Stack direction="row" spacing={1}>
-          <Iconify icon="eva:checkmark-fill" width={20} sx={{ color: 'green' }} />
-          <Typography variant="body2">User-friendly interface</Typography>
-        </Stack>
-        <Stack direction="row" spacing={1}>
-          <Iconify icon="eva:checkmark-fill" width={20} sx={{ color: 'green' }} />
-          <Typography variant="body2">Secure data handling</Typography>
-        </Stack>
+        {features?.length ? (
+          features.map((feature, idx) => (
+            <Stack direction="row" spacing={1} key={idx}>
+              <Iconify icon="eva:checkmark-fill" width={20} sx={{ color: 'green' }} />
+              <Typography variant="body2">{feature}</Typography>
+            </Stack>
+          ))
+        ) : (
+          <>
+            <Stack direction="row" spacing={1}>
+              <Iconify icon="eva:checkmark-fill" width={20} sx={{ color: 'green' }} />
+              <Typography variant="body2">Fast performance</Typography>
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              <Iconify icon="eva:checkmark-fill" width={20} sx={{ color: 'green' }} />
+              <Typography variant="body2">User-friendly interface</Typography>
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              <Iconify icon="eva:checkmark-fill" width={20} sx={{ color: 'green' }} />
+              <Typography variant="body2">Secure data handling</Typography>
+            </Stack>
+          </>
+        )}
       </Stack>
     </Stack>
   );
@@ -130,11 +177,8 @@ export default function PricingCard({ card, sx, ...other }) {
 
       {renderSubscription}
       {renderPrice}
-
       <Divider sx={{ borderStyle: 'dashed' }} />
-
       {renderList}
-
       <Divider
         sx={{
           width: '100%',
@@ -144,13 +188,12 @@ export default function PricingCard({ card, sx, ...other }) {
           mb: 0,
         }}
       />
-
       <Stack spacing={2} sx={{ pt: 0 }}>
         <Button
           fullWidth
           size="large"
           variant="contained"
-          disabled={isCurrentPlan || access} // ⬅️ here
+          disabled={isCurrentPlan || access || isAlreadyPurchased || price === 0}
           sx={{
             backgroundColor: isCurrentPlan ? 'success.main' : '#0040D8',
             color: '#fff',
@@ -177,6 +220,6 @@ export default function PricingCard({ card, sx, ...other }) {
 }
 
 PricingCard.propTypes = {
-  card: PropTypes.object,
+  card: PropTypes.object.isRequired,
   sx: PropTypes.object,
 };

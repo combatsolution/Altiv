@@ -116,7 +116,7 @@ export default function SubscriptionHistory() {
         id: plan.id || `sub_${Date.now()}`,
         date: plan.createdAt ? new Date(plan.createdAt).toLocaleDateString() : 'N/A',
         price: plan.planData?.price ? `₹${plan.planData.price}` : 'N/A',
-        planname: plan.planData?.planName || 'N/A',
+        planname: plan.planData?.courses?.courseName || 'N/A',
         paymenttype: plan.planData?.paymentType || 'N/A',
         status: plan.status ? plan.status.toUpperCase() : 'UNKNOWN',
         planType: plan.planData?.planType !== undefined ? plan.planData.planType : 0,
@@ -206,7 +206,7 @@ export default function SubscriptionHistory() {
       </Box>
 
       {/* Table */}
-      <Paper variant="outlined">
+      <Paper variant="outlined">  
         <Table size="small">
           <TableHead>
             <TableRow>

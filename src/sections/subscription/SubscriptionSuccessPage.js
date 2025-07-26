@@ -45,8 +45,7 @@ const SubscriptionSuccessCard = () => {
 
       if (ssoRes.data?.token && planData?.courses?.lmsId && planData?.price) {
         const courses_userId = ssoRes.data.user_id;
-        const normalizedProductId =
-          planData.courses.lmsId.charAt(0).toLowerCase() + planData.courses.lmsId.slice(1);
+        const normalizedProductId = planData.courses.lmsId.charAt(0).toLowerCase() + planData.courses.lmsId.slice(1);
 
         const enrollRes = await axios.post(
           `https://altiv.learnworlds.com/admin/api/v2/users/${courses_userId}/enrollment`,
@@ -68,15 +67,19 @@ const SubscriptionSuccessCard = () => {
         console.log('Enrollment Success:', enrollRes);
 
         if (ssoRes.data.success && ssoRes.data.url) {
-          const redirectUrl = ssoRes.data.url;
-            window.open(ssoRes.data.url, '_blank');
-            const courseSlug =normalizedProductId;
-            const courseUrl = `https://altiv.learnworlds.com/course/${courseSlug}`;
-            window.open(courseUrl, '_blank');
+          // const redirectUrl = ssoRes.data.url;
+          //   window.open(ssoRes.data.url, '_blank');
+          //   const courseSlug =normalizedProductId;
+          //   const courseUrl = `https://altiv.learnworlds.com/course/${courseSlug}`;
+          //   window.open(courseUrl, '_blank');
+          const loginTab = ssoRes.data.url;
+
+                if (loginTab) {
+            window.open(loginTab, '_blank');
+          }
         } else {
           console.error('SSO Login failed: no URL returned');
         }
-
       } else {
         console.error('Missing data for enrollment');
       }
@@ -132,12 +135,7 @@ const SubscriptionSuccessCard = () => {
             />
           </Box>
 
-          <Typography
-            variant="h5"
-            fontWeight={700}
-            sx={{ color: '#2A4DD0', mb: 1 }}
-            gutterBottom
-          >
+          <Typography variant="h5" fontWeight={700} sx={{ color: '#2A4DD0', mb: 1 }} gutterBottom>
             Payment Processed Successfully!
           </Typography>
 
