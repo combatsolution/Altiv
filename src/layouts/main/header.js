@@ -105,6 +105,7 @@
                   cursor: 'pointer',
                   display: 'inline-block',  
                   width: { xs: '114px', lg: '128px' },
+                  
                 }}
                 aria-label="Go to home"
               >

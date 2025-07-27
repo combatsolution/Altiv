@@ -24,11 +24,19 @@ const SubscriptionSuccessCard = () => {
   console.log('subscriptionId', subscriptionId);
   const [loading, setLoading] = useState(true);
   const [ssoResponse, setSsoResponse] = useState(null);
-  const [subscriptionData, setSubscriptionData] = useState(null);
+  const [subscriptionData, setSubscriptionData] = useState(null);  
 
   const handleSSOLogin = async () => {
     try {
-      const ssoRes = await axiosInstance.get('/sso/sso-login');
+      const subscriptionRes = await axiosInstance.get(`/subscriptions/${subscriptionId}`);
+      const planData = subscriptionRes.data.planData;
+      setSubscriptionData(planData);
+      console.log('Subscription Data:', planData);
+
+      const normalizedProductId =
+       planData.courses.lmsId.charAt(0).toLowerCase() + planData.courses.lmsId.slice(1);
+
+      const ssoRes = await axiosInstance.get(`/sso/sso-login/${normalizedProductId}`);
       console.log('SSO Login Success:', ssoRes.data);
       setSsoResponse(ssoRes.data);
 
@@ -38,14 +46,8 @@ const SubscriptionSuccessCard = () => {
         return;
       }
 
-      const subscriptionRes = await axiosInstance.get(`/subscriptions/${subscriptionId}`);
-      const planData = subscriptionRes.data.planData;
-      setSubscriptionData(planData);
-      console.log('Subscription Data:', planData);
-
       if (ssoRes.data?.token && planData?.courses?.lmsId && planData?.price) {
         const courses_userId = ssoRes.data.user_id;
-        const normalizedProductId = planData.courses.lmsId.charAt(0).toLowerCase() + planData.courses.lmsId.slice(1);
 
         const enrollRes = await axios.post(
           `https://altiv.learnworlds.com/admin/api/v2/users/${courses_userId}/enrollment`,
@@ -67,16 +69,8 @@ const SubscriptionSuccessCard = () => {
         console.log('Enrollment Success:', enrollRes);
 
         if (ssoRes.data.success && ssoRes.data.url) {
-          // const redirectUrl = ssoRes.data.url;
-          //   window.open(ssoRes.data.url, '_blank');
-          //   const courseSlug =normalizedProductId;
-          //   const courseUrl = `https://altiv.learnworlds.com/course/${courseSlug}`;
-          //   window.open(courseUrl, '_blank');
-          const loginTab = ssoRes.data.url;
-
-                if (loginTab) {
-            window.open(loginTab, '_blank');
-          }
+            window.open(ssoRes.data.url, '_blank');
+          
         } else {
           console.error('SSO Login failed: no URL returned');
         }
