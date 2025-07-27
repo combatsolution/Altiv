@@ -33,8 +33,7 @@ const SubscriptionSuccessCard = () => {
       setSubscriptionData(planData);
       console.log('Subscription Data:', planData);
 
-      const normalizedProductId =
-       planData.courses.lmsId.charAt(0).toLowerCase() + planData.courses.lmsId.slice(1);
+      const normalizedProductId = planData.courses.lmsId.charAt(0).toLowerCase() + planData.courses.lmsId.slice(1);
 
       const ssoRes = await axiosInstance.get(`/sso/sso-login/${normalizedProductId}`);
       console.log('SSO Login Success:', ssoRes.data);

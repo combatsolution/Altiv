@@ -71,6 +71,7 @@ export default function MyProfile() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [lmsId, setlmsId] = useState();
 
   const [existingResumes, setExistingResumes] = useState([]);
   const [selectedResumeId, setSelectedResumeId] = useState(null);
@@ -90,11 +91,12 @@ export default function MyProfile() {
       const response = await axiosInstance.get('/subscriptions/user');
       if (response && response.data) {
         const data = Array.isArray(response.data) ? response.data : [response.data];
+        console.log('dssdsd->', data);
         const formattedData = data.map((plan) => ({
           id: plan.id || `sub_${Date.now()}`,
+          planType: plan.planData?.planType ?? 0,
           planname: plan.planData?.courses?.courseName || 'N/A',
-          // price: `₹${plan.planData?.price ?? 'N/A'}`,
-           planType: plan.planData?.planType ?? 0,
+          lmsId: plan.planData?.courses?.lmsId || 'N/A',
         }));
         setSubscriptions(formattedData);
       } else {
@@ -149,7 +151,11 @@ export default function MyProfile() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [existingResumes]);
-
+  const lmsredirect = async (id) => {
+    console.log("dsadadassda",id);
+    const ssoRes = await axiosInstance.get(`/sso/sso-login/${id}`);
+    window.open(ssoRes.data.url, '_blank');
+  };
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -205,7 +211,7 @@ export default function MyProfile() {
       setExistingResumes((prev) => prev.filter((resume) => resume.id !== id));
       if (selectedResumeId === id) setSelectedResumeId(null);
       setSuccess('Resume deleted successfully');
-    } catch (err) { 
+    } catch (err) {
       console.error(err);
       setError('Failed to delete resume. Please try again.');
     } finally {
@@ -272,6 +278,8 @@ export default function MyProfile() {
     return (
       <Stack spacing={1.5}>
         {subscriptions.map((sub) => {
+          console.log('dsdsadsadasdd->', sub);
+          
           const categoryLabel = planTypeToLabel[sub.planType];
           const icon = categoryIcons[categoryLabel] || '🎓';
 
@@ -286,6 +294,9 @@ export default function MyProfile() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
+              }}
+              onClick={() => {
+                lmsredirect(sub.lmsId); // Pass lmsId directly
               }}
               elevation={0}
             >
@@ -695,11 +706,10 @@ export default function MyProfile() {
             </Paper>
           </Grid>
 
-          <Grid sx={{ display: 'flex', flexDirection: 'row', mt: 2, ml:2 }}>
-            
+          <Grid sx={{ display: 'flex', flexDirection: 'row', mt: 2, ml: 2 }}>
             {/* Profile analytics section */}
             {lastFOBOData && (
-              <Grid item xs={12} lg={8}   >
+              <Grid item xs={12} lg={8}>
                 {lastFOBOData ? (
                   <Paper
                     elevation={3}
@@ -773,7 +783,7 @@ export default function MyProfile() {
                           if (!key) {
                             console.error('Encryption key is missing');
                             return;
-                          }   
+                          }
 
                           // Clear old values first
                           sessionStorage.removeItem('xbszya');
@@ -812,10 +822,10 @@ export default function MyProfile() {
               </Grid>
             )}
 
-             {/* Right Column: Resume and Registered Courses */}  
+            {/* Right Column: Resume and Registered Courses */}
             <Grid item xs={12} lg={4}>
               {/* Registered Courses Section */}
-              <Paper sx={{ p: 3, borderRadius: 2, mt: 0,  ml:2  }}>
+              <Paper sx={{ p: 3, borderRadius: 2, mt: 0, ml: 2 }}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                   <Typography variant="subtitle1" fontWeight="600">
                     Registered Courses
@@ -824,11 +834,9 @@ export default function MyProfile() {
                 {renderRegisteredCourses()}
               </Paper>
             </Grid>
+          </Grid>
         </Grid>
-       </Grid>
 
-          
-            
         {/* <Grid container spacing={3} mt={1} ></Grid> */}
       </Container>
 
