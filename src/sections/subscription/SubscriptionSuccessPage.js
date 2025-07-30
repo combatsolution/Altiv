@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axiosInstance from 'src/utils/axios';
+import axios from 'axios';
 import {
   Box,
   Typography,
@@ -12,8 +12,8 @@ import {
   CircularProgress,
 } from '@mui/material';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
+import axiosInstance from 'src/utils/axios';
 
 const SubscriptionSuccessCard = () => {
   const [searchParams] = useSearchParams();
@@ -21,35 +21,62 @@ const SubscriptionSuccessCard = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  console.log('subscriptionId', subscriptionId);
   const [loading, setLoading] = useState(true);
   const [ssoResponse, setSsoResponse] = useState(null);
-  const [subscriptionData, setSubscriptionData] = useState(null);  
+  const [subscriptionData, setSubscriptionData] = useState(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 5000); // simulate loading
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSSOLogin = async () => {
     try {
       const subscriptionRes = await axiosInstance.get(`/subscriptions/${subscriptionId}`);
       const planData = subscriptionRes.data.planData;
       setSubscriptionData(planData);
-      console.log('Subscription Data:', planData);
+      console.log('Subscription Data:', planData)
 
       const normalizedProductId = planData.courses.lmsId.charAt(0).toLowerCase() + planData.courses.lmsId.slice(1);
 
-      const ssoRes = await axiosInstance.get(`/sso/sso-login/${normalizedProductId}`);
+      const fetchToken = async () => {
+        
+        const storedToken = sessionStorage.getItem('lmsAuthToken');
+        if (storedToken && storedToken !== 'undefined') {
+            return storedToken;
+          }
+        const formData = new URLSearchParams();
+        formData.append('grant_type', 'client_credentials');
+        formData.append('client_id', process.env.REACT_APP_LEARNWORLDS_CLIENT_ID);
+        formData.append('client_secret', process.env.REACT_APP_LEARNWORLDS_TOKEN);
+
+        const response = await axios.post(
+          'https://altiv.learnworlds.com/admin/api/oauth2/access_token',
+          formData.toString(),
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          }
+        );
+
+        const token = response.data?.tokenData?.access_token;
+        sessionStorage.setItem('lmsAuthToken', token);
+        console.log('Fetched Token:', response);
+        return token;
+      };
+
+      const token = await fetchToken();
+console.log('Token:', token);
+      const ssoRes = await axiosInstance.get(`/sso/sso-login/${normalizedProductId}/${token}`);
       console.log('SSO Login Success:', ssoRes.data);
       setSsoResponse(ssoRes.data);
-
-      const userId = localStorage.getItem('User_id');
-      if (!userId) {
-        console.error('User_id not found in localStorage');
-        return;
-      }
-
-      if (ssoRes.data?.token && planData?.courses?.lmsId && planData?.price) {
-        const courses_userId = ssoRes.data.user_id;
-
+      console.log('SSO Response:', ssoRes.data);  
+      if (planData?.courses?.lmsId && planData?.price) {
+        const coursesUserId = ssoRes.data.user_id;
+        console.log('Courses User ID:', coursesUserId);
         const enrollRes = await axios.post(
-          `https://altiv.learnworlds.com/admin/api/v2/users/${courses_userId}/enrollment`,
+          `https://altiv.learnworlds.com/admin/api/v2/users/${coursesUserId}/enrollment`,
           {
             productId: normalizedProductId,
             productType: 'course',
@@ -59,17 +86,17 @@ const SubscriptionSuccessCard = () => {
           },
           {
             headers: {
-              Authorization: `Bearer ${ssoRes.data.token}`,
+              Authorization: `Bearer ${token}`,
               'Content-Type': 'application/json',
               'lw-client': process.env.REACT_APP_LEARNWORLDS_CLIENT_ID,
             },
           }
         );
+
         console.log('Enrollment Success:', enrollRes);
 
         if (ssoRes.data.success && ssoRes.data.url) {
-            window.open(ssoRes.data.url, '_blank');
-          
+          window.open(ssoRes.data.url, '_blank');
         } else {
           console.error('SSO Login failed: no URL returned');
         }
@@ -80,11 +107,6 @@ const SubscriptionSuccessCard = () => {
       console.error('SSO or Enrollment Failed:', error.response?.data || error.message);
     }
   };
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 5000); // simulate loading
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <Container maxWidth="sm" sx={{ mt: 2 }}>
@@ -147,7 +169,6 @@ const SubscriptionSuccessCard = () => {
               >
                 Creating your learning profile...
               </Typography>
-
               <Typography
                 variant="body1"
                 color="text.secondary"
@@ -161,7 +182,6 @@ const SubscriptionSuccessCard = () => {
               >
                 Adding you to your courses...
               </Typography>
-
               <CircularProgress size={28} sx={{ mt: 1, color: '#2A4DD0' }} />
             </>
           ) : (

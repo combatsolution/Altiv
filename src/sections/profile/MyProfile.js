@@ -153,7 +153,8 @@ export default function MyProfile() {
   }, [existingResumes]);
   const lmsredirect = async (id) => {
     console.log("dsadadassda",id);
-    const ssoRes = await axiosInstance.get(`/sso/sso-login/${id}`);
+    const storedToken = sessionStorage.getItem('lmsAuthToken');
+    const ssoRes = await axiosInstance.get(`/sso/sso-login/${id}/${storedToken}`);
     window.open(ssoRes.data.url, '_blank');
   };
   const handleFileChange = async (e) => {

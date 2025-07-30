@@ -23,6 +23,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import { useNavigate } from 'react-router-dom';
 
 // ✅ Job list JSON
 const similarJobs = [
@@ -66,7 +67,7 @@ const similarJobs = [
 export default function JobDetailPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
+  const navigate = useNavigate();
   return (
     <Box>
       {/* Search Bar */}
@@ -166,8 +167,8 @@ export default function JobDetailPage() {
                 {/* Description */}
                 {[...Array(3)].map((_, i) => (
                   <Typography key={i} paragraph>
-                    Mollit in laborum tempor Lorem incididunt irure. Aute eu ex ad sunt. Pariatur sint
-                    culpa do incididunt eiusmod culpa. Mollit in laborum tempor Lorem incididunt irure.
+                   analyzes data to uncover insights and build predictive models, 
+                   using skills in statistics, programming, and machine learning. 
                   </Typography>
                 ))}
               </CardContent>
@@ -221,11 +222,14 @@ export default function JobDetailPage() {
             variant="contained"
             size="large"
             sx={{
-              color: '#fff',
-              backgroundColor: '#0040D8',
-              borderRadius: '100px',
-              width: { xs: '100%', sm: '200px' }
-            }}
+            color: '#fff',
+            backgroundColor: 'primary.main',
+            borderRadius: '100px',
+            width: { xs: '100%', sm: '200px' },
+            '&:hover':{
+              backgroundColor: 'primary.dark',
+            }
+          }}
           >
             Apply now
           </Button>
@@ -238,6 +242,7 @@ export default function JobDetailPage() {
               borderRadius: '100px',
               width: { xs: '100%', sm: '200px' }
             }}
+            onClick={()=> navigate('/job-booster')}
           >
             Boost my application
           </Button>

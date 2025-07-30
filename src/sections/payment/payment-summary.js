@@ -21,6 +21,7 @@ export default function PaymentSummary({ sx, ...other }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  console.log("user is :", user);
   // Fetch plan data
   useEffect(() => {
     const fetchPlan = async () => {

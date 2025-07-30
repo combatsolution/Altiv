@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -13,6 +13,8 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { FaClipboardList } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { NavigateBeforeTwoTone } from '@mui/icons-material';
 
 const labelStyles = {
   primary: {
@@ -76,7 +78,7 @@ const matchStyles = {
   error: { bgcolor: '#FDECEA', color: '#D32F2F' },
 };
 
-const CareerCard = ({ title, match, rate, salary, experience }) => {
+const CareerCard = ({ title, match, rate, salary, experience, onClick }) => {
   let variant = matchStyles.success;
   if (match < 50) variant = matchStyles.error;
   else if (match < 80) variant = matchStyles.warning;
@@ -84,12 +86,17 @@ const CareerCard = ({ title, match, rate, salary, experience }) => {
   return (
     <Paper
       variant="outlined"
+      onClick={onClick}
       sx={{
         p: 2,
         position: 'relative',
         width: { xs: '100%', sm: 360 },
         height: 140,
         borderRadius: 2,
+        cursor: onClick ? 'pointer' : 'default',
+        '&:hover': {
+          boxShadow: onClick ? 4 : 'none',
+        },
       }}
     >
       <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 0.5 }}>
@@ -120,14 +127,21 @@ CareerCard.propTypes = {
   rate: PropTypes.string.isRequired,
   salary: PropTypes.string.isRequired,
   experience: PropTypes.string.isRequired,
+  onClick: PropTypes.func,
 };
 
 export default function CareerPathProjection() {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
-
   const [jobTitle, setJobTitle] = useState('Lead Data Scientist');
   const [expYears, setExpYears] = useState(5);
+  const [userStartedWith, setUserStartedWith] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const startedWith = sessionStorage.getItem('userStartedWith');
+    setUserStartedWith(startedWith);
+  }, []);
 
   const paths = {
     current: {
@@ -143,7 +157,7 @@ export default function CareerPathProjection() {
         match: 80,
         rate: '18%',
         salary: '$50L - $55L',
-        experience: '8-12 years',
+        experience: '8-12 years', 
       },
       {
         title: 'Senior Data Scientist 1',
@@ -212,10 +226,11 @@ export default function CareerPathProjection() {
     <Box sx={{ bgcolor: 'white', p: { xs: 2, sm: 3 } }}>
       <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
         {/* Title & Filters */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, float: 'right' }}>
-          <Button variant="outlined">Upload resume to unlock your potential</Button>
-        </Box>
-
+        {userStartedWith === 'job' && (
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3 }}>
+            <Button variant="outlined">Upload resume to unlock your potential</Button>
+          </Box>
+        )}
         <Box sx={{ bgcolor: 'white', p: { xs: 2, sm: 3, md: 4 } }}>
           <Grid
             container
@@ -260,7 +275,7 @@ export default function CareerPathProjection() {
                 sx={{ minWidth: 450 }}
               >
                 <MenuItem value={5}>5 Years</MenuItem>
-                <MenuItem value={10}>10 Years</MenuItem>
+                {/* <MenuItem value={10}>10 Years</MenuItem> */}
               </Select>
             </Grid>
 
@@ -284,15 +299,20 @@ export default function CareerPathProjection() {
           </Grid>
 
           {/* Popular text */}
-          <Grid display='flex' flexDirection='column'
-          >
-          <Typography variant="caption" color="text.secondary" sx={{ ml: 4 }}>
-            Popular: <b>Senior Data Scientist, Director Data Science</b>
-          </Typography>
+          <Grid display="flex" flexDirection="column">
+            <Typography variant="caption" color="text.secondary" sx={{ ml: 4 }}>
+              Popular: <b>Senior Data Scientist, Director Data Science</b>
+            </Typography>
 
-          <Typography variant="caption" color="black" fontSize='18px' lineHeight='30px' sx={{ ml: 4, mt: 2 }}>
-            Personalized career path projection for <b>First Name</b> and <b>Job designation</b>
-          </Typography>
+            <Typography
+              variant="caption"
+              color="black"
+              fontSize="18px"
+              lineHeight="30px"
+              sx={{ ml: 4, mt: 2 }}
+            >
+              Personalized career path projection for <b>First Name</b> and <b>Job designation</b>
+            </Typography>
           </Grid>
         </Box>
 
@@ -346,11 +366,19 @@ export default function CareerPathProjection() {
                   key={index}
                   justifyContent={{ xs: 'center', md: 'flex-start' }}
                 >
-                  {group.map((p, i) => (
-                    <Grid item key={i} sx={{ flex: '0 0 auto' }}>
-                      <CareerCard {...p} />
-                    </Grid>
-                  ))}
+                  {group.map((p, i) => {
+                    const isSeniorDataScientist = p.title === 'Senior Data Scientist';
+                    return (
+                      <Grid item key={i} sx={{ flex: '0 0 auto' }}>
+                        <CareerCard
+                          {...p}
+                          onClick={
+                            isSeniorDataScientist ? () => navigate('/job-details') : undefined
+                          }
+                        />
+                      </Grid>
+                    );
+                  })}
                 </Grid>
               ))}
             </Stack>
@@ -366,10 +394,11 @@ export default function CareerPathProjection() {
               color: '#fff',
               '&:hover': {
                 boxshadow: 'none',
-                bgcolor: 'primary.main',
-                color: '#fff',
+                bgcolor: 'primary.dark',
+                color: '#fff',  
               },
             }}
+           
           >
             Show job match
           </Button>

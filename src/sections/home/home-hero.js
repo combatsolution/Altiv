@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';  
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -13,6 +13,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import { paths } from 'src/routes/paths';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import axios from 'axios';
+import { enqueueSnackbar } from 'notistack';
+import axiosInstance from 'src/utils/axios';
+import { useAuthContext } from 'src/auth/hooks';
+import { trackEvent } from 'src/utils/google-analytics';
 
 function HomeHero() {
   const [open, setOpen] = useState(false);
@@ -24,42 +29,89 @@ function HomeHero() {
   const [experience, setExperience] = useState(0);
   const [designation, setDesignation] = useState('');
 
+  const { currentUser } = useAuthContext();
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedResumeId, setSelectedResumeId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [docIsLoading, setDocIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const fileInputRef = useRef();
+
   const handleContinue = () => {
+    sessionStorage.setItem('userStartedWith', 'job');
     if (!designation.trim()) {
       setError('Please enter your designation');
       return;
     }
     setError('');
-    navigate('/job-details');
+    // navigate('/job-details');
+    navigate('/career-campass');
   };
 
   const handleOperation = (op) => {
     setExperience((prev) => {
       const newVal = op === 'inc' ? prev + 1 : prev - 1;
-      if (newVal < 0) return 0;
-      if (newVal > 30) return 30;
-      return newVal;
+      return Math.max(0, Math.min(newVal, 30));
     });
-  };
-
-  const handleChange = (event, newType) => {
-    if (newType !== null) {
-      setUploadType(newType);
-    }
   };
 
   const handleClose = () => {
     setSelectedFile(null);
     setError('');
     setUploadType('resume');
-    onclose?.();
     setOpen(false);
-    //  sessionStorage.removeItem('uploadedFile');
+    sessionStorage.removeItem('uploadedResumeId');
   };
 
-  const fileInputRef = useRef();
-  const [error, setError] = useState('');
-  const [selectedFile, setSelectedFile] = useState(null);
+  const handleUploadResume = async (file) => { 
+    try {
+      setIsLoading(true);
+      const response = await axiosInstance.post(
+        currentUser ? '/resumes' : '/resumes/guest-upload',
+        { fileDetails: file } 
+      );
+      if (response.data) {
+        enqueueSnackbar('Upload successful', { variant: 'success' });
+        setSelectedResumeId(response?.data?.id);
+        sessionStorage.setItem('userStartedWith', 'resume');
+        // sessionStorage.setItem('uploadedResumeId', response?.data?.id);
+        trackEvent({
+          category: 'Resume Uploaded',
+          action: 'Resume uploaded',
+          label: 'resume uploaded success',
+          value: 'resume uploaded'
+        });
+      }
+    } catch (uploadError) {
+      console.error('Error while uploading resume', uploadError);
+      enqueueSnackbar(uploadError?.error?.message || 'Upload failed', { variant: 'error' });
+      setSelectedFile(null);
+    } finally {
+      setDocIsLoading(false);
+      setIsLoading(false);
+    }
+  };
+
+  const handleDrop = async (acceptedFiles) => {
+    setDocIsLoading(true);
+    const file = acceptedFiles[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      const response = await axiosInstance.post('/files', formData);
+      await handleUploadResume(response.data.files[0]);
+      setSelectedFile(response.data.files[0]);
+    }
+  };
+
+  const handleCloseModel = () => {
+    setSelectedResumeId(false);
+    setSelectedFile(null);
+    setError('');
+    setDocIsLoading(false);
+    setOpen(false);
+  };
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -73,22 +125,16 @@ function HomeHero() {
       setError('');
     }
   };
+
+
   return (
-    <Box
-      sx={{
-        px: { xs: 2, md: 4 },
-        py: { xs: 4, md: 2 },
-        maxWidth: 1200,
-        mx: 'auto', // 👈 center horizontally
-      }}
-    >
+    // Keep original layout and add navigation when resume is uploaded
+    <Box sx={{ px: { xs: 2, md: 4 }, py: { xs: 4, md: 2 }, maxWidth: 1200, mx: 'auto' }}>
       <Grid
         container
         spacing={4}
         alignItems="center"
-        sx={{
-          minHeight: { xs: 'auto', md: '515px' }, // Adjust this value to fit below your header
-        }}
+        sx={{ minHeight: { xs: 'auto', md: '515px' } }}
       >
         <Grid xs={12} md={6} order={{ xs: 2, md: 1 }}>
           <Stack spacing={2}>
@@ -97,12 +143,7 @@ function HomeHero() {
               component="h1"
               fontWeight="bold"
               sx={{
-                fontSize: {
-                  xs: '44px',
-                  sm: '40px',
-                  md: '32px',
-                  lg: '54px',
-                },
+                fontSize: { xs: '44px', sm: '40px', md: '32px', lg: '54px' },
                 fontWeight: 400,
                 lineHeight: 1.2,
                 marginTop: 4,
@@ -110,35 +151,21 @@ function HomeHero() {
             >
               Your career’s secret weapon
             </Typography>
-
             <Typography
               variant="body1"
               color="#090808"
               sx={{
                 fontWeight: 400,
-                fontSize: {
-                  xs: '16px',
-                  sm: '1.1rem',
-                  lg: '20px',
-                },
+                fontSize: { xs: '16px', sm: '1.1rem', lg: '20px' },
                 lineHeight: '160%',
-                width: {
-                  xs: '100%',
-                  sm: '100%',
-                  md: '489px',
-                },
-                height: {
-                  xs: 'auto',
-                  sm: 'auto',
-                  md: '130px',
-                },
+                width: { xs: '100%', sm: '100%', md: '489px' },
+                height: { xs: 'auto', sm: 'auto', md: '130px' },
               }}
             >
               Tired of career uncertainty and endless job searches? Our AI coach guides your next
               move with data-driven insights while matching you to roles you’re truly qualified for
               — all in one place.
             </Typography>
-
             <Stack
               direction={{ xs: 'column', sm: 'row' }}
               spacing={2}
@@ -167,18 +194,12 @@ function HomeHero() {
               >
                 Start Free
               </Button>
-
               <Modal open={open} onClose={handleClose}>
                 <Box
                   display="flex"
                   justifyContent="center"
                   alignItems="center"
-                  sx={{
-                    minHeight: '100vh',
-                    overflowY: 'auto',
-                    px: 2,
-                    py: 4,
-                  }}
+                  sx={{ minHeight: '100vh', overflowY: 'auto', px: 2, py: 4 }}
                 >
                   <Box
                     sx={{
@@ -195,24 +216,18 @@ function HomeHero() {
                     <IconButton
                       onClick={handleClose}
                       size="small"
-                      sx={{
-                        position: 'absolute',
-                        top: 8,
-                        right: 8,
-                        color: 'grey.500',
-                      }}
+                      sx={{ position: 'absolute', top: 8, right: 8, color: 'grey.500' }}
                     >
                       <CloseIcon fontSize="small" />
                     </IconButton>
-
                     <Typography variant="h5" fontWeight="bold" mb={1}>
                       Magic happens either ways
                     </Typography>
                     <Typography variant="body2" color="textSecondary" mb={3}>
                       You can choose to go with your updated resume or job title
                     </Typography>
-
-                    <ToggleButtonGroup
+                 
+                      <ToggleButtonGroup
                       value={uploadType}
                       exclusive
                       onChange={(event, newValue) => {
@@ -275,7 +290,6 @@ function HomeHero() {
                         Job title
                       </ToggleButton>
                     </ToggleButtonGroup>
-
                     {uploadType === 'resume' ? (
                       <>
                         <Box
@@ -312,7 +326,6 @@ function HomeHero() {
                             onChange={handleFileChange}
                           />
                         </Box>
-
                         {selectedFile && (
                           <Box
                             border="1px solid #ccc"
@@ -329,7 +342,6 @@ function HomeHero() {
                             <Box>
                               Selected file: <strong>{selectedFile}</strong>
                             </Box>
-
                             <IconButton
                               size="small"
                               onClick={() => {
@@ -341,7 +353,6 @@ function HomeHero() {
                             </IconButton>
                           </Box>
                         )}
-
                         {error && (
                           <Typography
                             variant="caption"
@@ -353,20 +364,11 @@ function HomeHero() {
                             {error}
                           </Typography>
                         )}
-
                         <Button
                           variant="contained"
                           fullWidth
                           disabled={!!error || !selectedFile}
-                          onClick={() => {
-                            if (!selectedFile) {
-                              fileInputRef.current.click();
-                            } else {
-                              navigate(paths.careerResume);
-                            }
-
-                            // navigate(paths.careerResume);
-                          }}
+                          onClick={() => navigate(paths.careerResume)}
                           sx={{
                             backgroundColor: '#3f51b5',
                             borderRadius: 999,
@@ -406,7 +408,6 @@ function HomeHero() {
                             </Typography>
                           )}
                         </Box>
-
                         <Box width="100%" textAlign="left" mb={4}>
                           <Typography variant="caption" sx={{ color: '#0040D8' }} ml={1}>
                             Experience
@@ -450,7 +451,6 @@ function HomeHero() {
                             </Box>
                           </Box>
                         </Box>
-
                         <Button
                           fullWidth
                           variant="contained"
@@ -471,34 +471,23 @@ function HomeHero() {
                   </Box>
                 </Box>
               </Modal>
-
               <Button
-                variant="outlined"  
+                variant="outlined"
                 onClick={() => navigate(paths.comingSoon)}
                 sx={{
                   textTransform: 'none',
                   color: '#0040D8',
-
                   height: '48px',
                   width: { xs: '100%', sm: '100%', md: '100%', lg: '218px' },
-                  // Border + radius
                   border: '2px solid #0040D8',
                   borderRadius: '29px',
-
-                  // Padding
                   padding: '10px 14px',
-
-                  // Gap between elements
                   gap: '4px',
-
-                  // Hover effect
                   '&:hover': {
                     backgroundColor: 'transparent',
                     borderColor: blue[700],
                     color: blue[700],
                   },
-
-                  
                 }}
               >
                 Know How it Works
@@ -506,14 +495,13 @@ function HomeHero() {
             </Stack>
           </Stack>
         </Grid>
-
         <Grid xs={12} md={6} order={{ xs: 1, md: 2 }} sx={{ mt: { xs: 4, md: 0 } }}>
           <Box
             component="img"
             src={heroImg}
             alt="AI Coach"
             sx={{
-              ml:{ sm:6, lg:0},
+              ml: { sm: 6, lg: 0 },
               width: '100%',
               maxHeight: { xs: 'auto', md: '500px' },
               objectFit: 'contain',
