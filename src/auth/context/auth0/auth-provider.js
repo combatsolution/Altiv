@@ -14,7 +14,7 @@ function AuthProviderWrapper({ children }) {
 
   const [popupClick, setPopupClick] = useState(true);
 
-  // LOGIN
+  // LOGIN  
   const handleLoginWithPopup = useCallback(
     async (options) => {
       loginWithPopup?.(options);

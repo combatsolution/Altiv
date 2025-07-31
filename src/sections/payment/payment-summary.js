@@ -121,9 +121,9 @@ export default function PaymentSummary({ sx, ...other }) {
         }
       },
       prefill: {
-        name: data.customerName || '',
-        email: data.customerEmail || '',
-        contact: data.customerPhone || '',
+        name: data.customerName || user.name,
+        email: data.customerEmail || user.email,
+        contact: data.customerPhone || user.phone,
       },
       notes: {
         planId,

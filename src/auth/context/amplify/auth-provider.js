@@ -24,6 +24,7 @@ const reducer = (state, action) => {
     return {
       loading: false,
       user: action.payload.user,
+      
     };
   }
   if (action.type === 'LOGOUT') {
@@ -127,6 +128,7 @@ export function AuthProvider({ children }) {
     dispatch({
       type: 'LOGOUT',
     });
+    
   }, []);
 
   // FORGOT PASSWORD

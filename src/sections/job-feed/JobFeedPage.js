@@ -43,12 +43,15 @@ const jobs = [
     matchScore: '75%',
     logo: '/assets/images/liner.png',
   },
+
+
+  
 ];
 
 const JobCard = ({ job }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   const handleClick = () => {
-    // navigate('/job-details');
+     navigate('/job-details');
   };
 
   return (
@@ -63,7 +66,7 @@ const JobCard = ({ job }) => {
         gap: 2,
       }}
     >
-      
+      <Box sx={{display:{xs:'none', md:'block'}}}>
       <Avatar
        
         src={job.logo}
@@ -75,6 +78,7 @@ const JobCard = ({ job }) => {
           bgcolor: 'primary.main',
         }}
       />
+      </Box>
        {/* for Desktop  View */}
        
       <Box flex={1} sx={{ display: { xs: 'none', md: 'block' } }}>
@@ -176,6 +180,7 @@ const JobCard = ({ job }) => {
           spacing={1}
         >
           <Box sx={{}}>
+            <Grid>
             <Avatar
               src={job.logo}
               alt={job.company}
@@ -186,30 +191,26 @@ const JobCard = ({ job }) => {
                 bgcolor: 'primary.main',
               }}
             />
-            <Grid sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant="h6" fontWeight={700}>
-                {job.title}
+            </Grid> 
 
-              </Typography>
-
-              <Typography fontWeight={600}>{job.company}</Typography>
+            <Grid sx={{ display: 'flex', flexDirection: 'column', ml:7, mt:-6 }}>
+              <Typography variant="h6" fontWeight={700}> {job.title}  </Typography>
+               <Typography fontWeight={600}>{job.company}</Typography>
 
               {/* Horizontal row for icon and location */}
-              <Box display="flex" alignItems="center" gap={0.5}>
-                <LocationOnIcon fontSize="small" />
+              <Box display="flex" alignItems="left" gap={0.5}>
                 <Typography variant="body2">{job.location}</Typography>
               </Box>
-            </Grid>
-
+            
+          
             <Grid
               container
-              sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}
-            >
-              <Typography variant="body2">{job.applicants} applicants</Typography>
+              sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }} >
+              <Typography  fontSize='12px'>{job.applicants} applicants</Typography>
               {/* Vertical Divider */}
               <Divider orientation="vertical" flexItem sx={{ borderColor: 'grey.400' }} />
-
-              <Typography variant="body2">{job.posted}</Typography>
+              <Typography fontSize='12px'>{job.posted}</Typography>
+            </Grid>
             </Grid>
           </Box>
 
@@ -223,7 +224,7 @@ const JobCard = ({ job }) => {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-              mt: { xs: 1, sm: 0 },
+              
             }}
           >
             <Typography variant="caption" fontSize="10px" color="success.dark" fontWeight={400}>
@@ -236,17 +237,7 @@ const JobCard = ({ job }) => {
         </Stack>
 
         <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-          <Typography
-            variant="body2"
-            mt={1}
-            mb={2}
-            color="text.secondary"
-            sx={{ display: { xs: 'none' } }}
-          >
-            {job.description}
-          </Typography>
-
-          <Stack
+         <Stack
             direction={{ xs: 'column', sm: 'row' }}
             justifyContent="space-between"
             alignItems="center"
@@ -256,23 +247,28 @@ const JobCard = ({ job }) => {
               variant="contained"
               sx={{
                 bgcolor: '#2A4DD0',
-                borderRadius: 2,
-                px: 4,
-                py: 1.5,
+                
+                mt:2, 
+                px: 15,
+                py: 2,
                 fontWeight: 200,
                 textTransform: 'none',
                 '&:hover': {
                   bgcolor: '#2A4DD0',
                 },
-                width: { xs: '100%', sm: 'auto' },
-              }}
+                 width: { xs: '100%', md: '100%' },  
+                 height: { xs: '40px', md: '50px' },
+              }}  
             >
               Apply now
             </Button>
           </Stack>
         </Grid>
+
       </Box>
     </Paper>
+
+    
   );
 };
 

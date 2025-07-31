@@ -25,7 +25,6 @@ import {
   Pie,
   RadialBarChart,
   RadialBar,
-  LabelList,
   Cell,
 } from 'recharts';
 
@@ -42,9 +41,9 @@ const educationData = [
 ];
 
 const innerEducationData = [
-  { name: 'Engineering', value: 47, fill: '#42a5f5' }, // sum of Engg categories
-  { name: 'MBA', value: 42, fill: '#ffa726' }, // sum of MBA categories
-  { name: 'Others', value: 12, fill: '#43a047' }, // others
+  { name: 'Engineering', value: 47, fill: '#42a5f5' },
+  { name: 'MBA', value: 42, fill: '#ffa726' },
+  { name: 'Others', value: 12, fill: '#43a047' },
 ];
 
 const barData = [
@@ -55,11 +54,12 @@ const barData = [
 ];
 
 const companyBackgroundData = [
-  { name: 'Financial Tech', value: 35, fill: '#26a69a' },
-  { name: 'Big Tech', value: 20, fill: '#42a5f5' },
-  { name: 'Enterprise SaaS', value: 20, fill: '#fbc02d' },
-  { name: 'Internal Promotions', value: 25, fill: '#ffa726' },
+  { name: 'Financial Tech', value: 35, fill: '#00C49F' },
+  { name: 'Big Tech', value: 20, fill: '#0088FE' },
+  { name: 'Enterprise SaaS', value: 20, fill: '#FFBB28' },
+  { name: 'Internal Promotions', value: 25, fill: '#FF8042' },
 ];
+
 
 const resumeHighlights = [
   'Strong experience in cross-functional product development teams.',
@@ -114,8 +114,22 @@ const ProductManagementPage = () => {
     payload: [],
   };
 
-  const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, name, value }) => {
+  const renderCustomLabel = ({
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    name,
+    value,
+    index,
+  }) => {
     if (value < 8) return null;
+
+    // Apply fade effect when other segments are hovered
+    const isOtherHovered = hoveredOuter !== null && hoveredOuter !== index;
+    const opacity = isOtherHovered ? 0.3 : 1;
+
     const RADIAN = Math.PI / 180;
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -129,13 +143,18 @@ const ProductManagementPage = () => {
         dominantBaseline="central"
         fontSize="10"
         fontWeight="bold"
+        opacity={opacity}
       >
         {name}
       </text>
     );
   };
 
-  const renderInnerLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, name, value }) => {
+  const renderInnerLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, name, value, index }) => {
+    // Apply fade effect when other segments are hovered
+    const isOtherHovered = hoveredInner !== null && hoveredInner !== index;
+    const opacity = isOtherHovered ? 0.3 : 1;
+
     const RADIAN = Math.PI / 180;
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -149,6 +168,7 @@ const ProductManagementPage = () => {
         dominantBaseline="central"
         fontSize="11"
         fontWeight="bold"
+        opacity={opacity}
       >
         {name}
       </text>
@@ -173,15 +193,16 @@ const ProductManagementPage = () => {
           mb={2}
           alignItems={{ xs: 'flex-start', sm: 'center', md: 'flex-start' }}
           flexWrap="wrap"
-          width={{ xs: '330px', md: '701px' }}
+          width={{ xs: '100%', md: '701px' }}
         >
-          <Stack direction="row" spacing={2}>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} width="100%">
             <Box
               display="flex"
               flexDirection="row"
               sx={{
                 gap: 0,
-                width: '250px',
+                width: { xs: '100%', sm: '250px' },
+                maxWidth: '250px',
               }}
             >
               <Paper
@@ -210,28 +231,34 @@ const ProductManagementPage = () => {
               </Paper>
             </Box>
 
-            <Button size="small" fontSize="15px" margintop="1px" sx={{ color: 'grey.600', mt: 1 }}>
-              Select All
-            </Button>
-            <Button
-              size="medium"
-              variant="outlined"
-              sx={{ color: 'grey.600', mt: 1, borderRadius: '100px' }}
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={1}
+              sx={{ mt: { xs: 1, sm: 0 } }}
             >
-              Clear All
-            </Button>
-            <Button
-              size="medium"
-              variant="contained"
-              color="primary"
-              sx={{ borderRadius: '100px', mt: 1 }}
-            >
-              Update
-            </Button>
+              <Button size="small" fontSize="15px" sx={{ color: 'grey.600' }}>
+                Select All
+              </Button>
+              <Button
+                size="medium"
+                variant="outlined"
+                sx={{ color: 'grey.600', borderRadius: '100px' }}
+              >
+                Clear All
+              </Button>
+              <Button
+                size="medium"
+                variant="contained"
+                color="primary"
+                sx={{ borderRadius: '100px' }}
+              >
+                Update
+              </Button>
+            </Stack>
           </Stack>
 
           {/* Chips BELOW the buttons */}
-          <Stack direction="row" spacing={3} flexWrap="wrap" mt={1} pl={1}>
+          <Stack direction="row" spacing={1} flexWrap="wrap" mt={1} sx={{ width: '100%' }}>
             <Chip label="Technical" color="primary" variant="outlined" sx={{ borderRadius: 2 }} />
             <Chip label="Leadership" color="primary" variant="outlined" sx={{ borderRadius: 2 }} />
             <Chip
@@ -246,7 +273,7 @@ const ProductManagementPage = () => {
 
         <Grid container spacing={2}>
           {/* Left Column */}
-          <Grid item xs={12} md={6} sx={{ pr: 2 }}>
+          <Grid item xs={12} lg={6}>
             {/* Matching */}
             <Paper sx={{ p: 2, mb: 2, bgcolor: '#e8f5e9' }}>
               <Typography variant="h6" color="success.main">
@@ -309,150 +336,196 @@ const ProductManagementPage = () => {
           </Grid>
 
           {/* Right Column */}
-          <Grid
-            item
-            xs={12}
-            md={6}
-            sx={{ bgcolor: 'grey.200', width: '300px', height: '1200px', mt: -15 }}
-          >
-            <Typography variant="subtitle1" gutterBottom>
-              Background of Product Management at Mastercard
-            </Typography>
-
-            <Paper sx={{ p: 2, mb: 2, width: '550px', height: '400px' }}>
-              <Typography variant="body2" fontWeight="bold" mb={2}>
-                Education Background of Directors
+          <Grid item xs={12} lg={6}>
+            <Box
+              sx={{
+                bgcolor: { xs: 'transparent', lg: 'grey.200' },
+                p: { xs: 0, lg: 2 },
+                borderRadius: 1,
+              }}
+            >
+              <Typography
+                variant="subtitle1"
+                gutterBottom
+                sx={{ display: { xs: 'none', lg: 'block' } }}
+              >
+                Background of Product Management at Mastercard
               </Typography>
-              <Divider />
-              <Box sx={{ height: 300, width: 500, mt: 2, position: 'relative' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    {/* Inner Pie */}
-                    <Pie
-                      data={innerEducationData}
-                      dataKey="value"
-                      nameKey="name"
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={35}
-                      outerRadius={hoveredInner !== null ? 75 : 70}
-                      label={renderInnerLabel}
-                      onMouseEnter={(data, index) => setHoveredInner(index)}
-                      onMouseLeave={() => setHoveredInner(null)}
-                    >
-                      {innerEducationData.map((entry, index) => (
-                        <Cell
-                          key={`inner-cell-${index}`}
-                          fill={entry.fill}
-                          stroke={hoveredInner === index ? '#333' : 'none'}
-                          strokeWidth={hoveredInner === index ? 2 : 0}
-                        />
-                      ))}
-                    </Pie>
 
-                    {/* Outer Pie */}
-                    <Pie
-                      data={educationData}
-                      dataKey="value"
-                      nameKey="name"
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={78}
-                      outerRadius={hoveredOuter !== null ? 125 : 120}
-                      label={renderCustomLabel}
-                      onMouseEnter={(data, index) => setHoveredOuter(index)}
-                      onMouseLeave={() => setHoveredOuter(null)}
-                    >
-                      {educationData.map((entry, index) => (
-                        <Cell
-                          key={`outer-cell-${index}`}
-                          fill={entry.fill}
-                          stroke={hoveredOuter === index ? '#333' : 'none'}
-                          strokeWidth={hoveredOuter === index ? 2 : 0}
-                        />
-                      ))}
-                    </Pie>
-
-                    <Tooltip content={<CustomTooltip />} />
-                  </PieChart>
-                </ResponsiveContainer>
+              <Paper sx={{ p: 2, mb: 2, width: '100%' }}>
+                <Typography variant="body2" fontWeight="bold" mb={2}>
+                  Education Background of Directors
+                </Typography>
+                <Divider />
                 <Box
                   sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    textAlign: 'center',
-                    pointerEvents: 'none',
+                    height: { xs: 250, md: 300 },
+                    width: '100%',
+                    mt: 2,
+                    position: 'relative',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}
                 >
-                  <Typography variant="body1" fontWeight="bold" color="text.primary">
-                    Education
-                  </Typography>
-                </Box>
-              </Box>
-            </Paper>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      {/* Inner Pie */}
+                      <Pie
+                        data={innerEducationData}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={30}
+                        labelLine={false}
+                        outerRadius={hoveredInner !== null ? 75 : 65}
+                        label={renderInnerLabel}
+                        onMouseEnter={(data, index) => setHoveredInner(index)}
+                        onMouseLeave={() => setHoveredInner(null)}
+                        animationBegin={0}
+                        animationDuration={200}
+                      >
+                        {innerEducationData.map((entry, index) => (
+                          <Cell
+                            key={`inner-cell-${index}`}
+                            fill={entry.fill}
+                            fillOpacity={hoveredInner !== null && hoveredInner !== index ? 0.3 : 1}
+                            stroke="none"
+                          />
+                        ))}
+                      </Pie>
 
-            <Paper sx={{ p: 2, mb: 2, width: '550px', height: '300px' }}>
-              <Typography variant="body2" fontWeight="bold" mb={1}>
-                Years of Experience vs Percentage of Directors
-              </Typography>
-              <Divider />
+                      {/* Outer Pie */}
+                      <Pie
+                        data={educationData}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={80}
+                        labelLine={false}
+                        outerRadius={hoveredOuter !== null ? 125 : 115}
+                        label={renderCustomLabel}
+                        onMouseEnter={(data, index) => setHoveredOuter(index)}
+                        onMouseLeave={() => setHoveredOuter(null)}
+                        animationBegin={0}
+                        animationDuration={200}
+                      >
+                        {educationData.map((entry, index) => (
+                          <Cell
+                            key={`outer-cell-${index}`}
+                            fill={entry.fill}
+                            fillOpacity={hoveredOuter !== null && hoveredOuter !== index ? 0.3 : 1}
+                            stroke="none"
+                          />
+                        ))}
+                      </Pie>
 
-              {/* BarGraph */}
-              <Box sx={{ height: 250, width: 500, mt: 1 }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={barData}>
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="percentage" fill="#3f51b5" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </Box>
-            </Paper>
-
-            <Paper sx={{ p: 2, width: '550px', height: '350px' }}>
-              <Typography variant="body2" fontWeight="bold" mb={1}>
-                Previous Company Background
-              </Typography>
-              <Divider />
-
-              <Box sx={{ position: 'relative', height: 250, width: 500, mt: 1 }}>
-                {/* Labels */}
-                <Box sx={{ position: 'absolute', top: '30%', left: 20 }}>
-                  {companyBackgroundData.map((item, index) => (
-                    <Typography key={index} sx={{ mb: 1, fontSize: 12 }}>
-                      {item.name} <strong>{item.value}%</strong>
-                    </Typography>
-                  ))}
-                </Box>
-
-                {/* Chart */}
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadialBarChart
-                    cx="70%" // push chart to right
-                    cy="50%"
-                    innerRadius="20%"
-                    outerRadius="90%"
-                    barCategoryGap="10%"
-                    data={companyBackgroundData}
-                    startAngle={90}
-                    endAngle={-270}
+                      <Tooltip content={<CustomTooltip />} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      textAlign: 'center',
+                      pointerEvents: 'none',
+                    }}
                   >
-                    <RadialBar
-                      clockWise
-                      dataKey="value"
-                      cornerRadius={3}
-                      background={{ fill: '#fff' }}
-                    />
-                  </RadialBarChart>
-                </ResponsiveContainer>
-              </Box>
-            </Paper>
+                    <Typography fontSize="13px" fontWeight="bold" color="text.primary">
+                      Education
+                    </Typography>
+                  </Box>
+                </Box>
+              </Paper>
+
+              <Paper sx={{ p: 2, mb: 2, width: '100%' }}>
+                <Typography variant="body2" fontWeight="bold" mb={1}>
+                  Years of Experience vs Percentage of Directors
+                </Typography>
+                <Divider />
+
+                {/* BarGraph */}
+                <Box sx={{ height: { xs: 200, md: 250 }, width: '100%', mt: 1 }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={barData}>
+                      <XAxis
+                        dataKey="name"
+                        fontSize={12}
+                        angle={-45}
+                        textAnchor="end"
+                        height={60}
+                      />
+                      <YAxis fontSize={12} />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="percentage" fill="#3f51b5" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </Box>
+              </Paper>
+
+              <Paper sx={{ p: 2, width: '100%', bgcolor: '#fff' }}>
+                <Typography variant="body2" fontWeight="bold" mb={1}>
+                  Previous Company Background
+                </Typography>
+                <Divider />
+
+                <Box
+                  sx={{
+                    position: 'relative',
+                    height: { xs: 200, md: 250 },
+                    width: '100%',
+                    mt: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  {/* Labels */}
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: '30%',
+                      left: { xs: 10, md: 20 },
+                      zIndex: 1,
+                    }}
+                  >
+                    {companyBackgroundData.map((item, index) => (
+                      <Typography key={index} sx={{ mb: 1, fontSize: { xs: 10, md: 12 } }}>
+                        {item.name} <strong>{item.value}%</strong>
+                      </Typography>
+                    ))}
+                  </Box>
+
+                  {/* Chart */}
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RadialBarChart
+                      cx="70%"
+                      cy="50%"
+                      innerRadius="20%"
+                      outerRadius="90%"
+                      barCategoryGap="10%"
+                      data={companyBackgroundData}
+                      startAngle={90}
+                      endAngle={-270}
+                    >
+                      <RadialBar
+                        clockWise
+                        dataKey="value"
+                        cornerRadius={3}
+                        // 👇 Removed the background prop to eliminate grey ring
+                      />
+                    </RadialBarChart>
+                  </ResponsiveContainer>
+                </Box>
+              </Paper>
+            </Box>
           </Grid>
         </Grid>
+
         <CardActions
           sx={{
             display: 'flex',

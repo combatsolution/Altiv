@@ -38,7 +38,9 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useAuthContext } from 'src/auth/hooks';
 import bgImage from 'src/images/image.png';
 import Writelogo from 'src/images/write.svg';
-import axiosInstance from 'src/utils/axios';
+import axiosInstance, { endpoints } from 'src/utils/axios';
+import axios from 'axios';
+
 import { green } from '@mui/material/colors';
 import { useSnackbar } from 'notistack';
 import { SplashScreen } from 'src/components/loading-screen';
@@ -152,9 +154,35 @@ export default function MyProfile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [existingResumes]);
   const lmsredirect = async (id) => {
-    console.log("dsadadassda",id);
-    const storedToken = sessionStorage.getItem('lmsAuthToken');
-    const ssoRes = await axiosInstance.get(`/sso/sso-login/${id}/${storedToken}`);
+    console.log('id', id);
+
+    const fetchToken = async () => {
+      const LmsTokenResp = await axiosInstance.get(endpoints.auth.me);
+      const storedToken = LmsTokenResp.data.lmsToken;
+      if (storedToken && storedToken !== 'undefined' && storedToken !== 'null') {
+        return storedToken;
+      }
+      const formData = new URLSearchParams();
+      formData.append('grant_type', 'client_credentials');
+      formData.append('client_id', process.env.REACT_APP_LEARNWORLDS_CLIENT_ID);
+      formData.append('client_secret', process.env.REACT_APP_LEARNWORLDS_TOKEN);
+
+      const response = await axios.post(
+        'https://altiv.learnworlds.com/admin/api/oauth2/access_token',
+        formData.toString(),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
+      );
+
+      const token = response.data?.tokenData?.access_token;
+      return token;
+    };
+
+    const token = await fetchToken();
+    const ssoRes = await axiosInstance.get(`/sso/sso-login/${id}/${token}`);
     window.open(ssoRes.data.url, '_blank');
   };
   const handleFileChange = async (e) => {
@@ -280,7 +308,7 @@ export default function MyProfile() {
       <Stack spacing={1.5}>
         {subscriptions.map((sub) => {
           console.log('dsdsadsadasdd->', sub);
-          
+
           const categoryLabel = planTypeToLabel[sub.planType];
           const icon = categoryIcons[categoryLabel] || '🎓';
 
@@ -288,11 +316,13 @@ export default function MyProfile() {
             <Card
               key={sub.id}
               sx={{
+                
                 borderRadius: 2,
                 px: 2,
                 py: 1,
                 bgcolor: categoryBgColors[categoryLabel] || 'grey.50',
                 display: 'flex',
+                cursor:'pointer',
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}
@@ -304,6 +334,7 @@ export default function MyProfile() {
               <Box display="flex" alignItems="center" gap={1}>
                 <Box
                   sx={{
+                    
                     width: 32,
                     height: 32,
                     bgcolor: categoryColors[categoryLabel] || 'grey.300',
@@ -707,7 +738,7 @@ export default function MyProfile() {
             </Paper>
           </Grid>
 
-          <Grid sx={{ display: 'flex', flexDirection: 'row', mt: 2, ml: 2 }}>
+          <Grid sx={{ display: 'flex', flexDirection: {xs:'column', md:'row'}, mt: 2, ml: 2 }}>
             {/* Profile analytics section */}
             {lastFOBOData && (
               <Grid item xs={12} lg={8}>
@@ -826,7 +857,7 @@ export default function MyProfile() {
             {/* Right Column: Resume and Registered Courses */}
             <Grid item xs={12} lg={4}>
               {/* Registered Courses Section */}
-              <Paper sx={{ p: 3, borderRadius: 2, mt: 0, ml: 2 }}>
+              <Paper sx={{ p: 3, borderRadius: 2,  mt:{xs:2, md:0}, ml: 2 }}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                   <Typography variant="subtitle1" fontWeight="600">
                     Registered Courses

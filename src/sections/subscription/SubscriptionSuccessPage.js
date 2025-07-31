@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { useSearchParams } from 'react-router-dom';
-import axiosInstance from 'src/utils/axios';
+import axiosInstance, { endpoints } from 'src/utils/axios';
 
 const SubscriptionSuccessCard = () => {
   const [searchParams] = useSearchParams();
@@ -35,14 +35,14 @@ const SubscriptionSuccessCard = () => {
       const subscriptionRes = await axiosInstance.get(`/subscriptions/${subscriptionId}`);
       const planData = subscriptionRes.data.planData;
       setSubscriptionData(planData);
-      console.log('Subscription Data:', planData)
+      console.log('Subscription Data:', planData);
 
       const normalizedProductId = planData.courses.lmsId.charAt(0).toLowerCase() + planData.courses.lmsId.slice(1);
 
       const fetchToken = async () => {
-        
-        const storedToken = sessionStorage.getItem('lmsAuthToken');
-        if (storedToken && storedToken !== 'undefined') {
+       const LmsTokenResp = await axiosInstance.get(endpoints.auth.me);
+       const storedToken =LmsTokenResp.data.lmsToken;
+        if (storedToken && storedToken !== 'undefined' && storedToken !== 'null') {
             return storedToken;
           }
         const formData = new URLSearchParams();
@@ -61,17 +61,16 @@ const SubscriptionSuccessCard = () => {
         );
 
         const token = response.data?.tokenData?.access_token;
-        sessionStorage.setItem('lmsAuthToken', token);
-        console.log('Fetched Token:', response);
         return token;
       };
 
       const token = await fetchToken();
-console.log('Token:', token);
+      console.log('Token:', token);
+    
       const ssoRes = await axiosInstance.get(`/sso/sso-login/${normalizedProductId}/${token}`);
       console.log('SSO Login Success:', ssoRes.data);
       setSsoResponse(ssoRes.data);
-      console.log('SSO Response:', ssoRes.data);  
+      console.log('SSO Response:', ssoRes.data);    
       if (planData?.courses?.lmsId && planData?.price) {
         const coursesUserId = ssoRes.data.user_id;
         console.log('Courses User ID:', coursesUserId);
