@@ -29,6 +29,15 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  setDateFilter,
+  toggleCategory,
+  setLevelFilter,
+  setLocationFilter,
+  setCompanyStage,
+  setClassification,
+} from '../../store/jobSlice'; // adjust the path if needed
 
 const jobs = [
   {
@@ -43,15 +52,12 @@ const jobs = [
     matchScore: '75%',
     logo: '/assets/images/liner.png',
   },
-
-
-  
 ];
 
 const JobCard = ({ job }) => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const handleClick = () => {
-     navigate('/job-details');
+    navigate('/job-details');
   };
 
   return (
@@ -66,21 +72,20 @@ const JobCard = ({ job }) => {
         gap: 2,
       }}
     >
-      <Box sx={{display:{xs:'none', md:'block'}}}>
-      <Avatar
-       
-        src={job.logo}
-        alt={job.company}
-        sx={{
-          width: 48,
-          height: 48,
-          alignSelf: 'flex-start',
-          bgcolor: 'primary.main',
-        }}
-      />
+      <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+        <Avatar
+          src={job.logo}
+          alt={job.company}
+          sx={{
+            width: 48,    
+            height: 48,
+            alignSelf: 'flex-start',
+            bgcolor: 'primary.main',
+          }}
+        />
       </Box>
-       {/* for Desktop  View */}
-       
+      {/* for Desktop  View */}
+
       <Box flex={1} sx={{ display: { xs: 'none', md: 'block' } }}>
         <Stack direction="row" justifyContent="space-between" spacing={1}>
           <Box>
@@ -144,25 +149,20 @@ const JobCard = ({ job }) => {
             {job.description}
           </Typography>
 
-          <Stack  
-            direction={{ xs: 'column', md: 'row' }}
-          
-            alignItems="center"
-            spacing={0}
-          > 
+          <Stack direction={{ xs: 'column', md: 'row' }} alignItems="center" spacing={0}>
             <Button
               variant="contained"
               sx={{
                 bgcolor: '#2A4DD0',
                 borderRadius: 1,
                 px: 4,
-                py: 2,  
+                py: 2,
                 fontWeight: 200,
                 textTransform: 'none',
                 '&:hover': {
                   bgcolor: '#2A4DD0',
                 },
-                width: { xs: '100%', md: '140px' },  
+                width: { xs: '100%', md: '140px' },
                 height: { xs: '100%', md: '40px' },
               }}
             >
@@ -181,36 +181,39 @@ const JobCard = ({ job }) => {
         >
           <Box sx={{}}>
             <Grid>
-            <Avatar
-              src={job.logo}
-              alt={job.company}
-              sx={{
-                width: 48,
-                height: 48,
-                alignSelf: 'flex-start',
-                bgcolor: 'primary.main',
-              }}
-            />
-            </Grid> 
+              <Avatar
+                src={job.logo}
+                alt={job.company}
+                sx={{
+                  width: 48,
+                  height: 48,
+                  alignSelf: 'flex-start',
+                  bgcolor: 'primary.main',
+                }}
+              />
+            </Grid>
 
-            <Grid sx={{ display: 'flex', flexDirection: 'column', ml:7, mt:-6 }}>
-              <Typography variant="h6" fontWeight={700}> {job.title}  </Typography>
-               <Typography fontWeight={600}>{job.company}</Typography>
+            <Grid sx={{ display: 'flex', flexDirection: 'column', ml: 7, mt: -6 }}>
+              <Typography variant="h6" fontWeight={700}>
+                {' '}
+                {job.title}{' '}
+              </Typography>
+              <Typography fontWeight={600}>{job.company}</Typography>
 
               {/* Horizontal row for icon and location */}
               <Box display="flex" alignItems="left" gap={0.5}>
                 <Typography variant="body2">{job.location}</Typography>
               </Box>
-            
-          
-            <Grid
-              container
-              sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }} >
-              <Typography  fontSize='12px'>{job.applicants} applicants</Typography>
-              {/* Vertical Divider */}
-              <Divider orientation="vertical" flexItem sx={{ borderColor: 'grey.400' }} />
-              <Typography fontSize='12px'>{job.posted}</Typography>
-            </Grid>
+
+              <Grid
+                container
+                sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}
+              >
+                <Typography fontSize="12px">{job.applicants} applicants</Typography>
+                {/* Vertical Divider */}
+                <Divider orientation="vertical" flexItem sx={{ borderColor: 'grey.400' }} />
+                <Typography fontSize="12px">{job.posted}</Typography>
+              </Grid>
             </Grid>
           </Box>
 
@@ -224,7 +227,6 @@ const JobCard = ({ job }) => {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-              
             }}
           >
             <Typography variant="caption" fontSize="10px" color="success.dark" fontWeight={400}>
@@ -237,7 +239,7 @@ const JobCard = ({ job }) => {
         </Stack>
 
         <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-         <Stack
+          <Stack
             direction={{ xs: 'column', sm: 'row' }}
             justifyContent="space-between"
             alignItems="center"
@@ -247,8 +249,8 @@ const JobCard = ({ job }) => {
               variant="contained"
               sx={{
                 bgcolor: '#2A4DD0',
-                
-                mt:2, 
+
+                mt: 2,
                 px: 15,
                 py: 2,
                 fontWeight: 200,
@@ -256,19 +258,16 @@ const JobCard = ({ job }) => {
                 '&:hover': {
                   bgcolor: '#2A4DD0',
                 },
-                 width: { xs: '100%', md: '100%' },  
-                 height: { xs: '40px', md: '50px' },
-              }}  
+                width: { xs: '100%', md: '100%' },
+                height: { xs: '40px', md: '50px' },
+              }}
             >
               Apply now
             </Button>
           </Stack>
         </Grid>
-
       </Box>
     </Paper>
-
-    
   );
 };
 
@@ -290,13 +289,36 @@ export default function JobFeedPage() {
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [visibleJobs, setVisibleJobs] = useState(3);
-  const [dateFilter, setDateFilter] = useState('All time');
-  const [jobCategories, setJobCategories] = useState([]);
+  // const [dateFilter, setDateFilter] = useState('All time');
+  // const [jobCategories, setJobCategories] = useState([]);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
+  const dispatch = useDispatch();
+  const { dateFilter, jobCategories, levelFilter, 
+    locationFilter, companyStage, classification } = useSelector((state) => state.job);
+
+  const handleDateFilterChange = (event) => {
+    dispatch(setDateFilter(event.target.value));
+  };
+
   const handleCategoryChange = (event) => {
-    const { value, checked } = event.target;
-    setJobCategories((prev) => (checked ? [...prev, value] : prev.filter((cat) => cat !== value)));
+    dispatch(toggleCategory(event.target.value));
+  };
+
+  const handleLevelFilterChange = (event) => {
+    dispatch(setLevelFilter(event.target.value));
+  };
+
+  const handleLocationFilterChange = (event) => {
+    dispatch(setLocationFilter(event.target.value));
+  };
+
+  const handleCompanyStageChange = (event) => {
+    dispatch(setCompanyStage(event.target.value));
+  };
+
+  const handleClassificationChange = (event) => {
+    dispatch(setClassification(event.target.value));
   };
 
   const renderFilters = (
@@ -308,11 +330,7 @@ export default function JobFeedPage() {
       <Stack spacing={2} mt={2} sx={{ p: 2 }}>
         <Typography fontWeight={600}>Date of posting</Typography>
         <FormControl component="fieldset">
-          <RadioGroup
-            name="dateFilter"
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value)}
-          >
+          <RadioGroup name="dateFilter" value={dateFilter} onChange={handleDateFilterChange}>
             {['All time', 'Past 7 days', 'Past 15 days', 'Past 30 days'].map((d) => (
               <FormControlLabel key={d} value={d} control={<Radio size="small" />} label={d} />
             ))}
@@ -353,11 +371,7 @@ export default function JobFeedPage() {
 
         <Typography fontWeight={600}>Level</Typography>
         <FormControl component="fieldset">
-          <RadioGroup
-            name="dateFilter"
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value)}
-          >
+          <RadioGroup name="levelFilter" value={levelFilter} onChange={handleLevelFilterChange}>
             {[
               'Any',
               ' Entry Level',
@@ -375,11 +389,7 @@ export default function JobFeedPage() {
 
         <Typography fontWeight={600}>Company Stage</Typography>
         <FormControl component="fieldset">
-          <RadioGroup
-            name="dateFilter"
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value)}
-          >
+          <RadioGroup name="companyStage" value={companyStage} onChange={handleCompanyStageChange}>
             {[
               'All',
               ' Early Stage',
@@ -398,9 +408,9 @@ export default function JobFeedPage() {
         <Typography fontWeight={600}>Company Classification</Typography>
         <FormControl component="fieldset">
           <RadioGroup
-            name="dateFilter"
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value)}
+            name="classification"
+            value={classification}
+            onChange={handleClassificationChange}
           >
             {[
               'All',
@@ -410,7 +420,7 @@ export default function JobFeedPage() {
               'Enterprise and B2B',
               'GCC',
               'Growth Stage Startups',
-              'Indian IT Services and Consulting',
+              'Indian IT Services and Consulting',  
               'Indian Unicorns and Major Startups',
             ].map((d) => (
               <FormControlLabel key={d} value={d} control={<Radio size="small" />} label={d} />
