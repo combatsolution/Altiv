@@ -5,8 +5,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 //
 import { Provider } from 'react-redux';
-import store from './store/store'; 
+//  import {store} from './store/store'; 
 import App from './App';
+import { store } from './redux/store';
 
 
 // ----------------------------------------------------------------------

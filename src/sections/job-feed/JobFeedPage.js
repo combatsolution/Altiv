@@ -22,35 +22,58 @@ import {
   IconButton,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  setLocationFilter,
+  setLevelFilter,
+  setCompanyStage,
+  setClassification,
+  toggleCategory,
+  setDateFilter,
+} from 'src/store/jobSlice';
 import PropTypes from 'prop-types';
-
 import MenuIcon from '@mui/icons-material/Menu';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  setDateFilter,
-  toggleCategory,
-  setLevelFilter,
-  setLocationFilter,
-  setCompanyStage,
-  setClassification,
-} from '../../store/jobSlice'; // adjust the path if needed
+import {  Controller, useForm } from 'react-hook-form';
+import { enqueueSnackbar, useSnackbar } from 'notistack';
+import axiosInstance from 'src/utils/axios';
+
+
+
 
 const jobs = [
   {
     id: 1,
     company: 'Polygon Technology',
     title: 'Data Scientist',
-    location: 'Mumbai',
+    location: 'Remote job',
     applicants: 124,
-    posted: '12 hours ago',
+    posted: 'Past 7 days',
     description:
-      'Molilit in laborum tempor Lorem incididunt irure. Aute eu ex ad sunt. Pariatur sint culpa do incididunt eiusmod culpa. laborum tempor Lorem incididunt.',
+      'Molilit in laborum tempor Lorem incididunt irure. Aute eu ex ad sunt. Pariatur sint culpa do incididunt eiusmod culpa.',
     matchScore: '75%',
     logo: '/assets/images/liner.png',
+    level: 'Entry Level',
+    stage: 'Series A, B',
+    classification: 'Big Tech and Global Tech Giants',
+    category: 'Data Science',
+  },
+  {
+    id: 2,
+    company: 'Polygon Technology',
+    title: 'Product Manager',
+    location: 'Remote job',
+    applicants: 67,
+    posted: 'Past 30 days',
+    description: 'Another job description',
+    matchScore: '85%',
+    logo: '/assets/images/liner.png',
+    level: 'Middle Management',
+    stage: 'Private',
+    classification: 'Growth Stage Startups',
+    category: 'Product Management',
   },
 ];
 
@@ -70,52 +93,29 @@ const JobCard = ({ job }) => {
         display: 'flex',
         flexDirection: { xs: 'column', sm: 'row' },
         gap: 2,
+        cursor: 'pointer',
       }}
     >
       <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-        <Avatar
-          src={job.logo}
-          alt={job.company}
-          sx={{
-            width: 48,    
-            height: 48,
-            alignSelf: 'flex-start',
-            bgcolor: 'primary.main',
-          }}
-        />
+        <Avatar src={job.logo} alt={job.company} sx={{ width: 48, height: 48 }} />
       </Box>
-      {/* for Desktop  View */}
 
+      {/* Desktop view */}
       <Box flex={1} sx={{ display: { xs: 'none', md: 'block' } }}>
-        <Stack direction="row" justifyContent="space-between" spacing={1}>
+        <Stack direction="row" justifyContent="space-between">
           <Box>
-            <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 3 }}>
-              <Typography fontWeight={600}>{job.company}</Typography>
-              <BookmarkBorderIcon fontSize="small" sx={{ color: 'text.secondary' }} />
-            </Grid>
-
-            <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-              <Typography variant="h6" fontWeight={700}>
-                {job.title}
-              </Typography>
+            <Typography fontWeight={600}>{job.company}</Typography>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Typography variant="h6">{job.title}</Typography>
               <Typography variant="body2">{job.posted}</Typography>
-            </Grid>
-
-            <Stack
-              direction="row"
-              spacing={1}
-              alignItems="center"
-              mt={0.5}
-              flexWrap="wrap"
-              sx={{ display: 'flex', flexDirection: 'row' }}
-            >
+            </Stack>
+            <Stack direction="row" spacing={1} mt={1} alignItems="center">
               <LocationOnIcon fontSize="small" />
               <Typography variant="body2">{job.location}</Typography>
-              <AccessTimeIcon fontSize="extrasmall" />
+              <AccessTimeIcon fontSize="small" />
               <Typography variant="body2">{job.applicants} applicants</Typography>
             </Stack>
           </Box>
-
           <Box
             sx={{
               bgcolor: '#E9FFE9',
@@ -123,13 +123,12 @@ const JobCard = ({ job }) => {
               width: 80,
               height: 80,
               display: 'flex',
-              flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-              mt: { xs: 1, sm: 0 },
+              flexDirection: 'column',
             }}
           >
-            <Typography variant="caption" fontSize="10px" color="success.dark" fontWeight={400}>
+            <Typography variant="caption" fontSize={10} color="success.dark">
               Match Score
             </Typography>
             <Typography variant="h6" color="success.dark">
@@ -138,305 +137,259 @@ const JobCard = ({ job }) => {
           </Box>
         </Stack>
 
-        <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-          <Typography
-            variant="body2"
-            mt={1}
-            mb={2}
-            color="text.secondary"
-            sx={{ display: { xs: 'none', md: 'block' } }}
-          >
-            {job.description}
-          </Typography>
+        <Typography variant="body2" color="text.secondary" mt={1}>
+          {job.description}
+        </Typography>
 
-          <Stack direction={{ xs: 'column', md: 'row' }} alignItems="center" spacing={0}>
-            <Button
-              variant="contained"
-              sx={{
-                bgcolor: '#2A4DD0',
-                borderRadius: 1,
-                px: 4,
-                py: 2,
-                fontWeight: 200,
-                textTransform: 'none',
-                '&:hover': {
-                  bgcolor: '#2A4DD0',
-                },
-                width: { xs: '100%', md: '140px' },
-                height: { xs: '100%', md: '40px' },
-              }}
-            >
-              Apply Now
-            </Button>
-          </Stack>
-        </Grid>
+        <Button
+          variant="contained"
+          sx={{
+            mt: 2,
+            bgcolor: '#2A4DD0',
+            textTransform: 'none',
+            '&:hover': { bgcolor: '#2A4DD0' },
+          }}
+        >
+          Apply Now
+        </Button>
       </Box>
 
-      {/* for Mobile View */}
+      {/* Mobile View */}
       <Box flex={1} sx={{ display: { xs: 'block', md: 'none' } }}>
-        <Stack
-          sx={{ display: 'flex', flexDirection: 'row' }}
-          justifyContent="space-between"
-          spacing={1}
-        >
-          <Box sx={{}}>
-            <Grid>
-              <Avatar
-                src={job.logo}
-                alt={job.company}
-                sx={{
-                  width: 48,
-                  height: 48,
-                  alignSelf: 'flex-start',
-                  bgcolor: 'primary.main',
-                }}
-              />
-            </Grid>
-
-            <Grid sx={{ display: 'flex', flexDirection: 'column', ml: 7, mt: -6 }}>
-              <Typography variant="h6" fontWeight={700}>
-                {' '}
-                {job.title}{' '}
-              </Typography>
+        <Stack direction="row" justifyContent="space-between">
+          <Stack direction="row" spacing={2}>
+            <Avatar src={job.logo} alt={job.company} sx={{ width: 48, height: 48 }} />
+            <Box>
+              <Typography variant="h6">{job.title}</Typography>
               <Typography fontWeight={600}>{job.company}</Typography>
-
-              {/* Horizontal row for icon and location */}
-              <Box display="flex" alignItems="left" gap={0.5}>
-                <Typography variant="body2">{job.location}</Typography>
-              </Box>
-
-              <Grid
-                container
-                sx={{ display: 'flex', flexDirection: 'row', gap: 1, alignItems: 'center' }}
-              >
-                <Typography fontSize="12px">{job.applicants} applicants</Typography>
-                {/* Vertical Divider */}
-                <Divider orientation="vertical" flexItem sx={{ borderColor: 'grey.400' }} />
-                <Typography fontSize="12px">{job.posted}</Typography>
-              </Grid>
-            </Grid>
-          </Box>
-
+              <Typography variant="body2">{job.location}</Typography>
+              <Typography fontSize="12px">
+                {job.applicants} applicants • {job.posted}
+              </Typography>
+            </Box>
+          </Stack>
           <Box
             sx={{
               bgcolor: '#E9FFE9',
               borderRadius: '50%',
-              width: 80,
-              height: 80,
+              width: 60,
+              height: 60,
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
             }}
           >
-            <Typography variant="caption" fontSize="10px" color="success.dark" fontWeight={400}>
-              Match Score
+            <Typography variant="caption" fontSize={10} color="success.dark">
+              Match
             </Typography>
-            <Typography variant="h6" color="success.dark">
+            <Typography variant="body2" color="success.dark">
               {job.matchScore}
             </Typography>
           </Box>
         </Stack>
-
-        <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            justifyContent="space-between"
-            alignItems="center"
-            spacing={2}
-          >
-            <Button
-              variant="contained"
-              sx={{
-                bgcolor: '#2A4DD0',
-
-                mt: 2,
-                px: 15,
-                py: 2,
-                fontWeight: 200,
-                textTransform: 'none',
-                '&:hover': {
-                  bgcolor: '#2A4DD0',
-                },
-                width: { xs: '100%', md: '100%' },
-                height: { xs: '40px', md: '50px' },
-              }}
-            >
-              Apply now
-            </Button>
-          </Stack>
-        </Grid>
+        <Button
+          variant="contained"
+          fullWidth
+          sx={{
+            mt: 2,
+            bgcolor: '#2A4DD0',
+            textTransform: 'none',
+            '&:hover': { bgcolor: '#2A4DD0' },
+          }}
+        >
+          Apply now
+        </Button>
       </Box>
     </Paper>
   );
 };
 
 JobCard.propTypes = {
-  job: PropTypes.shape({
-    logo: PropTypes.string,
-    company: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    location: PropTypes.string.isRequired,
-    applicants: PropTypes.number,
-    posted: PropTypes.string,
-    description: PropTypes.string,
-    matchScore: PropTypes.string,
-  }).isRequired,
+  job: PropTypes.object.isRequired,
 };
 
 export default function JobFeedPage() {
-  const theme = useTheme();
-  const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [visibleJobs, setVisibleJobs] = useState(3);
-  // const [dateFilter, setDateFilter] = useState('All time');
-  // const [jobCategories, setJobCategories] = useState([]);
-  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-
   const dispatch = useDispatch();
-  const { dateFilter, jobCategories, levelFilter, 
-    locationFilter, companyStage, classification } = useSelector((state) => state.job);
+  console.log('JobFeedPage rendered',dispatch);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+const {
+  control,
+  handleSubmit,
+  reset,
+  setError,
+} = useForm ();
+const [submitting, setSubmitting] = useState(false);
+  const [visibleJobs, setVisibleJobs] = useState(3);
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const onSubmit = async (data) => {
+  setSubmitting(true);
+  const email = data.email?.trim();
+  const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const handleDateFilterChange = (event) => {
-    dispatch(setDateFilter(event.target.value));
-  };
+  if (!isValidEmail) {
+    setError('email', { type: 'manual', message: 'Invalid email format' });
+    enqueueSnackbar('Please enter a valid email address', { variant: 'error' });
+    setSubmitting(false);
+    return;
+  }
 
-  const handleCategoryChange = (event) => {
-    dispatch(toggleCategory(event.target.value));
-  };
+  try {
+    const response = await axiosInstance.post('/wait-lists', {
+      email,
+      type: 'notification',
+      isDeleted: false,
+    });
 
-  const handleLevelFilterChange = (event) => {
-    dispatch(setLevelFilter(event.target.value));
-  };
+    if (response.data?.success) {
+      enqueueSnackbar('Successfully subscribed!', { variant: 'success' });
+      reset();
+    } else {
+      enqueueSnackbar('Something went wrong. Please try again.', { variant: 'error' });
+    }
+  } catch (error) {
+    if (error.response?.status === 409) {
+      enqueueSnackbar('Email already subscribed.', { variant: 'warning' });
+    } else {
+      enqueueSnackbar('Failed to subscribe. Try again later.', { variant: 'error' });
+    }
+  } finally {
+    setSubmitting(false);
+  }
+};
 
-  const handleLocationFilterChange = (event) => {
-    dispatch(setLocationFilter(event.target.value));
-  };
 
-  const handleCompanyStageChange = (event) => {
-    dispatch(setCompanyStage(event.target.value));
-  };
+  const {
+    dateFilter = '',
+    jobCategories = [],
+    levelFilter = '',
+    locationFilter = '',
+    companyStage = '',
+    classification = '',
+  } = useSelector((state) => state.job || {});
 
-  const handleClassificationChange = (event) => {
-    dispatch(setClassification(event.target.value));
-  };
+  const filteredJobs = jobs.filter((job) => {
+    let matches = true;
+    if (dateFilter && dateFilter !== 'All time') matches = matches && job.posted === dateFilter;
+    if (jobCategories.length > 0) matches = matches && jobCategories.includes(job.category);
+    if (levelFilter && levelFilter !== '') matches = matches && job.level === levelFilter;
+    if (locationFilter) matches = matches && job.location === locationFilter;
+    if (companyStage) matches = matches && job.stage === companyStage;
+    if (classification) matches = matches && job.classification === classification;
+    return matches;
+  });
 
   const renderFilters = (
-    <Box sx={{ width: 280 }}>
-      <Typography variant="h6" mb={1}>
-        Filters
-      </Typography>
-      <Divider />
-      <Stack spacing={2} mt={2} sx={{ p: 2 }}>
-        <Typography fontWeight={600}>Date of posting</Typography>
-        <FormControl component="fieldset">
-          <RadioGroup name="dateFilter" value={dateFilter} onChange={handleDateFilterChange}>
-            {['All time', 'Past 7 days', 'Past 15 days', 'Past 30 days'].map((d) => (
-              <FormControlLabel key={d} value={d} control={<Radio size="small" />} label={d} />
-            ))}
-          </RadioGroup>
-        </FormControl>
+    <Box sx={{ width: 280, p: 2 }}>
+      <Typography variant="h6">Filters</Typography>
+      <Divider sx={{ my: 2 }} />
 
-        <Typography fontWeight={600}>Job Category</Typography>
-        <FormGroup>
-          {['Product Management', 'Data Science'].map((d) => (
-            <FormControlLabel
-              key={d}
-              control={
-                <Checkbox
-                  size="small"
-                  value={d}
-                  checked={jobCategories.includes(d)}
-                  onChange={handleCategoryChange}
-                />
-              }
-              label={d}
-            />
+      <Typography fontWeight={600}>Date of posting</Typography>
+      <FormControl component="fieldset">
+        <RadioGroup
+          name="dateFilter"
+          value={dateFilter}
+          onChange={(e) => dispatch(setDateFilter(e.target.value))}
+        >
+          {['All time', 'Past 7 days', 'Past 15 days', 'Past 30 days'].map((d) => (
+            <FormControlLabel key={d} value={d} control={<Radio />} label={d} />
           ))}
-        </FormGroup>
+        </RadioGroup>
+      </FormControl>
 
-        <Typography fontWeight={600}>Location</Typography>
-        <Typography fontWeight={300}>Search here </Typography>
-        <FormControl component="fieldset">
-          <RadioGroup
-            name="dateFilter"
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value)}
-          >
-            {['Remote job'].map((d) => (
-              <FormControlLabel key={d} value={d} control={<Radio size="small" />} label={d} />
-            ))}
-          </RadioGroup>
-        </FormControl>
+      <Typography fontWeight={600} mt={2}>
+        Job Category
+      </Typography>
+      <FormGroup>
+        {['Product Management', 'Data Science'].map((cat) => (
+          <FormControlLabel
+            key={cat}
+            control={
+              <Checkbox
+                size="small"
+                checked={jobCategories.includes(cat)}
+                onChange={() => dispatch(toggleCategory(cat))}
+              />
+            }
+            label={cat}
+          />
+        ))}
+      </FormGroup>
 
-        <Typography fontWeight={600}>Level</Typography>
-        <FormControl component="fieldset">
-          <RadioGroup name="levelFilter" value={levelFilter} onChange={handleLevelFilterChange}>
-            {[
-              'Any',
-              ' Entry Level',
-              'Senior Level',
-              'Junior Management',
-              'Middle Management',
-              'Director',
-              'VP',
-              'SVP and CXO',
-            ].map((d) => (
-              <FormControlLabel key={d} value={d} control={<Radio size="small" />} label={d} />
-            ))}
-          </RadioGroup>
-        </FormControl>
+      <Typography fontWeight={600} mt={2}>
+        Location
+      </Typography>
+      <RadioGroup
+        name="locationFilter"
+        value={locationFilter}
+        onChange={(e) => dispatch(setLocationFilter(e.target.value))}
+      >
+        {['Remote job', 'Mumbai'].map((loc) => (
+          <FormControlLabel key={loc} value={loc} control={<Radio />} label={loc} />
+        ))}
+      </RadioGroup>
 
-        <Typography fontWeight={600}>Company Stage</Typography>
-        <FormControl component="fieldset">
-          <RadioGroup name="companyStage" value={companyStage} onChange={handleCompanyStageChange}>
-            {[
-              'All',
-              ' Early Stage',
-              ' Series A, B',
-              'Series C+',
-              'Listed',
-              'Private',
-              '12-15years',
-              '15+ years',
-            ].map((d) => (
-              <FormControlLabel key={d} value={d} control={<Radio size="small" />} label={d} />
-            ))}
-          </RadioGroup>
-        </FormControl>
+      <Typography fontWeight={600} mt={2}>
+        Level
+      </Typography>
+      <RadioGroup
+        name="levelFilter"
+        value={levelFilter}
+        onChange={(e) => dispatch(setLevelFilter(e.target.value))}
+      >
+        {[
+          '',
+          'Entry Level',
+          'Senior Level',
+          'Junior Management',
+          'Middle Management',
+          'Director',
+          'VP',
+          'SVP and CXO',
+        ].map((lvl) => (
+          <FormControlLabel key={lvl || 'Any'} value={lvl} control={<Radio />} label={lvl || 'Any'} />
+        ))}
+      </RadioGroup>
 
-        <Typography fontWeight={600}>Company Classification</Typography>
-        <FormControl component="fieldset">
-          <RadioGroup
-            name="classification"
-            value={classification}
-            onChange={handleClassificationChange}
-          >
-            {[
-              'All',
-              '  Analytics and Consulting Specialists',
-              ' Big Tech and Global Tech Giants',
-              'Emerging Tech Companies',
-              'Enterprise and B2B',
-              'GCC',
-              'Growth Stage Startups',
-              'Indian IT Services and Consulting',  
-              'Indian Unicorns and Major Startups',
-            ].map((d) => (
-              <FormControlLabel key={d} value={d} control={<Radio size="small" />} label={d} />
-            ))}
-          </RadioGroup>
-        </FormControl>
-      </Stack>
+      <Typography fontWeight={600} mt={2}>
+        Company Stage
+      </Typography>
+      <RadioGroup
+        name="companyStage"
+        value={companyStage}
+        onChange={(e) => dispatch(setCompanyStage(e.target.value))}
+      >
+        {['', 'Early Stage', 'Series A, B', 'Series C+', 'Listed', 'Private'].map((stage) => (
+          <FormControlLabel key={stage || 'All'} value={stage} control={<Radio />} label={stage || 'All'} />
+        ))}
+      </RadioGroup>
+
+      <Typography fontWeight={600} mt={2}>
+        Classification
+      </Typography>
+      <RadioGroup
+        name="classification"
+        value={classification}
+        onChange={(e) => dispatch(setClassification(e.target.value))}
+      >
+        {[
+          '',
+          'Big Tech and Global Tech Giants',
+          'Growth Stage Startups',
+          'Indian Unicorns and Major Startups',
+        ].map((cls) => (
+          <FormControlLabel key={cls || 'All'} value={cls} control={<Radio />} label={cls || 'All'} />
+        ))}
+      </RadioGroup>
     </Box>
   );
 
   return (
     <Box sx={{ p: { xs: 2, md: 4 }, bgcolor: '#F9FAFB', minHeight: '100vh' }}>
-      {/* Mobile Hamburger for Filters */}
       {isMobile && (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-start', mb: 2 }}>
-          <IconButton onClick={() => setMobileFilterOpen(true)} color="primary">
+        <Box display="flex" alignItems="center" mb={2}>
+          <IconButton onClick={() => setMobileFilterOpen(true)}>
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" ml={1}>
@@ -445,62 +398,76 @@ export default function JobFeedPage() {
         </Box>
       )}
 
-      {/* Filters Drawer for Mobile */}
       <Drawer anchor="left" open={mobileFilterOpen} onClose={() => setMobileFilterOpen(false)}>
         {renderFilters}
       </Drawer>
 
       <Grid container spacing={4}>
-        {/* Desktop Sidebar Filters */}
         {!isMobile && (
-          <Grid item xs={12} md={3}>
-            <Paper sx={{ p: 2, borderRadius: 2 }}>{renderFilters}</Paper>
+          <Grid item md={3}>
+            <Paper>{renderFilters}</Paper>
           </Grid>
         )}
 
-        {/* Main Job Feed */}
         <Grid item xs={12} md={6}>
-          {jobs.slice(0, visibleJobs).map((job) => (
-            <JobCard key={job.id} job={job} />
-          ))}
-
-          {visibleJobs < jobs.length && (
+          {filteredJobs.length === 0 ? (
+            <Typography textAlign="center">No jobs match the selected filters.</Typography>
+          ) : (
+            filteredJobs.slice(0, visibleJobs).map((job) => <JobCard key={job.id} job={job} />)
+          )}
+          {visibleJobs < filteredJobs.length && (
             <Box textAlign="center" mt={2}>
-              <Button
-                variant="outlined"
-                onClick={() => setVisibleJobs((prev) => prev + 3)}
-                sx={{
-                  color: 'primary.main',
-                  borderColor: 'primary.main',
-                  bgcolor: '#fff',
-                }}
-              >
+              <Button onClick={() => setVisibleJobs((prev) => prev + 3)} variant="outlined">
                 Show More
               </Button>
             </Box>
           )}
         </Grid>
 
-        {/* Right Sidebar */}
-
-        <Grid item xs={12} md={3}>
-          <Stack spacing={3}>
-            <Paper sx={{ p: 1, mr: 5, borderRadius: 2, bgcolor: '#E7F6EA', mb: { xs: 2, md: 0 } }}>
+        <Grid item md={3}>
+          <Stack spacing={2}>
+            <Paper sx={{ p: 2, bgcolor: '#E7F6EA' }}>
               <Typography fontWeight={600}>📧 Email similar jobs</Typography>
               <Typography variant="body2" mt={1} mb={2}>
                 Get notified when similar jobs are posted.
               </Typography>
-              <TextField placeholder="name@mail.com" size="small" fullWidth sx={{ mb: 1 }} />
-              <Button variant="contained" fullWidth color="primary">
-                Subscribe
-              </Button>
+              <form onSubmit={handleSubmit(onSubmit)}>
+  <Controller
+    name="email"
+    control={control}
+    defaultValue=""
+    render={({ field }) => (
+      <TextField
+        {...field}
+        size="small"
+        fullWidth
+        placeholder="name@mail.com"
+        sx={{ mb: 1 }}
+        disabled={submitting}
+      />
+    )}
+  />
+  <Button
+    type="submit"
+    fullWidth
+    variant="contained"
+    disabled={submitting}
+    sx={{ 
+      bgcolor: 'primary.main',
+      '&:hover': { bgcolor: 'primary.dark' },
+    }}
+  >
+    {submitting ? 'Subscribing...' : 'Subscribe'}
+  </Button>
+</form>
+
             </Paper>
-            <Paper sx={{ p: 2, mr: 5, borderRadius: 2, bgcolor: '#E7F6EA', mb: { xs: 2, md: 0 } }}>
+            <Paper sx={{ p: 2, bgcolor: '#E7F6EA' }}>
               <Typography fontWeight={600}>🚀 Get noticed faster</Typography>
               <Typography variant="body2" mt={1} mb={2}>
                 Upload your resume to get accurate matches.
               </Typography>
-              <Button variant="contained" fullWidth color="primary">
+              <Button fullWidth variant="contained" sx={{ bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark' } }}>
                 Upload your resume
               </Button>
             </Paper>

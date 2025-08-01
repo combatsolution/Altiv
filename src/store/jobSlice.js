@@ -1,9 +1,7 @@
-// src/store/jobSlice.js
-
 import { createSlice } from '@reduxjs/toolkit';
 
 const jobSlice = createSlice({
-  name: 'job',
+   name: 'job', // ✅ FIXED
   initialState: {
     dateFilter: '',
     jobCategories: [],
@@ -12,13 +10,13 @@ const jobSlice = createSlice({
     companyStage: '',
     classification: '',
   },
-
+  
   reducers: {
     setDateFilter: (state, action) => {
+      console.log('Setting date filter:', action.payload);
       state.dateFilter = action.payload;
     },
-    toggleCategory: (state, action) =>
-       {
+     toggleCategory: (state, action) => {
       const value = action.payload;
       if (state.jobCategories.includes(value)) {
         state.jobCategories = state.jobCategories.filter((v) => v !== value);
@@ -26,7 +24,6 @@ const jobSlice = createSlice({
         state.jobCategories.push(value);
       }
     },
-
     setLevelFilter: (state, action) => {
       state.levelFilter = action.payload;
     },
@@ -39,9 +36,9 @@ const jobSlice = createSlice({
     setClassification: (state, action) => {
       state.classification = action.payload;
     },
+    // ... rest of reducers
   },
 });
-
 export const {
   setDateFilter,
   toggleCategory,
@@ -50,5 +47,4 @@ export const {
   setCompanyStage,
   setClassification,
 } = jobSlice.actions;
-
-export default jobSlice.reducer; // <-- THIS IS CRUCIAL
+export default jobSlice.reducer;

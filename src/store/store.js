@@ -4,7 +4,7 @@ import jobReducer from './jobSlice';
 
 const store = configureStore({
   reducer: {
-    job: jobReducer,
+    job: jobReducer, // <--- this key must match what you use in useSelector
   },
 });
 
