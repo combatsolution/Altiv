@@ -39,43 +39,73 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import {  Controller, useForm } from 'react-hook-form';
 import { enqueueSnackbar, useSnackbar } from 'notistack';
 import axiosInstance from 'src/utils/axios';
+import { jobs ,} from './jobFeedData';
 
 
-
-
-const jobs = [
-  {
-    id: 1,
-    company: 'Polygon Technology',
-    title: 'Data Scientist',
-    location: 'Remote job',
-    applicants: 124,
-    posted: 'Past 7 days',
-    description:
-      'Molilit in laborum tempor Lorem incididunt irure. Aute eu ex ad sunt. Pariatur sint culpa do incididunt eiusmod culpa.',
-    matchScore: '75%',
-    logo: '/assets/images/liner.png',
-    level: 'Entry Level',
-    stage: 'Series A, B',
-    classification: 'Big Tech and Global Tech Giants',
-    category: 'Data Science',
-  },
-  {
-    id: 2,
-    company: 'Polygon Technology',
-    title: 'Product Manager',
-    location: 'Remote job',
-    applicants: 67,
-    posted: 'Past 30 days',
-    description: 'Another job description',
-    matchScore: '85%',
-    logo: '/assets/images/liner.png',
-    level: 'Middle Management',
-    stage: 'Private',
-    classification: 'Growth Stage Startups',
-    category: 'Product Management',
-  },
-];
+// const jobs = [
+//   {
+//     id: 1,
+//     company: 'Polygon Technology',
+//     title: 'Data Scientist',
+//     location: 'Remote job',
+//     applicants: 124,
+//     posted: 'Past 7 days',
+//     description:
+//       'Molilit in laborum tempor Lorem incididunt irure. Aute eu ex ad sunt. Pariatur sint culpa do incididunt eiusmod culpa.',
+//     matchScore: '75%',
+//     logo: '/assets/images/liner.png',
+//     level: 'Entry Level',
+//     stage: 'Series A, B',
+//     classification: 'Big Tech and Global Tech Giants',
+//     category: 'Data Science',
+//   },
+//   {
+//     id: 2,
+//     company: 'Polygon Technology',
+//     title: 'Product Manager',
+//     location: 'Remote job',
+//     applicants: 67,
+//     posted: 'Past 30 days',
+//     description: 'Another job description',
+//     matchScore: '85%',
+//     logo: '/assets/images/liner.png',
+//     level: 'Middle Management',
+//     stage: 'Private',
+//     classification: 'Growth Stage Startups',
+//     category: 'Product Management',
+//   },
+//    {
+//     id: 3,
+//     company: 'Polygon Technology',
+//     title: 'Data Scientist',
+//     location: 'Remote job',
+//     applicants: 124,
+//     posted: 'Past 7 days',
+//     description:
+//       'Molilit in laborum tempor Lorem incididunt irure. Aute eu ex ad sunt. Pariatur sint culpa do incididunt eiusmod culpa.',
+//     matchScore: '75%',
+//     logo: '/assets/images/liner.png',
+//     level: 'Entry Level',
+//     stage: 'Series A, B',
+//     classification: 'Big Tech and Global Tech Giants',
+//     category: 'Data Science',
+//   },
+//   {
+//     id: 4,
+//     company: 'Polygon Technology',
+//     title: 'Product Manager',
+//     location: 'Remote job',
+//     applicants: 67,
+//     posted: 'Past 30 days',
+//     description: 'Another job description',
+//     matchScore: '85%',
+//     logo: '/assets/images/liner.png',
+//     level: 'Middle Management',
+//     stage: 'Private',
+//     classification: 'Growth Stage Startups',
+//     category: 'Product Management',
+//   },
+// ];
 
 const JobCard = ({ job }) => {
   const navigate = useNavigate();
@@ -140,7 +170,7 @@ const JobCard = ({ job }) => {
         <Typography variant="body2" color="text.secondary" mt={1}>
           {job.description}
         </Typography>
-
+            
         <Button
           variant="contained"
           sx={{
@@ -267,19 +297,61 @@ const [submitting, setSubmitting] = useState(false);
     locationFilter = '',
     companyStage = '',
     classification = '',
-  } = useSelector((state) => state.job || {});
+  } = useSelector((state) => state.jobs || {});
 
+  console.log("khdkjsdk->",dateFilter);
   const filteredJobs = jobs.filter((job) => {
     let matches = true;
-    if (dateFilter && dateFilter !== 'All time') matches = matches && job.posted === dateFilter;
+
+    if (dateFilter && dateFilter !== 'All time') {
+      // Only allow jobs that are posted within the selected filter
+      const days = parseInt(dateFilter.match(/\d+/)?.[0] || '0', 10); // extract number from 'Past 7 days'
+      if (days > 0) {
+        const now = new Date();
+        const jobPostedDaysAgo = (() => {
+          // Simulate job post date using string (you should use real dates ideally)
+          if (job.posted === 'Past 7 days') return 7;
+          if (job.posted === 'Past 15 days') return 15;
+          if (job.posted === 'Past 30 days') return 30;
+            if (job.location === 'Remote job') return 30;
+            if (job.location === 'Mumbai') return 30;
+
+          return 999; // default for unknown
+        })();
+        matches = matches && jobPostedDaysAgo <= days;
+      }
+    }
+
     if (jobCategories.length > 0) matches = matches && jobCategories.includes(job.category);
+    if (dateFilter && dateFilter !== 'All time') {
+      // Only allow jobs that are posted within the selected filter
+      const days = parseInt(dateFilter.match(/\d+/)?.[0] || '0', 10); // extract number from 'Past 7 days'
+      if (days > 0) {
+        const now = new Date();
+        const jobPostedDaysAgo = (() => {
+          // Simulate job post date using string (you should use real dates ideally)
+          if (job.posted === 'Past 7 days') return 7;
+          if (job.posted === 'Past 15 days') return 15;
+          if (job.posted === 'Past 30 days') return 30;
+            if (job.location === 'Remote job') return 30;
+            if (job.location === 'Mumbai') return 30;
+
+          return 999; // default for unknown
+        })();
+        matches = matches && jobPostedDaysAgo <= days;
+      }
+    }
+ if (jobCategories.length > 0) matches = matches && jobCategories.includes(job.category);
     if (levelFilter && levelFilter !== '') matches = matches && job.level === levelFilter;
+
     if (locationFilter) matches = matches && job.location === locationFilter;
     if (companyStage) matches = matches && job.stage === companyStage;
     if (classification) matches = matches && job.classification === classification;
+
     return matches;
   });
 
+console.log("hidhaskjhkajkasl->",filteredJobs);
   const renderFilters = (
     <Box sx={{ width: 280, p: 2 }}>
       <Typography variant="h6">Filters</Typography>
