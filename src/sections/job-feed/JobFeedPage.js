@@ -36,11 +36,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import {  Controller, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { enqueueSnackbar, useSnackbar } from 'notistack';
 import axiosInstance from 'src/utils/axios';
-import { jobs ,} from './jobFeedData';
-
+import { jobs } from './jobFeedData';
 
 // const jobs = [
 //   {
@@ -170,7 +169,7 @@ const JobCard = ({ job }) => {
         <Typography variant="body2" color="text.secondary" mt={1}>
           {job.description}
         </Typography>
-            
+
         <Button
           variant="contained"
           sx={{
@@ -241,54 +240,48 @@ JobCard.propTypes = {
 
 export default function JobFeedPage() {
   const dispatch = useDispatch();
-  console.log('JobFeedPage rendered',dispatch);
+  console.log('JobFeedPage rendered', dispatch);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-const {
-  control,
-  handleSubmit,
-  reset,
-  setError,
-} = useForm ();
-const [submitting, setSubmitting] = useState(false);
+  const { control, handleSubmit, reset, setError } = useForm();
+  const [submitting, setSubmitting] = useState(false);
   const [visibleJobs, setVisibleJobs] = useState(3);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const onSubmit = async (data) => {
-  setSubmitting(true);
-  const email = data.email?.trim();
-  const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    setSubmitting(true);
+    const email = data.email?.trim();
+    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  if (!isValidEmail) {
-    setError('email', { type: 'manual', message: 'Invalid email format' });
-    enqueueSnackbar('Please enter a valid email address', { variant: 'error' });
-    setSubmitting(false);
-    return;
-  }
-
-  try {
-    const response = await axiosInstance.post('/wait-lists', {
-      email,
-      type: 'notification',
-      isDeleted: false,
-    });
-
-    if (response.data?.success) {
-      enqueueSnackbar('Successfully subscribed!', { variant: 'success' });
-      reset();
-    } else {
-      enqueueSnackbar('Something went wrong. Please try again.', { variant: 'error' });
+    if (!isValidEmail) {
+      setError('email', { type: 'manual', message: 'Invalid email format' });
+      enqueueSnackbar('Please enter a valid email address', { variant: 'error' });
+      setSubmitting(false);
+      return;
     }
-  } catch (error) {
-    if (error.response?.status === 409) {
-      enqueueSnackbar('Email already subscribed.', { variant: 'warning' });
-    } else {
-      enqueueSnackbar('Failed to subscribe. Try again later.', { variant: 'error' });
-    }
-  } finally {
-    setSubmitting(false);
-  }
-};
 
+    try {
+      const response = await axiosInstance.post('/wait-lists', {
+        email,
+        type: 'notification',
+        isDeleted: false,
+      });
+
+      if (response.data?.success) {
+        enqueueSnackbar('Successfully subscribed!', { variant: 'success' });
+        reset();
+      } else {
+        enqueueSnackbar('Something went wrong. Please try again.', { variant: 'error' });
+      }
+    } catch (error) {
+      if (error.response?.status === 409) {
+        enqueueSnackbar('Email already subscribed.', { variant: 'warning' });
+      } else {
+        enqueueSnackbar('Failed to subscribe. Try again later.', { variant: 'error' });
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const {
     dateFilter = '',
@@ -299,7 +292,7 @@ const [submitting, setSubmitting] = useState(false);
     classification = '',
   } = useSelector((state) => state.jobs || {});
 
-  console.log("khdkjsdk->",dateFilter);
+  console.log('khdkjsdk->', dateFilter);
   const filteredJobs = jobs.filter((job) => {
     let matches = true;
 
@@ -313,8 +306,8 @@ const [submitting, setSubmitting] = useState(false);
           if (job.posted === 'Past 7 days') return 7;
           if (job.posted === 'Past 15 days') return 15;
           if (job.posted === 'Past 30 days') return 30;
-            if (job.location === 'Remote job') return 30;
-            if (job.location === 'Mumbai') return 30;
+          if (job.location === 'Remote job') return 30;
+          if (job.location === 'Mumbai') return 30;
 
           return 999; // default for unknown
         })();
@@ -333,15 +326,15 @@ const [submitting, setSubmitting] = useState(false);
           if (job.posted === 'Past 7 days') return 7;
           if (job.posted === 'Past 15 days') return 15;
           if (job.posted === 'Past 30 days') return 30;
-            if (job.location === 'Remote job') return 30;
-            if (job.location === 'Mumbai') return 30;
+          if (job.location === 'Remote job') return 30;
+          if (job.location === 'Mumbai') return 30;
 
           return 999; // default for unknown
         })();
         matches = matches && jobPostedDaysAgo <= days;
       }
     }
- if (jobCategories.length > 0) matches = matches && jobCategories.includes(job.category);
+    if (jobCategories.length > 0) matches = matches && jobCategories.includes(job.category);
     if (levelFilter && levelFilter !== '') matches = matches && job.level === levelFilter;
 
     if (locationFilter) matches = matches && job.location === locationFilter;
@@ -351,7 +344,7 @@ const [submitting, setSubmitting] = useState(false);
     return matches;
   });
 
-console.log("hidhaskjhkajkasl->",filteredJobs);
+  console.log('hidhaskjhkajkasl->', filteredJobs);
   const renderFilters = (
     <Box sx={{ width: 280, p: 2 }}>
       <Typography variant="h6">Filters</Typography>
@@ -420,7 +413,12 @@ console.log("hidhaskjhkajkasl->",filteredJobs);
           'VP',
           'SVP and CXO',
         ].map((lvl) => (
-          <FormControlLabel key={lvl || 'Any'} value={lvl} control={<Radio />} label={lvl || 'Any'} />
+          <FormControlLabel
+            key={lvl || 'Any'}
+            value={lvl}
+            control={<Radio />}
+            label={lvl || 'Any'}
+          />
         ))}
       </RadioGroup>
 
@@ -433,7 +431,12 @@ console.log("hidhaskjhkajkasl->",filteredJobs);
         onChange={(e) => dispatch(setCompanyStage(e.target.value))}
       >
         {['', 'Early Stage', 'Series A, B', 'Series C+', 'Listed', 'Private'].map((stage) => (
-          <FormControlLabel key={stage || 'All'} value={stage} control={<Radio />} label={stage || 'All'} />
+          <FormControlLabel
+            key={stage || 'All'}
+            value={stage}
+            control={<Radio />}
+            label={stage || 'All'}
+          />
         ))}
       </RadioGroup>
 
@@ -451,14 +454,19 @@ console.log("hidhaskjhkajkasl->",filteredJobs);
           'Growth Stage Startups',
           'Indian Unicorns and Major Startups',
         ].map((cls) => (
-          <FormControlLabel key={cls || 'All'} value={cls} control={<Radio />} label={cls || 'All'} />
+          <FormControlLabel
+            key={cls || 'All'}
+            value={cls}
+            control={<Radio />}
+            label={cls || 'All'}
+          />
         ))}
       </RadioGroup>
     </Box>
   );
 
   return (
-    <Box sx={{ p: { xs: 2, md: 4 }, bgcolor: '#F9FAFB', minHeight: '100vh' }}>
+    <Box sx={{pl  :{md:4}, p: { xs: 2, md: 4 }, bgcolor: '#F9FAFB', minHeight: '100vh' }}>
       {isMobile && (
         <Box display="flex" alignItems="center" mb={2}>
           <IconButton onClick={() => setMobileFilterOpen(true)}>
@@ -504,42 +512,45 @@ console.log("hidhaskjhkajkasl->",filteredJobs);
                 Get notified when similar jobs are posted.
               </Typography>
               <form onSubmit={handleSubmit(onSubmit)}>
-  <Controller
-    name="email"
-    control={control}
-    defaultValue=""
-    render={({ field }) => (
-      <TextField
-        {...field}
-        size="small"
-        fullWidth
-        placeholder="name@mail.com"
-        sx={{ mb: 1 }}
-        disabled={submitting}
-      />
-    )}
-  />
-  <Button
-    type="submit"
-    fullWidth
-    variant="contained"
-    disabled={submitting}
-    sx={{ 
-      bgcolor: 'primary.main',
-      '&:hover': { bgcolor: 'primary.dark' },
-    }}
-  >
-    {submitting ? 'Subscribing...' : 'Subscribe'}
-  </Button>
-</form>
-
+                <Controller
+                  name="email"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      size="small"
+                      fullWidth
+                      placeholder="name@mail.com"
+                      sx={{ mb: 1 }}
+                      disabled={submitting}
+                    />
+                  )}
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={submitting}
+                  sx={{
+                    bgcolor: 'primary.main',
+                    '&:hover': { bgcolor: 'primary.dark' },
+                  }}
+                >
+                  {submitting ? 'Subscribing...' : 'Subscribe'}
+                </Button>
+              </form>
             </Paper>
             <Paper sx={{ p: 2, bgcolor: '#E7F6EA' }}>
               <Typography fontWeight={600}>🚀 Get noticed faster</Typography>
               <Typography variant="body2" mt={1} mb={2}>
                 Upload your resume to get accurate matches.
               </Typography>
-              <Button fullWidth variant="contained" sx={{ bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark' } }}>
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{ bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark' } }}
+              >
                 Upload your resume
               </Button>
             </Paper>
