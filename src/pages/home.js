@@ -12,7 +12,7 @@ export default function HomePage() {
         <title> Altiv AI </title>
       </Helmet>
 
-      <HomeView />
+      {/* <HomeView /> */}
       <FoboView/>
     </>
   );
