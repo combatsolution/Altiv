@@ -137,6 +137,7 @@ export default function CareerPathProjection() {
   const [expYears, setExpYears] = useState(5);
   const [userStartedWith, setUserStartedWith] = useState(null);
   const navigate = useNavigate();
+  const [arraymap, setArrayMap] = useState(false);
 
   useEffect(() => {
     const startedWith = sessionStorage.getItem('userStartedWith');
@@ -155,28 +156,28 @@ export default function CareerPathProjection() {
       {
         title: 'Senior Data Scientist',
         match: 80,
-        rate: '18%',
+        rate: '12%',
         salary: '$50L - $55L',
         experience: '8-12 years', 
       },
       {
         title: 'Senior Data Scientist 1',
-        match: 80,
-        rate: '18%',
+        match: 90,
+        rate: '12%',
         salary: '$50L - $55L',
         experience: '8-12 years',
       },
       {
         title: 'Senior Data Scientist 2',
         match: 80,
-        rate: '18%',
+        rate: '12%',
         salary: '$50L - $55L',
         experience: '8-12 years',
       },
       {
         title: 'Senior Data Scientist 3',
-        match: 80,
-        rate: '18%',
+        match: 75,
+        rate: '14%',
         salary: '$50L - $55L',
         experience: '8-12 years',
       },
@@ -274,14 +275,14 @@ export default function CareerPathProjection() {
                 variant="standard"
                 sx={{ minWidth: 450 }}
               >
-                <MenuItem value={5}>5 Years</MenuItem>
+                <MenuItem value={2}>2 Years</MenuItem>
                 {/* <MenuItem value={10}>10 Years</MenuItem> */}
               </Select>
             </Grid>
 
             {/* Right: Modify Button */}
             <Grid item>
-              <Button
+              <Button 
                 variant="outlined"
                 sx={{
                   borderRadius: '100px',

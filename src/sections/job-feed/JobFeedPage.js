@@ -41,70 +41,6 @@ import { enqueueSnackbar, useSnackbar } from 'notistack';
 import axiosInstance from 'src/utils/axios';
 import { jobs } from './jobFeedData';
 
-// const jobs = [
-//   {
-//     id: 1,
-//     company: 'Polygon Technology',
-//     title: 'Data Scientist',
-//     location: 'Remote job',
-//     applicants: 124,
-//     posted: 'Past 7 days',
-//     description:
-//       'Molilit in laborum tempor Lorem incididunt irure. Aute eu ex ad sunt. Pariatur sint culpa do incididunt eiusmod culpa.',
-//     matchScore: '75%',
-//     logo: '/assets/images/liner.png',
-//     level: 'Entry Level',
-//     stage: 'Series A, B',
-//     classification: 'Big Tech and Global Tech Giants',
-//     category: 'Data Science',
-//   },
-//   {
-//     id: 2,
-//     company: 'Polygon Technology',
-//     title: 'Product Manager',
-//     location: 'Remote job',
-//     applicants: 67,
-//     posted: 'Past 30 days',
-//     description: 'Another job description',
-//     matchScore: '85%',
-//     logo: '/assets/images/liner.png',
-//     level: 'Middle Management',
-//     stage: 'Private',
-//     classification: 'Growth Stage Startups',
-//     category: 'Product Management',
-//   },
-//    {
-//     id: 3,
-//     company: 'Polygon Technology',
-//     title: 'Data Scientist',
-//     location: 'Remote job',
-//     applicants: 124,
-//     posted: 'Past 7 days',
-//     description:
-//       'Molilit in laborum tempor Lorem incididunt irure. Aute eu ex ad sunt. Pariatur sint culpa do incididunt eiusmod culpa.',
-//     matchScore: '75%',
-//     logo: '/assets/images/liner.png',
-//     level: 'Entry Level',
-//     stage: 'Series A, B',
-//     classification: 'Big Tech and Global Tech Giants',
-//     category: 'Data Science',
-//   },
-//   {
-//     id: 4,
-//     company: 'Polygon Technology',
-//     title: 'Product Manager',
-//     location: 'Remote job',
-//     applicants: 67,
-//     posted: 'Past 30 days',
-//     description: 'Another job description',
-//     matchScore: '85%',
-//     logo: '/assets/images/liner.png',
-//     level: 'Middle Management',
-//     stage: 'Private',
-//     classification: 'Growth Stage Startups',
-//     category: 'Product Management',
-//   },
-// ];
 
 const JobCard = ({ job }) => {
   const navigate = useNavigate();
@@ -133,11 +69,31 @@ const JobCard = ({ job }) => {
       <Box flex={1} sx={{ display: { xs: 'none', md: 'block' } }}>
         <Stack direction="row" justifyContent="space-between">
           <Box>
-            <Typography fontWeight={600}>{job.company}</Typography>
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <Typography variant="h6">{job.title}</Typography>
-              <Typography variant="body2">{job.posted}</Typography>
+            <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 13 }}>
+              <Typography fontWeight={600}>{job.company}</Typography>
+              <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />
+            </Grid>
+
+            <Stack direction="row" justifyContent="center" spacing={1}>
+              <Typography fontSize="1rem">{job.title}</Typography>
+              <Grid
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center', // vertical alignment
+                  justifyContent: 'center', // horizontal alignment
+                  width: '80px',
+                  height: '20px',
+                  bgcolor: 'rgba(125, 90, 226, 0.1)',
+                  color: 'rgba(125, 90, 226, 1)',
+                  mt: 0.5,
+                }}
+              >
+                <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '12px' }}>
+                  {job.posted}
+                </Typography>
+              </Grid>
             </Stack>
+
             <Stack direction="row" spacing={1} mt={1} alignItems="center">
               <LocationOnIcon fontSize="small" />
               <Typography variant="body2">{job.location}</Typography>
@@ -166,21 +122,38 @@ const JobCard = ({ job }) => {
           </Box>
         </Stack>
 
-        <Typography variant="body2" color="text.secondary" mt={1}>
-          {job.description}
-        </Typography>
+        <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+          <Typography
+            variant="body2"
+            mt={1}
+            mb={2}
+            color="text.secondary"
+            sx={{ display: { xs: 'none', md: 'block' } }}
+          >
+            {job.description}
+          </Typography>
 
-        <Button
-          variant="contained"
-          sx={{
-            mt: 2,
-            bgcolor: '#2A4DD0',
-            textTransform: 'none',
-            '&:hover': { bgcolor: '#2A4DD0' },
-          }}
-        >
-          Apply Now
-        </Button>
+          <Stack direction={{ xs: 'column', md: 'row' }} alignItems="center" spacing={0}>
+            <Button
+              variant="contained"
+              sx={{
+                bgcolor: '#2A4DD0',
+                borderRadius: 1,
+                px: 2,
+                py: 2,
+                fontWeight: 200,
+                textTransform: 'none',
+                '&:hover': {
+                  bgcolor: '#2A4DD0',
+                },
+                width: { xs: '100%', md: '140px' },
+                height: { xs: '100%', md: '40px' },
+              }}
+            >
+              Apply Now
+            </Button>
+          </Stack>
+        </Grid>
       </Box>
 
       {/* Mobile View */}
@@ -189,14 +162,17 @@ const JobCard = ({ job }) => {
           <Stack direction="row" spacing={2}>
             <Avatar src={job.logo} alt={job.company} sx={{ width: 48, height: 48 }} />
             <Box>
+              <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
               <Typography variant="h6">{job.title}</Typography>
+               <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />
+               </Grid>
               <Typography fontWeight={600}>{job.company}</Typography>
               <Typography variant="body2">{job.location}</Typography>
               <Typography fontSize="12px">
                 {job.applicants} applicants • {job.posted}
               </Typography>
             </Box>
-          </Stack>
+          </Stack>  
           <Box
             sx={{
               bgcolor: '#E9FFE9',
@@ -466,7 +442,7 @@ export default function JobFeedPage() {
   );
 
   return (
-    <Box sx={{pl  :{md:4}, p: { xs: 2, md: 4 }, bgcolor: '#F9FAFB', minHeight: '100vh' }}>
+    <Box sx={{ px: { lg: 10 }, p: { xs: 2, md: 4 }, bgcolor: '#F9FAFB', minHeight: '100vh' }}>
       {isMobile && (
         <Box display="flex" alignItems="center" mb={2}>
           <IconButton onClick={() => setMobileFilterOpen(true)}>

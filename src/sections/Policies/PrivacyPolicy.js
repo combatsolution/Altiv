@@ -201,7 +201,7 @@ const PrivacyPolicyPage = () => {
         <Typography variant="h6" sx={{ mb: 1 }}>
           Contact Us
         </Typography>
-        <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
+        <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}> 
           Questions about your data? Reach out anytime.
         </Typography>
 
