@@ -11,17 +11,9 @@ import {
 } from '@mui/material';
 import { FaClipboardList } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import ReactFlow, {
-  Background,
-  Controls,
-  MiniMap,
-  Handle,
-  Position,
-  useNodesState,
-  useEdgesState,
-} from 'reactflow';
+import ReactFlow, { Background, Controls, MiniMap, Handle, Position } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { m, AnimatePresence } from 'framer-motion';
+import { m } from 'framer-motion';
 import CareerCard from './CareerCard';
 
 const mockData = {
@@ -60,25 +52,32 @@ const mockData = {
 };
 
 const nodeTypes = {
-  career: ({ data }) => (
-    <AnimatePresence>
-      <m.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
-        transition={{ duration: 0.4 }}
+  career: ({ data }) => {
+    const { isNew, onClick } = data;
+    return (
+      <div
         role="button"
         tabIndex={0}
-        onClick={data.onClick}
-        onKeyDown={(e) => e.key === 'Enter' && data.onClick?.()}
+        onClick={onClick}
+        onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
         style={{ width: 300, position: 'relative', cursor: 'pointer', zIndex: 2 }}
       >
         <Handle type="target" position={Position.Left} style={{ background: '#1976d2' }} />
-        <CareerCard {...data} />
+        {isNew ? (
+          <m.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+          >
+            <CareerCard {...data} />
+          </m.div>
+        ) : (
+          <CareerCard {...data} />
+        )}
         <Handle type="source" position={Position.Right} style={{ background: '#1976d2' }} />
-      </m.div>
-    </AnimatePresence>
-  ),
+      </div>
+    );
+  },
   label: ({ data }) => (
     <m.div
       initial={{ opacity: 0 }}
@@ -93,7 +92,7 @@ const nodeTypes = {
         textAlign: 'center',
         width: 100,
         whiteSpace: 'pre-line',
-        zIndex: 10,
+        zIndex: 9999, // ensure label is always on top
         position: 'relative',
       }}
     >
@@ -138,13 +137,13 @@ export default function CareerPathProjection() {
             id: labelId,
             type: 'label',
             data: { label },
-            position: { x: 0, y },
+            position: { x: 0, y }, // move labels to left
             draggable: false,
           });
         }
 
         const HORIZONTAL_SPACING = 400;
-        const BASE_OFFSET = -150;
+        const BASE_OFFSET = 150; // shift cards right so they don't overlap labels
 
         children.forEach((child, index) => {
           const nodeId = `${parentId}-${level}-${index}-${Date.now()}`;
@@ -153,6 +152,7 @@ export default function CareerPathProjection() {
             type: 'career',
             data: {
               ...child,
+              isNew: true,
               onClick: () => {
                 if (level === 'next') {
                   handleExpand(nodeId, 'executive');
@@ -185,6 +185,14 @@ export default function CareerPathProjection() {
           ),
         ]);
 
+        setTimeout(() => {
+          setNodes((prev) =>
+            prev.map((node) =>
+              node.data?.isNew ? { ...node, data: { ...node.data, isNew: false } } : node
+            )
+          );
+        }, 500);
+
         return [
           ...prevNodes,
           ...newNodes.filter((newNode) => !prevNodes.some((node) => node.id === newNode.id)),
@@ -200,7 +208,7 @@ export default function CareerPathProjection() {
         id: 'label-current',
         type: 'label',
         data: { label: 'Current Role' },
-        position: { x: 0, y: 0 },
+        position: { x: 0, y: 0 }, // move current role label left
         draggable: false,
       },
       {
@@ -212,14 +220,25 @@ export default function CareerPathProjection() {
           rate: '18%',
           salary: '$50L - $55L',
           experience: '8-12 years',
+          isNew: true,
           onClick: () => handleExpand('current-node', 'next'),
         },
-        position: { x: 150, y: 0 },
+        position: { x: 150, y: 0 }, // start cards right of labels
         sourcePosition: Position.Right,
         targetPosition: Position.Left,
       },
     ];
+
     setNodes(initialNodes);
+
+    setTimeout(() => {
+      setNodes((prev) =>
+        prev.map((node) =>
+          node.data?.isNew ? { ...node, data: { ...node.data, isNew: false } } : node
+        )
+      );
+    }, 500);
+
     setInitialized(true);
   }, [handleExpand]);
 
