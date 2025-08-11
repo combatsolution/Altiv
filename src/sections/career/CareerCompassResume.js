@@ -8,6 +8,7 @@ import {
   Button,
   useTheme,
   useMediaQuery,
+  Stack,
 } from '@mui/material';
 import { FaClipboardList } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -62,7 +63,7 @@ const nodeTypes = {
         onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
         style={{ width: 300, position: 'relative', cursor: 'pointer', zIndex: 2 }}
       >
-        <Handle type="target" position={Position.Left} style={{ background: '#1976d2' }} />
+        <Handle type="target" position={Position.Top} style={{ background: '#1976d2' }} />
         {isNew ? (
           <m.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -74,7 +75,7 @@ const nodeTypes = {
         ) : (
           <CareerCard {...data} />
         )}
-        <Handle type="source" position={Position.Right} style={{ background: '#1976d2' }} />
+        <Handle type="source" position={Position.Bottom} style={{ background: '#1976d2' }} />
       </div>
     );
   },
@@ -104,6 +105,7 @@ const nodeTypes = {
 export default function CareerPathProjection() {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
   const [jobTitle, setJobTitle] = useState('Lead Data Scientist');
   const [expYears, setExpYears] = useState(5);
   const [userStartedWith, setUserStartedWith] = useState(null);
@@ -124,8 +126,16 @@ export default function CareerPathProjection() {
 
         const children = mockData[level] || [];
         const levelMap = {
-          next: { y: 300, label: 'Next Level\n(2-4 yrs)', id: 'label-next' },
-          executive: { y: 600, label: 'Executive Level', id: 'label-executive' },
+          next: {
+            y: isMdUp ? 300 : 200,
+            label: 'Next Level\n(2-4 yrs)',
+            id: 'label-next',
+          },
+          executive: {
+            y: isMdUp ? 600 : 400,
+            label: 'Executive Level',
+            id: 'label-executive',
+          },
         };
         const { y, label, id: labelId } = levelMap[level] || {};
 
@@ -137,13 +147,13 @@ export default function CareerPathProjection() {
             id: labelId,
             type: 'label',
             data: { label },
-            position: { x: 0, y }, // move labels to left
+            position: { x: 0, y },
             draggable: false,
           });
         }
 
-        const HORIZONTAL_SPACING = 400;
-        const BASE_OFFSET = 150; // shift cards right so they don't overlap labels
+        const HORIZONTAL_SPACING = isMdUp ? 400 : 280;
+        const BASE_OFFSET = isMdUp ? 150 : 100;
 
         children.forEach((child, index) => {
           const nodeId = `${parentId}-${level}-${index}-${Date.now()}`;
@@ -163,8 +173,8 @@ export default function CareerPathProjection() {
               x: parentNode.position.x + BASE_OFFSET + index * HORIZONTAL_SPACING,
               y,
             },
-            sourcePosition: Position.Right,
-            targetPosition: Position.Left,
+            sourcePosition: Position.Top,
+            targetPosition: Position.Bottom,
           });
 
           newEdges.push({
@@ -199,7 +209,7 @@ export default function CareerPathProjection() {
         ];
       });
     },
-    [expanded]
+    [expanded, isMdUp]
   );
 
   const initializeNodes = useCallback(() => {
@@ -208,7 +218,7 @@ export default function CareerPathProjection() {
         id: 'label-current',
         type: 'label',
         data: { label: 'Current Role' },
-        position: { x: 0, y: 0 }, // move current role label left
+        position: { x: 0, y: 0 },
         draggable: false,
       },
       {
@@ -223,9 +233,9 @@ export default function CareerPathProjection() {
           isNew: true,
           onClick: () => handleExpand('current-node', 'next'),
         },
-        position: { x: 150, y: 0 }, // start cards right of labels
-        sourcePosition: Position.Right,
-        targetPosition: Position.Left,
+        position: { x: isMdUp ? 150 : 100, y: 0 },
+        sourcePosition: Position.Top,
+        targetPosition: Position.Bottom,
       },
     ];
 
@@ -240,7 +250,7 @@ export default function CareerPathProjection() {
     }, 500);
 
     setInitialized(true);
-  }, [handleExpand]);
+  }, [handleExpand, isMdUp]);
 
   useEffect(() => {
     const startedWith = sessionStorage.getItem('userStartedWith');
@@ -249,71 +259,134 @@ export default function CareerPathProjection() {
   }, [initializeNodes, initialized]);
 
   return (
-    <Box sx={{ bgcolor: 'white', p: { xs: 2, sm: 3 } }}>
+    <Box sx={{ bgcolor: 'white', p: { xs: 1, sm: 2, md: 3 } }}>
       <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
         {userStartedWith === 'job' && (
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3 }}>
-            <Button variant="outlined">Upload resume to unlock your potential</Button>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+            <Button
+              variant="outlined"
+              size={isMdUp ? 'medium' : 'small'}
+              sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+            >
+              Upload resume to unlock your potential
+            </Button>
           </Box>
         )}
 
-        <Box sx={{ bgcolor: 'white', p: { xs: 2, sm: 3, md: 4 } }}>
-          <Grid
-            container
-            alignItems="center"
-            justifyContent="space-between"
-            spacing={2}
-            sx={{ mb: 1 }}
-          >
-            <Grid item sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <FaClipboardList size={16} />
-              <Box sx={{ minWidth: 450, borderBottom: '1px solid #ccc', pb: 0.5 }}>
-                <Typography variant="body2" color="text.primary" sx={{ px: 1, py: 0.5 }}>
-                  {jobTitle}
-                </Typography>
+        <Box sx={{ bgcolor: 'white', p: { xs: 1, sm: 2, md: 4 } }}>
+          {isMdUp ? (
+            // Desktop layout
+            <Grid
+              container
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={2}
+              sx={{ mb: 1 }}
+            >
+              <Grid item sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <FaClipboardList size={16} />
+                <Box sx={{ minWidth: 450, borderBottom: '1px solid #ccc', pb: 0.5 }}>
+                  <Typography variant="body2" color="text.primary" sx={{ px: 1, py: 0.5 }}>
+                    {jobTitle}
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid item sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <FaClipboardList size={16} />
+                <Select
+                  size="small"
+                  value={expYears}
+                  onChange={(e) => setExpYears(e.target.value)}
+                  variant="standard"
+                  sx={{ minWidth: 450 }}
+                >
+                  <MenuItem value={5}>5 Years</MenuItem>
+                </Select>
+              </Grid>
+              <Grid item>
+                <Button variant="outlined" sx={{ borderRadius: '100px', px: 6 }}>
+                  Modify
+                </Button>
+              </Grid>
+            </Grid>
+          ) : (
+            // Mobile layout
+            <Stack spacing={2} sx={{ mb: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <FaClipboardList size={14} />
+                <Box
+                  sx={{
+                    flex: 1,
+                    borderBottom: '1px solid #ccc',
+                    pb: 0.5,
+                    minWidth: 0,
+                  }}
+                >
+                  <Typography variant="body2" color="text.primary" sx={{ px: 1, py: 0.5 }} noWrap>
+                    {jobTitle}
+                  </Typography>
+                </Box>
               </Box>
-            </Grid>
-            <Grid item sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <FaClipboardList size={16} />
-              <Select
-                size="small"
-                value={expYears}
-                onChange={(e) => setExpYears(e.target.value)}
-                variant="standard"
-                sx={{ minWidth: 450 }}
-              >
-                <MenuItem value={5}>5 Years</MenuItem>
-              </Select>
-            </Grid>
-            <Grid item>
-              <Button variant="outlined" sx={{ borderRadius: '100px', px: 6 }}>
-                Modify
-              </Button>
-            </Grid>
-          </Grid>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <FaClipboardList size={14} />
+                <Select
+                  size="small"
+                  value={expYears}
+                  onChange={(e) => setExpYears(e.target.value)}
+                  variant="standard"
+                  sx={{ flex: 1, minWidth: 0 }}
+                >
+                  <MenuItem value={5}>5 Years</MenuItem>
+                </Select>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Button variant="outlined" size="small" sx={{ borderRadius: '100px', px: 4 }}>
+                  Modify
+                </Button>
+              </Box>
+            </Stack>
+          )}
         </Box>
 
-        <Box sx={{ height: '90vh', width: '100%', mb: 4 }}>
+        <Box
+          sx={{
+            height: { xs: '70vh', sm: '80vh', md: '90vh' },
+            width: '100%',
+            mb: { xs: 2, sm: 3, md: 4 },
+          }}
+        >
           <ReactFlow
             nodes={nodes}
             edges={edges}
             nodeTypes={nodeTypes}
             fitView
             key={`flow-${nodes.length}-${edges.length}`}
+            fitViewOptions={{
+              padding: isMdUp ? 0.1 : 0.2,
+              minZoom: isMdUp ? 0.5 : 0.3,
+              maxZoom: isMdUp ? 2 : 1.5,
+            }}
           >
             <Background />
             <Controls />
-            <MiniMap />
+            <MiniMap
+              style={{
+                width: isMdUp ? 200 : 120,
+                height: isMdUp ? 150 : 90,
+              }}
+            />
           </ReactFlow>
         </Box>
 
-        <Box sx={{ textAlign: 'center', mt: 4 }}>
+        <Box sx={{ textAlign: 'center', mt: { xs: 2, sm: 3, md: 4 } }}>
           <Button
+            size={isMdUp ? 'medium' : 'small'}
             sx={{
               borderRadius: 5,
-              px: 4,
+              px: { xs: 3, sm: 4 },
               bgcolor: 'primary.main',
               color: '#fff',
+              fontSize: { xs: '0.875rem', sm: '1rem' },
               '&:hover': { bgcolor: 'primary.dark' },
             }}
           >
