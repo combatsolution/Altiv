@@ -42,7 +42,7 @@ export default function CareerCard({ title, match, rate, salary, experience, onC
       sx={{
         p: 2,
         position: 'relative',
-        width: { xs: '100%', sm: 360 },
+        width: { xs: '100%', sm: 260 },
         height: 140,
         borderRadius: 2,
         cursor: onClick ? 'pointer' : 'default',
