@@ -21,29 +21,28 @@ const ROOTS = {
 // ----------------------------------------------------------------------
 
 export const paths = {
-  SubscriptionSuccess:'/payment/success',
+  SubscriptionSuccess: '/payment/success',
   //  SubscriptionSuccess:'/successpage',
-  subscription:'/subscription',
- 
+  subscription: '/subscription',
 
   // footer
-  PolicyView:'/privacy-policy',
-  attributions:'/attributions',
-  AitrainingpolicyView:'/ai-training-policy',
-  TermsAndConditions:'/termsandconditions',
+  Blogs: '/post',
+  PolicyView: '/privacy-policy',
+  attributions: '/attributions',
+  AitrainingpolicyView: '/ai-training-policy',
+  TermsAndConditions: '/termsandconditions',
   jobDetails: '/job-details',
   careerResume: '/career-campass',
-  careerTitle:'/career-title',
-  jobFeed:'/job-feed',
+  careerTitle: '/career-title',
+  jobFeed: '/job-feed',
 
-  fobo:'/fobo',
-
+  fobo: '/fobo',
 
   // comingsoonPage:'/comingsoon-Page',
-  dashboardPage:`/dashboard-page`, 
-  ResumeView: '/resume-view', 
-  Profile:'/Profile',
-  comingSoon: '/coming-soon',  
+  dashboardPage: `/dashboard-page`,
+  ResumeView: '/resume-view',
+  Profile: '/Profile',
+  comingSoon: '/coming-soon',
   comingSoonWithType: (type) => `/coming-soon/${type}`,
   // pricing:(type) => `/pricing/${type}`,
   pricings: (type) => `/pricing?type=${type}`,
@@ -67,7 +66,7 @@ export const paths = {
     'https://www.figma.com/file/kAYnYYdib0aQPNKZpgJT6J/%5BPreview%5D-Minimal-Web.v5.0.0?type=design&node-id=0%3A1&t=Al4jScQq97Aly0Mn-1',
   product: {
     root: `/product`,
-    checkout:(planId) =>  `/product/checkout/${planId}`,
+    checkout: (planId) => `/product/checkout/${planId}`,
     details: (id) => `/product/${id}`,
     demo: {
       details: `/product/${MOCK_ID}`,
@@ -75,15 +74,13 @@ export const paths = {
   },
   post: {
     root: `/post`,
-    details: (title) => `/post/${paramCase(title)}`,
+    details: (slug) => `/post/${slug}`,
     demo: {
       details: `/post/${paramCase(MOCK_TITLE)}`,
     },
   },
   // AUTH
   auth: {
-    
-
     amplify: {
       login: `${ROOTS.AUTH}/amplify/login`,
       verify: `${ROOTS.AUTH}/amplify/verify`,
@@ -118,7 +115,7 @@ export const paths = {
       verify: `${ROOTS.AUTH_DEMO}/classic/verify`,
     },
     modern: {
-      login: `${ROOTS.AUTH_DEMO}/modern/login`, 
+      login: `${ROOTS.AUTH_DEMO}/modern/login`,
       register: `${ROOTS.AUTH_DEMO}/modern/register`,
       forgotPassword: `${ROOTS.AUTH_DEMO}/modern/forgot-password`,
       newPassword: `${ROOTS.AUTH_DEMO}/modern/new-password`,

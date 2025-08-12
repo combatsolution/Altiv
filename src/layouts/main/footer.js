@@ -29,18 +29,17 @@ const jobseekers = [
 
 const AICareerCoach = [
   { name: 'FOBO', href: paths.fobo },
-  { name: 'Career Compass', href: paths.comingSoon  },
+  { name: 'Career Compass', href: paths.comingSoon },
   { name: 'Smart Job Feed', href: paths.comingSoon },
   { name: 'Job Match Boost', href: paths.comingSoon },
 ];
 
 const Programs = [
-  { name: 'Marketing Track', href: paths.pricings('MT')  },
+  { name: 'Marketing Track', href: paths.pricings('MT') },
   { name: 'Data Science Track', href: paths.pricings('DS') },
   { name: 'Product Track', href: paths.pricings('PM') },
   { name: 'Software Eng. Track', href: paths.pricing },
 ];
-
 
 // const Programs = [
 //   { name: 'Marketing Track', href: paths.pricing  },
@@ -55,6 +54,7 @@ const Recruiters = [
 ];
 
 const AboutAltiv = [
+  { name: 'Blogs', href: paths.Blogs },
   { name: 'About Us', href: paths.about },
   { name: 'Contact Us', href: paths.contact },
   { name: 'Terms of Use', href: paths.TermsAndConditions },
@@ -64,15 +64,13 @@ const AboutAltiv = [
 ];
 
 export default function Footer() {
-
   <div>
-      {Programs.map((program) => (
-        <Link key={program.name} to={program.href}>
-          {program.name}
-        </Link>
-      ))}
-    </div>
-
+    {Programs.map((program) => (
+      <Link key={program.name} to={program.href}>
+        {program.name}
+      </Link>
+    ))}
+  </div>;
 
   const {
     control,
@@ -345,7 +343,7 @@ export default function Footer() {
             <Button
               onClick={handleSubmit(onSubmit)}
               variant="outlined"
-              sx={{ 
+              sx={{
                 height: '40px',
                 borderRadius: '4px',
                 backgroundColor: 'common.white',
