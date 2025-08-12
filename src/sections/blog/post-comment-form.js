@@ -57,7 +57,7 @@ export default function PostCommentForm() {
 
         <Stack direction="row" alignItems="center">
           <Stack direction="row" alignItems="center" flexGrow={1}>
-            <IconButton>
+            {/* <IconButton>
               <Iconify icon="solar:gallery-add-bold" />
             </IconButton>
 
@@ -67,7 +67,7 @@ export default function PostCommentForm() {
 
             <IconButton>
               <Iconify icon="eva:smiling-face-fill" />
-            </IconButton>
+            </IconButton> */}
           </Stack>
 
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>

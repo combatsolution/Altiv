@@ -52,6 +52,9 @@ export const endpoints = {
     latest: '/api/post/latest',
     search: '/api/post/search',
   },
+  comments: {
+    list: (blogId) => `/comments/${blogId}`,
+  },
   product: {
     list: '/api/product/list',
     details: '/api/product/details',

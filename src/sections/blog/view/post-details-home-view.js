@@ -16,7 +16,7 @@ import { RouterLink } from 'src/routes/components';
 // utils
 import { fShortenNumber } from 'src/utils/format-number';
 // api
-import { useGetPost, useGetLatestPosts } from 'src/api/blog';
+import { useGetPost, useGetLatestPosts, useGetComments } from 'src/api/blog';
 // components
 import Iconify from 'src/components/iconify';
 import Markdown from 'src/components/markdown';
@@ -36,6 +36,8 @@ export default function PostDetailsHomeView() {
   const { title } = params;
 
   const { post, postError, postLoading } = useGetPost(`${title}`);
+
+  const { comments = [], commentsCount, commentsLoading, commentsError } = useGetComments(post?.id);
 
   const renderSkeleton = <PostDetailsSkeleton />;
 
@@ -143,15 +145,32 @@ export default function PostDetailsHomeView() {
             <Typography variant="h4">Comments</Typography>
 
             <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
-              ({post?.comments?.length})
+              ({commentsCount || 0})
             </Typography>
           </Stack>
 
-          <PostCommentForm />
+          <PostCommentForm postId={post?.id} onSuccess={() => {}} />
 
           <Divider sx={{ mt: 5, mb: 2 }} />
 
-          <PostCommentList comments={post?.comments} />
+          <PostCommentList
+            comments={comments.map((comment) => ({
+              id: comment.id,
+              name: comment.user?.fullName || 'Anonymous',
+              avatarUrl: comment.user?.avatar || null,
+              message: comment.comment,
+              postedAt: comment.createdAt,
+              users: [
+                {
+                  id: comment.user?.id,
+                  name: comment.user?.fullName || 'Anonymous',
+                  avatarUrl: comment.user?.avatar || null,
+                },
+              ],
+              replyComment: [], // We'll handle replies separately if needed
+            }))}
+            loading={commentsLoading}
+          />
         </Stack>
       </Container>
     </>

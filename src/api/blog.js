@@ -87,3 +87,26 @@ export function useSearchPosts(query) {
 
   return memoizedValue;
 }
+
+// ----------------------------------------------------------------------
+
+export function useGetComments(blogId) {
+  const URL = blogId ? endpoints.comments.list(blogId) : null;
+
+  const { data, isLoading, error, isValidating, mutate } = useSWR(URL, fetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      comments: data?.data || [], // Extract comments from the data array
+      commentsCount: data?.commentsCount?.count || 0,
+      totalCommentCount: data?.totalCommentCount || 0,
+      commentsLoading: isLoading,
+      commentsError: error,
+      commentsValidating: isValidating,
+      refreshComments: mutate,
+    }),
+    [data, error, isLoading, isValidating, mutate]
+  );
+
+  return memoizedValue;
+}
