@@ -33,12 +33,12 @@ export function useGetPost(slug) {
 
   const memoizedValue = useMemo(
     () => ({
-      post: data?.blogs?.[0],
+      post: data?.blogs?.[0] || data,
       postLoading: isLoading,
       postError: error,
       postValidating: isValidating,
     }),
-    [data?.blogs, error, isLoading, isValidating]
+    [data, error, isLoading, isValidating]
   );
 
   return memoizedValue;

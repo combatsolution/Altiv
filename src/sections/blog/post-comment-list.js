@@ -11,7 +11,7 @@ export default function PostCommentList({ comments }) {
   return (
     <>
       <>
-        {comments.map((comment) => {
+        {comments?.map((comment) => {
           const { id, replyComment, name, users, message, avatarUrl, postedAt } = comment;
 
           const hasReply = !!replyComment.length;
@@ -25,7 +25,7 @@ export default function PostCommentList({ comments }) {
                 avatarUrl={avatarUrl}
               />
               {hasReply &&
-                replyComment.map((reply) => {
+                replyComment?.map((reply) => {
                   const userReply = users.find((user) => user.id === reply.userId);
 
                   return (
