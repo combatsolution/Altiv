@@ -47,7 +47,7 @@ export default function PostDetailsHero({ title, author, coverUrl, createdAt }) 
             zIndex: 9,
             color: 'common.white',
             position: 'absolute',
-            maxWidth: 480,
+            maxWidth: { xs: '90%', md: 480 },
             pt: { xs: 2, md: 8 },
           }}
         >
