@@ -86,7 +86,7 @@ export default function PostDetailsHero({ title, author, coverUrl, createdAt }) 
               />
             </Stack>
           )}
-
+{/* 
           <SpeedDial
             direction={smUp ? 'left' : 'up'}
             ariaLabel="Share post"
@@ -107,7 +107,7 @@ export default function PostDetailsHero({ title, author, coverUrl, createdAt }) 
                 FabProps={{ color: 'default' }}
               />
             ))}
-          </SpeedDial>
+          </SpeedDial> */}
         </Stack>
       </Container>
     </Box>

@@ -45,7 +45,7 @@ export default function PostCommentList({ comments }) {
         })}
       </>
 
-      <Pagination count={8} sx={{ my: 5, mx: 'auto' }} />
+      {/* <Pagination count={8} sx={{ my: 5, mx: 'auto' }} /> */}
     </>
   );
 }
