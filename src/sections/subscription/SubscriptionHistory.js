@@ -41,6 +41,41 @@ const EmptyRow = () => (
   </TableRow>
 );
 
+const lmsredirect = async (id) => {
+    console.log('id', id);
+
+    const fetchToken = async () => {
+      const LmsTokenResp = await axiosInstance.get(endpoints.auth.me);
+      const storedToken = LmsTokenResp.data.lmsToken;
+      if (storedToken && storedToken !== 'undefined' && storedToken !== 'null') {
+        return storedToken;
+      }
+      const formData = new URLSearchParams();
+      formData.append('grant_type', 'client_credentials');
+      formData.append('client_id', process.env.REACT_APP_LEARNWORLDS_CLIENT_ID);
+      formData.append('client_secret', process.env.REACT_APP_LEARNWORLDS_TOKEN);
+
+      const response = await axios.post(
+        'https://altiv.learnworlds.com/admin/api/oauth2/access_token',
+        formData.toString(),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
+      );
+
+      const token = response.data?.tokenData?.access_token;
+      return token;
+      
+    };
+
+    const token = await fetchToken();
+    const ssoRes = await axiosInstance.get(`/sso/sso-login/${id}/${token}`);
+    window.open(ssoRes.data.url, '_blank');
+  };
+
+
 // Component for subscription rows
 const SubscriptionRows = ({ subscriptions, handleReverify }) => (
   <>
@@ -48,7 +83,19 @@ const SubscriptionRows = ({ subscriptions, handleReverify }) => (
       <TableRow key={idx}>
         <TableCell>{row.date}</TableCell>
         <TableCell>{row.price}</TableCell>
-        <TableCell>{row.planname}</TableCell>
+
+        <TableCell
+          sx={{
+            cursor: 'pointer',
+            color: 'primary.main',
+            textDecoration: 'underline'
+          }}
+          onClick={() => lmsredirect(row.lmsId)}
+        >
+          {row.planname}
+        </TableCell>
+
+
         <TableCell>{row.paymenttype}</TableCell>
         <TableCell>
           <Stack direction="row" spacing={1} alignItems="center">
@@ -60,7 +107,7 @@ const SubscriptionRows = ({ subscriptions, handleReverify }) => (
             >
               {row.status}
             </Button>
-            
+
           </Stack>
         </TableCell>
         {/* <TableCell>{row.paymenttype}</TableCell> */}
@@ -69,7 +116,7 @@ const SubscriptionRows = ({ subscriptions, handleReverify }) => (
     ))}
   </>
 );
-            
+
 
 SubscriptionRows.propTypes = {
   subscriptions: PropTypes.arrayOf(
@@ -92,7 +139,7 @@ export default function SubscriptionHistory() {
 
   // Plan categories for filtering
   const planCategories = useMemo(() => [
-    { label: 'Marketing', value: 1}, 
+    { label: 'Marketing', value: 1 },
     { label: 'Data Science', value: 2 },
     { label: 'Product Management', value: 3 },
   ], []); // Empty dependency array since planCategories is static
@@ -106,35 +153,37 @@ export default function SubscriptionHistory() {
 
   // Fetch subscription history using plans API
   const fetchSubscriptionHistory = useCallback(async (planType) => {
-  setIsLoading(true);
-  try {
-    const response = await axiosInstance.get(`/subscriptions/user`);
-    if (response && response.data) {
-      console.log('Fetched plans:', response);
-      const data = Array.isArray(response.data) ? response.data : [response.data];
-      const formattedData = data.map((plan) => ({
-        id: plan.id || `sub_${Date.now()}`,
-        date: plan.createdAt ? new Date(plan.createdAt).toLocaleDateString() : 'N/A',
-        price: plan.planData?.price ? `₹${plan.planData.price}` : 'N/A',
-        planname: plan.planData?.courses?.courseName || 'N/A',
-        paymenttype: plan.planData?.paymentType || 'N/A',
-        status: plan.status ? plan.status.toUpperCase() : 'UNKNOWN',
-        planType: plan.planData?.planType !== undefined ? plan.planData.planType : 0,
-      }));
+    setIsLoading(true);
+    try {
+      const response = await axiosInstance.get(`/subscriptions/user`);
+      if (response && response.data) {
+        console.log('Fetched plans:', response);
+        const data = Array.isArray(response.data) ? response.data : [response.data];
+        const formattedData = data.map((plan) => ({
+          id: plan.id || `sub_${Date.now()}`,
+          date: plan.createdAt ? new Date(plan.createdAt).toLocaleDateString() : 'N/A',
+          price: plan.planData?.price ? `₹${plan.planData.price}` : 'N/A',
+          planname: plan.planData?.courses?.courseName || 'N/A',
+          paymenttype: plan.planData?.paymentType || 'N/A',
+          status: plan.status ? plan.status.toUpperCase() : 'UNKNOWN',
+          planType: plan.planData?.planType !== undefined ? plan.planData.planType : 0,
+         lmsId: plan.planData?.courses?.lmsId || 'N/A',// <-- add this
 
-      const filteredData = formattedData.filter((sub) => sub.planType === planType);
+        }));
 
-      setSubscriptions(filteredData);
-    } else {
+        const filteredData = formattedData.filter((sub) => sub.planType === planType);
+
+        setSubscriptions(filteredData);
+      } else {
+        setSubscriptions([]);
+      }
+    } catch (error) {
+      console.error('Error fetching plans:', error);
       setSubscriptions([]);
+    } finally {
+      setIsLoading(false);
     }
-  } catch (error) {
-    console.error('Error fetching plans:', error);
-    setSubscriptions([]);
-  } finally {
-    setIsLoading(false);
-  }
-}, []);
+  }, []);
 
 
   // Handle re-verification (mock)
@@ -195,7 +244,7 @@ export default function SubscriptionHistory() {
       </Paper>
 
       {/* Service Selection */}
-      <Box sx={{mb:2}}>
+      <Box sx={{ mb: 2 }}>
         <Select value={service} onChange={handleChange} size="small">
           {planCategories.map((category) => (
             <MenuItem key={category.value} value={category.value}>
@@ -206,7 +255,7 @@ export default function SubscriptionHistory() {
       </Box>
 
       {/* Table */}
-      <Paper variant="outlined">  
+      <Paper variant="outlined">
         <Table size="small">
           <TableHead>
             <TableRow>

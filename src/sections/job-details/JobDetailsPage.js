@@ -129,7 +129,7 @@ export default function JobDetailPage() {
                             variant="caption"
                             color="primary"
                             sx={{ mt: 0, display: 'inline-block', cursor: 'pointer' }}
-                          >
+                          > 
                             Why this score?
                           </Typography>
                         </Box>
