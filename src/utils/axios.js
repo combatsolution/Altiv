@@ -54,6 +54,7 @@ export const endpoints = {
   },
   comments: {
     list: (blogId) => `/comments/${blogId}`,
+    replies: (commentId) => `/comment-replies/${commentId}`,
   },
   product: {
     list: '/api/product/list',

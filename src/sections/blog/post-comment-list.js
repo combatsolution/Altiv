@@ -1,50 +1,80 @@
 import PropTypes from 'prop-types';
+import { useState, useCallback } from 'react';
 // @mui
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import Pagination from '@mui/material/Pagination';
 //
+import { useGetCommentReplies } from 'src/api/blog';
 import PostCommentItem from './post-comment-item';
 
 // ----------------------------------------------------------------------
 
-export default function PostCommentList({ comments }) {
+function CommentReplies({ commentId }) {
+  const [showReplies, setShowReplies] = useState(false);
+  const { replies, repliesLoading } = useGetCommentReplies(showReplies ? commentId : commentId);
+  const replyCount = replies?.length || 0;
+  console.log('replies', replies);
+
+  const handleToggleReplies = useCallback(() => {
+    setShowReplies((prev) => !prev);
+  }, []);
+
+  if (replyCount === 0) return null;
+
+  return (
+    <Stack alignItems="flex-start" sx={{ ml: 8, mt: 1 }}>
+      {!showReplies ? (
+        <Button size="small" onClick={handleToggleReplies} disabled={repliesLoading}>
+          View {replyCount} {replyCount === 1 ? 'reply' : 'replies'}
+        </Button>
+      ) : (
+        <>
+          {replies?.map((reply) => (
+            <PostCommentItem
+              key={reply.id}
+              name={reply.user?.fullName || ''}
+              message={reply.comment}
+              postedAt={reply.createdAt}
+              avatarUrl={reply.user?.avatarUrl || ''}
+              tagUser={reply.tagUser}
+              hasReply
+            />
+          ))}
+          <Button size="small" onClick={handleToggleReplies} sx={{ mt: 1 }}>
+            Hide replies
+          </Button>
+        </>
+      )}
+    </Stack>
+  );
+}
+
+CommentReplies.propTypes = {
+  commentId: PropTypes.string.isRequired,
+};
+
+// ----------------------------------------------------------------------
+
+export default function PostCommentList({ comments, postId }) {
   return (
     <>
-      <>
-        {comments?.map((comment) => {
-          const { id, replyComment, name, users, message, avatarUrl, postedAt } = comment;
+      {comments?.map((comment) => {
+        const { id, name, message, postedAt, avatarUrl} = comment;
 
-          const hasReply = !!replyComment.length;
-
-          return (
-            <Box key={id}>
-              <PostCommentItem
-                name={name}
-                message={message}
-                postedAt={postedAt}
-                avatarUrl={avatarUrl}
-              />
-              {hasReply &&
-                replyComment?.map((reply) => {
-                  const userReply = users.find((user) => user.id === reply.userId);
-
-                  return (
-                    <PostCommentItem
-                      key={reply.id}
-                      name={userReply?.name || ''}
-                      message={reply.message}
-                      postedAt={reply.postedAt}
-                      avatarUrl={userReply?.avatarUrl || ''}
-                      tagUser={reply.tagUser}
-                      hasReply
-                    />
-                  );
-                })}
-            </Box>
-          );
-        })}
-      </>
-
+        return (
+          <Box key={id} sx={{ mb: 3 }}>
+            <PostCommentItem
+              name={name}
+              message={message}
+              postedAt={postedAt}
+              avatarUrl={avatarUrl}
+            />
+            <CommentReplies commentId={id} />
+          </Box>
+        );
+      })}
       {/* <Pagination count={8} sx={{ my: 5, mx: 'auto' }} /> */}
     </>
   );
@@ -52,4 +82,5 @@ export default function PostCommentList({ comments }) {
 
 PostCommentList.propTypes = {
   comments: PropTypes.array,
+  postId: PropTypes.string,
 };

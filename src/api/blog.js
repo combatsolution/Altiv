@@ -110,3 +110,27 @@ export function useGetComments(blogId) {
 
   return memoizedValue;
 }
+
+// ----------------------------------------------------------------------
+
+export function useGetCommentReplies(commentId) {
+  const URL = commentId ? `${endpoints.comments.replies(commentId)}` : null;
+
+  const { data, isLoading, error, isValidating, mutate } = useSWR(URL, fetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      replies: data?.data || [],
+      repliesLoading: isLoading,
+      repliesError: error,
+      repliesValidating: isValidating,
+      repliesEmpty: !isLoading && !data?.data?.length,
+      mutateReplies: mutate,
+    }),
+    [data?.data, error, isLoading, isValidating, mutate]
+  );
+
+  return memoizedValue;
+}
+
+// ----------------------------------------------------------------------
