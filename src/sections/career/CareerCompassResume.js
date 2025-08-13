@@ -351,11 +351,11 @@ export default function CareerPathProjection() {
   // Dynamically color edges based on selected node
   const styledEdges = edges.map((edge) => ({
     ...edge,
+    type: 'bezier', // smoother than smoothstep
     style: {
       stroke: edge.source === selectedNodeId || edge.target === selectedNodeId ? '#1976d2' : '#999',
-      strokeWidth: edge.source === selectedNodeId || edge.target === selectedNodeId ? 3 : 2,
+      strokeWidth: 4, // thicker lines
     },
-    type: 'smoothstep', // ensures curved lines
   }));
 
   return (
@@ -387,7 +387,7 @@ export default function CareerPathProjection() {
                 <FaClipboardList size={16} />
                 <Select
                   size="small"
-                  value='Lead Data Scientist'
+                  value="Lead Data Scientist"
                   onChange={(e) => setExpYears(e.target.value)}
                   variant="standard"
                   sx={{ minWidth: 450 }}
@@ -431,7 +431,7 @@ export default function CareerPathProjection() {
                 <FaClipboardList size={14} />
                 <Select
                   size="small"
-                  value='Lead Data Scientist'
+                  value="Lead Data Scientist"
                   onChange={(e) => setExpYears(e.target.value)}
                   variant="standard"
                   sx={{ flex: 1, minWidth: 0 }}
