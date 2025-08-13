@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useSnackbar } from 'src/components/snackbar';
 // @mui
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -7,17 +8,53 @@ import Avatar from '@mui/material/Avatar';
 import ListItem from '@mui/material/ListItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // utils
 import { fDate } from 'src/utils/format-time';
 // components
 import Iconify from 'src/components/iconify';
+// api
+import axiosInstance from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
-export default function PostCommentItem({ name, avatarUrl, message, tagUser, postedAt, hasReply }) {
+export default function PostCommentItem({
+  id,
+  name,
+  avatarUrl,
+  message,
+  tagUser,
+  postedAt,
+  hasReply,
+  blogId,
+}) {
   const reply = useBoolean();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const [replyText, setReplyText] = useState('');
+  const handleReplySubmit = async () => {
+    try {
+      const payload = {
+        commentType: 'string',
+        isParentComment: false,
+        blogsId: blogId,
+        repliedCommentId: id,
+        comment: replyText,
+      };
+
+      await axiosInstance.post('/comment', payload);
+
+      setReplyText('');
+      reply.onToggle();
+
+      enqueueSnackbar('Reply posted successfully!');
+    } catch (error) {
+      console.error('Error posting comment:', error);
+      enqueueSnackbar(error.message || 'Failed to post comment', { variant: 'error' });
+    }
+  };
 
   return (
     <ListItem
@@ -57,8 +94,17 @@ export default function PostCommentItem({ name, avatarUrl, message, tagUser, pos
         </Typography>
 
         {reply.value && (
-          <Box sx={{ mt: 2 }}>
-            <TextField fullWidth autoFocus placeholder="Write comment..." />
+          <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+            <TextField
+              fullWidth
+              autoFocus
+              placeholder="Write reply..."
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+            />
+            <Button variant="contained" onClick={handleReplySubmit} disabled={!replyText.trim()}>
+              Send
+            </Button>
           </Box>
         )}
       </Stack>
@@ -79,10 +125,12 @@ export default function PostCommentItem({ name, avatarUrl, message, tagUser, pos
 }
 
 PostCommentItem.propTypes = {
+  id: PropTypes.number,
   avatarUrl: PropTypes.string,
   hasReply: PropTypes.bool,
   message: PropTypes.string,
   name: PropTypes.string,
   postedAt: PropTypes.string,
   tagUser: PropTypes.string,
+  blogId: PropTypes.number,
 };

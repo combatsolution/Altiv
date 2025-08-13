@@ -15,7 +15,6 @@ function CommentReplies({ commentId }) {
   const [showReplies, setShowReplies] = useState(false);
   const { replies, repliesLoading } = useGetCommentReplies(showReplies ? commentId : commentId);
   const replyCount = replies?.length || 0;
-  console.log('replies', replies);
 
   const handleToggleReplies = useCallback(() => {
     setShowReplies((prev) => !prev);
@@ -39,6 +38,7 @@ function CommentReplies({ commentId }) {
               postedAt={reply.createdAt}
               avatarUrl={reply.user?.avatarUrl || ''}
               tagUser={reply.tagUser}
+              blogId={reply.blogsId}
               hasReply
             />
           ))}
@@ -57,11 +57,11 @@ CommentReplies.propTypes = {
 
 // ----------------------------------------------------------------------
 
-export default function PostCommentList({ comments, postId }) {
+export default function PostCommentList({ comments }) {
   return (
     <>
       {comments?.map((comment) => {
-        const { id, name, message, postedAt, avatarUrl} = comment;
+        const { id, name, message, postedAt, avatarUrl, blogId } = comment;
 
         return (
           <Box key={id} sx={{ mb: 3 }}>
@@ -70,6 +70,8 @@ export default function PostCommentList({ comments, postId }) {
               message={message}
               postedAt={postedAt}
               avatarUrl={avatarUrl}
+              id={id}
+              blogId={blogId}
             />
             <CommentReplies commentId={id} />
           </Box>
@@ -82,5 +84,4 @@ export default function PostCommentList({ comments, postId }) {
 
 PostCommentList.propTypes = {
   comments: PropTypes.array,
-  postId: PropTypes.string,
 };

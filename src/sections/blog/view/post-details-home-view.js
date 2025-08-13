@@ -167,7 +167,8 @@ export default function PostDetailsHomeView() {
                   avatarUrl: comment.user?.avatar || null,
                 },
               ],
-              replyComment: [], // We'll handle replies separately if needed
+              replyComment: [],
+              blogId: comment?.blogsId,
             }))}
             loading={commentsLoading}
           />
