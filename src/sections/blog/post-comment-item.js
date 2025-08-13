@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'src/components/snackbar';
+// hooks
+import { useGetCommentReplies } from 'src/api/blog';
 // @mui
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -34,6 +36,8 @@ export default function PostCommentItem({
   const { enqueueSnackbar } = useSnackbar();
 
   const [replyText, setReplyText] = useState('');
+  const { mutateReplies } = useGetCommentReplies(id);
+
   const handleReplySubmit = async () => {
     try {
       const payload = {
@@ -48,6 +52,11 @@ export default function PostCommentItem({
 
       setReplyText('');
       reply.onToggle();
+
+      // Refresh the replies list
+      if (mutateReplies) {
+        await mutateReplies();
+      }
 
       enqueueSnackbar('Reply posted successfully!');
     } catch (error) {

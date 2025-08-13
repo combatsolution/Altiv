@@ -234,7 +234,7 @@ export default function CareerPathProjection() {
           });
         }
 
-        const HORIZONTAL_SPACING = isMdUp ? 400 : 280;
+        const HORIZONTAL_SPACING = isMdUp ? 400 : 320;
         const BASE_OFFSET = isMdUp ? 150 : 100;
 
         children.forEach((child, index) => {

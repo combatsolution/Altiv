@@ -37,7 +37,7 @@ export default function PostDetailsHomeView() {
 
   const { post, postError, postLoading } = useGetPost(`${title}`);
 
-  const { comments = [], commentsCount, commentsLoading, commentsError } = useGetComments(post?.id);
+  const { comments = [], commentsCount, commentsLoading, commentsError, refreshComments } = useGetComments(post?.id);
 
   const renderSkeleton = <PostDetailsSkeleton />;
 
@@ -149,7 +149,7 @@ export default function PostDetailsHomeView() {
             </Typography>
           </Stack>
 
-          <PostCommentForm postId={post?.id} onSuccess={() => {}} />
+          <PostCommentForm postId={post?.id} onCommentAdded={refreshComments} />
 
           <Divider sx={{ mt: 5, mb: 2 }} />
 

@@ -33,7 +33,7 @@ const matchStyles = {
 
 export default function CareerCard({ title, match, rate, salary, experience, onClick }) {
   const navigate = useNavigate();
-  
+
   const handleDetailsClick = (e) => {
     e.stopPropagation(); // Prevent triggering the card's onClick
     navigate('/job-details');
@@ -76,17 +76,17 @@ export default function CareerCard({ title, match, rate, salary, experience, onC
         {match}%<br />
         Match
       </Box>
-      
-      <Button 
-        variant="outlined" 
-        size="small" 
+
+      <Button
+        variant="outlined"
+        size="small"
         onClick={handleDetailsClick}
-        sx={{ 
+        sx={{
           position: 'absolute',
           bottom: 16,
           right: 16,
           fontSize: '0.7rem',
-          textTransform: 'none'
+          textTransform: 'none',
         }}
       >
         Details
