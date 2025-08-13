@@ -32,7 +32,7 @@ export const paths = {
   AitrainingpolicyView: '/ai-training-policy',
   TermsAndConditions: '/termsandconditions',
   jobDetails: '/job-details',
-  careerResume: '/career-campass',
+  careerResume: '/career-compass',
   careerTitle: '/career-title',
   jobFeed: '/job-feed',
 

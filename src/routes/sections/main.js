@@ -79,7 +79,7 @@ export const mainRoutes = [
       { path: 'contact-us', element: <ContactPage /> },
       { path: 'faqs', element: <FaqPage /> },
       { path: 'job-details', element: <JobDetailsPage /> },
-      { path: 'career-campass', element: <CareerPathResumePage /> },
+      { path: 'career-compass', element: <CareerPathResumePage /> },
       { path: 'career-title', element: <CareerPathTitlePage /> },
       { path: 'job-feed', element: <JobFeedPage /> },
       {path:'job-booster', element:<JobBoosterpage/>},

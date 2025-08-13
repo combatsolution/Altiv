@@ -19,7 +19,7 @@ export const links = [
 
   // Career / Jobs
   { url: '/job-details', changefreq: 'weekly', priority: 0.6 },
-  { url: '/career-campass', changefreq: 'monthly', priority: 0.6 },
+  { url: '/career-compass', changefreq: 'monthly', priority: 0.6 },
   { url: '/career-title', changefreq: 'monthly', priority: 0.6 },
   { url: '/job-feed', changefreq: 'daily', priority: 0.8 },
 

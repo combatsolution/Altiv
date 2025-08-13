@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { Paper, Typography, Box } from '@mui/material';
+import { Paper, Typography, Box, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const badgeStyles = {
   display: 'inline-block',
@@ -31,6 +32,12 @@ const matchStyles = {
 };
 
 export default function CareerCard({ title, match, rate, salary, experience, onClick }) {
+  const navigate = useNavigate();
+  
+  const handleDetailsClick = (e) => {
+    e.stopPropagation(); // Prevent triggering the card's onClick
+    navigate('/job-details');
+  };
   let variant = matchStyles.success;
   if (match < 50) variant = matchStyles.error;
   else if (match < 80) variant = matchStyles.warning;
@@ -69,6 +76,21 @@ export default function CareerCard({ title, match, rate, salary, experience, onC
         {match}%<br />
         Match
       </Box>
+      
+      <Button 
+        variant="outlined" 
+        size="small" 
+        onClick={handleDetailsClick}
+        sx={{ 
+          position: 'absolute',
+          bottom: 16,
+          right: 16,
+          fontSize: '0.7rem',
+          textTransform: 'none'
+        }}
+      >
+        Details
+      </Button>
     </Paper>
   );
 }
