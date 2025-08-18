@@ -25,8 +25,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import { useNavigate } from 'react-router-dom';
 
+import {jobs} from './jobsData'; // Importing jobs data
+
 // ✅ Job list JSON
-const similarJobs = [
+const similarJob = [
   {
     id: 1,
     title: 'Sr. Director AI | Data Science',
@@ -68,6 +70,12 @@ export default function JobDetailPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
+
+    // ✅ Pick one job (e.g., first one in JSON)
+  const job = jobs[0];
+
+  // ✅ For similar jobs, just filter out the current one
+  const similarJobs = jobs.filter(j => j.id !== job.id);
   return (
     <Box>
       {/* Search Bar */}
@@ -85,8 +93,7 @@ export default function JobDetailPage() {
           }}
         />
       </Container>
-
-      {/* Main Content */}
+{/* Main Content */}
       <Container>
         <Grid container spacing={3}>
           {/* Left Panel */}
@@ -97,15 +104,15 @@ export default function JobDetailPage() {
                 <Grid container spacing={2} alignItems="center" justifyContent="space-between">
                   <Grid item xs={12} md={8}>
                     <Box display="flex" gap={2} flexWrap="wrap" alignItems="center">
-                      <Avatar sx={{ bgcolor: 'primary.main', width: 56, height: 56 }}>PT</Avatar>
+                      <Avatar src={job.logo} sx={{ width: 56, height: 56 }} />
                       <Box>
-                        <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 8 }}>
-                          <Typography fontWeight={600}>Polygon Technology</Typography>
-                          <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />
+                        <Grid sx={{ display: "flex", flexDirection: "row", gap: 8 }}>
+                          <Typography fontWeight={600}>{job.company}</Typography>
+                          <BookmarkBorderIcon fontSize="medium" sx={{ color: "text.secondary" }} />
                         </Grid>
                         <Grid container gap={3} alignItems="center">
                           <Typography variant="h5" fontWeight={600}>
-                            Data Scientist
+                            {job.title}
                           </Typography>
                           <Typography
                             variant="body2"
@@ -115,21 +122,21 @@ export default function JobDetailPage() {
                             py={0.5}
                             borderRadius={1}
                           >
-                            12 hours ago
+                            {job.posted}
                           </Typography>
                         </Grid>
                         <Box display="flex" gap={4} flexWrap="wrap" mt={0.5}>
                           <Typography variant="body2" color="text.secondary">
-                            📍 Mumbai
+                            📍 {job.location}
                           </Typography>
                           <Typography variant="body2" color="text.secondary">
-                            • 124 applicants
+                            • {job.applicants} applicants
                           </Typography>
                           <Typography
                             variant="caption"
                             color="primary"
-                            sx={{ mt: 0, display: 'inline-block', cursor: 'pointer' }}
-                          > 
+                            sx={{ cursor: "pointer" }}
+                          >
                             Why this score?
                           </Typography>
                         </Box>
@@ -138,18 +145,18 @@ export default function JobDetailPage() {
                   </Grid>
 
                   {/* Match Score */}
-                  <Grid item xs={12} md="auto" textAlign={{ xs: 'left', md: 'center' }}>
+                  <Grid item xs={12} md="auto" textAlign={{ xs: "left", md: "center" }}>
                     <Box
                       sx={{
-                        bgcolor: '#E9FFE9',
-                        borderRadius: '50%',
+                        bgcolor: "#E9FFE9",
+                        borderRadius: "50%",
                         width: 80,
                         height: 80,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        mx: { md: 'auto' },
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        mx: { md: "auto" },
                         mt: { xs: 2, md: 0 },
                       }}
                     >
@@ -157,32 +164,37 @@ export default function JobDetailPage() {
                         variant="caption"
                         fontSize="10px"
                         color="success.dark"
-                        fontWeight={400}
                       >
                         Match Score
                       </Typography>
                       <Typography variant="h6" color="success.dark">
-                        75%
+                        {job.matchScore}
                       </Typography>
                     </Box>
                   </Grid>
                 </Grid>
 
                 <Divider sx={{ my: 2 }} />
+               {/* Description */}
+                <Typography paragraph>{job.description}</Typography>
 
                 {/* Description */}
-                {[...Array(3)].map((_, i) => (
+                {/* {[...Array(3)].map((_, i) => (
                   <Typography key={i} paragraph>
                     analyzes data to uncover insights and build predictive models, using skills in
                     statistics, programming, and machine learning.
                   </Typography>
-                ))}
+                ))} */}
+
+
                 <CardActions
                   sx={{
                     display: { xs: 'block', md: 'none' },
                     flexDirection: { xs: 'column', sm: 'row' },
                     justifyContent: 'center',
                     alignItems: 'center',
+
+                    
 
                     mt: 4,
                   }}
@@ -233,16 +245,16 @@ export default function JobDetailPage() {
                 Similar Jobs
               </Typography>
               <List disablePadding>
-                {similarJobs.map((job) => (
-                  <ListItem key={job.id} alignItems="flex-start" sx={{ mb: 1 }}>
+                {similarJob.map((jobb) => (
+                  <ListItem key={jobb.id} alignItems="flex-start" sx={{ mb: 1 }}>
                     <ListItemAvatar>
-                      <Avatar src={job.logo} />
+                      <Avatar src={jobb.logo} />
                     </ListItemAvatar>
                     <ListItemText
-                      primary={job.title}
+                      primary={jobb.title}
                       secondary={
                         <Typography variant="body2" color="text.secondary">
-                          Salary: {job.salary} • {job.experience}
+                          Salary: {jobb.salary} • {jobb.experience}
                         </Typography>
                       }
                     />

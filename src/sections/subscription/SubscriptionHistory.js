@@ -15,7 +15,8 @@ import {
   Stack,
   Container,
 } from '@mui/material';
-import axiosInstance from 'src/utils/axios';
+import axiosInstance, { endpoints} from 'src/utils/axios';
+import axios from 'axios';
 
 const statusColor = {
   SUCCESS: 'success',
