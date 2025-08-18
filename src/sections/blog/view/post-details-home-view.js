@@ -16,7 +16,7 @@ import { RouterLink } from 'src/routes/components';
 // utils
 import { fShortenNumber } from 'src/utils/format-number';
 // api
-import { useGetPost, useGetLatestPosts } from 'src/api/blog';
+import { useGetPost, useGetLatestPosts, useGetComments } from 'src/api/blog';
 // components
 import Iconify from 'src/components/iconify';
 import Markdown from 'src/components/markdown';
@@ -37,7 +37,7 @@ export default function PostDetailsHomeView() {
 
   const { post, postError, postLoading } = useGetPost(`${title}`);
 
-  const { latestPosts, latestPostsLoading } = useGetLatestPosts(`${title}`);
+  const { comments = [], commentsCount, commentsLoading, commentsError, refreshComments } = useGetComments(post?.id);
 
   const renderSkeleton = <PostDetailsSkeleton />;
 
@@ -113,7 +113,7 @@ export default function PostDetailsHomeView() {
             }}
           >
             <Stack direction="row" flexWrap="wrap" spacing={1}>
-              {post.tags.map((tag) => (
+              {post?.tags?.map((tag) => (
                 <Chip key={tag} label={tag} variant="soft" />
               ))}
             </Stack>
@@ -134,7 +134,7 @@ export default function PostDetailsHomeView() {
               />
 
               <AvatarGroup>
-                {post.favoritePerson.map((person) => (
+                {post?.favoritePerson?.map((person) => (
                   <Avatar key={person.name} alt={person.name} src={person.avatarUrl} />
                 ))}
               </AvatarGroup>
@@ -145,31 +145,35 @@ export default function PostDetailsHomeView() {
             <Typography variant="h4">Comments</Typography>
 
             <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
-              ({post.comments.length})
+              ({commentsCount || 0})
             </Typography>
           </Stack>
 
-          <PostCommentForm />
+          <PostCommentForm postId={post?.id} onCommentAdded={refreshComments} />
 
           <Divider sx={{ mt: 5, mb: 2 }} />
 
-          <PostCommentList comments={post.comments} />
+          <PostCommentList
+            comments={comments.map((comment) => ({
+              id: comment.id,
+              name: comment.user?.fullName || 'Anonymous',
+              avatarUrl: comment.user?.avatar || null,
+              message: comment.comment,
+              postedAt: comment.createdAt,
+              users: [
+                {
+                  id: comment.user?.id,
+                  name: comment.user?.fullName || 'Anonymous',
+                  avatarUrl: comment.user?.avatar || null,
+                },
+              ],
+              replyComment: [],
+              blogId: comment?.blogsId,
+            }))}
+            loading={commentsLoading}
+          />
         </Stack>
       </Container>
-    </>
-  );
-
-  const renderLatestPosts = (
-    <>
-      <Typography variant="h4" sx={{ mb: 5 }}>
-        Recent Posts
-      </Typography>
-
-      <PostList
-        posts={latestPosts.slice(latestPosts.length - 4)}
-        loading={latestPostsLoading}
-        disabledIndex
-      />
     </>
   );
 
@@ -180,8 +184,6 @@ export default function PostDetailsHomeView() {
       {postError && renderError}
 
       {post && renderPost}
-
-      <Container sx={{ pb: 15 }}>{!!latestPosts.length && renderLatestPosts}</Container>
     </>
   );
 }

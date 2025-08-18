@@ -45,7 +45,7 @@ function HomeHero() {
     }
     setError('');
     // navigate('/job-details');
-    navigate('/career-campass');
+    navigate('/career-compass');
   };
 
   const handleOperation = (op) => {
