@@ -11,7 +11,7 @@ import { useDebounce } from 'src/hooks/use-debounce';
 // _mock
 import { POST_SORT_OPTIONS } from 'src/_mock';
 // api
-import { useGetPosts, useSearchPosts } from 'src/api/blog';
+import { useGetPosts, useGetPostsByFilters, useSearchPosts } from 'src/api/blog';
 // components
 import { useSettingsContext } from 'src/components/settings';
 //
@@ -30,7 +30,15 @@ export default function PostListHomeView() {
 
   const debouncedQuery = useDebounce(searchQuery);
 
-  const { posts, postsLoading } = useGetPosts();
+
+    const filter = {
+      where: {
+        publish: 'published',
+      }
+    }
+  
+    const newFilterString = encodeURIComponent(JSON.stringify(filter));
+    const { posts, postsLoading } = useGetPostsByFilters(newFilterString);
 
   const { searchResults, searchLoading } = useSearchPosts(debouncedQuery);
 

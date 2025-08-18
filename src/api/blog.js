@@ -132,5 +132,25 @@ export function useGetCommentReplies(commentId) {
 
   return memoizedValue;
 }
+// ----------------------------------------------------------------------
+
+export function useGetPostsByFilters(filterString) {
+  const URL = filterString ? endpoints.post.byFilters(filterString) : null;
+
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      posts: data?.blogs || [],
+      postsLoading: isLoading,
+      postsError: error,
+      postsValidating: isValidating,
+      postsEmpty: !isLoading && !data?.blogs?.length,
+    }),
+    [data?.blogs, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
 
 // ----------------------------------------------------------------------
