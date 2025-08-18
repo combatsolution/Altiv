@@ -25,6 +25,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import { useNavigate } from 'react-router-dom';
 
+
+
 // ✅ Job list JSON
 const similarJobs = [
   {
