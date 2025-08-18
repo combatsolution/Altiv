@@ -99,6 +99,7 @@
     "react-scripts": "^5.0.1",
     "react-slick": "^0.29.0",
     "react-swipeable": "^7.0.2",
+    "reactflow": "^11.11.4",
     "recharts": "^2.15.4",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",

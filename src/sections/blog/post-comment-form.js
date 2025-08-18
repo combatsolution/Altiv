@@ -1,6 +1,8 @@
+import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useSnackbar } from 'src/components/snackbar';
 // @mui
 import LoadingButton from '@mui/lab/LoadingButton';
 import Stack from '@mui/material/Stack';
@@ -8,20 +10,20 @@ import IconButton from '@mui/material/IconButton';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
+// api
+import axiosInstance from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
-export default function PostCommentForm() {
+export default function PostCommentForm({ postId, onCommentAdded }) {
+  const { enqueueSnackbar } = useSnackbar();
+
   const CommentSchema = Yup.object().shape({
     comment: Yup.string().required('Comment is required'),
-    name: Yup.string().required('Name is required'),
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
   });
 
   const defaultValues = {
     comment: '',
-    name: '',
-    email: '',
   };
 
   const methods = useForm({
@@ -37,11 +39,25 @@ export default function PostCommentForm() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const payload = {
+        commentType: 'string',
+        isParentComment: true,
+        blogsId: postId,
+        comment: data.comment,
+      };
+
+      await axiosInstance.post('/comment', payload);
+
       reset();
-      console.info('DATA', data);
+
+      enqueueSnackbar('Comment posted successfully!');
+
+      if (onCommentAdded) {
+        onCommentAdded();
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Error posting comment:', error);
+      enqueueSnackbar(error.message || 'Failed to post comment', { variant: 'error' });
     }
   });
 
@@ -50,26 +66,13 @@ export default function PostCommentForm() {
       <Stack spacing={3}>
         <RHFTextField
           name="comment"
-          placeholder="Write some of your comments..."
+          label="Comment"
           multiline
           rows={4}
+          placeholder="Write your comment here..."
         />
 
-        <Stack direction="row" alignItems="center">
-          <Stack direction="row" alignItems="center" flexGrow={1}>
-            <IconButton>
-              <Iconify icon="solar:gallery-add-bold" />
-            </IconButton>
-
-            <IconButton>
-              <Iconify icon="eva:attach-2-fill" />
-            </IconButton>
-
-            <IconButton>
-              <Iconify icon="eva:smiling-face-fill" />
-            </IconButton>
-          </Stack>
-
+        <Stack direction="row" justifyContent="flex-end">
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
             Post comment
           </LoadingButton>
@@ -78,3 +81,8 @@ export default function PostCommentForm() {
     </FormProvider>
   );
 }
+
+PostCommentForm.propTypes = {
+  postId: PropTypes.string,
+  onCommentAdded: PropTypes.func,
+};

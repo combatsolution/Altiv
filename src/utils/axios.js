@@ -47,10 +47,15 @@ export const endpoints = {
     labels: '/api/mail/labels',
   },
   post: {
-    list: '/api/post/list',
-    details: '/api/post/details',
+    list: '/blogs',
+    details: '/blogs/slug/',
     latest: '/api/post/latest',
     search: '/api/post/search',
+    byFilters: (filterString) => `/blogs?filter=${filterString}`,
+  },
+  comments: {
+    list: (blogId) => `/comments/${blogId}`,
+    replies: (commentId) => `/comment-replies/${commentId}`,
   },
   product: {
     list: '/api/product/list',
