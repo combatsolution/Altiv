@@ -234,8 +234,8 @@ export default function CareerPathProjection() {
           });
         }
 
-        const HORIZONTAL_SPACING = isMdUp ? 400 : 320;
-        const BASE_OFFSET = isMdUp ? 150 : 100;
+        const HORIZONTAL_SPACING = isMdUp ? 300 : 320;
+        const BASE_OFFSET = isMdUp ? 0 : 100;
 
         children.forEach((child, index) => {
           // create deterministic-ish id using parentId, level, and index + timestamp to avoid collisions
@@ -482,22 +482,22 @@ export default function CareerPathProjection() {
             nodes={nodes}
             edges={styledEdges}
             nodeTypes={nodeTypes}
-            fitView
+            fitView={false}
             key={`flow-${nodes.length}-${edges.length}`}
             fitViewOptions={{
               padding: isMdUp ? 0.1 : 0.2,
               minZoom: isMdUp ? 0.5 : 0.3,
-              maxZoom: isMdUp ? 2 : 1.5,
+              maxZoom: 1,
             }}
           >
             <Background />
-            <Controls />
-            <MiniMap
+            {/* <Controls /> */}
+            {/* <MiniMap
               style={{
                 width: isMdUp ? 200 : 120,
                 height: isMdUp ? 150 : 90,
               }}
-            />
+            /> */}
           </ReactFlow>
         </Box>
 
