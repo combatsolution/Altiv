@@ -4,26 +4,28 @@ import { useNavigate } from 'react-router-dom';
 
 const badgeStyles = {
   display: 'inline-block',
-  bgcolor: '#E8F0FF',
-  color: '#1976d2',
+  bgcolor: '#DCECF6',
+  color: '#1BABFE',
   fontSize: 12,
   fontWeight: 600,
-  borderRadius: 1,
+  borderRadius: '3px',
   px: 1,
-  py: 0.75,
+  // py: 0.75,
   mb: 1,
 };
 
 const matchStyles = {
   base: {
     position: 'absolute',
-    top: 8,
-    right: 8,
+    top: 0,
+    right: 0,
     fontSize: 10,
     fontWeight: 600,
-    px: 1,
-    py: 0.5,
-    borderRadius: 1,
+    padding: '4px 4px 14px 14px',
+    borderTopLeftRadius: 0, // Top-left
+    borderTopRightRadius: '8px', // Top-right
+    borderBottomRightRadius: 0, // Bottom-right
+    borderBottomLeftRadius: '100%', // Bottom-left
     textAlign: 'center',
   },
   success: { bgcolor: '#E6F4EA', color: '#2E7D32' },
@@ -47,18 +49,29 @@ export default function CareerCard({ title, match, rate, salary, experience, onC
       variant="outlined"
       onClick={onClick}
       sx={{
-        p: 2,
+        px: 2,
+        py: 1,
         position: 'relative',
-        width: { xs: '100%', sm: 260 },
-        height: 140,
-        borderRadius: 2,
+        width: { xs: '100%', sm: 360 },
+        height: 127,
+        borderRadius: '8px',
         cursor: onClick ? 'pointer' : 'default',
         '&:hover': {
           boxShadow: onClick ? 4 : 'none',
         },
       }}
     >
-      <Typography variant="subtitle2" fontWeight={700} sx={{ mb: 0.5 }}>
+      <Typography
+        sx={{
+          fontFamily: 'Inter',
+          fontWeight: 500,
+          fontSize: '16px',
+          lineHeight: '28px',
+          letterSpacing: '0%',
+          verticalAlign: 'middle',
+          mb: 0.5,
+        }}
+      >
         {title}
       </Typography>
 
@@ -66,15 +79,62 @@ export default function CareerCard({ title, match, rate, salary, experience, onC
         {rate} Transition rate
       </Box>
       <br />
-      <Typography variant="caption" color="grey.600" sx={{ lineHeight: 1.4 }}>
+      <Typography
+        sx={{
+          fontFamily: 'Inter',
+          fontWeight: 400,
+          fontSize: '12px',
+          lineHeight: '20px',
+          letterSpacing: '0%',
+          color: '#767F8C',
+          display: 'block',
+          mb: 0.5,
+        }}
+      >
         Salary: {salary}
-        <br />
+      </Typography>
+      <Typography
+        sx={{
+          fontFamily: 'Inter',
+          fontWeight: 400,
+          fontSize: '12px',
+          lineHeight: '20px',
+          letterSpacing: '0%',
+          color: '#767F8C',
+          display: 'block',
+        }}
+      >
         Experience: {experience}
       </Typography>
 
       <Box component="span" sx={{ ...matchStyles.base, ...variant }}>
-        {match}%<br />
-        Match
+        <Typography
+          sx={{
+            fontFamily: 'Inter',
+            fontWeight: 500,
+            fontSize: '12px',
+            lineHeight: '12px',
+            letterSpacing: '0%',
+            textTransform: 'uppercase',
+            color: variant.color || '#0BA02C',
+          }}
+        >
+          {match}%
+        </Typography>
+        <Typography
+          sx={{
+            fontFamily: 'Inter',
+            fontWeight: 500,
+            fontSize: '10px',
+            lineHeight: '12px',
+            letterSpacing: '0%',
+            textTransform: 'uppercase',
+            color: variant.color || '#0BA02C',
+            mt: '2px',
+          }}
+        >
+          Match
+        </Typography>
       </Box>
 
       <Button
