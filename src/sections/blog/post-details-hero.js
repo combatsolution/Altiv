@@ -54,7 +54,7 @@ export default function PostDetailsHero({ title, author, coverUrl, createdAt, de
             variant="h3"
             component="h1"
             sx={{
-              fontSize: { xs: 40, md: 58 },
+              fontSize: { xs: 32, md: 60 },
               lineHeight: { xs: 1.2, md: 1.3 },
             }}
           >
@@ -63,7 +63,7 @@ export default function PostDetailsHero({ title, author, coverUrl, createdAt, de
 
           <Typography
             variant="subtitle1"
-            sx={{ fontSize: '20px', fontWeight: 700, lineHeight: 1.5 }}
+            sx={{ fontSize: { xs: '16px', md: '20px' }, fontWeight: 400, lineHeight: 1.6 }}
           >
             {description}
           </Typography>

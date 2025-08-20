@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
-import { Paper, Typography, Box, Button } from '@mui/material';
+import { Paper, Typography, Box, Button, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { MdExpandMore, MdExpandLess } from 'react-icons/md';
 
 const badgeStyles = {
   display: 'inline-block',
@@ -33,7 +34,18 @@ const matchStyles = {
   error: { bgcolor: '#FDECEA', color: '#D32F2F' },
 };
 
-export default function CareerCard({ title, match, rate, salary, experience, onClick }) {
+export default function CareerCard({
+  title,
+  match,
+  rate,
+  salary,
+  experience,
+  onClick,
+  isSelected = false,
+  showExpandButton = false,
+  isExpanded = false,
+  onExpandToggle,
+}) {
   const navigate = useNavigate();
 
   const handleDetailsClick = (e) => {
@@ -56,8 +68,11 @@ export default function CareerCard({ title, match, rate, salary, experience, onC
         height: 127,
         borderRadius: '8px',
         cursor: onClick ? 'pointer' : 'default',
+        backgroundColor: isSelected ? '#F0F9FF' : 'transparent',
+        borderColor: isSelected ? '#1976d2' : undefined,
         '&:hover': {
           boxShadow: onClick ? 4 : 'none',
+          backgroundColor: isSelected ? '#F0F9FF' : 'rgba(240, 249, 255, 0.5)',
         },
       }}
     >
@@ -137,20 +152,43 @@ export default function CareerCard({ title, match, rate, salary, experience, onC
         </Typography>
       </Box>
 
-      <Button
-        variant="outlined"
-        size="small"
-        onClick={handleDetailsClick}
-        sx={{
-          position: 'absolute',
-          bottom: 16,
-          right: 16,
-          fontSize: '0.7rem',
-          textTransform: 'none',
-        }}
-      >
-        Details
-      </Button>
+      {/* Arrow at bottom center */}
+      {showExpandButton && (
+        <Box sx={{ position: 'absolute', bottom: -15, left: '50%', transform: 'translateX(-50%)' }}>
+          <IconButton
+            size="small"
+            onClick={(e) => {
+              e.stopPropagation();
+              onExpandToggle?.();
+            }}
+            sx={{
+              p: 0.5,
+              color: '#fff',
+              backgroundColor: 'primary.main',
+              '&:hover': {
+                backgroundColor: 'primary.main',
+              },
+            }}
+          >
+            {isExpanded ? <MdExpandLess size={20} /> : <MdExpandMore size={20} />}
+          </IconButton>
+        </Box>
+      )}
+
+      {/* Details button at bottom right */}
+      <Box sx={{ position: 'absolute', bottom: 16, right: 16 }}>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={handleDetailsClick}
+          sx={{
+            fontSize: '0.7rem',
+            textTransform: 'none',
+          }}
+        >
+          Details
+        </Button>
+      </Box>
     </Paper>
   );
 }
@@ -162,4 +200,8 @@ CareerCard.propTypes = {
   salary: PropTypes.string.isRequired,
   experience: PropTypes.string.isRequired,
   onClick: PropTypes.func,
+  isSelected: PropTypes.bool,
+  showExpandButton: PropTypes.bool,
+  isExpanded: PropTypes.bool,
+  onExpandToggle: PropTypes.func,
 };

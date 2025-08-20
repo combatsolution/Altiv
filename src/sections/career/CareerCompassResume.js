@@ -18,36 +18,64 @@ import { m } from 'framer-motion';
 import CareerCard from './CareerCard';
 
 const mockData = {
+  current: {
+    id: 'current-node',
+    title: 'Lead Data Scientist',
+    match: 95,
+    rate: '18%',
+    salary: '$50L - $55L',
+    experience: '8-12 years',
+    children: ['next-0', 'next-1'],
+  },
   next: [
     {
+      id: 'next-0',
       title: 'Senior Data Scientist',
       match: 50,
       rate: '18%',
       salary: '$50L - $55L',
       experience: '8-12 years',
+      parent: 'current-node',
+      children: ['exec-0', 'exec-1'],
     },
     {
-      title: 'Senior Data Scientist 1',
-      match: 50,
-      rate: '18%',
-      salary: '$50L - $55L',
-      experience: '8-12 years',
+      id: 'next-1',
+      title: 'Principal Data Scientist',
+      match: 45,
+      rate: '15%',
+      salary: '$55L - $60L',
+      experience: '10-14 years',
+      parent: 'current-node',
+      children: ['exec-2'],
     },
   ],
   executive: [
     {
+      id: 'exec-0',
       title: 'Director Data Science',
       match: 30,
-      rate: '18%',
-      salary: '$50L - $55L',
-      experience: '10-15 years',
+      rate: '12%',
+      salary: '$60L - $70L',
+      experience: '12-16 years',
+      parent: 'next-0',
     },
     {
+      id: 'exec-1',
       title: 'VP Data Science',
-      match: 30,
-      rate: '18%',
-      salary: '$60L - $70L',
+      match: 25,
+      rate: '10%',
+      salary: '$70L - $90L',
       experience: '15+ years',
+      parent: 'next-0',
+    },
+    {
+      id: 'exec-2',
+      title: 'Data Science',
+      match: 25,
+      rate: '10%',
+      salary: '$70L - $90L',
+      experience: '15+ years',
+      parent: 'next-1',
     },
   ],
 };
@@ -69,9 +97,44 @@ export default function CareerPathProjection() {
     executive: null,
   });
 
+  const [expandedCards, setExpandedCards] = useState({
+    current: true,
+    next: true,
+    executive: true,
+  });
+
+  const toggleCardExpansion = (level) => {
+    setExpandedCards((prev) => {
+      // If collapsing the next level, also collapse the executive level
+      if (level === 'next') {
+        return {
+          ...prev,
+          next: !prev.next,
+          executive: prev.next ? false : prev.executive,
+        };
+      }
+      // If collapsing the current level, collapse both next and executive levels
+      if (level === 'current') {
+        return {
+          ...prev,
+          next: !prev.next,
+          executive: false,
+        };
+      }
+      // For executive level, just toggle its own state
+      return {
+        ...prev,
+        [level]: !prev[level],
+      };
+    });
+  };
+
   const nodeTypes = {
     career: ({ data, id }) => {
       const { isNew, onClick } = data;
+      const isSelected =
+        selectedNodes.current === id || selectedNodes.next === id || selectedNodes.executive === id;
+
       return (
         <div
           role="button"
@@ -84,6 +147,19 @@ export default function CareerPathProjection() {
             position: 'relative',
             cursor: 'pointer',
             zIndex: 2,
+            opacity:
+              id === 'current-node' ||
+              (id.startsWith('next-') && expandedCards.next) ||
+              (id.startsWith('exec-') && expandedCards.executive)
+                ? 1
+                : 0,
+            transition: 'opacity 0.3s ease',
+            pointerEvents:
+              id === 'current-node' ||
+              (id.startsWith('next-') && expandedCards.next) ||
+              (id.startsWith('exec-') && expandedCards.executive)
+                ? 'auto'
+                : 'none',
           }}
         >
           <Handle type="target" position={Position.Top} style={{ background: '#1976d2' }} />
@@ -93,41 +169,101 @@ export default function CareerPathProjection() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
             >
-              <CareerCard {...data} />
+              {(() => {
+                const getExpandedState = () => {
+                  if (id === 'current-node') return expandedCards.current;
+                  if (id.startsWith('next-')) return expandedCards.next;
+                  return expandedCards.executive;
+                };
+
+                return (
+                  <CareerCard
+                    {...data}
+                    isSelected={isSelected}
+                    showExpandButton={id === 'current-node' || id.startsWith('next-')}
+                    isExpanded={getExpandedState()}
+                    onExpandToggle={() => {
+                      if (id === 'current-node') toggleCardExpansion('next');
+                      else if (id.startsWith('next-')) toggleCardExpansion('executive');
+                    }}
+                  />
+                );
+              })()}
             </m.div>
           ) : (
-            <CareerCard {...data} />
+            (() => {
+              const getExpandedState = () => {
+                if (id === 'current-node') return expandedCards.current;
+                if (id.startsWith('next-')) return expandedCards.next;
+                return expandedCards.executive;
+              };
+
+              return (
+                <CareerCard
+                  {...data}
+                  isSelected={isSelected}
+                  showExpandButton={id === 'current-node' || id.startsWith('next-')}
+                  isExpanded={getExpandedState()}
+                  onExpandToggle={() => {
+                    if (id === 'current-node') toggleCardExpansion('next');
+                    else if (id.startsWith('next-')) toggleCardExpansion('executive');
+                  }}
+                />
+              );
+            })()
           )}
           <Handle type="source" position={Position.Bottom} style={{ background: '#1976d2' }} />
         </div>
       );
     },
-    label: ({ data }) => (
-      <m.div
-        style={{
-          padding: 10,
-          background: '#2A4DD0',
-          color: '#fff',
-          borderRadius: '25px',
-          fontSize: '12px',
-          textAlign: 'center',
-          width: '64px',
-          height: '64px',
-          whiteSpace: 'pre-line',
-          zIndex: 9999,
-          position: 'relative',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-        }}
-      >
-        {data.label}
-        <Handle type="source" position={Position.Bottom} style={{ opacity: 0 }} />
-        <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
-      </m.div>
-    ),
+    label: ({ data, id }) => {
+      const isCurrentLevel = id === 'label-current' && selectedNodes.current;
+      const isNextLevel = id === 'label-next' && selectedNodes.next;
+      const isExecutiveLevel = id === 'label-executive' && selectedNodes.executive;
+      const isActive = isCurrentLevel || isNextLevel || isExecutiveLevel;
+
+      return (
+        <m.div
+          style={{
+            padding: 10,
+            background: isActive ? theme.palette.primary.main : '#fff',
+            color: isActive ? '#fff' : '#000',
+            border: `1px solid ${isActive ? theme.palette.primary.main : '#E6EBF2'}`,
+            borderRadius: '25px',
+            fontSize: '12px',
+            textAlign: 'center',
+            width: '64px',
+            height: '64px',
+            whiteSpace: 'pre-line',
+            zIndex: 9999,
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            transition: 'all 0.3s ease',
+            dropShadow: isActive ? '0px 0px 10px rgba(0, 0, 0, 0.5)' : 'none',
+          }}
+        >
+          {data.label}
+          <Handle type="source" position={Position.Bottom} style={{ opacity: 0 }} />
+          <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
+        </m.div>
+      );
+    },
   };
+
+  // Filter nodes based on expanded state
+  const filterNodesByExpandedState = useCallback(
+    (nodeList) =>
+      nodeList.filter((node) => {
+        if (node.id === 'current-node') return true; // Always show current node
+        if (node.id.startsWith('next-')) return expandedCards.next;
+        if (node.id.startsWith('exec-')) return expandedCards.executive;
+        return true; // Keep all other nodes (labels, etc.)
+      }),
+    [expandedCards]
+  );
 
   // 👇 Generate all nodes
   const generateAllNodes = useCallback(() => {
@@ -135,13 +271,26 @@ export default function CareerPathProjection() {
       setSelectedNodes((prev) => {
         let updated = { ...prev };
 
-        // reset deeper selections when selecting higher level
         if (level === 'current') {
+          // When clicking current, clear all selections
           updated = { current: id, next: null, executive: null };
         } else if (level === 'next') {
-          updated = { ...updated, next: id, executive: null };
+          // When clicking next level, ensure current is selected and clear executive
+          updated = {
+            current: mockData.current.id,
+            next: id,
+            executive: null,
+          };
         } else if (level === 'executive') {
-          updated = { ...updated, executive: id };
+          // When clicking executive, find and set its parent next level and current
+          const executiveNode = mockData.executive.find((node) => node.id === id);
+          if (executiveNode) {
+            updated = {
+              current: mockData.current.id,
+              next: executiveNode.parent,
+              executive: id,
+            };
+          }
         }
 
         rebuildEdges(updated);
@@ -158,14 +307,10 @@ export default function CareerPathProjection() {
         draggable: false,
       },
       {
-        id: 'current-node',
+        id: mockData.current.id,
         type: 'career',
         data: {
-          title: 'Lead Data Scientist',
-          match: 95,
-          rate: '18%',
-          salary: '$50L - $55L',
-          experience: '8-12 years',
+          ...mockData.current,
           isNew: false,
           onClick: (id) => handleNodeClick(id, 'current'),
         },
@@ -190,7 +335,7 @@ export default function CareerPathProjection() {
     ];
 
     const nextNodes = mockData.next.map((child, index) => ({
-      id: `current-node-next-${index}`,
+      id: child.id,
       type: 'career',
       data: {
         ...child,
@@ -198,34 +343,32 @@ export default function CareerPathProjection() {
         onClick: (id) => handleNodeClick(id, 'next'),
       },
       position: {
-        x: (isMdUp ? 150 : 80) + index * (isMdUp ? 400 : 400),
+        x: (isMdUp ? 150 : 80) + index * (isMdUp ? 400 : 300),
         y: isMdUp ? 200 : 200,
       },
       sourcePosition: Position.Top,
       targetPosition: Position.Bottom,
     }));
 
-    const executiveNodes = mockData.executive.flatMap((child, index) =>
-      mockData.next.map((_, parentIndex) => ({
-        id: `current-node-next-${parentIndex}-executive-${index}`,
-        type: 'career',
-        data: {
-          ...child,
-          isNew: false,
-          onClick: (id) => handleNodeClick(id, 'executive'),
-        },
-        position: {
-          x:
-            (isMdUp ? 150 : 80) + parentIndex * (isMdUp ? 400 : 400) + index * (isMdUp ? 400 : 400),
-          y: isMdUp ? 400 : 400,
-        },
-        sourcePosition: Position.Top,
-        targetPosition: Position.Bottom,
-      }))
-    );
+    const executiveNodes = mockData.executive.map((child, index) => ({
+      id: child.id,
+      type: 'career',
+      data: {
+        ...child,
+        isNew: false,
+        onClick: (id) => handleNodeClick(id, 'executive'),
+      },
+      position: {
+        x: (isMdUp ? 150 : 80) + index * (isMdUp ? 400 : 300),
+        y: isMdUp ? 400 : 400,
+      },
+      sourcePosition: Position.Top,
+      targetPosition: Position.Bottom,
+    }));
 
-    return [...baseNodes, ...nextNodes, ...executiveNodes];
-  }, [isMdUp]);
+    const allNodes = [...baseNodes, ...nextNodes, ...executiveNodes];
+    return filterNodesByExpandedState(allNodes);
+  }, [isMdUp, filterNodesByExpandedState]);
 
   useEffect(() => {
     const startedWith = sessionStorage.getItem('userStartedWith');
@@ -257,38 +400,43 @@ export default function CareerPathProjection() {
       },
     ];
 
-    // 🔹 current → next (always)
-    mockData.next.forEach((_, idx) => {
-      const childId = `current-node-next-${idx}`;
+    // Connect current node to its children
+    mockData.current.children.forEach((childId) => {
+      const isActive =
+        selected.next === childId ||
+        (selected.executive &&
+          mockData.executive.some((e) => e.parent === childId && selected.executive === e.id));
       newEdges.push({
-        id: `edge-current-node-${childId}`,
-        source: 'current-node',
+        id: `edge-${mockData.current.id}-${childId}`,
+        source: mockData.current.id,
         target: childId,
         type: 'bezier',
         style: {
-          stroke:
-            selected.next === childId ||
-            (typeof selected.executive === 'string' && selected.executive.startsWith(childId))
-              ? '#1976d2'
-              : '#999',
-          strokeWidth: 3,
+          stroke: isActive ? '#1976d2' : '#999',
+          strokeWidth: isActive ? 3 : 1,
+          opacity: isActive ? 1 : 0.6,
         },
       });
+    });
 
-      // 🔹 next → executive (always, for every parent next node)
-      mockData.executive.forEach((__, execIdx) => {
-        const execId = `${childId}-executive-${execIdx}`;
-        newEdges.push({
-          id: `edge-${childId}-${execId}`,
-          source: childId,
-          target: execId,
-          type: 'bezier',
-          style: {
-            stroke: selected.executive === execId ? '#1976d2' : '#999',
-            strokeWidth: 3,
-          },
+    // Connect next level nodes to their executive children
+    mockData.next.forEach((nextNode) => {
+      if (nextNode.children) {
+        nextNode.children.forEach((childId) => {
+          const isActive = selected.next === nextNode.id && selected.executive === childId;
+          newEdges.push({
+            id: `edge-${nextNode.id}-${childId}`,
+            source: nextNode.id,
+            target: childId,
+            type: 'bezier',
+            style: {
+              stroke: isActive ? '#1976d2' : '#999',
+              strokeWidth: isActive ? 3 : 1,
+              opacity: isActive ? 1 : 0.6,
+            },
+          });
         });
-      });
+      }
     });
 
     setEdges(newEdges);
@@ -432,7 +580,7 @@ export default function CareerPathProjection() {
           >
             <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView={false}>
               <Background />
-              <Controls />
+              <Controls position="top-right" />
             </ReactFlow>
           </Box>
 
