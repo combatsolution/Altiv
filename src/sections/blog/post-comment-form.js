@@ -73,7 +73,13 @@ export default function PostCommentForm({ postId, onCommentAdded }) {
         />
 
         <Stack direction="row" justifyContent="flex-end">
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            sx={{ borderRadius: '100px' }}
+            color="primary"
+            loading={isSubmitting}
+          >
             Post comment
           </LoadingButton>
         </Stack>

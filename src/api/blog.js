@@ -154,3 +154,43 @@ export function useGetPostsByFilters(filterString) {
 }
 
 // ----------------------------------------------------------------------
+
+export function useGetCategories() {
+  const URL = endpoints.post.categories;
+
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      categories: data || [],
+      categoriesLoading: isLoading,
+      categoriesError: error,
+      categoriesValidating: isValidating,
+      categoriesEmpty: !isLoading && !data?.length,
+    }),
+    [data, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
+
+// ----------------------------------------------------------------------
+
+export function useGetCategoriesPost(filterString, categoryId) {
+  const URL = categoryId !== null ? endpoints.post.byCategoryFilters(filterString, categoryId) : null;
+
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+
+   const memoizedValue = useMemo(
+     () => ({
+       posts: data?.blogs || [],
+       postsLoading: URL ? isLoading : false,
+       postsError: error,
+       postsValidating: isValidating,
+       postsEmpty: !isLoading && !data?.blogs?.length,
+     }),
+     [URL, data?.blogs, error, isLoading, isValidating]
+   );
+
+  return memoizedValue;
+}

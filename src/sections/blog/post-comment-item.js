@@ -111,7 +111,13 @@ export default function PostCommentItem({
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
             />
-            <Button variant="contained" onClick={handleReplySubmit} disabled={!replyText.trim()}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleReplySubmit}
+              disabled={!replyText.trim()}
+              sx={{ borderRadius: '100px' }}
+            >
               Send
             </Button>
           </Box>
