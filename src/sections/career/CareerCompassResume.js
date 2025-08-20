@@ -216,9 +216,7 @@ export default function CareerPathProjection() {
         },
         position: {
           x:
-            (isMdUp ? 150 : 80) +
-            parentIndex * (isMdUp ? 400 : 400) +
-            index * (isMdUp ? 400 : 400),
+            (isMdUp ? 150 : 80) + parentIndex * (isMdUp ? 400 : 400) + index * (isMdUp ? 400 : 400),
           y: isMdUp ? 400 : 400,
         },
         sourcePosition: Position.Top,
@@ -236,24 +234,9 @@ export default function CareerPathProjection() {
     const generatedNodes = generateAllNodes();
     setNodes(generatedNodes);
 
-    // set initial edges using default selectedNodes (none selected yet)
-    setEdges([
-      {
-        id: 'edge-label-current-next',
-        source: 'label-current',
-        target: 'label-next',
-        type: 'straight',
-        style: { stroke: '#E6EBF2', strokeWidth: 6 },
-      },
-      {
-        id: 'edge-label-next-exec',
-        source: 'label-next',
-        target: 'label-executive',
-        type: 'straight',
-        style: { stroke: '#E6EBF2', strokeWidth: 6 },
-      },
-    ]);
-  }, [generateAllNodes]);
+    // instead of only label edges, build full edges set
+    rebuildEdges(selectedNodes);
+  }, [generateAllNodes, selectedNodes]);
 
   // 👇 Build edges dynamically
   const rebuildEdges = (selected) => {
@@ -274,7 +257,7 @@ export default function CareerPathProjection() {
       },
     ];
 
-    // 🔹 current → next (always drawn, but highlight only selected branch)
+    // 🔹 current → next (always)
     mockData.next.forEach((_, idx) => {
       const childId = `current-node-next-${idx}`;
       newEdges.push({
@@ -291,35 +274,22 @@ export default function CareerPathProjection() {
           strokeWidth: 3,
         },
       });
-    });
 
-    // 🔹 next → executive (only draw from the selected next OR the one linked to selected executive)
-    if (selected.next || selected.executive) {
-      mockData.next.forEach((_, parentIdx) => {
-        const nextId = `current-node-next-${parentIdx}`;
-
-        // expand only the selected next node or the one that leads to selected executive
-        const shouldExpand =
-          selected.next === nextId ||
-          (typeof selected.executive === 'string' && selected.executive.startsWith(nextId));
-
-        if (shouldExpand) {
-          mockData.executive.forEach((__, execIdx) => {
-            const execId = `${nextId}-executive-${execIdx}`;
-            newEdges.push({
-              id: `edge-${nextId}-${execId}`,
-              source: nextId,
-              target: execId,
-              type: 'bezier',
-              style: {
-                stroke: selected.executive === execId ? '#1976d2' : '#999',
-                strokeWidth: 3,
-              },
-            });
-          });
-        }
+      // 🔹 next → executive (always, for every parent next node)
+      mockData.executive.forEach((__, execIdx) => {
+        const execId = `${childId}-executive-${execIdx}`;
+        newEdges.push({
+          id: `edge-${childId}-${execId}`,
+          source: childId,
+          target: execId,
+          type: 'bezier',
+          style: {
+            stroke: selected.executive === execId ? '#1976d2' : '#999',
+            strokeWidth: 3,
+          },
+        });
       });
-    }
+    });
 
     setEdges(newEdges);
   };

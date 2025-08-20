@@ -36,7 +36,7 @@ export default function SubHeader({ subtitle, showUploadResume }) {
             variant="outlined"
             size="medium"
             sx={{
-              fontSize: { xs: '14px', sm: '16px', md: '20px' },
+              fontSize: { xs: '14px', sm: '16px', md: '16px' },
               fontFamily: 'Roboto',
               fontWeight: 400,
               lineHeight: '120%',
