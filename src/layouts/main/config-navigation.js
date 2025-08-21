@@ -8,12 +8,12 @@ import Iconify from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 export const navConfig = [
-  {
-    title: 'Career Compass',
-    icon: <Iconify icon="solar:home-2-bold-duotone" />,
-    path: paths.careerResume,
-  },
-  {
+  // {
+  //   title: 'Career Compass',
+  //   icon: <Iconify icon="solar:home-2-bold-duotone" />,
+  //   path: paths.careerResume,
+  // },
+  { 
     title: 'FOBO',
     icon: <Iconify icon="solar:home-2-bold-duotone" />,
     path: paths.fobo,

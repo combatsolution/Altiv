@@ -142,7 +142,7 @@ function JobMatchBooster() {
                 variant="contained"
                 sx={{
                   width:{
-                  xs:'360px'},
+                  xs:'360px'},  
                   bgcolor: "#0040D8",
                   color: "#fff",
                   borderRadius: "999px",
@@ -150,6 +150,7 @@ function JobMatchBooster() {
                   py: { xs: 1, sm: 1.5 },
                   textTransform: "none",
                    ml:{xs: -1, sm: 2 },
+                    '&:hover': { bgcolor: 'primary.dark' },
                 }}
                 onClick={()=>navigate(paths.comingSoon)}
               >

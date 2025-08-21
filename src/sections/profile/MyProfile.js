@@ -176,9 +176,10 @@ export default function MyProfile() {
           },
         }
       );
-
+      
       const token = response.data?.tokenData?.access_token;
       return token;
+      
     };
 
     const token = await fetchToken();
