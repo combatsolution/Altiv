@@ -51,6 +51,10 @@ export const endpoints = {
     details: '/blogs/slug/',
     latest: '/api/post/latest',
     search: '/api/post/search',
+    categories: '/categories',
+    byFilters: (filterString) => `/blogs?filter=${filterString}`,
+    byCategoryFilters: (filterString, categoryId) =>
+      `/blogs?filter=${filterString}&categoryId=${categoryId}`,
   },
   comments: {
     list: (blogId) => `/comments/${blogId}`,

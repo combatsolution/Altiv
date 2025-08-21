@@ -9,7 +9,7 @@ export default function CareerPathResumePage()
             <Helmet>
                 <title> Career Compass</title>
             </Helmet>
-            <SubHeader subtitle="Career Compass" />
+            <SubHeader subtitle="Career Compass" showUploadResume />
             <CareerPathProjection />
         </>
     )

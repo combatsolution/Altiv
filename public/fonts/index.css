@@ -58,3 +58,8 @@
   font-display: swap;
   src: local('Roboto-Bold'), url('Roboto-Bold.ttf') format('opentype');
 }
+
+.react-flow__handle.source {
+  opacity: 0;
+  /* or visibility: hidden; */
+}

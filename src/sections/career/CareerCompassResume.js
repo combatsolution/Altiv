@@ -12,42 +12,70 @@ import {
 } from '@mui/material';
 import { FaClipboardList } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import ReactFlow, { Background, Controls, MiniMap, Handle, Position } from 'reactflow';
+import ReactFlow, { Background, Handle, Position, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { m } from 'framer-motion';
 import CareerCard from './CareerCard';
 
 const mockData = {
+  current: {
+    id: 'current-node',
+    title: 'Lead Data Scientist',
+    match: 95,
+    rate: '18%',
+    salary: '$50L - $55L',
+    experience: '8-12 years',
+    children: ['next-0', 'next-1'],
+  },
   next: [
     {
+      id: 'next-0',
       title: 'Senior Data Scientist',
-      match: 80,
+      match: 50,
       rate: '18%',
       salary: '$50L - $55L',
       experience: '8-12 years',
+      parent: 'current-node',
+      children: ['exec-0', 'exec-1'],
     },
     {
-      title: 'Senior Data Scientist 1',
-      match: 80,
-      rate: '18%',
-      salary: '$50L - $55L',
-      experience: '8-12 years',
+      id: 'next-1',
+      title: 'Principal Data Scientist',
+      match: 45,
+      rate: '15%',
+      salary: '$55L - $60L',
+      experience: '10-14 years',
+      parent: 'current-node',
+      children: ['exec-2'],
     },
   ],
   executive: [
     {
+      id: 'exec-0',
       title: 'Director Data Science',
-      match: 74,
-      rate: '18%',
-      salary: '$50L - $55L',
-      experience: '10-15 years',
+      match: 30,
+      rate: '12%',
+      salary: '$60L - $70L',
+      experience: '12-16 years',
+      parent: 'next-0',
     },
     {
+      id: 'exec-1',
       title: 'VP Data Science',
-      match: 72,
-      rate: '18%',
-      salary: '$60L - $70L',
+      match: 25,
+      rate: '10%',
+      salary: '$70L - $90L',
       experience: '15+ years',
+      parent: 'next-0',
+    },
+    {
+      id: 'exec-2',
+      title: 'Data Science',
+      match: 25,
+      rate: '10%',
+      salary: '$70L - $90L',
+      experience: '15+ years',
+      parent: 'next-1',
     },
   ],
 };
@@ -63,23 +91,76 @@ export default function CareerPathProjection() {
 
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
-  const [expanded, setExpanded] = useState(new Set());
-  const [initialized, setInitialized] = useState(false);
-  const [selectedNodeId, setSelectedNodeId] = useState(null);
+  const [selectedNodes, setSelectedNodes] = useState({
+    current: null,
+    next: null,
+    executive: null,
+  });
+
+  const [expandedCards, setExpandedCards] = useState({
+    current: true,
+    next: true,
+    executive: true,
+  });
+
+  const toggleCardExpansion = (level) => {
+    setExpandedCards((prev) => {
+      // If collapsing the next level, also collapse the executive level
+      if (level === 'next') {
+        return {
+          ...prev,
+          next: !prev.next,
+          executive: prev.next ? false : prev.executive,
+        };
+      }
+      // If collapsing the current level, collapse both next and executive levels
+      if (level === 'current') {
+        return {
+          ...prev,
+          next: !prev.next,
+          executive: false,
+        };
+      }
+      // For executive level, just toggle its own state
+      return {
+        ...prev,
+        [level]: !prev[level],
+      };
+    });
+  };
 
   const nodeTypes = {
     career: ({ data, id }) => {
       const { isNew, onClick } = data;
+      const isSelected =
+        selectedNodes.current === id || selectedNodes.next === id || selectedNodes.executive === id;
+
       return (
         <div
           role="button"
           tabIndex={0}
-          onClick={() => {
-            setSelectedNodeId(id);
-            onClick?.();
+          onClick={() => onClick?.(id)}
+          onKeyDown={(e) => e.key === 'Enter' && onClick?.(id)}
+          style={{
+            width: isMdUp ? 360 : 280,
+            height: 127,
+            position: 'relative',
+            cursor: 'pointer',
+            zIndex: 2,
+            opacity:
+              id === 'current-node' ||
+              (id.startsWith('next-') && expandedCards.next) ||
+              (id.startsWith('exec-') && expandedCards.executive)
+                ? 1
+                : 0,
+            transition: 'opacity 0.3s ease',
+            pointerEvents:
+              id === 'current-node' ||
+              (id.startsWith('next-') && expandedCards.next) ||
+              (id.startsWith('exec-') && expandedCards.executive)
+                ? 'auto'
+                : 'none',
           }}
-          onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
-          style={{ width: 300, position: 'relative', cursor: 'pointer', zIndex: 2 }}
         >
           <Handle type="target" position={Position.Top} style={{ background: '#1976d2' }} />
           {isNew ? (
@@ -88,221 +169,136 @@ export default function CareerPathProjection() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
             >
-              <CareerCard {...data} />
+              {(() => {
+                const getExpandedState = () => {
+                  if (id === 'current-node') return expandedCards.next; // Show if next level is expanded
+                  if (id.startsWith('next-')) return expandedCards.executive; // Show if executive level is expanded
+                  return false; // No levels below executive
+                };
+
+                return (
+                  <CareerCard
+                    {...data}
+                    isSelected={isSelected}
+                    showExpandButton={id === 'current-node' || id.startsWith('next-')}
+                    isExpanded={getExpandedState()}
+                    onExpandToggle={() => {
+                      if (id === 'current-node') toggleCardExpansion('next');
+                      else if (id.startsWith('next-')) toggleCardExpansion('executive');
+                    }}
+                  />
+                );
+              })()}
             </m.div>
           ) : (
-            <CareerCard {...data} />
+            (() => {
+              const getExpandedState = () => {
+                if (id === 'current-node') return expandedCards.next; // Show if next level is expanded
+                if (id.startsWith('next-')) return expandedCards.executive; // Show if executive level is expanded
+                return false; // No levels below executive
+              };
+
+              return (
+                <CareerCard
+                  {...data}
+                  isSelected={isSelected}
+                  showExpandButton={id === 'current-node' || id.startsWith('next-')}
+                  isExpanded={getExpandedState()}
+                  onExpandToggle={() => {
+                    if (id === 'current-node') toggleCardExpansion('next');
+                    else if (id.startsWith('next-')) toggleCardExpansion('executive');
+                  }}
+                />
+              );
+            })()
           )}
           <Handle type="source" position={Position.Bottom} style={{ background: '#1976d2' }} />
         </div>
       );
     },
-    label: ({ data }) => (
-      <m.div
-        // initial={{ opacity: 0 }}
-        // animate={{ opacity: 1 }}
-        // transition={{ duration: 0.6 }}
-        style={{
-          padding: 10,
-          background: '#1976d2',
-          color: '#fff',
-          borderRadius: '20px',
-          fontSize: 12,
-          textAlign: 'center',
-          width: 100,
-          whiteSpace: 'pre-line',
-          zIndex: 9999,
-          position: 'relative',
-        }}
-      >
-        {data.label}
-      </m.div>
-    ),
-  };
+    label: ({ data, id }) => {
+      const isCurrentLevel = id === 'label-current' && selectedNodes.current;
+      const isNextLevel = id === 'label-next' && selectedNodes.next;
+      const isExecutiveLevel = id === 'label-executive' && selectedNodes.executive;
+      const isActive = isCurrentLevel || isNextLevel || isExecutiveLevel;
 
-  /**
-   * Helpers
-   */
-
-  // get all descendant node ids for a given parentId from a node list
-  const getDescendantNodeIds = (nodeList, parentId) => {
-    // descendants are nodes whose id starts with `${parentId}-`
-    const directAndIndirect = nodeList
-      .filter((n) => n.id.startsWith(`${parentId}-`))
-      .map((n) => n.id);
-    return directAndIndirect;
-  };
-
-  // remove nodes and edges by node ids
-  const removeNodesAndEdgesByIds = (nodeIdsToRemove) => {
-    setNodes((prev) => prev.filter((n) => !nodeIdsToRemove.includes(n.id)));
-    setEdges((prev) =>
-      prev.filter((e) => !nodeIdsToRemove.includes(e.source) && !nodeIdsToRemove.includes(e.target))
-    );
-  };
-
-  const handleExpand = useCallback(
-    (parentId, level) => {
-      setNodes((prevNodes) => {
-        const parentNode = prevNodes.find((n) => n.id === parentId);
-        if (!parentNode) return prevNodes;
-
-        // If already expanded, perform collapse: remove all descendants recursively
-        if (expanded.has(parentId)) {
-          // remove expanded state for parent and any descendants
-          setExpanded((prev) => {
-            const next = new Set(prev);
-            next.delete(parentId);
-
-            // also remove any descendant ids from expanded set
-            const descendants = getDescendantNodeIds(prevNodes, parentId);
-            descendants.forEach((d) => next.delete(d));
-            return next;
-          });
-
-          // Remove all descendant nodes and their edges
-          const descendants = getDescendantNodeIds(prevNodes, parentId);
-          if (descendants.length) {
-            setEdges((prevEdges) =>
-              prevEdges.filter(
-                (edge) => !descendants.includes(edge.source) && !descendants.includes(edge.target)
-              )
-            );
-            return prevNodes.filter((n) => !descendants.includes(n.id));
-          }
-          return prevNodes;
-        }
-
-        // Otherwise, expand:
-        // 1) mark parent as expanded
-        setExpanded((prev) => new Set(prev).add(parentId));
-
-        const children = mockData[level] || [];
-        const levelMap = {
-          next: {
-            y: isMdUp ? 300 : 200,
-            label: 'Next Level\n(2-4 yrs)',
-            id: 'label-next',
-          },
-          executive: {
-            y: isMdUp ? 600 : 400,
-            label: 'Executive Level',
-            id: 'label-executive',
-          },
-        };
-        const { y, label, id: labelId } = levelMap[level] || {};
-
-        // 2) remove children that belong to OTHER nodes at this same level
-        //    Keep label nodes; remove any node whose id contains `-${level}-` but does not start with `${parentId}-`
-        const nodesToRemove = prevNodes
-          .filter(
-            (n) =>
-              n.type !== 'label' &&
-              n.id.includes(`-${level}-`) &&
-              !n.id.startsWith(`${parentId}-${level}-`)
-          )
-          .map((n) => n.id);
-
-        // Also remove any descendants of those nodes (their grandchildren) for a full cleanup
-        const extraDescendants = prevNodes
-          .filter((n) => nodesToRemove.some((rid) => n.id.startsWith(`${rid}-`)))
-          .map((n) => n.id);
-
-        const allToRemove = Array.from(new Set([...nodesToRemove, ...extraDescendants]));
-
-        // filter nodes first to compute an updated nodes list without other-level children
-        const filteredNodes = prevNodes.filter((n) => !allToRemove.includes(n.id));
-
-        // remove edges pointing to removed nodes
-        setEdges((prevEdges) =>
-          prevEdges.filter(
-            (e) => !allToRemove.includes(e.source) && !allToRemove.includes(e.target)
-          )
-        );
-
-        // 3) Prepare new nodes & edges to add for this parent
-        const newNodes = [];
-        const newEdges = [];
-
-        if (y !== undefined && !filteredNodes.find((n) => n.id === labelId)) {
-          newNodes.push({
-            id: labelId,
-            type: 'label',
-            data: { label },
-            position: { x: 0, y },
-            draggable: false,
-          });
-        }
-
-        const HORIZONTAL_SPACING = isMdUp ? 400 : 320;
-        const BASE_OFFSET = isMdUp ? 150 : 100;
-
-        children.forEach((child, index) => {
-          // create deterministic-ish id using parentId, level, and index + timestamp to avoid collisions
-          const nodeId = `${parentId}-${level}-${index}-${Date.now()}`;
-          newNodes.push({
-            id: nodeId,
-            type: 'career',
-            data: {
-              ...child,
-              isNew: true,
-              // clicking a node in "next" expands its "executive" children
-              onClick: () => {
-                if (level === 'next') {
-                  handleExpand(nodeId, 'executive');
-                } else {
-                  // if clicked on executive or deeper, you can implement further behavior
-                }
-              },
-            },
-            position: {
-              x: parentNode.position.x + BASE_OFFSET + index * HORIZONTAL_SPACING,
-              y,
-            },
-            sourcePosition: Position.Top,
-            targetPosition: Position.Bottom,
-          });
-
-          newEdges.push({
-            id: `edge-${parentId}-${nodeId}-${Date.now()}`,
-            source: parentId,
-            target: nodeId,
-            animated: false,
-            type: 'smoothstep',
-          });
-        });
-
-        // 4) Merge filteredNodes + newNodes (avoid duplicates)
-        const mergedNodes = [
-          ...filteredNodes,
-          ...newNodes.filter((newNode) => !filteredNodes.some((n) => n.id === newNode.id)),
-        ];
-
-        // 5) Add new edges to current edges (we already removed edges for other-level children earlier)
-        setEdges((prevEdges) => [
-          ...prevEdges,
-          ...newEdges.filter(
-            (ne) => !prevEdges.some((e) => e.source === ne.source && e.target === ne.target)
-          ),
-        ]);
-
-        // 6) animate new nodes in (remove isNew after a short delay)
-        setTimeout(() => {
-          setNodes((prev) =>
-            prev.map((node) =>
-              node.data?.isNew ? { ...node, data: { ...node.data, isNew: false } } : node
-            )
-          );
-        }, 500);
-
-        return mergedNodes;
-      });
+      return (
+        <m.div
+          style={{
+            padding: 10,
+            background: isActive ? theme.palette.primary.main : '#fff',
+            color: isActive ? '#fff' : '#000',
+            border: `1px solid ${isActive ? theme.palette.primary.main : '#E6EBF2'}`,
+            borderRadius: '25px',
+            fontSize: '12px',
+            textAlign: 'center',
+            width: '64px',
+            height: '64px',
+            whiteSpace: 'pre-line',
+            zIndex: 9999,
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            transition: 'all 0.3s ease',
+            dropShadow: isActive ? '0px 0px 10px rgba(0, 0, 0, 0.5)' : 'none',
+          }}
+        >
+          {data.label}
+          <Handle type="source" position={Position.Bottom} style={{ opacity: 0 }} />
+          <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
+        </m.div>
+      );
     },
-    [expanded, isMdUp]
+  };
+
+  // Filter nodes based on expanded state
+  const filterNodesByExpandedState = useCallback(
+    (nodeList) =>
+      nodeList.filter((node) => {
+        if (node.id === 'current-node') return true; // Always show current node
+        if (node.id.startsWith('next-')) return expandedCards.next;
+        if (node.id.startsWith('exec-')) return expandedCards.executive;
+        return true; // Keep all other nodes (labels, etc.)
+      }),
+    [expandedCards]
   );
 
-  const initializeNodes = useCallback(() => {
-    const initialNodes = [
+  // 👇 Generate all nodes
+  const generateAllNodes = useCallback(() => {
+    const handleNodeClick = (id, level) => {
+      setSelectedNodes((prev) => {
+        let updated = { ...prev };
+
+        if (level === 'current') {
+          // When clicking current, clear all selections
+          updated = { current: id, next: null, executive: null };
+        } else if (level === 'next') {
+          // When clicking next level, ensure current is selected and clear executive
+          updated = {
+            current: mockData.current.id,
+            next: id,
+            executive: null,
+          };
+        } else if (level === 'executive') {
+          // When clicking executive, find and set its parent next level and current
+          const executiveNode = mockData.executive.find((node) => node.id === id);
+          if (executiveNode) {
+            updated = {
+              current: mockData.current.id,
+              next: executiveNode.parent,
+              executive: id,
+            };
+          }
+        }
+
+        rebuildEdges(updated);
+        return updated;
+      });
+    };
+
+    const baseNodes = [
       {
         id: 'label-current',
         type: 'label',
@@ -311,210 +307,298 @@ export default function CareerPathProjection() {
         draggable: false,
       },
       {
-        id: 'current-node',
+        id: mockData.current.id,
         type: 'career',
         data: {
-          title: 'Lead Data Scientist',
-          match: 95,
-          rate: '18%',
-          salary: '$50L - $55L',
-          experience: '8-12 years',
-          isNew: true,
-          onClick: () => handleExpand('current-node', 'next'),
+          ...mockData.current,
+          isNew: false,
+          onClick: (id) => handleNodeClick(id, 'current'),
         },
-        position: { x: isMdUp ? 150 : 100, y: 0 },
+        position: { x: isMdUp ? 150 : 80, y: 0 },
         sourcePosition: Position.Top,
         targetPosition: Position.Bottom,
       },
+      {
+        id: 'label-next',
+        type: 'label',
+        data: { label: 'Next Level 2-4 yrs' },
+        position: { x: 0, y: isMdUp ? 200 : 200 },
+        draggable: false,
+      },
+      {
+        id: 'label-executive',
+        type: 'label',
+        data: { label: 'Executive Level' },
+        position: { x: 0, y: isMdUp ? 400 : 400 },
+        draggable: false,
+      },
     ];
 
-    setNodes(initialNodes);
+    const nextNodes = mockData.next.map((child, index) => ({
+      id: child.id,
+      type: 'career',
+      data: {
+        ...child,
+        isNew: false,
+        onClick: (id) => handleNodeClick(id, 'next'),
+      },
+      position: {
+        x: (isMdUp ? 150 : 80) + index * (isMdUp ? 400 : 300),
+        y: isMdUp ? 200 : 200,
+      },
+      sourcePosition: Position.Top,
+      targetPosition: Position.Bottom,
+    }));
 
-    setTimeout(() => {
-      setNodes((prev) =>
-        prev.map((node) =>
-          node.data?.isNew ? { ...node, data: { ...node.data, isNew: false } } : node
-        )
-      );
-    }, 500);
+    const executiveNodes = mockData.executive.map((child, index) => ({
+      id: child.id,
+      type: 'career',
+      data: {
+        ...child,
+        isNew: false,
+        onClick: (id) => handleNodeClick(id, 'executive'),
+      },
+      position: {
+        x: (isMdUp ? 150 : 80) + index * (isMdUp ? 400 : 300),
+        y: isMdUp ? 400 : 400,
+      },
+      sourcePosition: Position.Top,
+      targetPosition: Position.Bottom,
+    }));
 
-    setInitialized(true);
-  }, [handleExpand, isMdUp]);
+    const allNodes = [...baseNodes, ...nextNodes, ...executiveNodes];
+    return filterNodesByExpandedState(allNodes);
+  }, [isMdUp, filterNodesByExpandedState]);
 
   useEffect(() => {
     const startedWith = sessionStorage.getItem('userStartedWith');
     setUserStartedWith(startedWith);
-    if (!initialized) initializeNodes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initializeNodes, initialized]);
 
-  // Dynamically color edges based on selected node
-  const styledEdges = edges.map((edge) => ({
-    ...edge,
-    type: 'bezier', // smoother than smoothstep
-    style: {
-      stroke: edge.source === selectedNodeId || edge.target === selectedNodeId ? '#1976d2' : '#999',
-      strokeWidth: 4, // thicker lines
-    },
-  }));
+    const generatedNodes = generateAllNodes();
+    setNodes(generatedNodes);
+
+    // instead of only label edges, build full edges set
+    rebuildEdges(selectedNodes);
+  }, [generateAllNodes, selectedNodes]);
+
+  // 👇 Build edges dynamically
+  const rebuildEdges = (selected) => {
+    const newEdges = [
+      {
+        id: 'edge-label-current-next',
+        source: 'label-current',
+        target: 'label-next',
+        type: 'straight',
+        style: { stroke: '#E6EBF2', strokeWidth: 6 },
+      },
+      {
+        id: 'edge-label-next-exec',
+        source: 'label-next',
+        target: 'label-executive',
+        type: 'straight',
+        style: { stroke: '#E6EBF2', strokeWidth: 6 },
+      },
+    ];
+
+    // Connect current node to its children
+    mockData.current.children.forEach((childId) => {
+      const isActive =
+        selected.next === childId ||
+        (selected.executive &&
+          mockData.executive.some((e) => e.parent === childId && selected.executive === e.id));
+      newEdges.push({
+        id: `edge-${mockData.current.id}-${childId}`,
+        source: mockData.current.id,
+        target: childId,
+        type: 'bezier',
+        style: {
+          stroke: isActive ? '#1976d2' : '#999',
+          strokeWidth: isActive ? 3 : 1,
+          opacity: isActive ? 1 : 0.6,
+        },
+      });
+    });
+
+    // Connect next level nodes to their executive children
+    mockData.next.forEach((nextNode) => {
+      if (nextNode.children) {
+        nextNode.children.forEach((childId) => {
+          const isActive = selected.next === nextNode.id && selected.executive === childId;
+          newEdges.push({
+            id: `edge-${nextNode.id}-${childId}`,
+            source: nextNode.id,
+            target: childId,
+            type: 'bezier',
+            style: {
+              stroke: isActive ? '#1976d2' : '#999',
+              strokeWidth: isActive ? 3 : 1,
+              opacity: isActive ? 1 : 0.6,
+            },
+          });
+        });
+      }
+    });
+
+    setEdges(newEdges);
+  };
 
   return (
     <Box sx={{ bgcolor: 'white', p: { xs: 1, sm: 2, md: 3 } }}>
       <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-        {userStartedWith === 'job' && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-            <Button
-              variant="outlined"
-              size={isMdUp ? 'medium' : 'small'}
-              sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
-            >
-              Upload resume to unlock your potential
-            </Button>
-          </Box>
-        )}
-
         <Box sx={{ bgcolor: 'white', p: { xs: 1, sm: 2, md: 4 } }}>
-          {/* Desktop */}
-          {isMdUp ? (
-            <Grid
-              container
-              alignItems="center"
-              justifyContent="space-between"
-              spacing={2}
-              sx={{ mb: 1 }}
-            >
-              <Grid item sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <FaClipboardList size={16} />
-                <Select
-                  size="small"
-                  value="Lead Data Scientist"
-                  onChange={(e) => setExpYears(e.target.value)}
-                  variant="standard"
-                  sx={{ minWidth: 450 }}
-                >
-                  <MenuItem value={jobTitle}>{jobTitle}</MenuItem>
-                </Select>
+          <Grid container direction="column" spacing={2}>
+            <Grid item container spacing={2} alignItems="center">
+              <Grid item xs={12} sm>
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                    <img
+                      src="\assets\icons\careerCompass\job_title.svg"
+                      alt=""
+                      width={24}
+                      height={24}
+                    />
+                    <Select
+                      fullWidth
+                      size="small"
+                      value={jobTitle}
+                      onChange={(e) => setJobTitle(e.target.value)}
+                      variant="standard"
+                      sx={{
+                        '&:before': { borderBottom: '1px solid #D6DDEB' },
+                        '&:after': { borderBottom: '1px solid #D6DDEB' },
+                        '& .MuiSelect-select': {
+                          fontWeight: 400,
+                          fontSize: '16px',
+                          lineHeight: '160%',
+                          letterSpacing: '0%',
+                          color: '#25324B',
+                          padding: '8px 0 4px',
+                        },
+                      }}
+                    >
+                      <MenuItem value={jobTitle}>{jobTitle}</MenuItem>
+                    </Select>
+                  </Box>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      display: 'block',
+                      fontSize: '10px',
+                      lineHeight: '160%',
+                      color: '#202430',
+                      opacity: 0.7,
+                      ml: '32px', // Align with the input field (24px icon + 8px gap)
+                      mt: 0.5,
+                    }}
+                  >
+                    Popular: Senior Data Scientist, Director Data Science
+                  </Typography>
+                </Box>
               </Grid>
-              <Grid item sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <FaClipboardList size={16} />
-                <Select
-                  size="small"
-                  value={expYears}
-                  onChange={(e) => setExpYears(e.target.value)}
-                  variant="standard"
-                  sx={{ minWidth: 450 }}
-                >
-                  <MenuItem value={5}>5 Years</MenuItem>
-                </Select>
+              <Grid item xs={12} sm>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2.4 }}>
+                  <img
+                    src="\assets\icons\careerCompass\job_experience.svg"
+                    alt=""
+                    width={24}
+                    height={24}
+                  />
+                  <Select
+                    fullWidth
+                    size="small"
+                    value={expYears}
+                    onChange={(e) => setExpYears(e.target.value)}
+                    variant="standard"
+                    sx={{
+                      '&:before': { borderBottom: '1px solid #D6DDEB' },
+                      '&:after': { borderBottom: '1px solid #D6DDEB' },
+                      '& .MuiSelect-select': {
+                        fontWeight: 400,
+                        fontSize: '16px',
+                        lineHeight: '160%',
+                        letterSpacing: '0%',
+                        color: '#25324B',
+                        padding: '8px 0 4px',
+                      },
+                    }}
+                  >
+                    <MenuItem value={5}>5 Years</MenuItem>
+                  </Select>
+                </Box>
               </Grid>
-              <Grid item>
-                <Button variant="outlined" sx={{ borderRadius: '100px', px: 6 }}>
+              <Grid item xs={12} sm="auto">
+                <Button
+                  variant="outlined"
+                  sx={{
+                    minWidth: '180px',
+                    height: '48px',
+                    borderRadius: '30px',
+                    border: '2px solid #0040D8',
+                    color: '#0040D8',
+                    mb: 2.4,
+                    '&:hover': {
+                      border: '2px solid #0040D8',
+                    },
+                    '&.MuiButton-outlined': {
+                      border: '2px solid #0040D8',
+                    },
+                    fontSize: { xs: '14px', sm: '16px' },
+                    textTransform: 'none',
+                  }}
+                >
                   Modify
                 </Button>
               </Grid>
-              <Box sx={{ textAlign: 'center', mt: 4, mb: 0 }}>
+            </Grid>
+            <Grid item xs={12}>
+              <Box sx={{ textAlign: 'left', mt: '26px', mb: '36px' }}>
                 <Typography
-                  color="#333333"
                   sx={{
+                    fontFamily: { xs: 'Inter', sm: 'Roboto' },
                     fontWeight: 400,
-                    fontSize: '24px',
+                    fontSize: '18px',
+                    lineHeight: '30px',
+                    letterSpacing: { xs: '-1.14px', sm: '-1.14px' },
+                    color: '#333333',
+                    '& b': {
+                      fontWeight: 700,
+                    },
                   }}
                 >
                   Personalized career path projection for <b>FirstName</b>
                 </Typography>
               </Box>
             </Grid>
-          ) : (
-            // Mobile
-            <Stack spacing={2} sx={{ mb: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <FaClipboardList size={14} />
-                <Select
-                  size="small"
-                  value="Lead Data Scientist"
-                  onChange={(e) => setExpYears(e.target.value)}
-                  variant="standard"
-                  sx={{ flex: 1, minWidth: 0 }}
-                >
-                  <MenuItem value={jobTitle}>{jobTitle}</MenuItem>
-                </Select>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <FaClipboardList size={14} />
-                <Select
-                  size="small"
-                  value={expYears}
-                  onChange={(e) => setExpYears(e.target.value)}
-                  variant="standard"
-                  sx={{ flex: 1, minWidth: 0 }}
-                >
-                  <MenuItem value={5}>5 Years</MenuItem>
-                </Select>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button variant="outlined" size="small" sx={{ borderRadius: '100px', px: 4 }}>
-                  Modify
-                </Button>
-              </Box>
-              <Box sx={{ textAlign: 'center', mt: 4, mb: 0 }}>
-                <Typography
-                  color="#333333"
-                  sx={{
-                    fontWeight: 400,
-                    fontSize: '18px',
-                  }}
-                >
-                  Personalized career path projection for FirstName
-                </Typography>
-              </Box>
-            </Stack>
-          )}
-        </Box>
+          </Grid>
 
-        <Box
-          sx={{
-            height: { xs: '70vh', sm: '80vh', md: '90vh' },
-            width: '100%',
-            mb: { xs: 2, sm: 3, md: 4 },
-          }}
-        >
-          <ReactFlow
-            nodes={nodes}
-            edges={styledEdges}
-            nodeTypes={nodeTypes}
-            fitView
-            key={`flow-${nodes.length}-${edges.length}`}
-            fitViewOptions={{
-              padding: isMdUp ? 0.1 : 0.2,
-              minZoom: isMdUp ? 0.5 : 0.3,
-              maxZoom: isMdUp ? 2 : 1.5,
-            }}
-          >
-            <Background />
-            <Controls />
-            <MiniMap
-              style={{
-                width: isMdUp ? 200 : 120,
-                height: isMdUp ? 150 : 90,
-              }}
-            />
-          </ReactFlow>
-        </Box>
-
-        <Box sx={{ textAlign: 'center', mt: { xs: 2, sm: 3, md: 4 } }}>
-          <Button
-            size={isMdUp ? 'medium' : 'small'}
+          <Box
             sx={{
-              borderRadius: 5,
-              px: { xs: 3, sm: 4 },
-              bgcolor: 'primary.main',
-              color: '#fff',
-              fontSize: { xs: '0.875rem', sm: '1rem' },
-              '&:hover': { bgcolor: 'primary.dark' },
+              height: { xs: '70vh', sm: '80vh', md: '90vh' },
+              width: '100%',
+              mb: { xs: 2, sm: 3, md: 4 },
             }}
           >
-            Show job match
-          </Button>
+            <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView={false}>
+              <Background />
+              <Controls position="top-right" />
+            </ReactFlow>
+          </Box>
+
+          <Box sx={{ textAlign: 'center', mt: { xs: 2, sm: 3, md: 4 } }}>
+            <Button
+              size={isMdUp ? 'medium' : 'small'}
+              sx={{
+                borderRadius: 5,
+                px: { xs: 3, sm: 4 },
+                bgcolor: 'primary.main',
+                color: '#fff',
+                fontSize: { xs: '0.875rem', sm: '1rem' },
+                '&:hover': { bgcolor: 'primary.dark' },
+              }}
+            >
+              Show job match
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>

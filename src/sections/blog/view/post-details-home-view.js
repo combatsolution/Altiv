@@ -65,6 +65,7 @@ export default function PostDetailsHomeView() {
     <>
       <PostDetailsHero
         title={post.title}
+        description={post.description}
         author={post.author}
         coverUrl={post.coverUrl}
         createdAt={post.createdAt}
@@ -98,9 +99,9 @@ export default function PostDetailsHomeView() {
 
       <Container maxWidth={false}>
         <Stack sx={{ maxWidth: 720, mx: 'auto' }}>
-          <Typography variant="subtitle1" sx={{ mb: 5 }}>
+          {/* <Typography variant="subtitle1" sx={{ mb: 5, fontSize: '20px', fontWeight: 700, lineHeight: 1.5 }}>
             {post.description}
-          </Typography>
+          </Typography> */}
 
           <Markdown children={post.content} />
 
