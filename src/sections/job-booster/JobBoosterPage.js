@@ -34,22 +34,143 @@ import { paths } from 'src/routes/paths';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { NoEncryptionGmailerrorred } from '@mui/icons-material';
 
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+import Sunburst from "highcharts/modules/sunburst";
 
-const educationData = [
-  { name: 'Tier 1', value: 20, fill: '#42a5f5' },
-  { name: 'IT / NT', value: 25, fill: '#2196f3' },
-  { name: 'Other Engineering', value: 15, fill: '#1e88e5' },
-  { name: 'IM', value: 10, fill: '#ffb300' },
-  { name: 'MBA', value: 12, fill: '#ff9800' },
-  { name: 'ISB', value: 8, fill: '#f57c00' },
-  { name: 'Other MBA', value: 12, fill: '#ffa726' },
-];
 
-const innerEducationData = [
-  { name: 'Engineering', value: 47, fill: '#42a5f5' },
-  { name: 'MBA', value: 42, fill: '#ffa726' },
-  { name: 'Others', value: 12, fill: '#43a047' },
+
+const dataa = [
+  // Root
+  {
+    id: "0.0", parent: "", name: "Education", color: "transparent", // transparent root
+    borderWidth: 0
+  },
+
+  // First Level
+  { id: "1.2", parent: "0.0", name: "MBA", value: 12, color: '#FF8800' },
+  { id: "1.3", parent: "0.0", name: "Others", value: 2, color: '#0BA02C' },
+  { id: "1.1", parent: "0.0", name: "Engineering", value: 12, color: '#1976D2' },
+
+  // Second Level under Engineering
+  { id: "2.1", parent: "1.1", name: "IIT / NIT", value: 25, color: '#1BABFE' },
+  { id: "2.2", parent: "1.1", name: "Tier 1", value: 20, color: '#1BABFE' },
+  { id: "2.3", parent: "1.1", name: "Other Engineering", value: 15, color: '#1BABFE' },
+
+  // Second Level under MBA
+  { id: "2.4", parent: "1.2", name: "IIM", value: 10, color: '#FBBC05' },
+  { id: "2.5", parent: "1.2", name: "ISB", value: 8, color: '#FBBC05' },
+  { id: "2.6", parent: "1.2", name: "Other MBA", value: 12, color: '#FBBC05' },
+
 ];
+const options = {
+  chart: {
+    height: "80%",
+    events: {
+      render() {
+        const chart = this;
+
+        if (chart.customLabel) {
+          chart.customLabel.destroy();
+        }
+
+        let text = "Education";
+        if (chart.drilldownNode && chart.drilldownNode.name) {
+          text = chart.drilldownNode.name;
+        }
+
+        chart.customLabel = chart.renderer
+          .text(
+            text,
+            chart.plotWidth / 2 + chart.plotLeft,
+            chart.plotHeight / 2 + chart.plotTop
+          )
+          .css({
+            color: "#000",
+            fontSize: "16px",
+            fontWeight: "bold",
+            textAnchor: "middle"
+          })
+          .attr({
+            align: "center"
+          })
+          .add();
+
+        chart.customLabel.attr({
+          x: chart.plotWidth / 2 + chart.plotLeft,
+          y: chart.plotHeight / 2 + chart.plotTop
+        });
+      }
+    }
+  },
+
+
+  plotOptions: {
+    sunburst: {
+      allowDrillToNode: true,
+      cursor: 'pointer',
+      point: {
+        events: {
+          click: function () {
+            const chart = this.series.chart;
+            chart.drilldownNode = this; // store selected node
+            chart.redraw(); // trigger render update
+          }
+        }
+      }
+    }
+  },
+  title: {
+    text: "", // start empty
+
+  },
+
+
+  series: [
+    {
+      type: "sunburst",
+      data: dataa,
+      allowDrillToNode: true,
+      cursor: "pointer",
+      borderWidth: 2,
+      slicedOffset: 10,
+
+      dataLabels: {
+        format: "{point.name}:<br>{point.value}%",
+
+        style: {
+          color: '#fff',   // white text
+          fontWeight: 'bold',
+          textOutline: 'none', // removes ugly black border
+        },
+
+      },
+      levels: [
+        {
+          level: 1,
+          levelIsConstant: false,
+          dataLabels: {
+            rotationMode: "parallel"
+          }
+        },
+        {
+          level: 2,
+          colorByPoint: true,
+          dataLabels: {
+            rotationMode: "parallel"
+          }
+        }
+      ]
+    }
+  ],
+  tooltip: {
+    pointFormat: "<b>{point.name}</b>: {point.value}%"
+  }
+};
+
+
+
+
 
 const COLORS = ["#20C997", "#4285F4", "#F4A300", "#FFD43B"];
 
@@ -78,21 +199,34 @@ const resumeHighlights = [
   'Led successful product launches with cross-departmental collaboration.',
 ];
 
+const skills = [
+  { label: "Technical", score: 85 },
+  { label: "Leadership", score: 50 },
+  { label: "Project Management", score: 45 },
+  { label: "Lorem Ipsum", score: 20 },
+];
 
+
+const getBadgeColor = (score) => {
+  if (score >= 70) return "green";
+  if (score >= 50) return "orange";
+  if (score >= 30) return "darkorange";
+  return "red";
+};
 
 const ProductManagementPage = () => {
 
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
-const sliderSettings = {
-  dots: true,
-  arrows: false,
-  infinite: false,
-  speed: 400,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-  adaptiveHeight: true,
-};
+  const sliderSettings = {
+    dots: true,
+    arrows: false,
+    infinite: false,
+    speed: 400,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    adaptiveHeight: true,
+  };
   const [hoveredInner, setHoveredInner] = useState(null);
   const [hoveredOuter, setHoveredOuter] = useState(null);
   const navigate = useNavigate();
@@ -222,201 +356,288 @@ const sliderSettings = {
   return (
     <Container maxWidth="auto">
       <Box sx={{ pl: { xs: 2, md: 8 }, pr: { xs: 2, md: 4 }, py: 2, order: { xs: 2, md: 1 } }}>
-        {/* Title */}
-        <Typography variant="h5" fontSize="20px" fontWeight="bold" gutterBottom>
-          Product Management at Mastercard
-        </Typography>
-        <Typography variant="body2" color="text.secondary" mb={2}>
-          Match analysis and background
-        </Typography>
-
-        {/* Filters */}
-        <Stack
-          sx={{display:{xs:"none" , lg:'block'}}}
-          direction={{ xs: 'column', sm: 'row', md: 'column' }}
-          spacing={1}
-          mb={2}
-          alignItems={{ xs: 'flex-start', sm: 'center', md: 'flex-start' }}
-          flexWrap="wrap"
-          width={{ xs: '100%', md: '701px' }}
-        >
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} width="100%">
-
-            <Box
-              display="flex"
-              flexDirection="row"
-              sx={{
-                gap: 0,
-                width: { xs: '100%', sm: '250px', lg: '6550px' }, // ⚠ probably meant 650px not 6550px
-                maxWidth: '300px',
-              }}
-            >
-              <Paper
-                elevation={0}
-                sx={{
-                  bgcolor: 'grey.100',
-                  flex: 1,
-                  p: 1,
-                  textAlign: 'center',
-                  borderRadius: '0px',
-                }}
-              >
-                Match Score
-              </Paper>
-              <Paper
-                elevation={0}
-                sx={{
-                  bgcolor: 'grey.300',
-                  flex: 1,
-                  p: 1,
-                  textAlign: 'center',
-                  borderRadius: '0px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: 5,
-                }}
-              >
-                Everything
-                <KeyboardArrowDownIcon fontSize="medium" />
-              </Paper>
-            </Box>
-
-            <Stack
-              direction={{ xs: 'column', sm: 'row' }}
-              spacing={1}
-              sx={{ mt: { xs: 1, sm: 0 } }}
-            >
-              <Button size="small" fontSize="15px" sx={{ color: 'grey.600' }}>
-                Select All
-              </Button>
-              <Button
-                size="medium"
-                variant="outlined"
-                sx={{ color: 'grey.600', borderRadius: '100px' }}
-              >
-                Clear All
-              </Button>
-              <Button
-                size="medium"
-                variant="contained"
-                color="primary"
-                sx={{ borderRadius: '100px' }}
-              >
-                Update
-              </Button>
-            </Stack>
-          </Stack>
-
-          {/* Chips BELOW the buttons */}
-          <Stack direction="row" spacing={1} flexWrap="wrap" mt={1} sx={{ width: '100%' }}>
-            <Chip label="Technical" variant="outlined" sx={{ borderRadius: 2, color: "black" }} />
-            <Chip label="Leadership" color="primary" variant="outlined" sx={{ borderRadius: 2, color: "black" }} />
-            <Chip
-              label="Project Management"
-              color="primary"
-              variant="outlined"
-              sx={{ borderRadius: 2, color: 'black' }}
-            />
-            <Chip label="Lorem Ipsum" color="primary" variant="outlined" sx={{ borderRadius: 2, color: "black" }} />
-          </Stack>
-        </Stack>
-
+       
         <Grid container spacing={2}>
-           <Stack
-          sx={{display:{xs:"block" , lg:'none'}}}
-          direction={{ xs: 'column', sm: 'row', md: 'column' }}
-          spacing={1}
-          mb={2}
-          alignItems={{ xs: 'flex-start', sm: 'center', md: 'flex-start' }}
-          flexWrap="wrap"
-          width={{ xs: '100%', md: '701px' }}
-        >
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} width="100%">
+          {/* desktop Left Column */}
+          <Grid item xs={12} lg={6} order={{ xs: 2, md: 1 }}>
+            <Grid sx={{ display: { xs: 'none', lg: 'block' }, mb: 2 }} >
+              <Typography variant="h5" fontSize="20px" fontWeight="bold"  >
+                Product Management at Mastercard
+              </Typography>
+              <Typography variant="body2" color="text.secondary"  >
+                Match analysis and background
+              </Typography>
+            </Grid>
 
-            <Box
-              display="flex"
-              flexDirection="row"
-              sx={{
-                gap: 0,
-                width: { xs: '100%', sm: '250px', lg: '6550px' }, // ⚠ probably meant 650px not 6550px
-                maxWidth: '300px',
-              }}
+            {/* Filters desktop */}
+            <Stack
+              sx={{ display: { xs: "none", lg: 'block' } }}
+              direction={{ xs: 'column', sm: 'row', md: 'column' }}
+              spacing={1}
+              mb={2}
+              alignItems={{ xs: 'flex-start', sm: 'center', md: 'flex-start' }}
+              flexWrap="wrap"
+              width={{ xs: '100%', md: '701px' }}
             >
-              <Paper
-                elevation={0}
-                sx={{
-                  bgcolor: 'grey.100',
-                  flex: 1,
-                  p: 1,
-                  textAlign: 'center',
-                  borderRadius: '0px',
-                }}
-              >
-                Match Score
-              </Paper>
-              <Paper
-                elevation={0}
-                sx={{
-                  bgcolor: 'grey.300',
-                  flex: 1,
-                  p: 1,
-                  textAlign: 'center',
-                  borderRadius: '0px',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: 5,
-                }}
-              >
-                Everything
-                <KeyboardArrowDownIcon fontSize="medium" />
-              </Paper>
-            </Box>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} width="100%">
+
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  sx={{
+                    gap: 0,
+                    width: { xs: '100%', sm: '250px', lg: '100%' }, // ⚠ probably meant 650px not 6550px
+                    maxWidth: '300px',
+                  }}
+                >
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      bgcolor: 'grey.100',
+                      flex: 1,
+                      p: 1,
+                      textAlign: 'center',
+                      borderRadius: '0px',
+                    }}
+                  >
+                    Match Score
+                  </Paper>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      bgcolor: 'grey.300',
+                      flex: 1,
+                      p: 1,
+                      textAlign: 'center',
+                      borderRadius: '0px',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      gap: 5,
+                    }}
+                  >
+                    Everything
+                    <KeyboardArrowDownIcon fontSize="medium" />
+                  </Paper>
+                </Box>
+
+                <Stack
+                  direction={{ xs: 'column', sm: 'row' }}
+                  spacing={1}
+                  sx={{ mt: { xs: 1, sm: 0 } }}
+                  
+                >
+                  <Button size="small" fontSize="15px" sx={{ color: 'grey.600', mt: 1 }}>
+                    Select All
+                  </Button>
+                  <Button
+                    size="medium"
+                    variant="outlined"
+                    sx={{ color: 'grey.600', borderRadius: '100px', width: '100px' }}
+                  >
+                    Clear All
+                  </Button>
+                  <Button
+                    size="medium"
+                    variant="contained"
+                    color="primary"
+                    sx={{ borderRadius: '100px', width: '100px' }}
+                  >
+                    Update
+                  </Button>
+                </Stack>
+              </Stack>
+
+              {/* Chips BELOW the buttons */}
+              <Stack direction="row" spacing={1} flexWrap="wrap" mt={1} sx={{ width: "100%" }}>
+                {skills.map((skill, index) => {
+                  const badgeColor = getBadgeColor(skill.score);
+                  return (
+                    <Box key={index} sx={{ position: "relative", display: "inline-block" }}>
+                      {/* The Chip */}
+                      <Chip
+                        label={<Typography fontWeight={200} fontSize={11} >{skill.label}</Typography>}
+                        variant="outlined"
+                        sx={{
+                          width: "120px",
+                          borderRadius: "20px",
+                          py: 0.2,
+
+                        }}
+                      />
+                      {/* The floating badge */}
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          top: -8,
+                          right: -8,
+                          bgcolor: badgeColor,
+                          color: "white",
+                          borderRadius: "50%",
+                          fontSize: "0.7rem",
+                          fontWeight: "bold",
+                          minWidth: 25,
+                          height: 26,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          boxShadow: 1,
+                        }}
+                      >
+                        {skill.score}%
+                      </Box>
+                    </Box>
+                  );
+                })}
+              </Stack>
+            </Stack>
+
 
             <Stack
-              direction={{ xs: 'column', sm: 'row' }}
+            sx={{ display: { xs: "block", lg: 'none' } }}
+            direction={{ xs: 'column', sm: 'row', md: 'column' }}
+            spacing={1}
+            mb={2}
+            alignItems={{ xs: 'flex-start', sm: 'center', md: 'flex-start' }}
+            flexWrap="wrap"
+            width={{ xs: '100%', md: '100%' }}
+          >  
+        
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} width="100%">
+             <Typography
+                variant="subtitle1"
+                fontWeight={700}
+                gutterBottom
+                sx={{ display: { xs: "block", lg: "none" }, mt:10, mb:-1, }}
+              >
+                Background of Product Management at Mastercard 
+              </Typography>
+              <Box
+                display="flex"
+                flexDirection="row"
+                sx={{
+                  gap: 0,
+                  width: { xs: '100%', sm: '100%', lg: '100%' }, // ⚠ probably meant 650px not 6550px
+                  maxWidth: '500px',
+                 mb:2,
+                }}  
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    bgcolor: 'grey.100',
+                    display: 'flex',
+                    textAlign: 'center',
+                    p: 0.5,
+                  }}
+                >
+                  Match Score
+                </Paper>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    bgcolor: { xs: '#0BA02C', lg: 'grey.300' },
+                    flex: 1,
+                    p: 1,
+                    textAlign: 'center',
+                    borderRadius: '0px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: 5,
+                    color: '#fff',
+                  }}
+                >
+                  Everything
+                  <KeyboardArrowDownIcon fontSize="medium" />
+                </Paper>
+              </Box>
+
+
+            </Stack>
+
+
+            {/* Chips BELOW the buttons */}
+            <Stack direction="row" spacing={2} flexWrap="wrap" mt={1} sx={{ width: "100%" }}>
+              {skills.map((skill, index) => {
+                const badgeColor = getBadgeColor(skill.score);
+                return (
+                  <Box key={index} sx={{ position: "relative", display: "inline-block" }}>
+                    {/* The Chip */}
+                    <Chip
+                      label={<Typography fontWeight={600}>{skill.label}</Typography>}
+                      variant="outlined"
+                      sx={{
+                        borderRadius: "20px",
+                        px: 1,
+                        py: 0.5,
+                      }}
+                    />
+                    {/* The floating badge */}
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: -8,
+                        right: -8,
+                        bgcolor: badgeColor,
+                        color: "white",
+                        borderRadius: "50%",
+                        fontSize: "0.7rem",
+                        fontWeight: "bold",
+                        minWidth: 28,
+                        height: 28,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxShadow: 1,
+                      }}
+                    >
+                      {skill.score}%
+                    </Box>
+                  </Box>
+                );
+              })}
+            </Stack>
+
+            <Stack
+              direction={{ xs: 'row', sm: 'row' }}
               spacing={1}
-              sx={{ mt: { xs: 1, sm: 0 } }}
+              sx={{ mt: { xs: 1, sm: 1 } }}
+              width='330px'
+              height='60px'
+              bgcolor='grey.200'
+              borderRadius='10px'
+              padding='10px'
             >
-              <Button size="small" fontSize="15px" sx={{ color: 'grey.600' }}>
+
+              <Button
+               
+                variant="outlined"
+                sx={{ color: 'grey.600',bgcolor:'#fff', borderRadius: '100px', width:'100px'  }}
+              >
                 Select All
               </Button>
               <Button
-                size="medium"
+               
                 variant="outlined"
-                sx={{ color: 'grey.600', borderRadius: '100px' }}
+                sx={{ color: 'grey.600', bgcolor:'#fff', borderRadius: '100px', width:'100px' }}
               >
                 Clear All
               </Button>
+
               <Button
-                size="medium"
+
                 variant="contained"
                 color="primary"
-                sx={{ borderRadius: '100px' }}
+                sx={{ borderRadius: '100px', width:'100px' }}
               >
                 Update
               </Button>
             </Stack>
           </Stack>
 
-          {/* Chips BELOW the buttons */}
-          <Stack direction="row" spacing={1} flexWrap="wrap" mt={1} sx={{ width: '100%' }}>
-            <Chip label="Technical" variant="outlined" sx={{ borderRadius: 2, color: "black" }} />
-            <Chip label="Leadership" color="primary" variant="outlined" sx={{ borderRadius: 2, color: "black" }} />
-            <Chip
-              label="Project Management"
-              color="primary"
-              variant="outlined"
-              sx={{ borderRadius: 2, color: 'black' }}
-            />
-            <Chip label="Lorem Ipsum" color="primary" variant="outlined" sx={{ borderRadius: 2, color: "black" }} />
-          </Stack>
-        </Stack>
-          {/* Left Column */}
-          <Grid item xs={12} lg={6} order={{ xs: 2, md: 1 }}>
             {/* Matching */}
-            <Paper sx={{ p: 2,  mb: 2, bgcolor: '#e8f5e9', mt:{ xs: 6, md: 0 } }}>
+            <Paper sx={{ p: 2, mb: 2, bgcolor: '#e8f5e9', mt: { xs: 6, md: 0 } }}>
               <Typography variant="h6" color="success.main">
                 Matching 75%
               </Typography>
@@ -484,6 +705,8 @@ const sliderSettings = {
                 bgcolor: { xs: "transparent", lg: "grey.200" },
                 p: { xs: 0, lg: 2 },
                 borderRadius: 1,
+
+
               }}
             >
               <Typography
@@ -497,102 +720,26 @@ const sliderSettings = {
               {isMobile ? (
                 <Slider {...sliderSettings}>
                   {/* Slide 1 - Education Background Pie */}
-                  <Paper sx={{ p: 2, mb: 2, width: '100%' }}>
-                    <Typography variant="body2" fontWeight="800" mb={2} >
+                  <Box>
+                    <Typography variant="body2" fontWeight="800" mb={1} >
                       Education Background of Directors
                     </Typography>
+
                     <Divider />
-                    <Box
-                      sx={{
-                        height: { xs: 250, md: 300 },
-                        width: '100%',
-                        mt: 2,
-                        position: 'relative',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
 
-                      }}
-                    >
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          {/* Inner Pie */}
-                          <Pie
-                            paddingAngle={1}
-                            data={innerEducationData}
-                            dataKey="value"
-                            nameKey="name"
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={30}
-                            labelLine={false}
-                            outerRadius={hoveredInner !== null ? 65 : 65}
-                            label={renderInnerLabel}
-                            onMouseEnter={(data, index) => setHoveredInner(index)}
-                            onMouseLeave={() => setHoveredInner(null)}
-                            animationBegin={0}
-                            animationDuration={200}
-                          >
-                            {innerEducationData.map((entry, index) => (
-                              <Cell
-                                key={`inner-cell-${index}`}
-                                fill={entry.fill}
-                                fillOpacity={hoveredInner !== null && hoveredInner !== index ? 0.3 : 1}
-                                stroke="none"
-                              />
-                            ))}
-                          </Pie>
+                    <Grid sx={{
+                      position:'relative',
+                      width:'330px',
+            
+                    }}>
+                      <HighchartsReact highcharts={Highcharts} options={options} />
+                    </Grid>
+                  </Box>
 
-                          {/* Outer Pie */}
-                          <Pie
-                            data={educationData}
-                            dataKey="value"
-                            nameKey="name"
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={75}
-                            labelLine={false}
-                            outerRadius={hoveredOuter !== null ? 115 : 115}
-                            label={renderCustomLabel}
-                            onMouseEnter={(data, index) => setHoveredOuter(index)}
-                            onMouseLeave={() => setHoveredOuter(null)}
-                            animationBegin={0}
-                            animationDuration={200}
-                            paddingAngle={1}
-                          >
-                            {educationData.map((entry, index) => (
-                              <Cell
-                                key={`outer-cell-${index}`}
-                                fill={entry.fill}
-                                fillOpacity={hoveredOuter !== null && hoveredOuter !== index ? 0.3 : 1}
-                                stroke="none"
-                              />
-                            ))}
-                          </Pie>
-
-                          <Tooltip content={<CustomTooltip />} />
-                        </PieChart>
-                      </ResponsiveContainer>
-                      <Box
-                        sx={{
-                          position: 'absolute',
-                          top: '50%',
-                          left: '50%',
-                          transform: 'translate(-50%, -50%)',
-                          textAlign: 'center',
-                          pointerEvents: 'none',
-                        }}
-                      >
-                        <Typography fontSize="11px" fontWeight="bold" color="text.primary">
-                          Education
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Paper>
 
                   {/* Slide 2 - Bar Chart */}
                   <Paper sx={{ p: 2, mb: 2, width: "100%" }}>
-                    <Typography variant="body2" fontWeight="800" mb={1} >
+                    <Typography variant="body2" fontWeight="600" mb={1} >
                       Years of Experience vs Percentage of Directors
                     </Typography>
                     <Divider />
@@ -685,99 +832,15 @@ const sliderSettings = {
               ) : (
                 <>
                   {/* Desktop: All stacked */}
-                <Paper sx={{ p: 2, mb: 2, width: '100%' }}>
-                    <Typography variant="body2" fontWeight="800" mb={2} >
+                  <Box>
+                    <Typography variant="body2" fontWeight="800" mb={1} >
                       Education Background of Directors
                     </Typography>
-                    <Divider />
-                    <Box
-                      sx={{
-                        height: { xs: 250, md: 300 },
-                        width: '100%',
-                        mt: 2,
-                        position: 'relative',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-
-                      }}
-                    >
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          {/* Inner Pie */}
-                          <Pie
-                            paddingAngle={1}
-                            data={innerEducationData}
-                            dataKey="value"
-                            nameKey="name"
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={30}
-                            labelLine={false}
-                            outerRadius={hoveredInner !== null ? 65 : 65}
-                            label={renderInnerLabel}
-                            onMouseEnter={(data, index) => setHoveredInner(index)}
-                            onMouseLeave={() => setHoveredInner(null)}
-                            animationBegin={0}
-                            animationDuration={200}
-                          >
-                            {innerEducationData.map((entry, index) => (
-                              <Cell
-                                key={`inner-cell-${index}`}
-                                fill={entry.fill}
-                                fillOpacity={hoveredInner !== null && hoveredInner !== index ? 0.3 : 1}
-                                stroke="none"
-                              />
-                            ))}
-                          </Pie>
-
-                          {/* Outer Pie */}
-                          <Pie
-                            data={educationData}
-                            dataKey="value"
-                            nameKey="name"
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={75}
-                            labelLine={false}
-                            outerRadius={hoveredOuter !== null ? 115 : 115}
-                            label={renderCustomLabel}
-                            onMouseEnter={(data, index) => setHoveredOuter(index)}
-                            onMouseLeave={() => setHoveredOuter(null)}
-                            animationBegin={0}
-                            animationDuration={200}
-                            paddingAngle={1}
-                          >
-                            {educationData.map((entry, index) => (
-                              <Cell
-                                key={`outer-cell-${index}`}
-                                fill={entry.fill}
-                                fillOpacity={hoveredOuter !== null && hoveredOuter !== index ? 0.3 : 1}
-                                stroke="none"
-                              />
-                            ))}
-                          </Pie>
-
-                          <Tooltip content={<CustomTooltip />} />
-                        </PieChart>
-                      </ResponsiveContainer>
-                      <Box
-                        sx={{
-                          position: 'absolute',
-                          top: '50%',
-                          left: '50%',
-                          transform: 'translate(-50%, -50%)',
-                          textAlign: 'center',
-                          pointerEvents: 'none',
-                        }}
-                      >
-                        <Typography fontSize="11px" fontWeight="bold" color="text.primary">
-                          Education
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Paper>
-
+                    <Divider sx={{ bgcolor: "grey.400", my: 1 }} />
+                    <div style={{ width: "100%", marginBottom: '10px' }}>
+                      <HighchartsReact highcharts={Highcharts} options={options} />
+                    </div>
+                  </Box>
 
                   <Paper sx={{ p: 2, mb: 2, width: "100%" }}>
                     <Typography variant="body2" fontWeight="800" mb={1} >
@@ -813,7 +876,7 @@ const sliderSettings = {
                     <CustomLegend />
                   </Paper>
 
-                   <Paper sx={{ p: 2, width: '100%', bgcolor: '#fff' }}>
+                  <Paper sx={{ p: 2, width: '100%', bgcolor: '#fff' }}>
                     <Typography variant="body2" fontWeight="800" mb={1} >
                       Previous Company Background
                     </Typography>
@@ -871,25 +934,24 @@ const sliderSettings = {
               )}
             </Box>
           </Grid>
-
-
-
         </Grid>
 
         <CardActions
           sx={{
-            display: 'flex',
+            display: { xs: 'block', md: 'none', lg: 'none' },
             flexDirection: { xs: 'column', sm: 'row' },
             justifyContent: 'center',
             alignItems: 'center',
             gap: 2,
             mt: 4,
+          
           }}
         >
           <Button
             variant="contained"
             size="large"
             sx={{
+              mb:2,
               color: '#fff',
               backgroundColor: 'primary.main',
               borderRadius: '100px',

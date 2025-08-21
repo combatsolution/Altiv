@@ -17,10 +17,11 @@ const CareerToolkitHero = () => {
         backgroundPosition: "center",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
+        justifyContent: {xs:'center', lg:"center"},
+        alignItems:{xs:'left', lg:"center"},
+        textAlign:{xs:'left', lg:"center"},
         px: 2,
+        
       }}
     >
       <Typography
@@ -29,8 +30,8 @@ const CareerToolkitHero = () => {
         color="black" 
         sx={
           {
-           fontsize:{xs:'40px', md:'54px'}
-
+          fontSize:{xs:'40px', lg:'53px'},
+          width:{xs:'327px', lg:'100%'}      
           }
         }
       >
@@ -40,11 +41,12 @@ const CareerToolkitHero = () => {
         variant="body1"
         color="text.secondary"
         mt={2}
-        maxWidth="700px"
-         sx={
+        maxWidth="100%"
+         sx=
+         {
           {
-           fontsize:{xs:'16px', md:'20px'}
-           
+           fontSize:{ xs:'16px', md:'20px'},
+             width:{xs:'327px', lg:'100%'}  
           }
         }
       >

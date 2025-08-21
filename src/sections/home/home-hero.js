@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';  
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -44,7 +44,6 @@ function HomeHero() {
       return;
     }
     setError('');
-    // navigate('/job-details');
     navigate('/career-compass');
   };
 
@@ -63,18 +62,25 @@ function HomeHero() {
     sessionStorage.removeItem('uploadedResumeId');
   };
 
-  const handleUploadResume = async (file) => { 
+  const handleUploadResume = async (fileDetails) => {
     try {
       setIsLoading(true);
-      const response = await axiosInstance.post(
-        currentUser ? '/resumes' : '/resumes/guest-upload',
-        { fileDetails: file } 
-      );
+
+      const payload = {
+        fileDetails,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        isDeleted: false,
+        userId: currentUser?.id || 0,
+      };
+
+
+      const response = await axiosInstance.post('/resumes', payload);
+
       if (response.data) {
         enqueueSnackbar('Upload successful', { variant: 'success' });
         setSelectedResumeId(response?.data?.id);
         sessionStorage.setItem('userStartedWith', 'resume');
-        // sessionStorage.setItem('uploadedResumeId', response?.data?.id);
         trackEvent({
           category: 'Resume Uploaded',
           action: 'Resume uploaded',
@@ -84,7 +90,7 @@ function HomeHero() {
       }
     } catch (uploadError) {
       console.error('Error while uploading resume', uploadError);
-      enqueueSnackbar(uploadError?.error?.message || 'Upload failed', { variant: 'error' });
+      enqueueSnackbar(uploadError?.response?.data?.message || 'Upload failed', { variant: 'error' });
       setSelectedFile(null);
     } finally {
       setDocIsLoading(false);
@@ -96,13 +102,28 @@ function HomeHero() {
     setDocIsLoading(true);
     const file = acceptedFiles[0];
     if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
-      const response = await axiosInstance.post('/files', formData);
-      await handleUploadResume(response.data.files[0]);
-      setSelectedFile(response.data.files[0]);
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        // Step 1: upload to /files
+        const response = await axiosInstance.post('/files', formData);
+        const uploadedFileDetails = response.data.files[0];
+
+        // Step 2: save to /resumes
+        await handleUploadResume(uploadedFileDetails);
+
+        // For UI display
+        setSelectedFile(uploadedFileDetails.name);
+      } catch (err) {
+        console.error('Error uploading file:', err);
+        enqueueSnackbar('File upload failed', { variant: 'error' });
+      } finally {
+        setDocIsLoading(false);
+      }
     }
   };
+
 
   const handleCloseModel = () => {
     setSelectedResumeId(false);
@@ -226,8 +247,8 @@ function HomeHero() {
                     <Typography variant="body2" color="textSecondary" mb={3}>
                       You can choose to go with your updated resume or job title
                     </Typography>
-                 
-                      <ToggleButtonGroup
+
+                    <ToggleButtonGroup
                       value={uploadType}
                       exclusive
                       onChange={(event, newValue) => {
@@ -368,7 +389,35 @@ function HomeHero() {
                           variant="contained"
                           fullWidth
                           disabled={!!error || !selectedFile}
-                          onClick={() => navigate(paths.careerResume)}
+                          onClick={async () => {
+                            try {
+                              setDocIsLoading(true);
+
+                              // Step 1: upload raw file
+                              const file = fileInputRef.current?.files?.[0];
+                              if (!file) {
+                                enqueueSnackbar('Please select a file', { variant: 'warning' });
+                                return;
+                              }
+
+                              const formData = new FormData();
+                              formData.append('file', file);
+
+                              const fileRes = await axiosInstance.post('/files', formData);
+                              const uploadedFileDetails = fileRes.data.files[0];
+
+                              // Step 2: create resume entry in /resumes
+                              await handleUploadResume(uploadedFileDetails);
+
+                              // Step 3: navigate on success
+                              navigate(paths.careerResume);
+                            } catch (err) {
+                              console.error('Upload failed:', err);
+                              enqueueSnackbar('Upload failed, please try again', { variant: 'error' });
+                            } finally {
+                              setDocIsLoading(false);
+                            }
+                          }}
                           sx={{
                             backgroundColor: '#3f51b5',
                             borderRadius: 999,
@@ -380,6 +429,8 @@ function HomeHero() {
                         >
                           {selectedFile ? 'Continue' : 'Upload Resume'}
                         </Button>
+
+
                       </>
                     ) : (
                       <>

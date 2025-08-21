@@ -25,7 +25,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import { useNavigate } from 'react-router-dom';
 
-import {jobs} from './jobsData'; // Importing jobs data
+import { jobs } from './jobsData'; // Importing jobs data
+
 
 // ✅ Job list JSON
 const similarJob = [
@@ -71,7 +72,7 @@ export default function JobDetailPage() {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
 
-    // ✅ Pick one job (e.g., first one in JSON)
+  // ✅ Pick one job (e.g., first one in JSON)
   const job = jobs[0];
 
   // ✅ For similar jobs, just filter out the current one
@@ -93,13 +94,13 @@ export default function JobDetailPage() {
           }}
         />
       </Container>
-{/* Main Content */}
+      {/* Main Content */}
       <Container>
         <Grid container spacing={3}>
           {/* Left Panel */}
           <Grid item xs={12} md={8}>
             <Card>
-              <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+              <CardContent sx={{ p: { xs: 2, md: 3 }, display: { xs: 'none', md: 'block' } }}>
                 {/* Header */}
                 <Grid container spacing={2} alignItems="center" justifyContent="space-between">
                   <Grid item xs={12} md={8}>
@@ -175,7 +176,7 @@ export default function JobDetailPage() {
                 </Grid>
 
                 <Divider sx={{ my: 2 }} />
-               {/* Description */}
+                {/* Description */}
                 <Typography paragraph>{job.description}</Typography>
 
                 {/* Description */}
@@ -193,9 +194,6 @@ export default function JobDetailPage() {
                     flexDirection: { xs: 'column', sm: 'row' },
                     justifyContent: 'center',
                     alignItems: 'center',
-
-                    
-
                     mt: 4,
                   }}
                 >
@@ -230,6 +228,164 @@ export default function JobDetailPage() {
                   </Button>
                 </CardActions>
               </CardContent>
+
+
+            </Card>
+
+
+            {/* mobile view */}
+            <Card>
+              <CardContent sx={{ p: { xs: 1, md: 0 }, display: { xs: 'block', md: 'none' } }}>
+                {/* Header */}
+
+                {/* Left: Company + Job Info */}
+                <Grid item xs={12} md={12} >
+                  <Box
+                    display="flex"
+                    flexDirection="row"
+                    gap={1}
+                    justifyContent='center'
+                  >
+                    <Avatar src={job.logo} sx={{ width: 56, height: 56 }} />
+
+                    <Box>
+                      {/* Company + Save Icon */}
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <Typography fontWeight={600} fontSize="18px">  {job.title}</Typography>
+                        <BookmarkBorderIcon
+                          fontSize="medium"
+                          sx={{ color: "text.secondary", cursor: "pointer" }}
+                        />
+                      </Box>
+
+                      {/* Job Title + Posted Time */}
+                      <Box display="flex" alignItems="center" gap={2} mt={0.5}>
+                        <Typography fontSize="15px" fontWeight={200}>
+                          {job.company}
+                        </Typography>
+                      </Box>
+
+                      {/* Location + Applicants + Score */}
+                      <Box display="flex" gap={1} flexWrap="wrap" >
+                        <Typography variant="body2" color="text.secondary"> {job.location} </Typography>
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <Typography fontSize="12px" color="text.secondary">
+                            {job.applicants} applicants
+                          </Typography>
+
+                          <Divider orientation="vertical" flexItem sx={{ bgcolor: "grey.400" }} />
+
+                          <Typography fontSize="12px" color="text.secondary">
+                            {job.posted}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    {/* Right: Match Score */}
+                    <Grid
+                      item
+                      xs={6}
+                      md="auto"
+                      textAlign={{ xs: "left", md: "center" }}
+                    >
+                      <Box
+                        sx={{
+                          bgcolor: "#E9FFE9",
+                          borderRadius: "50%",
+                          width: 80,
+                          height: 80,
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          mx: { md: "auto" },
+                          mt: { xs: 2, md: 0 },
+                        }}
+                      >
+                        <Typography
+                          variant="caption"
+                          fontSize="10px"
+                          color="success.dark"
+                        >
+                          Match Score
+                        </Typography>
+                        <Typography variant="h6" color="success.dark">
+                          {job.matchScore}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  </Box>
+
+                  <Typography
+                    variant="caption"
+                    color="primary"
+                    sx={{
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                      fontSize: "20px",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      mt: 2,
+                    }}
+                  >
+                    How is this match score?
+                  </Typography>
+                  {/* Description */}
+                  <Typography paragraph sx={{ mt: 2 }}>{job.description}</Typography>
+                </Grid>
+
+                {/* Description */}
+                {/* {[...Array(3)].map((_, i) => (
+                  <Typography key={i} paragraph>
+                    analyzes data to uncover insights and build predictive models, using skills in
+                    statistics, programming, and machine learning.
+                  </Typography>
+                ))} */}
+
+
+                <CardActions
+                  sx={{
+                    display: { xs: 'block', md: 'none' },
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    mt: 4,
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    size="large"
+                    sx={{
+                      color: '#fff',
+                      backgroundColor: 'primary.main',
+                      borderRadius: '10px',
+                      width: { xs: '100%', sm: '200px' },
+                      '&:hover': {
+                        backgroundColor: 'primary.dark',
+                      },
+                    }}
+                  >
+                    Apply now
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    sx={{
+                      mt: 2,
+                      color: '#0040D8',
+                      backgroundColor: '#fff',
+                      borderRadius: '10px',
+                      width: { xs: '100%', sm: '200px' },
+                    }}
+                    onClick={() => navigate('/job-booster')}
+                  >
+                    Boost my application
+                  </Button>
+                </CardActions>
+              </CardContent>
+
+
             </Card>
           </Grid>
 

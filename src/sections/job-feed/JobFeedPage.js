@@ -69,19 +69,19 @@ const JobCard = ({ job }) => {
       <Box flex={1} sx={{ display: { xs: 'none', md: 'block' } }}>
         <Stack direction="row" justifyContent="space-between">
           <Box>
-            <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 13 }}>
+            <Grid sx={{ display: 'flex', flexDirection: 'row', gap:4 }}>
               <Typography fontWeight={600}>{job.company}</Typography>
               <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />
             </Grid>
 
-            <Stack direction="row" justifyContent="center" spacing={1}>
+            <Stack direction="row" justifyContent="left" spacing={1}>
               <Typography fontSize="1rem">{job.title}</Typography>
               <Grid
                 sx={{
                   display: 'flex',
                   alignItems: 'center', // vertical alignment
                   justifyContent: 'center', // horizontal alignment
-                  width: '80px',
+                  width: '80px',  
                   height: '20px',
                   bgcolor: 'rgba(125, 90, 226, 0.1)',
                   color: 'rgba(125, 90, 226, 1)',

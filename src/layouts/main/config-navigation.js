@@ -38,7 +38,8 @@ export const navConfig = [
   {
     title: 'Jobs',
     icon: <Iconify icon="solar:atom-bold-duotone" />,
-    path: `${paths.comingSoonWithType('jobs')}`,
+    path: paths.jobFeed || paths.comingSoonWithType('jobs'),
+    
     // paths.components
   },
   {

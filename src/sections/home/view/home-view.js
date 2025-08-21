@@ -60,7 +60,7 @@ export default function HomeView() {
       <HomeHero />
       <FeatureSection />
       <TestimonialSection />
-      {/* <CareerToolkitHero /> */}
+      <CareerToolkitHero />
       {/* <Box
         src="/assets/images/line.svg"
         alt="img decorative"
