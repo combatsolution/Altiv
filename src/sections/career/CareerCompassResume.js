@@ -97,43 +97,62 @@ export default function CareerPathProjection() {
     executive: null,
   });
 
-  const [expandedCards, setExpandedCards] = useState({
-    current: true,
-    next: true,
-    executive: true,
-  });
+  // Track collapsed state - all nodes are expanded by default
+  const [collapsedNodes, setCollapsedNodes] = useState(new Set());
 
-  const toggleCardExpansion = (level) => {
-    setExpandedCards((prev) => {
-      // If collapsing the next level, also collapse the executive level
-      if (level === 'next') {
-        return {
-          ...prev,
-          next: !prev.next,
-          executive: prev.next ? false : prev.executive,
-        };
+  // Memoize isNodeCollapsed to prevent unnecessary recalculations
+  const isNodeCollapsed = useCallback(
+    (nodeId) => collapsedNodes.has(nodeId),
+    [collapsedNodes]
+  );
+
+  // Toggle node expansion
+  const toggleNodeExpansion = (nodeId) => {
+    setCollapsedNodes(prev => {
+      const newCollapsed = new Set(prev);
+      if (newCollapsed.has(nodeId)) {
+        newCollapsed.delete(nodeId);
+      } else {
+        newCollapsed.add(nodeId);
       }
-      // If collapsing the current level, collapse both next and executive levels
-      if (level === 'current') {
-        return {
-          ...prev,
-          next: !prev.next,
-          executive: false,
-        };
-      }
-      // For executive level, just toggle its own state
-      return {
-        ...prev,
-        [level]: !prev[level],
-      };
+      return newCollapsed;
     });
   };
+
+  // Check if a node should be visible based on its parent's expanded state
+  const isNodeVisible = useCallback((node) => {
+    // Always show current node and labels
+    if (node.id === 'current-node' || node.id.startsWith('label-')) return true;
+    
+    // For next level nodes, check if top level is expanded
+    if (node.id.startsWith('next-')) {
+      return !isNodeCollapsed('current-node');
+    }
+    
+    // For executive level nodes
+    if (node.id.startsWith('exec-')) {
+      // If top level is collapsed, hide all executive nodes
+      if (isNodeCollapsed('current-node')) return false;
+      
+      // Find the parent node in the next level
+      const parentNode = mockData.next.find(n => n.children?.includes(node.id));
+      if (!parentNode) return true;
+      
+      // If parent (next-level node) is collapsed, hide this node
+      return !isNodeCollapsed(parentNode.id);
+    }
+    
+    return true;
+  }, [isNodeCollapsed]);
 
   const nodeTypes = {
     career: ({ data, id }) => {
       const { isNew, onClick } = data;
       const isSelected =
         selectedNodes.current === id || selectedNodes.next === id || selectedNodes.executive === id;
+      const isVisible = isNodeVisible({ id });
+      const hasChildren = (id === 'current-node' || id.startsWith('next-'));
+      const isExpanded = !isNodeCollapsed(id);
 
       return (
         <div
@@ -142,24 +161,14 @@ export default function CareerPathProjection() {
           onClick={() => onClick?.(id)}
           onKeyDown={(e) => e.key === 'Enter' && onClick?.(id)}
           style={{
-            width: isMdUp ? 360 : 280,
+            width: isMdUp ? 360 : 260,
             height: 127,
             position: 'relative',
             cursor: 'pointer',
             zIndex: 2,
-            opacity:
-              id === 'current-node' ||
-              (id.startsWith('next-') && expandedCards.next) ||
-              (id.startsWith('exec-') && expandedCards.executive)
-                ? 1
-                : 0,
+            opacity: isVisible ? 1 : 0,
             transition: 'opacity 0.3s ease',
-            pointerEvents:
-              id === 'current-node' ||
-              (id.startsWith('next-') && expandedCards.next) ||
-              (id.startsWith('exec-') && expandedCards.executive)
-                ? 'auto'
-                : 'none',
+            pointerEvents: isVisible ? 'auto' : 'none',
           }}
         >
           <Handle type="target" position={Position.Top} style={{ background: '#1976d2' }} />
@@ -169,48 +178,28 @@ export default function CareerPathProjection() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
             >
-              {(() => {
-                const getExpandedState = () => {
-                  if (id === 'current-node') return expandedCards.next; // Show if next level is expanded
-                  if (id.startsWith('next-')) return expandedCards.executive; // Show if executive level is expanded
-                  return false; // No levels below executive
-                };
-
-                return (
-                  <CareerCard
-                    {...data}
-                    isSelected={isSelected}
-                    showExpandButton={id === 'current-node' || id.startsWith('next-')}
-                    isExpanded={getExpandedState()}
-                    onExpandToggle={() => {
-                      if (id === 'current-node') toggleCardExpansion('next');
-                      else if (id.startsWith('next-')) toggleCardExpansion('executive');
-                    }}
-                  />
-                );
-              })()}
+              <CareerCard
+                {...data}
+                isSelected={isSelected}
+                showExpandButton={hasChildren}
+                isExpanded={isExpanded}
+                onExpandToggle={(e) => {
+                  e?.stopPropagation();
+                  toggleNodeExpansion(id);
+                }}
+              />
             </m.div>
           ) : (
-            (() => {
-              const getExpandedState = () => {
-                if (id === 'current-node') return expandedCards.next; // Show if next level is expanded
-                if (id.startsWith('next-')) return expandedCards.executive; // Show if executive level is expanded
-                return false; // No levels below executive
-              };
-
-              return (
-                <CareerCard
-                  {...data}
-                  isSelected={isSelected}
-                  showExpandButton={id === 'current-node' || id.startsWith('next-')}
-                  isExpanded={getExpandedState()}
-                  onExpandToggle={() => {
-                    if (id === 'current-node') toggleCardExpansion('next');
-                    else if (id.startsWith('next-')) toggleCardExpansion('executive');
-                  }}
-                />
-              );
-            })()
+            <CareerCard
+              {...data}
+              isSelected={isSelected}
+              showExpandButton={hasChildren}
+              isExpanded={isExpanded}
+              onExpandToggle={(e) => {
+                e?.stopPropagation();
+                toggleNodeExpansion(id);
+              }}
+            />
           )}
           <Handle type="source" position={Position.Bottom} style={{ background: '#1976d2' }} />
         </div>
@@ -255,14 +244,8 @@ export default function CareerPathProjection() {
 
   // Filter nodes based on expanded state
   const filterNodesByExpandedState = useCallback(
-    (nodeList) =>
-      nodeList.filter((node) => {
-        if (node.id === 'current-node') return true; // Always show current node
-        if (node.id.startsWith('next-')) return expandedCards.next;
-        if (node.id.startsWith('exec-')) return expandedCards.executive;
-        return true; // Keep all other nodes (labels, etc.)
-      }),
-    [expandedCards]
+    (nodeList) => nodeList.filter(node => isNodeVisible(node)),
+    [isNodeVisible] // Rebuild when isNodeVisible changes
   );
 
   // 👇 Generate all nodes
