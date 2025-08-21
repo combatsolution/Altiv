@@ -103,15 +103,19 @@ const options = {
       }
     }
   },
+  credits: {
+    enabled: false
+  },
 
 
   plotOptions: {
     sunburst: {
       allowDrillToNode: true,
       cursor: 'pointer',
+
       point: {
         events: {
-          click: function () {
+          click() {
             const chart = this.series.chart;
             chart.drilldownNode = this; // store selected node
             chart.redraw(); // trigger render update
@@ -122,7 +126,6 @@ const options = {
   },
   title: {
     text: "", // start empty
-
   },
 
 
@@ -136,15 +139,25 @@ const options = {
       slicedOffset: 10,
 
       dataLabels: {
-        format: "{point.name}:<br>{point.value}%",
-
-        style: {
-          color: '#fff',   // white text
-          fontWeight: 'bold',
-          textOutline: 'none', // removes ugly black border
+        useHTML: true,
+        formatter() {
+          const name = (this.point && this.point.name) ? String(this.point.name) : '';
+          // hide labels that match "education" (case-insensitive) or common typo "edcation"
+          if (/education/i.test(name) || /edcation/i.test(name) || /\bedu\b/i.test(name)) {
+            return null; // returning null hides the label
+          }
+          // otherwise show the name and value (keeps your original layout with a <br>)
+          return `${name}:<br>${this.point.value}%`;
         },
-
+        style: {
+          color: '#fff',         // white text
+          fontWeight: 'bold',
+          textOutline: 'none'    // removes black outline
+        }
       },
+
+
+
       levels: [
         {
           level: 1,
@@ -356,7 +369,7 @@ const ProductManagementPage = () => {
   return (
     <Container maxWidth="auto">
       <Box sx={{ pl: { xs: 2, md: 8 }, pr: { xs: 2, md: 4 }, py: 2, order: { xs: 2, md: 1 } }}>
-       
+
         <Grid container spacing={2}>
           {/* desktop Left Column */}
           <Grid item xs={12} lg={6} order={{ xs: 2, md: 1 }}>
@@ -425,7 +438,7 @@ const ProductManagementPage = () => {
                   direction={{ xs: 'column', sm: 'row' }}
                   spacing={1}
                   sx={{ mt: { xs: 1, sm: 0 } }}
-                  
+
                 >
                   <Button size="small" fontSize="15px" sx={{ color: 'grey.600', mt: 1 }}>
                     Select All
@@ -494,147 +507,147 @@ const ProductManagementPage = () => {
 
 
             <Stack
-            sx={{ display: { xs: "block", lg: 'none' } }}
-            direction={{ xs: 'column', sm: 'row', md: 'column' }}
-            spacing={1}
-            mb={2}
-            alignItems={{ xs: 'flex-start', sm: 'center', md: 'flex-start' }}
-            flexWrap="wrap"
-            width={{ xs: '100%', md: '100%' }}
-          >  
-        
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} width="100%">
-             <Typography
-                variant="subtitle1"
-                fontWeight={700}
-                gutterBottom
-                sx={{ display: { xs: "block", lg: "none" }, mt:10, mb:-1, }}
-              >
-                Background of Product Management at Mastercard 
-              </Typography>
-              <Box
-                display="flex"
-                flexDirection="row"
-                sx={{
-                  gap: 0,
-                  width: { xs: '100%', sm: '100%', lg: '100%' }, // ⚠ probably meant 650px not 6550px
-                  maxWidth: '500px',
-                 mb:2,
-                }}  
-              >
-                <Paper
-                  elevation={0}
-                  sx={{
-                    bgcolor: 'grey.100',
-                    display: 'flex',
-                    textAlign: 'center',
-                    p: 0.5,
-                  }}
-                >
-                  Match Score
-                </Paper>
-                <Paper
-                  elevation={0}
-                  sx={{
-                    bgcolor: { xs: '#0BA02C', lg: 'grey.300' },
-                    flex: 1,
-                    p: 1,
-                    textAlign: 'center',
-                    borderRadius: '0px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: 5,
-                    color: '#fff',
-                  }}
-                >
-                  Everything
-                  <KeyboardArrowDownIcon fontSize="medium" />
-                </Paper>
-              </Box>
-
-
-            </Stack>
-
-
-            {/* Chips BELOW the buttons */}
-            <Stack direction="row" spacing={2} flexWrap="wrap" mt={1} sx={{ width: "100%" }}>
-              {skills.map((skill, index) => {
-                const badgeColor = getBadgeColor(skill.score);
-                return (
-                  <Box key={index} sx={{ position: "relative", display: "inline-block" }}>
-                    {/* The Chip */}
-                    <Chip
-                      label={<Typography fontWeight={600}>{skill.label}</Typography>}
-                      variant="outlined"
-                      sx={{
-                        borderRadius: "20px",
-                        px: 1,
-                        py: 0.5,
-                      }}
-                    />
-                    {/* The floating badge */}
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        top: -8,
-                        right: -8,
-                        bgcolor: badgeColor,
-                        color: "white",
-                        borderRadius: "50%",
-                        fontSize: "0.7rem",
-                        fontWeight: "bold",
-                        minWidth: 28,
-                        height: 28,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxShadow: 1,
-                      }}
-                    >
-                      {skill.score}%
-                    </Box>
-                  </Box>
-                );
-              })}
-            </Stack>
-
-            <Stack
-              direction={{ xs: 'row', sm: 'row' }}
+              sx={{ display: { xs: "block", lg: 'none' } }}
+              direction={{ xs: 'column', sm: 'row', md: 'column' }}
               spacing={1}
-              sx={{ mt: { xs: 1, sm: 1 } }}
-              width='330px'
-              height='60px'
-              bgcolor='grey.200'
-              borderRadius='10px'
-              padding='10px'
+              mb={2}
+              alignItems={{ xs: 'flex-start', sm: 'center', md: 'flex-start' }}
+              flexWrap="wrap"
+              width={{ xs: '100%', md: '100%' }}
             >
 
-              <Button
-               
-                variant="outlined"
-                sx={{ color: 'grey.600',bgcolor:'#fff', borderRadius: '100px', width:'100px'  }}
-              >
-                Select All
-              </Button>
-              <Button
-               
-                variant="outlined"
-                sx={{ color: 'grey.600', bgcolor:'#fff', borderRadius: '100px', width:'100px' }}
-              >
-                Clear All
-              </Button>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} width="100%">
+                <Typography
+                  variant="subtitle1"
+                  fontWeight={700}
+                  gutterBottom
+                  sx={{ display: { xs: "block", lg: "none" }, mt: 10, mb: -1, }}
+                >
+                  Background of Product Management at Mastercard
+                </Typography>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  sx={{
+                    gap: 0,
+                    width: { xs: '100%', sm: '100%', lg: '100%' }, // ⚠ probably meant 650px not 6550px
+                    maxWidth: '500px',
+                    mb: 2,
+                  }}
+                >
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      bgcolor: 'grey.100',
+                      display: 'flex',
+                      textAlign: 'center',
+                      p: 0.5,
+                    }}
+                  >
+                    Match Score
+                  </Paper>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      bgcolor: { xs: '#0BA02C', lg: 'grey.300' },
+                      flex: 1,
+                      p: 1,
+                      textAlign: 'center',
+                      borderRadius: '0px',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      gap: 5,
+                      color: '#fff',
+                    }}
+                  >
+                    Everything
+                    <KeyboardArrowDownIcon fontSize="medium" />
+                  </Paper>
+                </Box>
 
-              <Button
 
-                variant="contained"
-                color="primary"
-                sx={{ borderRadius: '100px', width:'100px' }}
+              </Stack>
+
+
+              {/* Chips BELOW the buttons */}
+              <Stack direction="row" spacing={2} flexWrap="wrap" mt={1} sx={{ width: "100%" }}>
+                {skills.map((skill, index) => {
+                  const badgeColor = getBadgeColor(skill.score);
+                  return (
+                    <Box key={index} sx={{ position: "relative", display: "inline-block" }}>
+                      {/* The Chip */}
+                      <Chip
+                        label={<Typography fontWeight={600}>{skill.label}</Typography>}
+                        variant="outlined"
+                        sx={{
+                          borderRadius: "20px",
+                          px: 1,
+                          py: 0.5,
+                        }}
+                      />
+                      {/* The floating badge */}
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          top: -8,
+                          right: -8,
+                          bgcolor: badgeColor,
+                          color: "white",
+                          borderRadius: "50%",
+                          fontSize: "0.7rem",
+                          fontWeight: "bold",
+                          minWidth: 28,
+                          height: 28,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          boxShadow: 1,
+                        }}
+                      >
+                        {skill.score}%
+                      </Box>
+                    </Box>
+                  );
+                })}
+              </Stack>
+
+              <Stack
+                direction={{ xs: 'row', sm: 'row' }}
+                spacing={1}
+                sx={{ mt: { xs: 1, sm: 1 } }}
+                width='330px'
+                height='60px'
+                bgcolor='grey.200'
+                borderRadius='10px'
+                padding='10px'
               >
-                Update
-              </Button>
+
+                <Button
+
+                  variant="outlined"
+                  sx={{ color: 'grey.600', bgcolor: '#fff', borderRadius: '100px', width: '100px' }}
+                >
+                  Select All
+                </Button>
+                <Button
+
+                  variant="outlined"
+                  sx={{ color: 'grey.600', bgcolor: '#fff', borderRadius: '100px', width: '100px' }}
+                >
+                  Clear All
+                </Button>
+
+                <Button
+
+                  variant="contained"
+                  color="primary"
+                  sx={{ borderRadius: '100px', width: '100px' }}
+                >
+                  Update
+                </Button>
+              </Stack>
             </Stack>
-          </Stack>
 
             {/* Matching */}
             <Paper sx={{ p: 2, mb: 2, bgcolor: '#e8f5e9', mt: { xs: 6, md: 0 } }}>
@@ -728,9 +741,9 @@ const ProductManagementPage = () => {
                     <Divider />
 
                     <Grid sx={{
-                      position:'relative',
-                      width:'330px',
-            
+                      position: 'relative',
+                      width: '330px',
+
                     }}>
                       <HighchartsReact highcharts={Highcharts} options={options} />
                     </Grid>
@@ -944,14 +957,14 @@ const ProductManagementPage = () => {
             alignItems: 'center',
             gap: 2,
             mt: 4,
-          
+
           }}
         >
           <Button
             variant="contained"
             size="large"
             sx={{
-              mb:2,
+              mb: 2,
               color: '#fff',
               backgroundColor: 'primary.main',
               borderRadius: '100px',
