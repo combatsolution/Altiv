@@ -951,7 +951,7 @@ const ProductManagementPage = () => {
 
         <CardActions
           sx={{
-            display: { xs: 'block', md: 'none', lg: 'none' },
+            display: { xs: 'block', md: 'none', lg: 'flex' },
             flexDirection: { xs: 'column', sm: 'row' },
             justifyContent: 'center',
             alignItems: 'center',
