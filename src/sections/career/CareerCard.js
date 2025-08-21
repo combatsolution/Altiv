@@ -154,7 +154,14 @@ export default function CareerCard({
 
       {/* Arrow at bottom center */}
       {showExpandButton && (
-        <Box sx={{ position: 'absolute', bottom: -15, left: '50%', transform: 'translateX(-50%)' }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: -15,
+            left: '50%',
+            transform: 'translateX(-50%)',
+          }}
+        >
           <IconButton
             size="small"
             onClick={(e) => {

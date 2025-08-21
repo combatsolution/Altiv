@@ -171,9 +171,9 @@ export default function CareerPathProjection() {
             >
               {(() => {
                 const getExpandedState = () => {
-                  if (id === 'current-node') return expandedCards.current;
-                  if (id.startsWith('next-')) return expandedCards.next;
-                  return expandedCards.executive;
+                  if (id === 'current-node') return expandedCards.next; // Show if next level is expanded
+                  if (id.startsWith('next-')) return expandedCards.executive; // Show if executive level is expanded
+                  return false; // No levels below executive
                 };
 
                 return (
@@ -193,9 +193,9 @@ export default function CareerPathProjection() {
           ) : (
             (() => {
               const getExpandedState = () => {
-                if (id === 'current-node') return expandedCards.current;
-                if (id.startsWith('next-')) return expandedCards.next;
-                return expandedCards.executive;
+                if (id === 'current-node') return expandedCards.next; // Show if next level is expanded
+                if (id.startsWith('next-')) return expandedCards.executive; // Show if executive level is expanded
+                return false; // No levels below executive
               };
 
               return (
