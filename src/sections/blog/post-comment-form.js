@@ -10,13 +10,16 @@ import IconButton from '@mui/material/IconButton';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
+// hooks
+import { useNavigate } from 'react-router';
 // api
 import axiosInstance from 'src/utils/axios';
-
+import { paths } from 'src/routes/paths';
 // ----------------------------------------------------------------------
 
 export default function PostCommentForm({ postId, onCommentAdded }) {
   const { enqueueSnackbar } = useSnackbar();
+  const router = useNavigate();
 
   const CommentSchema = Yup.object().shape({
     comment: Yup.string().required('Comment is required'),
@@ -49,7 +52,6 @@ export default function PostCommentForm({ postId, onCommentAdded }) {
       await axiosInstance.post('/comment', payload);
 
       reset();
-
       enqueueSnackbar('Comment posted successfully!');
 
       if (onCommentAdded) {
@@ -57,7 +59,17 @@ export default function PostCommentForm({ postId, onCommentAdded }) {
       }
     } catch (error) {
       console.error('Error posting comment:', error);
-      enqueueSnackbar(error.message || 'Failed to post comment', { variant: 'error' });
+
+      if (error?.error?.statusCode === 401) {
+        // Navigate to login with current path as return URL
+        const returnTo = encodeURIComponent(window.location.pathname);
+        router(`${paths.auth.jwt.login}?returnTo=${returnTo}`);
+        return;
+      }
+
+      enqueueSnackbar(error.response?.data?.message || 'Failed to post comment', {
+        variant: 'error',
+      });
     }
   });
 

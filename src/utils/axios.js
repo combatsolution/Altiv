@@ -54,7 +54,7 @@ export const endpoints = {
     categories: '/categories',
     byFilters: (filterString) => `/blogs?filter=${filterString}`,
     byCategoryFilters: (filterString, categoryId) =>
-      `/blogs?categoryId=${categoryId}&filter=${filterString}`,
+      `/blogs?filter=${filterString}&categoryId=${categoryId}`,
   },
   comments: {
     list: (blogId) => `/comments/${blogId}`,
