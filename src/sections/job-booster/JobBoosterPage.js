@@ -32,7 +32,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { paths } from 'src/routes/paths';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { NoEncryptionGmailerrorred } from '@mui/icons-material';
+                              
 
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
@@ -147,7 +147,7 @@ const options = {
             return null; // returning null hides the label
           }
           // otherwise show the name and value (keeps your original layout with a <br>)
-          return `${name}:<br>${this.point.value}%`;
+          return `${name}<br>${this.point.value}%`;
         },
         style: {
           color: '#fff',         // white text
@@ -177,7 +177,7 @@ const options = {
     }
   ],
   tooltip: {
-    pointFormat: "<b>{point.name}</b>: {point.value}%"
+    pointFormat: "<b>{point.name}</b> {point.value}%"
   }
 };
 
@@ -472,7 +472,7 @@ const ProductManagementPage = () => {
                         label={<Typography fontWeight={200} fontSize={11} >{skill.label}</Typography>}
                         variant="outlined"
                         sx={{
-                          width: "120px",
+                          width: "127px",
                           borderRadius: "20px",
                           py: 0.2,
 

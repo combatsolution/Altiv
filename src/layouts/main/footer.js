@@ -29,9 +29,9 @@ const jobseekers = [
 
 const AICareerCoach = [
   { name: 'FOBO', href: paths.fobo },
-  { name: 'Career Compass', href: paths.comingSoon },
-  { name: 'Smart Job Feed', href: paths.comingSoon },
-  { name: 'Job Match Boost', href: paths.comingSoon },
+  { name: 'Career Compass', href: paths.careerResume },
+  { name: 'Smart Job Feed', href: paths.jobFeed },
+  { name: 'Job Match Boost', href: paths.jobbooster },
 ];
 
 const Programs = [
