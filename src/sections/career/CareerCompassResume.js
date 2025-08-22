@@ -609,7 +609,7 @@ export default function CareerPathProjection() {
                   top: '50%',
                   right: 16,
                   transform: 'translateY(-50%)',
-                  backgroundColor: 'rgba(0, 64, 216, 0.9)',
+                  // backgroundColor: 'rgba(0, 64, 216, 0.9)',
                   color: 'white',
                   padding: '8px 16px',
                   borderRadius: '20px',
@@ -618,18 +618,26 @@ export default function CareerPathProjection() {
                   alignItems: 'center',
                   animation: 'pulse 2s infinite',
                   '@keyframes pulse': {
-                    '0%': { opacity: 0.8 },
-                    '50%': { opacity: 0.5 },
-                    '100%': { opacity: 0.8 },
+                    '0%': { opacity: 1 },
+                    '50%': { opacity: 0.3 },
+                    '100%': { opacity: 1 },
                   },
                 }}
               >
                 {/* <Typography variant="body2" sx={{ fontSize: '14px' }}>
                   Swipe right
                 </Typography> */}
-                <Box component="span" sx={{ ml: 1, transform: 'rotate(90deg)', fontSize: '24px' }}>
-                  👆
-                </Box>
+                <Box 
+                  component="img" 
+                  src="/assets/icons/careerCompass/swipe_right.png" 
+                  alt="swipe right"
+                  sx={{ 
+                    ml: 1, 
+                    width: '54px', 
+                    height: '54px',
+                    // transform: 'rotate(90deg)'
+                  }} 
+                />
               </Box>
             )}
             <ReactFlow
