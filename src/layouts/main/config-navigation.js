@@ -13,15 +13,15 @@ export const navConfig = [
   //   icon: <Iconify icon="solar:home-2-bold-duotone" />,
   //   path: paths.careerResume,
   // },
+  {
+    title: 'AI Career Coach',
+    icon: <Iconify icon="solar:home-2-bold-duotone" />,
+    path: '/',
+  },
   { 
     title: 'FOBO',
     icon: <Iconify icon="solar:home-2-bold-duotone" />,
     path: paths.fobo,
-  },
-  {
-    title: 'AI Career Coach',
-    icon: <Iconify icon="solar:home-2-bold-duotone" />,
-    path: `${paths.comingSoonWithType('ai')}`,
   },
   // {
   //   title: 'Programs',
