@@ -1,3 +1,4 @@
+import React from 'react';
 // @mui
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
@@ -11,7 +12,7 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 // routes
 import { paths } from 'src/routes/paths';
-import { useParams } from 'src/routes/hook';
+import { useParams, useSearchParams } from 'src/routes/hook';
 import { RouterLink } from 'src/routes/components';
 // utils
 import { fShortenNumber } from 'src/utils/format-number';
@@ -34,10 +35,18 @@ export default function PostDetailsHomeView() {
   const params = useParams();
 
   const { title } = params;
+  const searchParams = useSearchParams();
+  const categoryId = searchParams.get('category') ? parseInt(searchParams.get('category'), 10) : null;
 
   const { post, postError, postLoading } = useGetPost(`${title}`);
 
-  const { comments = [], commentsCount, commentsLoading, commentsError, refreshComments } = useGetComments(post?.id);
+  const {
+    comments = [],
+    commentsCount,
+    commentsLoading,
+    commentsError,
+    refreshComments,
+  } = useGetComments(post?.id);
 
   const renderSkeleton = <PostDetailsSkeleton />;
 
@@ -85,10 +94,29 @@ export default function PostDetailsHomeView() {
               name: 'Home',
               href: '/',
             },
-            {
-              name: 'Blog',
-              href: paths.post.root,
-            },
+            ...(categoryId && post?.categories?.length > 0
+              ? [
+                  {
+                    name: 'Blog',
+                    href: paths.post.root, // Remove category parameter from Blog link
+                  },
+                  {
+                    name:
+                      post.categories.find((cat) => 
+                        cat.id === categoryId || 
+                        cat._id === categoryId ||
+                        cat.id?.toString() === categoryId.toString() ||
+                        cat._id?.toString() === categoryId.toString()
+                      )?.name || 'Category',
+                    href: `${paths.post.root}?category=${categoryId}`,
+                  },
+                ]
+              : [
+                  {
+                    name: 'Blog',
+                    href: paths.post.root,
+                  },
+                ]),
             {
               name: post?.title,
             },

@@ -1,5 +1,5 @@
 import orderBy from 'lodash/orderBy';
-import { useCallback, useState, useRef } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 // @mui
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import Iconify from 'src/components/iconify';
 // routes
 import { paths } from 'src/routes/paths';
+import { useSearchParams } from 'src/routes/hook';
 // hooks
 import { useDebounce } from 'src/hooks/use-debounce';
 // _mock
@@ -31,9 +32,20 @@ export default function PostListHomeView() {
   const [sortBy, setSortBy] = useState('latest');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const searchParams = useSearchParams();
   const scrollContainerRef = useRef(null);
 
   const { categories: fetchedCategories = [], categoriesLoading } = useGetCategories();
+
+  // Set initial category from URL if present
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get('category');
+    if (categoryFromUrl) {
+      // Convert to string for consistent comparison
+      setSelectedCategory(String(categoryFromUrl));
+      console.log('Setting category from URL:', categoryFromUrl);
+    }
+  }, [searchParams]);
 
   // Add 'All' category at the beginning
   const categories = [{ _id: 'all', name: 'All' }, ...fetchedCategories];
@@ -171,12 +183,13 @@ export default function PostListHomeView() {
                   key={category._id || category.id}
                   label={category.name}
                   variant={
-                    selectedCategory === (category._id || category.id) ? 'filled' : 'outlined'
+                    String(selectedCategory) === String(category._id || category.id) ? 'filled' : 'outlined'
                   }
-                  color={selectedCategory === (category._id || category.id) ? 'primary' : 'default'}
+                  color={String(selectedCategory) === String(category._id || category.id) ? 'primary' : 'default'}
                   onClick={() => {
-                    setSelectedCategory(category._id || category.id);
-                    console.log('Category clicked:', category._id || category.id);
+                    const catId = String(category._id || category.id);
+                    setSelectedCategory(catId);
+                    console.log('Category clicked:', catId, 'Current selected:', selectedCategory);
                   }}
                   sx={{
                     flexShrink: 0,
@@ -187,7 +200,7 @@ export default function PostListHomeView() {
                     '& .MuiChip-label': {
                       px: 1.5,
                     },
-                    ...(selectedCategory === (category._id || category.id) && {
+                    ...(String(selectedCategory) === String(category._id || category.id) && {
                       bgcolor: 'primary.main',
                       color: 'primary.contrastText',
                       '&:hover': {
@@ -221,7 +234,7 @@ export default function PostListHomeView() {
         <PostSort sort={sortBy} onSort={handleSortBy} sortOptions={POST_SORT_OPTIONS} />
       </Stack>
 
-      <PostList posts={dataFiltered} loading={postsLoading} />
+      <PostList posts={dataFiltered} loading={postsLoading} selectedCategory={selectedCategory} />
     </Container>
   );
 }

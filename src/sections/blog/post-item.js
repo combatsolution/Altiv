@@ -18,7 +18,7 @@ import TextMaxLine from 'src/components/text-max-line';
 
 // ----------------------------------------------------------------------
 
-export default function PostItem({ post }) {
+export default function PostItem({ post, selectedCategory = 'all' }) {
   const theme = useTheme();
   const { coverUrl, title, description, tags = [], createdAt, slug } = post;
 
@@ -50,7 +50,9 @@ export default function PostItem({ post }) {
         />
       </Box>
 
-      <CardContent sx={{ p: 3, flexGrow: 1, display: 'flex', flexDirection: 'column', minHeight: '50%' }}>
+      <CardContent
+        sx={{ p: 3, flexGrow: 1, display: 'flex', flexDirection: 'column', minHeight: '50%' }}
+      >
         <Typography
           variant="overline"
           sx={{
@@ -64,7 +66,9 @@ export default function PostItem({ post }) {
 
         <Link
           component={RouterLink}
-          href={paths.post.details(slug)}
+          href={`${paths.post.details(slug)}${
+            selectedCategory !== 'all' ? `?category=${encodeURIComponent(selectedCategory)}` : ''
+          }`}
           color="inherit"
           sx={{ flexGrow: 1 }}
         >
@@ -78,28 +82,38 @@ export default function PostItem({ post }) {
         </TextMaxLine>
 
         {tags.length > 0 && (
-          <Stack direction="row" spacing={1} sx={{ mt: 'auto', pt: 2 }}>
-            {tags.slice(0, 4).map((tag) => (
-              <Typography
-                key={tag}
-                variant="caption"
-                sx={{
-                  px: 1,
-                  py: 0.5,
-                  borderRadius: 0.5,
-                  bgcolor: alpha(theme.palette.primary.main, 0.08),
-                  color: 'primary.main',
-                }}
-              >
-                {tag}
-              </Typography>
-            ))}
-            {tags.length > 4 && (
-              <Typography variant="caption" sx={{ color: 'text.secondary', pt: 1 }}>
-                +{tags.length - 4} more
-              </Typography>
-            )}
-          </Stack>
+          <Box
+            sx={{
+              mt: 'auto',
+              pt: 2,
+              width: '100%',
+              overflowX: 'auto',
+              '&::-webkit-scrollbar': { display: 'none' },
+              msOverflowStyle: 'none',
+              scrollbarWidth: 'none',
+            }}
+          >
+            <Stack direction="row" spacing={1} sx={{ width: 'max-content', pb: 1 }}>
+              {tags.map((tag) => (
+                <Typography
+                  key={tag}
+                  variant="caption"
+                  sx={{
+                    px: 1,
+                    py: 0.5,
+                    borderRadius: 0.5,
+                    bgcolor: alpha(theme.palette.primary.main, 0.08),
+                    color: 'primary.main',
+                    flexShrink: 0,
+                    fontSize: '10px',
+                    fontWeight: 700,
+                  }}
+                >
+                  {tag}
+                </Typography>
+              ))}
+            </Stack>
+          </Box>
         )}
       </CardContent>
     </Card>
@@ -110,11 +124,12 @@ PostItem.propTypes = {
   post: PropTypes.shape({
     coverUrl: PropTypes.string,
     title: PropTypes.string,
+    slug: PropTypes.string,
     description: PropTypes.string,
     tags: PropTypes.arrayOf(PropTypes.string),
     createdAt: PropTypes.string,
-    slug: PropTypes.string,
-  }).isRequired,
+  }),
+  selectedCategory: PropTypes.string,
 };
 
 // ----------------------------------------------------------------------
