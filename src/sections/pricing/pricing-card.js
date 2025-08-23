@@ -109,7 +109,7 @@ export default function PricingCard({ card, sx, ...other }) {
           ml: 1,
           typography: 'body2',
         }}
-      >
+      > 
         {paymentType === 'oneTime' ? 'One Time Payment' : recurringPeriod}
       </Typography>
     </Stack>
@@ -156,6 +156,10 @@ export default function PricingCard({ card, sx, ...other }) {
       alignItems="center"
       sx={{
         p: 4,
+
+
+
+        
         height: '100%',
         borderRadius: 2,
         boxShadow: (theme) => ({

@@ -953,7 +953,7 @@ const ProductManagementPage = () => {
                         </ResponsiveContainer>
                       </Box>
 
-                      {/* Custom Legend */}
+                      {/* Custom Legend code  */}
                       <CustomLegend />
                     </Paper>
 

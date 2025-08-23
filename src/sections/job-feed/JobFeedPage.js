@@ -589,7 +589,7 @@ export default function JobFeedPage() {
                   </Button>
                 </form>
               </Paper>
-              <Paper sx={{ p: 2, bgcolor: '#E7F6EA' }}>
+              {/* <Paper sx={{ p: 2, bgcolor: '#E7F6EA' }}>
                 <Typography fontWeight={600}>🚀 Get noticed faster</Typography>
                 <Typography variant="body2" mt={1} mb={2}>
                   Upload your resume to get accurate matches.
@@ -601,7 +601,7 @@ export default function JobFeedPage() {
                 >
                   Upload your resume
                 </Button>
-              </Paper>
+              </Paper> */}
             </Stack>
           </Grid>
         </Grid>
