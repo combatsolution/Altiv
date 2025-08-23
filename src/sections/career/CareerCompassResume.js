@@ -83,7 +83,46 @@ const mockData = {
 export default function CareerPathProjection() {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
+  const [showSwipeHint, setShowSwipeHint] = useState(false);
+
+  // Show swipe hint on mobile after component mounts
+  useEffect(() => {
+    if (isMobile) {
+      // const hasSwipedBefore = localStorage.getItem('hasSwiped');
+      setShowSwipeHint(true);
+    }
+  }, [isMobile]);
+
+  const handleSwipe = useCallback(() => {
+    if (showSwipeHint) {
+      setShowSwipeHint(false);
+      localStorage.setItem('hasSwiped', 'true');
+    }
+  }, [showSwipeHint]);
+
+  // Close hint on any interaction with the flow
+  useEffect(() => {
+    const handleInteraction = () => {
+      if (showSwipeHint) {
+        setShowSwipeHint(false);
+      }
+    };
+
+    const flowPane = document.querySelector('.react-flow__pane');
+    if (flowPane) {
+      flowPane.addEventListener('click', handleInteraction);
+      flowPane.addEventListener('touchstart', handleInteraction);
+    }
+
+    return () => {
+      if (flowPane) {
+        flowPane.removeEventListener('click', handleInteraction);
+        flowPane.removeEventListener('touchstart', handleInteraction);
+      }
+    };
+  }, [showSwipeHint]);
 
   const [jobTitle, setJobTitle] = useState('Lead Data Scientist');
   const [expYears, setExpYears] = useState(5);
@@ -101,14 +140,11 @@ export default function CareerPathProjection() {
   const [collapsedNodes, setCollapsedNodes] = useState(new Set());
 
   // Memoize isNodeCollapsed to prevent unnecessary recalculations
-  const isNodeCollapsed = useCallback(
-    (nodeId) => collapsedNodes.has(nodeId),
-    [collapsedNodes]
-  );
+  const isNodeCollapsed = useCallback((nodeId) => collapsedNodes.has(nodeId), [collapsedNodes]);
 
   // Toggle node expansion
   const toggleNodeExpansion = (nodeId) => {
-    setCollapsedNodes(prev => {
+    setCollapsedNodes((prev) => {
       const newCollapsed = new Set(prev);
       if (newCollapsed.has(nodeId)) {
         newCollapsed.delete(nodeId);
@@ -120,30 +156,33 @@ export default function CareerPathProjection() {
   };
 
   // Check if a node should be visible based on its parent's expanded state
-  const isNodeVisible = useCallback((node) => {
-    // Always show current node and labels
-    if (node.id === 'current-node' || node.id.startsWith('label-')) return true;
-    
-    // For next level nodes, check if top level is expanded
-    if (node.id.startsWith('next-')) {
-      return !isNodeCollapsed('current-node');
-    }
-    
-    // For executive level nodes
-    if (node.id.startsWith('exec-')) {
-      // If top level is collapsed, hide all executive nodes
-      if (isNodeCollapsed('current-node')) return false;
-      
-      // Find the parent node in the next level
-      const parentNode = mockData.next.find(n => n.children?.includes(node.id));
-      if (!parentNode) return true;
-      
-      // If parent (next-level node) is collapsed, hide this node
-      return !isNodeCollapsed(parentNode.id);
-    }
-    
-    return true;
-  }, [isNodeCollapsed]);
+  const isNodeVisible = useCallback(
+    (node) => {
+      // Always show current node and labels
+      if (node.id === 'current-node' || node.id.startsWith('label-')) return true;
+
+      // For next level nodes, check if top level is expanded
+      if (node.id.startsWith('next-')) {
+        return !isNodeCollapsed('current-node');
+      }
+
+      // For executive level nodes
+      if (node.id.startsWith('exec-')) {
+        // If top level is collapsed, hide all executive nodes
+        if (isNodeCollapsed('current-node')) return false;
+
+        // Find the parent node in the next level
+        const parentNode = mockData.next.find((n) => n.children?.includes(node.id));
+        if (!parentNode) return true;
+
+        // If parent (next-level node) is collapsed, hide this node
+        return !isNodeCollapsed(parentNode.id);
+      }
+
+      return true;
+    },
+    [isNodeCollapsed]
+  );
 
   const nodeTypes = {
     career: ({ data, id }) => {
@@ -151,7 +190,7 @@ export default function CareerPathProjection() {
       const isSelected =
         selectedNodes.current === id || selectedNodes.next === id || selectedNodes.executive === id;
       const isVisible = isNodeVisible({ id });
-      const hasChildren = (id === 'current-node' || id.startsWith('next-'));
+      const hasChildren = id === 'current-node' || id.startsWith('next-');
       const isExpanded = !isNodeCollapsed(id);
 
       return (
@@ -244,11 +283,11 @@ export default function CareerPathProjection() {
 
   // Filter nodes based on expanded state
   const filterNodesByExpandedState = useCallback(
-    (nodeList) => nodeList.filter(node => isNodeVisible(node)),
+    (nodeList) => nodeList.filter((node) => isNodeVisible(node)),
     [isNodeVisible] // Rebuild when isNodeVisible changes
   );
 
-  // 👇 Generate all nodes
+  // Generate all nodes
   const generateAllNodes = useCallback(() => {
     const handleNodeClick = (id, level) => {
       setSelectedNodes((prev) => {
@@ -364,7 +403,7 @@ export default function CareerPathProjection() {
     rebuildEdges(selectedNodes);
   }, [generateAllNodes, selectedNodes]);
 
-  // 👇 Build edges dynamically
+  // Build edges dynamically
   const rebuildEdges = (selected) => {
     const newEdges = [
       {
@@ -559,15 +598,58 @@ export default function CareerPathProjection() {
               height: { xs: '70vh', sm: '80vh', md: '90vh' },
               width: '100%',
               mb: { xs: 2, sm: 3, md: 4 },
+              position: 'relative',
             }}
+            onTouchStart={handleSwipe}
           >
-            <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView={false}>
+            {showSwipeHint && (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  right: 16,
+                  transform: 'translateY(-50%)',
+                  // backgroundColor: 'rgba(0, 64, 216, 0.9)',
+                  color: 'white',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  zIndex: 10,
+                  display: 'flex',
+                  alignItems: 'center',
+                  animation: 'pulse 2s infinite',
+                  '@keyframes pulse': {
+                    '0%': { opacity: 1 },
+                    '50%': { opacity: 0.3 },
+                    '100%': { opacity: 1 },
+                  },
+                }}
+              >
+                {/* <Typography variant="body2" sx={{ fontSize: '14px' }}>
+                  Swipe right
+                </Typography> */}
+                <Box 
+                  component="img" 
+                  src="/assets/icons/careerCompass/swipe_right.png" 
+                  alt="swipe right"
+                  sx={{ 
+                    ml: 1, 
+                    width: '54px', 
+                    height: '54px',
+                    // transform: 'rotate(90deg)'
+                  }} 
+                />
+              </Box>
+            )}
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              nodeTypes={nodeTypes}
+              fitView={false}
+              onPaneClick={handleSwipe}
+            >
               <Background />
               <Controls position="top-right" />
             </ReactFlow>
-          </Box>
-
-          <Box sx={{ textAlign: 'center', mt: { xs: 2, sm: 3, md: 4 } }}>
             <Button
               size={isMdUp ? 'medium' : 'small'}
               sx={{
