@@ -78,12 +78,19 @@ const mockData = {
   ],
 };
 
-export default function CareerPathProjection({ isResume }) {
+export default function CareerPathProjection({ isResume, job, experience }) {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [showSwipeHint, setShowSwipeHint] = useState(false);
   const [showReactFlow, setShowReactFlow] = useState(false);
+
+  // Show React Flow if job and experience are provided or if isResume is true
+  useEffect(() => {
+    if (isResume || (job && experience)) {
+      setShowReactFlow(true);
+    }
+  }, [isResume, job, experience]);
 
   // Show swipe hint on mobile after component mounts
   useEffect(() => {
@@ -736,7 +743,7 @@ export default function CareerPathProjection({ isResume }) {
                 />
               </Box>
             )}
-            {showReactFlow || isResume ? (
+            {showReactFlow ? (
               <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -798,4 +805,6 @@ export default function CareerPathProjection({ isResume }) {
 
 CareerPathProjection.propTypes = {
   isResume: PropTypes.bool,
+  job: PropTypes.string,
+  experience: PropTypes.number,
 };
