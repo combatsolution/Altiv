@@ -1033,7 +1033,7 @@ const ProductManagementPage = () => {
               variant="contained"
               size="large"
               sx={{
-                mb: 2,
+               
                 color: '#fff',
                 backgroundColor: 'primary.main',
                 borderRadius: '100px',
