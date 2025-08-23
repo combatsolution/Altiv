@@ -68,7 +68,8 @@ export default function PricingView() {
     try {
       const response = await axiosInstance.get(`/plans/plan-by-type/${categoryValue}`);
       if (response && response.data) {
-        setPlansData(response.data);
+        const finalPlansData = response?.data?.length > 0 ? response?.data?.filter((res) => !res?.isFreePlan) : [];
+        setPlansData(finalPlansData);
       }
     } catch (error) {
       console.error('Error fetching plans:', error);
