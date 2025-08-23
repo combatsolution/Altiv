@@ -203,7 +203,7 @@ export default function CareerPathProjection() {
             width: isMdUp ? 360 : 260,
             height: 127,
             position: 'relative',
-            cursor: 'pointer',
+            cursor: 'grab',
             zIndex: 2,
             opacity: isVisible ? 1 : 0,
             transition: 'opacity 0.3s ease',
@@ -216,6 +216,7 @@ export default function CareerPathProjection() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
+              style={{ pointerEvents: 'auto' }}
             >
               <CareerCard
                 {...data}
@@ -229,16 +230,18 @@ export default function CareerPathProjection() {
               />
             </m.div>
           ) : (
-            <CareerCard
-              {...data}
-              isSelected={isSelected}
-              showExpandButton={hasChildren}
-              isExpanded={isExpanded}
-              onExpandToggle={(e) => {
-                e?.stopPropagation();
-                toggleNodeExpansion(id);
-              }}
-            />
+            <div style={{ pointerEvents: 'auto' }}>
+              <CareerCard
+                {...data}
+                isSelected={isSelected}
+                showExpandButton={hasChildren}
+                isExpanded={isExpanded}
+                onExpandToggle={(e) => {
+                  e?.stopPropagation();
+                  toggleNodeExpansion(id);
+                }}
+              />
+            </div>
           )}
           <Handle type="source" position={Position.Bottom} style={{ background: '#1976d2' }} />
         </div>
@@ -627,16 +630,15 @@ export default function CareerPathProjection() {
                 {/* <Typography variant="body2" sx={{ fontSize: '14px' }}>
                   Swipe right
                 </Typography> */}
-                <Box 
-                  component="img" 
-                  src="/assets/icons/careerCompass/swipe_right.png" 
+                <Box
+                  component="img"
+                  src="/assets/icons/careerCompass/swipe_right.png"
                   alt="swipe right"
-                  sx={{ 
-                    ml: 1, 
-                    width: '54px', 
+                  sx={{
+                    ml: 1,
+                    width: '54px',
                     height: '54px',
-                    // transform: 'rotate(90deg)'
-                  }} 
+                  }}
                 />
               </Box>
             )}
@@ -646,6 +648,18 @@ export default function CareerPathProjection() {
               nodeTypes={nodeTypes}
               fitView={false}
               onPaneClick={handleSwipe}
+              nodesDraggable={false}
+              // nodesConnectable={false}
+              // elementsSelectable={false}
+              // panOnDrag={[0, 1, 2]} // Allow pan with left, right, and middle mouse buttons
+              // panOnScroll
+              // zoomOnScroll={!isMobile}
+              // zoomOnPinch
+              // preventScrolling={false}
+              // defaultViewport={{ x: 0, y: 0, zoom: 1 }}
+              // minZoom={0.5}
+              // maxZoom={2}
+              onNodeContextMenu={(e) => e.preventDefault()} // Prevent context menu on nodes
             >
               <Background />
               <Controls position="top-right" />
