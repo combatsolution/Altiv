@@ -105,7 +105,7 @@ const options = {
           y: chart.plotHeight / 2 + chart.plotTop
         });
 
-
+        
       }
     }
   },
@@ -141,15 +141,13 @@ const options = {
       type: "sunburst",
       name: "",   // 👈 removes the "Series 1" text
       data: dataa,
-
       allowDrillToNode: true,
       cursor: "pointer",
       borderWidth: 2,
       slicedOffset: 10,
       dataLabels: {
-        rotationMode: 'circular',
+           rotationMode: 'circular',  
         
-        useHTML: true,
         formatter() {
           const name = (this.point && this.point.name) ? String(this.point.name) : '';
           // hide labels that match "education" (case-insensitive) or common typo "edcation"
@@ -160,15 +158,10 @@ const options = {
           return `${name}<br>${this.point.value}%`;
         },
         style: {
-          fontSize: '12px',
+          
           color: '#fff',         // white text
           fontWeight: 'bold',
           textOutline: 'none'    // removes black outline
-        },
-        filter: {
-          property: 'outerArcLength', // hide labels that are too small
-          operator: '>',
-          value: 30
         }
       },
 
@@ -177,17 +170,16 @@ const options = {
           level: 1,
           levelIsConstant: false,
           dataLabels: {
-            rotationMode: 'circular',
+            rotationMode: "circular"
           }
         },
         {
           level: 2,
           colorByPoint: true,
           dataLabels: {
-            rotationMode: 'circular',
+            rotationMode: "circular"
           }
-        },
-     
+        }
       ]
     }
   ],
