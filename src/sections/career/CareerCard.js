@@ -68,7 +68,7 @@ export default function CareerCard({
         height: 127,
         borderRadius: '8px',
         cursor: onClick ? 'pointer' : 'default',
-        backgroundColor: isSelected ? '#F0F9FF' : 'transparent',
+        backgroundColor: isSelected ? '#F0F9FF' : '#FFFFFF',
         borderColor: isSelected ? '#1976d2' : undefined,
         '&:hover': {
           boxShadow: onClick ? 4 : 'none',
