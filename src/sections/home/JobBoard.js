@@ -177,7 +177,7 @@ const JobBoard = () => (
   </Grid>
 
 
-  <Grid item xs={12} md={3} >
+  {/* <Grid item xs={12} md={3} >
     <Paper variant="outlined" sx={{ p: { xs: 2, sm: 3 }, display:{xs:'block ', lg:'none'} }}>
       <Box 
       p={1.5}
@@ -224,7 +224,7 @@ const JobBoard = () => (
       </Box>
 
     </Paper>
-  </Grid>
+  </Grid> */}
 
  
 
