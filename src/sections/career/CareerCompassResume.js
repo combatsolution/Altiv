@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   Grid,
@@ -8,10 +9,7 @@ import {
   Button,
   useTheme,
   useMediaQuery,
-  Stack,
 } from '@mui/material';
-import { FaClipboardList } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
 import ReactFlow, { Background, Handle, Position, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { m } from 'framer-motion';
@@ -80,12 +78,12 @@ const mockData = {
   ],
 };
 
-export default function CareerPathProjection() {
+export default function CareerPathProjection({ isResume }) {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const navigate = useNavigate();
   const [showSwipeHint, setShowSwipeHint] = useState(false);
+  const [showReactFlow, setShowReactFlow] = useState(false);
 
   // Show swipe hint on mobile after component mounts
   useEffect(() => {
@@ -124,8 +122,20 @@ export default function CareerPathProjection() {
     };
   }, [showSwipeHint]);
 
-  const [jobTitle, setJobTitle] = useState('Lead Data Scientist');
-  const [expYears, setExpYears] = useState(5);
+  const [jobTitle, setJobTitle] = useState('');
+  const [expYears, setExpYears] = useState('');
+  const [errors, setErrors] = useState({
+    jobTitle: '',
+    expYears: '',
+  });
+  const jobTitles = [
+    'Software Engineer',
+    'Senior Software Engineer',
+    'Lead Developer',
+    'Engineering Manager',
+    'Technical Lead',
+    'Data Scientist',
+  ];
   const [userStartedWith, setUserStartedWith] = useState(null);
 
   const [nodes, setNodes] = useState([]);
@@ -467,6 +477,20 @@ export default function CareerPathProjection() {
     setEdges(newEdges);
   };
 
+  const handleModify = () => {
+    const newErrors = {
+      jobTitle: !jobTitle ? 'Please select a job title' : '',
+      expYears: !expYears ? 'Please select years of experience' : '',
+    };
+    setErrors(newErrors);
+
+    if (!newErrors.jobTitle && !newErrors.expYears) {
+      console.log('Form submitted with:', { jobTitle, expYears });
+      // TODO: Add your form submission logic here
+      setShowReactFlow(true);
+    }
+  };
+
   return (
     <Box sx={{ bgcolor: 'white', p: { xs: 1, sm: 2, md: 3 } }}>
       <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
@@ -482,27 +506,63 @@ export default function CareerPathProjection() {
                       width={24}
                       height={24}
                     />
-                    <Select
-                      fullWidth
-                      size="small"
-                      value={jobTitle}
-                      onChange={(e) => setJobTitle(e.target.value)}
-                      variant="standard"
-                      sx={{
-                        '&:before': { borderBottom: '1px solid #D6DDEB' },
-                        '&:after': { borderBottom: '1px solid #D6DDEB' },
-                        '& .MuiSelect-select': {
-                          fontWeight: 400,
-                          fontSize: '16px',
-                          lineHeight: '160%',
-                          letterSpacing: '0%',
-                          color: '#25324B',
-                          padding: '8px 0 4px',
-                        },
-                      }}
-                    >
-                      <MenuItem value={jobTitle}>{jobTitle}</MenuItem>
-                    </Select>
+                    <Box sx={{ width: '100%' }}>
+                      <Select
+                        fullWidth
+                        size="small"
+                        value={jobTitle}
+                        displayEmpty
+                        onChange={(e) => {
+                          setJobTitle(e.target.value);
+                          if (errors.jobTitle) {
+                            setErrors((prev) => ({ ...prev, jobTitle: '' }));
+                          }
+                        }}
+                        variant="standard"
+                        error={!!errors.jobTitle}
+                        renderValue={(selected) => {
+                          if (!selected) {
+                            return <span style={{ color: '#7C8DB5' }}>Select job title</span>;
+                          }
+                          return selected;
+                        }}
+                        sx={{
+                          '&:before': {
+                            borderBottom: errors.jobTitle
+                              ? '1px solid #FF4D4F'
+                              : '1px solid #D6DDEB',
+                          },
+                          '&:after': {
+                            borderBottom: errors.jobTitle
+                              ? '1px solid #FF4D4F'
+                              : '1px solid #D6DDEB',
+                          },
+                          '& .MuiSelect-select': {
+                            fontWeight: 400,
+                            fontSize: '16px',
+                            lineHeight: '160%',
+                            letterSpacing: '0%',
+                            color: errors.jobTitle ? '#FF4D4F' : '#25324B',
+                            padding: '8px 0 4px',
+                          },
+                        }}
+                      >
+                        {jobTitles.map((title) => (
+                          <MenuItem key={title} value={title}>
+                            {title}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {errors.jobTitle && (
+                        <Typography
+                          variant="caption"
+                          color="error"
+                          sx={{ display: 'block', mt: 0.5, fontSize: '12px' }}
+                        >
+                          {errors.jobTitle}
+                        </Typography>
+                      )}
+                    </Box>
                   </Box>
                   <Typography
                     variant="caption"
@@ -528,32 +588,66 @@ export default function CareerPathProjection() {
                     width={24}
                     height={24}
                   />
-                  <Select
-                    fullWidth
-                    size="small"
-                    value={expYears}
-                    onChange={(e) => setExpYears(e.target.value)}
-                    variant="standard"
-                    sx={{
-                      '&:before': { borderBottom: '1px solid #D6DDEB' },
-                      '&:after': { borderBottom: '1px solid #D6DDEB' },
-                      '& .MuiSelect-select': {
-                        fontWeight: 400,
-                        fontSize: '16px',
-                        lineHeight: '160%',
-                        letterSpacing: '0%',
-                        color: '#25324B',
-                        padding: '8px 0 4px',
-                      },
-                    }}
-                  >
-                    <MenuItem value={5}>5 Years</MenuItem>
-                  </Select>
+                  <Box sx={{ width: '100%' }}>
+                    <Select
+                      fullWidth
+                      size="small"
+                      value={expYears}
+                      displayEmpty
+                      onChange={(e) => {
+                        setExpYears(e.target.value);
+                        if (errors.expYears) {
+                          setErrors((prev) => ({ ...prev, expYears: '' }));
+                        }
+                      }}
+                      variant="standard"
+                      error={!!errors.expYears}
+                      renderValue={(selected) => {
+                        if (!selected) {
+                          return <span style={{ color: '#7C8DB5' }}>Select years</span>;
+                        }
+                        return `${selected} Years`;
+                      }}
+                      sx={{
+                        '&:before': {
+                          borderBottom: errors.expYears ? '1px solid #FF4D4F' : '1px solid #D6DDEB',
+                        },
+                        '&:after': {
+                          borderBottom: errors.expYears ? '1px solid #FF4D4F' : '1px solid #D6DDEB',
+                        },
+                        '& .MuiSelect-select': {
+                          fontWeight: 400,
+                          fontSize: '16px',
+                          lineHeight: '160%',
+                          letterSpacing: '0%',
+                          color: errors.expYears ? '#FF4D4F' : '#25324B',
+                          padding: '8px 0 4px',
+                        },
+                      }}
+                    >
+                      <MenuItem value={5}>5 Years</MenuItem>
+                      <MenuItem value={10}>10 Years</MenuItem>
+                      <MenuItem value={15}>15 Years</MenuItem>
+                      <MenuItem value={20}>20 Years</MenuItem>
+                      <MenuItem value={25}>25 Years</MenuItem>
+                      <MenuItem value={30}>30 Years</MenuItem>
+                    </Select>
+                    {errors.expYears && (
+                      <Typography
+                        variant="caption"
+                        color="error"
+                        sx={{ display: 'block', mt: 0.5, fontSize: '12px' }}
+                      >
+                        {errors.expYears}
+                      </Typography>
+                    )}
+                  </Box>
                 </Box>
               </Grid>
               <Grid item xs={12} sm="auto">
                 <Button
                   variant="outlined"
+                  onClick={handleModify}
                   sx={{
                     minWidth: '180px',
                     height: '48px',
@@ -590,7 +684,7 @@ export default function CareerPathProjection() {
                     },
                   }}
                 >
-                  Personalized career path projection for <b>FirstName</b>
+                  Personalized career path projection for
                 </Typography>
               </Box>
             </Grid>
@@ -598,7 +692,7 @@ export default function CareerPathProjection() {
 
           <Box
             sx={{
-              height: { xs: '70vh', sm: '80vh', md: '90vh' },
+              height: { xs: '70vh', sm: '80vh', md: showReactFlow ? '90vh' : '50vh' },
               width: '100%',
               mb: { xs: 2, sm: 3, md: 4 },
               position: 'relative',
@@ -642,28 +736,46 @@ export default function CareerPathProjection() {
                 />
               </Box>
             )}
-            <ReactFlow
-              nodes={nodes}
-              edges={edges}
-              nodeTypes={nodeTypes}
-              fitView={false}
-              onPaneClick={handleSwipe}
-              nodesDraggable={false}
-              // nodesConnectable={false}
-              // elementsSelectable={false}
-              // panOnDrag={[0, 1, 2]} // Allow pan with left, right, and middle mouse buttons
-              // panOnScroll
-              // zoomOnScroll={!isMobile}
-              // zoomOnPinch
-              // preventScrolling={false}
-              // defaultViewport={{ x: 0, y: 0, zoom: 1 }}
-              // minZoom={0.5}
-              // maxZoom={2}
-              onNodeContextMenu={(e) => e.preventDefault()} // Prevent context menu on nodes
-            >
-              <Background />
-              <Controls position="top-right" />
-            </ReactFlow>
+            {showReactFlow || isResume ? (
+              <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                nodeTypes={nodeTypes}
+                fitView={false}
+                onPaneClick={handleSwipe}
+                nodesDraggable={false}
+                // nodesConnectable={false}
+                // elementsSelectable={false}
+                // panOnDrag={[0, 1, 2]} // Allow pan with left, right, and middle mouse buttons
+                // panOnScroll
+                // zoomOnScroll={!isMobile}
+                // zoomOnPinch
+                // preventScrolling={false}
+                // defaultViewport={{ x: 0, y: 0, zoom: 1 }}
+                // minZoom={0.5}
+                // maxZoom={2}
+                onNodeContextMenu={(e) => e.preventDefault()} // Prevent context menu on nodes
+              >
+                <Background />
+                <Controls position="top-right" />
+              </ReactFlow>
+            ) : (
+              <Box
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  p: 3,
+                }}
+              >
+                <Typography variant="h6">
+                  Select job and experience or upload your resume
+                </Typography>
+              </Box>
+            )}
             <Button
               size={isMdUp ? 'medium' : 'small'}
               sx={{
@@ -683,3 +795,7 @@ export default function CareerPathProjection() {
     </Box>
   );
 }
+
+CareerPathProjection.propTypes = {
+  isResume: PropTypes.bool,
+};
