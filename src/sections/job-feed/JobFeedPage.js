@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -39,13 +39,21 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import { Controller, useForm } from 'react-hook-form';
 import { enqueueSnackbar, useSnackbar } from 'notistack';
 import axiosInstance from 'src/utils/axios';
-import { jobs } from './jobFeedData';
+// import { jobs } from './jobFeedData';
 
 
 const JobCard = ({ job }) => {
+  console.log("GSHJSHKSH->", job);
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate('/job-details');
+    navigate(`/job-details/${job.id}`);
+  };
+
+  const [expanded, setExpanded] = useState(false);
+
+  // Function to toggle
+  const handleToggle = () => {
+    setExpanded(!expanded);
   };
 
   return (
@@ -69,7 +77,7 @@ const JobCard = ({ job }) => {
       <Box flex={1} sx={{ display: { xs: 'none', md: 'block' } }}>
         <Stack direction="row" justifyContent="space-between">
           <Box>
-            <Grid sx={{ display: 'flex', flexDirection: 'row', gap:4 }}>
+            <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 4 }}>
               <Typography fontWeight={600}>{job.company}</Typography>
               <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />
             </Grid>
@@ -81,7 +89,7 @@ const JobCard = ({ job }) => {
                   display: 'flex',
                   alignItems: 'center', // vertical alignment
                   justifyContent: 'center', // horizontal alignment
-                  width: '80px',  
+                  width: '80px',
                   height: '20px',
                   bgcolor: 'rgba(125, 90, 226, 0.1)',
                   color: 'rgba(125, 90, 226, 1)',
@@ -123,18 +131,56 @@ const JobCard = ({ job }) => {
         </Stack>
 
         <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-          <Typography
-            variant="body2"
-            mt={1}
-            mb={2}
-            color="text.secondary"
-            sx={{ display: { xs: 'none', md: 'block' } }}
-          >
-            {job.description}
-          </Typography>
+          <Box>
+            <Typography
+              variant="body2"
+              mt={1}
+              mb={2}
+              color="text.secondary"
+              sx={{
+                display: { xs: "none", md: "block" },
+                height: expanded ? "auto" : "60px",
+                overflow: "hidden",
+                position: "relative",
+              }}
+            >
+              {job.description}
+            </Typography>
+
+            {/* Show dots only when not expanded */}
+            {!expanded && (
+              <Typography
+                variant="body2"
+                color="primary"
+                sx={{ cursor: "pointer", display: "inline" }}
+                onClick={(e) => {
+                  e.stopPropagation();   // prevent Paper click (navigation)
+                  handleToggle();
+                }}
+              >
+                ... Read more
+              </Typography>
+            )}
+
+            {/* Collapse link */}
+            {expanded && (
+              <Typography
+                variant="body2" 
+                color="primary"
+                sx={{ cursor: "pointer", display: "inline" }}
+                onClick={(e) => {
+                  e.stopPropagation();   // prevent Paper click (navigation)
+                  handleToggle();
+                }}
+              >
+                Show less
+              </Typography>
+            )}
+          </Box>
 
           <Stack direction={{ xs: 'column', md: 'row' }} alignItems="center" spacing={0}>
             <Button
+              onClick={handleClick}
               variant="contained"
               sx={{
                 bgcolor: '#2A4DD0',
@@ -163,16 +209,16 @@ const JobCard = ({ job }) => {
             <Avatar src={job.logo} alt={job.company} sx={{ width: 48, height: 48 }} />
             <Box>
               <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-              <Typography variant="h6">{job.title}</Typography>
-               <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />
-               </Grid>
+                <Typography variant="h6">{job.title}</Typography>
+                <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />
+              </Grid>
               <Typography fontWeight={600}>{job.company}</Typography>
               <Typography variant="body2">{job.location}</Typography>
               <Typography fontSize="12px">
                 {job.applicants} applicants • {job.posted}
               </Typography>
             </Box>
-          </Stack>  
+          </Stack>
           <Box
             sx={{
               bgcolor: '#E9FFE9',
@@ -194,6 +240,7 @@ const JobCard = ({ job }) => {
           </Box>
         </Stack>
         <Button
+
           variant="contained"
           fullWidth
           sx={{
@@ -222,6 +269,7 @@ export default function JobFeedPage() {
   const { control, handleSubmit, reset, setError } = useForm();
   const [submitting, setSubmitting] = useState(false);
   const [visibleJobs, setVisibleJobs] = useState(3);
+  const [jobs, setJobs] = useState([]);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const onSubmit = async (data) => {
     setSubmitting(true);
@@ -269,50 +317,71 @@ export default function JobFeedPage() {
   } = useSelector((state) => state.jobs || {});
 
   console.log('khdkjsdk->', dateFilter);
+
+  const formatPostedDate = (createdAt) => {
+    const created = new Date(createdAt);
+    const now = new Date();
+    const diffDays = Math.floor((now - created) / (1000 * 60 * 60 * 24));
+
+    if (diffDays <= 7) return 'Past 7 days';
+    if (diffDays <= 15) return 'Past 15 days';
+    if (diffDays <= 30) return 'Past 30 days';
+    return 'All time';
+  };
+
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const res = await axiosInstance.get('/jobs');
+        const apiJobs = res.data;
+
+        // 🔹 Map API fields to match your UI
+        const mappedJobs = apiJobs.map((job) => ({
+          id: job.id,
+          company: job.company,
+          title: job.jobTitle,                       // map jobTitle → title
+          location: job.location,
+          description: job.description,
+          applicants: Math.floor(Math.random() * 200), // backend missing → fake count
+          posted: formatPostedDate(job.createdAt),     // convert createdAt → "Past X days"
+          matchScore: `${Math.floor(Math.random() * 30) + 70}%`, // fake for now
+          logo: '/assets/images/liner.png',            // fallback logo
+          level: 'Entry Level',                        // placeholder until backend provides
+          stage: 'Early Stage',
+          classification: 'Growth Stage Startups',
+          category: 'Data Science',
+        }));
+
+        setJobs(mappedJobs);
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+        enqueueSnackbar('Failed to load jobs', { variant: 'error' });
+      }
+    };
+
+    fetchJobs();
+  }, []);
+
+
   const filteredJobs = jobs.filter((job) => {
     let matches = true;
 
     if (dateFilter && dateFilter !== 'All time') {
-      // Only allow jobs that are posted within the selected filter
-      const days = parseInt(dateFilter.match(/\d+/)?.[0] || '0', 10); // extract number from 'Past 7 days'
+      const days = parseInt(dateFilter.match(/\d+/)?.[0] || '0', 10);
       if (days > 0) {
-        const now = new Date();
         const jobPostedDaysAgo = (() => {
-          // Simulate job post date using string (you should use real dates ideally)
           if (job.posted === 'Past 7 days') return 7;
           if (job.posted === 'Past 15 days') return 15;
           if (job.posted === 'Past 30 days') return 30;
-          if (job.location === 'Remote job') return 30;
-          if (job.location === 'Mumbai') return 30;
-
-          return 999; // default for unknown
+          return 999; // default
         })();
         matches = matches && jobPostedDaysAgo <= days;
       }
     }
 
     if (jobCategories.length > 0) matches = matches && jobCategories.includes(job.category);
-    if (dateFilter && dateFilter !== 'All time') {
-      // Only allow jobs that are posted within the selected filter
-      const days = parseInt(dateFilter.match(/\d+/)?.[0] || '0', 10); // extract number from 'Past 7 days'
-      if (days > 0) {
-        const now = new Date();
-        const jobPostedDaysAgo = (() => {
-          // Simulate job post date using string (you should use real dates ideally)
-          if (job.posted === 'Past 7 days') return 7;
-          if (job.posted === 'Past 15 days') return 15;
-          if (job.posted === 'Past 30 days') return 30;
-          if (job.location === 'Remote job') return 30;
-          if (job.location === 'Mumbai') return 30;
-
-          return 999; // default for unknown
-        })();
-        matches = matches && jobPostedDaysAgo <= days;
-      }
-    }
-    if (jobCategories.length > 0) matches = matches && jobCategories.includes(job.category);
-    if (levelFilter && levelFilter !== '') matches = matches && job.level === levelFilter;
-
+    if (levelFilter) matches = matches && job.level === levelFilter;
     if (locationFilter) matches = matches && job.location === locationFilter;
     if (companyStage) matches = matches && job.stage === companyStage;
     if (classification) matches = matches && job.classification === classification;
@@ -320,10 +389,11 @@ export default function JobFeedPage() {
     return matches;
   });
 
+
   console.log('hidhaskjhkajkasl->', filteredJobs);
   const renderFilters = (
     <Box sx={{ width: 280, p: 2 }}>
-      <Typography variant="h6">Filters</Typography>
+      <Typography variant="h6">Filters </Typography>
       <Divider sx={{ my: 2 }} />
 
       <Typography fontWeight={600}>Date of posting</Typography>
@@ -442,97 +512,100 @@ export default function JobFeedPage() {
   );
 
   return (
-    <Box sx={{ px: { lg: 10 }, p: { xs: 2, md: 4 }, bgcolor: '#F9FAFB', minHeight: '100vh' }}>
-      {isMobile && (
-        <Box display="flex" alignItems="center" mb={2}>
-          <IconButton onClick={() => setMobileFilterOpen(true)}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" ml={1}>
-            Filters
-          </Typography>
-        </Box>
-      )}
-
-      <Drawer anchor="left" open={mobileFilterOpen} onClose={() => setMobileFilterOpen(false)}>
-        {renderFilters}
-      </Drawer>
-
-      <Grid container spacing={4}>
-        {!isMobile && (
-          <Grid item md={3}>
-            <Paper>{renderFilters}</Paper>
-          </Grid>
+    <Box sx={{ px: { xs: 2, }, py: { xs: 4, md: 2 }, maxWidth: 1300, mx: 'auto' }}>
+      <Box sx={{ px: { lg: 5 }, p: { xs: 2, md: 4 }, bgcolor: '#F9FAFB', minHeight: '100vh' }}>
+        {/* mobile view */}
+        {isMobile && (
+          <Box display="flex" alignItems="center" mb={2}>
+            <IconButton onClick={() => setMobileFilterOpen(true)}>
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" ml={1}>
+              Filters
+            </Typography>
+          </Box>
         )}
 
-        <Grid item xs={12} md={6}>
-          {filteredJobs.length === 0 ? (
-            <Typography textAlign="center">No jobs match the selected filters.</Typography>
-          ) : (
-            filteredJobs.slice(0, visibleJobs).map((job) => <JobCard key={job.id} job={job} />)
-          )}
-          {visibleJobs < filteredJobs.length && (
-            <Box textAlign="center" mt={2}>
-              <Button onClick={() => setVisibleJobs((prev) => prev + 3)} variant="outlined">
-                Show More
-              </Button>
-            </Box>
-          )}
-        </Grid>
+        <Drawer anchor="left" open={mobileFilterOpen} onClose={() => setMobileFilterOpen(false)}>
+          {renderFilters}
+        </Drawer>
 
-        <Grid item md={3}>
-          <Stack spacing={2}>
-            <Paper sx={{ p: 2, bgcolor: '#E7F6EA' }}>
-              <Typography fontWeight={600}>📧 Email similar jobs</Typography>
-              <Typography variant="body2" mt={1} mb={2}>
-                Get notified when similar jobs are posted.
-              </Typography>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Controller
-                  name="email"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      size="small"
-                      fullWidth
-                      placeholder="name@mail.com"
-                      sx={{ mb: 1 }}
-                      disabled={submitting}
-                    />
-                  )}
-                />
+        <Grid container spacing={4}>
+          {!isMobile && (
+            <Grid item md={3}>
+              <Paper>{renderFilters}</Paper>
+            </Grid>
+          )}
+
+          <Grid item xs={12} md={6}>
+            {filteredJobs.length === 0 ? (
+              <Typography textAlign="center">No jobs match the selected filters.</Typography>
+            ) : (
+              filteredJobs.slice(0, visibleJobs).map((job) => <JobCard key={job.id} job={job} />)
+            )}
+            {visibleJobs < filteredJobs.length && (
+              <Box textAlign="center" mt={2}>
+                <Button onClick={() => setVisibleJobs((prev) => prev + 3)} variant="outlined">
+                  Show More
+                </Button>
+              </Box>
+            )}
+          </Grid>
+
+          <Grid item md={3}>
+            <Stack spacing={2}>
+              <Paper sx={{ p: 2, bgcolor: '#E7F6EA' }}>
+                <Typography fontWeight={600}>📧 Email similar jobs</Typography>
+                <Typography variant="body2" mt={1} mb={2}>
+                  Get notified when similar jobs are posted.
+                </Typography>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <Controller
+                    name="email"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        size="small"
+                        fullWidth
+                        placeholder="name@mail.com"
+                        sx={{ mb: 1 }}
+                        disabled={submitting}
+                      />
+                    )}
+                  />
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    disabled={submitting}
+                    sx={{
+                      bgcolor: 'primary.main',
+                      '&:hover': { bgcolor: 'primary.dark' },
+                    }}
+                  >
+                    {submitting ? 'Subscribing...' : 'Subscribe'}
+                  </Button>
+                </form>
+              </Paper>
+              <Paper sx={{ p: 2, bgcolor: '#E7F6EA' }}>
+                <Typography fontWeight={600}>🚀 Get noticed faster</Typography>
+                <Typography variant="body2" mt={1} mb={2}>
+                  Upload your resume to get accurate matches.
+                </Typography>
                 <Button
-                  type="submit"
                   fullWidth
                   variant="contained"
-                  disabled={submitting}
-                  sx={{
-                    bgcolor: 'primary.main',
-                    '&:hover': { bgcolor: 'primary.dark' },
-                  }}
+                  sx={{ bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark' } }}
                 >
-                  {submitting ? 'Subscribing...' : 'Subscribe'}
+                  Upload your resume
                 </Button>
-              </form>
-            </Paper>
-            <Paper sx={{ p: 2, bgcolor: '#E7F6EA' }}>
-              <Typography fontWeight={600}>🚀 Get noticed faster</Typography>
-              <Typography variant="body2" mt={1} mb={2}>
-                Upload your resume to get accurate matches.
-              </Typography>
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{ bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark' } }}
-              >
-                Upload your resume
-              </Button>
-            </Paper>
-          </Stack>
+              </Paper>
+            </Stack>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </Box>
   );
 }

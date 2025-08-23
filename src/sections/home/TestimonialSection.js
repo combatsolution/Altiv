@@ -95,7 +95,7 @@ function TestimonialSection() {
         <Typography
           variant="h4"
           sx={{
-            fontSize: { xs: 28, md: 54 },
+            fontSize: { xs: "44px", md: 54 },
             textAlign: { xs: 'left', md: 'center' },
             fontFamily: 'Inter, sans-serif',
             fontWeight: 400,
