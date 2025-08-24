@@ -235,7 +235,7 @@ const JobBoard = () => (
   <Grid item xs={12} md={9} px={{ xs: 2, sm: 4, md: 6 }}>
     <Stack spacing={3}>
       {jobData.map((job, index) => (
-        <Paper
+      <Paper
           key={index}
           variant="outlined"
           sx={{ p: { xs: 2, sm: 3 } }}
@@ -264,7 +264,7 @@ const JobBoard = () => (
               />
             ))}
           </Stack>
-
+        
           {job.description.map((line, i) => (
             <Typography
               key={i}
@@ -274,7 +274,7 @@ const JobBoard = () => (
               fontSize={{ xs: 13, sm: 14 }}
             >
               {line}
-            </Typography>
+            </Typography> 
           ))}
 
           <Box textAlign={{ xs: 'left', sm: 'right' }} mt={2}>
@@ -283,18 +283,14 @@ const JobBoard = () => (
               sx={{
                 borderRadius: 999,
                 px: 4,
-                bgcolor: "primary.main",
+                bgcolor: "#0040D8",
                 fontSize: { xs: 14, sm: 16 },
                 textTransform: 'none',
-                '&:hover':{
-                  bgcolor:'primary.dark',  
-                  boxShadow:'none'
-                }
-                
               }}
             >
               Apply →
             </Button>
+           
           </Box>
         </Paper>
       ))}

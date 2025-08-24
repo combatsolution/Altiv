@@ -68,7 +68,9 @@ export default function PricingView() {
     try {
       const response = await axiosInstance.get(`/plans/plan-by-type/${categoryValue}`);
       if (response && response.data) {
-        setPlansData(response.data);
+        // setPlansData(response.data);
+         const finalPlansData = response?.data?.length > 0 ? response?.data?.filter((res) => !res?.isFreePlan) : [];
+        setPlansData(finalPlansData);
       }
     } catch (error) {
       console.error('Error fetching plans:', error);
@@ -162,10 +164,11 @@ export default function PricingView() {
 
       {/* Pricing Cards */}
       <Box
+        sx={{display:'flex', justifyContent:'center', alignItems:'center'}}
         gap={{ xs: 3, md: 2 }}
         display="grid"
         gridTemplateColumns={{ xs: '1fr', md: 'repeat(3, 1fr)' }}
-        alignItems="stretch"
+        
       >
         {plansData.length > 0 ? (
           plansData.map(( card, index) => (
@@ -173,8 +176,9 @@ export default function PricingView() {
               key={card.id}
               elevation={2}
               sx={{
-                px: 3,
+                px: 1,
                 borderRadius: 2,
+                width:'30%',
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',

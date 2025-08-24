@@ -30,6 +30,7 @@ import {
   RadialBarChart,
   RadialBar,
   Cell,
+  PolarAngleAxis,
 } from 'recharts';
 import Slider from 'react-slick';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -105,7 +106,7 @@ const options = {
           y: chart.plotHeight / 2 + chart.plotTop
         });
 
-        
+
       }
     }
   },
@@ -141,13 +142,14 @@ const options = {
       type: "sunburst",
       name: "",   // 👈 removes the "Series 1" text
       data: dataa,
+      fontweight: 200,
       allowDrillToNode: true,
       cursor: "pointer",
       borderWidth: 2,
       slicedOffset: 10,
       dataLabels: {
-           rotationMode: 'circular',  
-        
+        rotationMode: 'circular',
+
         formatter() {
           const name = (this.point && this.point.name) ? String(this.point.name) : '';
           // hide labels that match "education" (case-insensitive) or common typo "edcation"
@@ -158,9 +160,10 @@ const options = {
           return `${name}<br>${this.point.value}%`;
         },
         style: {
-          
+
           color: '#fff',         // white text
-          fontWeight: 'bold',
+          fontWeight: 'normal',
+          fontSize: '11px',
           textOutline: 'none'    // removes black outline
         }
       },
@@ -197,13 +200,15 @@ const LEGENDS = [
   { label: "13 – 15 years", color: "#F4A300" },
   { label: "15+ years", color: "#FFD43B" }
 ];
-const companyBackgroundData = [
-  { name: 'Financial Tech', value: 35, fill: '#00C49F' },
-  { name: 'Big Tech', value: 20, fill: '#0088FE' },
-  { name: 'Enterprise SaaS', value: 20, fill: '#FFBB28' },
-  { name: 'Internal Promotions', value: 25, fill: '#FF8042' },
-];
 
+
+
+const companyBackgroundData = [
+  { name: "Financial Tech", value: 20, fill: " #00C49F" },
+  { name: "Big Tech", value: 25, fill: " #0088FE" },
+  { name: "Enterprise SaaS", value: 35, fill: "#FF8042" },
+  { name: "Internal Promotions", value: 45, fill: "#FACC15" },
+];
 
 
 const array1 = [
@@ -346,13 +351,14 @@ const ProductManagementPage = () => {
   const CustomLegend = () => (
     <Stack
       direction="row"
-      spacing={3}
+      spacing={2}
       justifyContent="center"
       flexWrap="wrap"
       mt={2}
     >
       {LEGENDS.map((item, index) => (
         <Stack
+          maxWidth="100px"
           key={index}
           direction="row"
           spacing={1}
@@ -364,10 +370,10 @@ const ProductManagementPage = () => {
               width: 12,
               height: 12,
               bgcolor: item.color,
-              borderRadius: "2px"
+              borderRadius: "20px"
             }}
           />
-          <Typography variant="body2">{item.label}</Typography>
+          <Typography fontSize='12px'>{item.label}</Typography>
         </Stack>
       ))}
     </Stack>
@@ -432,7 +438,7 @@ const ProductManagementPage = () => {
                     display="flex"
                     flexDirection="row"
                     sx={{
-                      gap: 0,
+                      mb: '7px',
                       width: { xs: '100%', sm: '250px', lg: '350px' }, // ⚠ probably meant 650px not 6550px
 
                     }}
@@ -460,13 +466,14 @@ const ProductManagementPage = () => {
                         renderValue={(selected) => selected}
                         sx={{
                           bgcolor: 'grey.300',
-                          borderRadius: 0,
+                          borderRadius: "100px",
                           textAlign: 'center',
                           "& .MuiSelect-select": {
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
                             gap: 1
+
                           }
                         }}
                         IconComponent={KeyboardArrowDownIcon}
@@ -490,7 +497,7 @@ const ProductManagementPage = () => {
                     <Button
                       size="medium"
                       variant="outlined"
-                      sx={{ color: 'grey.600', borderRadius: '100px', width: '85px', height: '35px', fontSize: '13px' }}
+                      sx={{ color: 'grey.600', borderRadius: '100px', width: '110px', height: '35px', fontSize: '13px' }}
                       onClick={() => setSelectedFilter("Everything")}   // ✅
                     >
                       Select All
@@ -499,8 +506,8 @@ const ProductManagementPage = () => {
                     <Button
                       size="medium"
                       variant="outlined"
-                      sx={{ color: 'grey.600', borderRadius: '100px', width: '80px', height: '35px', fontSize: '13px' }}
-                      onClick={() => setSelectedFilter("Empty")}   // ✅ maybe clear instead of Everything
+                      sx={{ color: 'grey.600', borderRadius: '100px', width: '110px', height: '35px', fontSize: '13px' }}
+                      onClick={() => setSelectedFilter("Empty")}
                     >
                       Clear All
                     </Button>
@@ -544,8 +551,8 @@ const ProductManagementPage = () => {
                             borderRadius: "50%",
                             fontSize: "0.5rem",
                             fontWeight: "bold",
-                            minWidth: 25,
-                            height: 26,
+                            width: 25,
+                            height: 25,
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -699,7 +706,7 @@ const ProductManagementPage = () => {
                     size="medium"
                     variant="outlined"
                     sx={{ color: 'grey.600', borderRadius: '100px', width: '80px', height: '35px', fontSize: '13px' }}
-                    onClick={() => setSelectedFilter("Empty")}   // ✅ maybe clear instead of Everything
+                    onClick={() => setSelectedFilter("Empty")}
                   >
                     Clear All
                   </Button>
@@ -716,54 +723,129 @@ const ProductManagementPage = () => {
               </Stack>
 
               {(selectedFilter === "Everything" || selectedFilter === "Matching") && (
-                <Paper sx={{ p: 1, mb: 2, bgcolor: '#e8f5e9' }}>
-                  <Typography variant="h6" color="success.main">
+                <Paper sx={{ p: 1, mb: 1, bgcolor: '#e8f5e9' }}>
+                  <Typography variant="h6" paddingLeft='25px' color="success.main" fontFamily='Roboto'>
                     Matching 75%
                   </Typography>
-                  <Divider sx={{ my: 1 }} />
-                  <ul>
+                  <ul style={{ listStyle: 'none', paddingLeft: 0, marginTop: 8 }}>
                     {array1.map((item, idx) => (
-                      <li key={idx}>{item}</li>
+                      <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 4 }}>
+                        <Box
+                          component="span"
+                          sx={{
+                            width: 3,
+                            height: 3,
+                            bgcolor: 'success.main',
+                            borderRadius: '50%',
+                            flexShrink: 0,
+                            mt: 1.2,
+                            mr: 1.5,
+                            ml: 2,
+                            fontFamily: 'Epiloguelo'
+
+                          }}
+                        />
+                        <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
+                          {item}
+                        </Typography>
+                      </li>
                     ))}
                   </ul>
                 </Paper>
               )}
 
               {(selectedFilter === "Everything" || selectedFilter === "Close Matching") && (
-                <Paper sx={{ p: 1, mb: 2, bgcolor: '#fff3e0' }}>
-                  <Typography variant="h6" color="warning.main">
+                <Paper sx={{ p: 1, mb: 1, bgcolor: '#fff3e0' }}>
+                  <Typography variant="h6" paddingLeft='20px' color="warning.main" fontFamily='Roboto'>
                     Close Matching 65%
                   </Typography>
-                  <Divider sx={{ my: 1 }} />
-                  <ul>
+
+                  <ul style={{ listStyle: 'none', paddingLeft: 0, marginTop: 8 }}>
                     {array2.map((item, idx) => (
-                      <li key={idx}>{item}</li>
+                      <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 4 }}>
+                        <Box
+                          component="span"
+                          sx={{
+                            width: 3,
+                            height: 3,
+                            bgcolor: 'warning.main',
+                            borderRadius: '50%',
+                            flexShrink: 0,
+                            mt: 1.2,
+                            mr: 1.5,
+                            ml: 2,
+                            fontFamily: 'Epilogue',
+
+                          }}
+                        />
+                        <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
+                          {item}
+                        </Typography>
+                      </li>
                     ))}
                   </ul>
                 </Paper>
               )}
 
               {(selectedFilter === "Everything" || selectedFilter === "Not Matching") && (
-                <Paper sx={{ p: 1, mb: 2, bgcolor: '#ffebee' }}>
-                  <Typography variant="h6" color="error.main">
+                <Paper sx={{ p: 1, mb: 1, bgcolor: '#ffebee' }}>
+                  <Typography variant="h6" paddingLeft='20px' color="error.main" fontFamily='Roboto'>
                     Not Matching 65%
                   </Typography>
-                  <Divider sx={{ my: 1 }} />
-                  <ul>
+
+                  <ul style={{ listStyle: 'none', paddingLeft: 0, marginTop: 8 }}>
                     {array3.map((item, idx) => (
-                      <li key={idx}>{item}</li>
+                      <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 4 }}>
+                        <Box
+                          component="span"
+                          sx={{
+                            width: 3,
+                            height: 3,
+                            bgcolor: 'error.main',
+                            borderRadius: '50%',
+                            flexShrink: 0,
+                            mt: 1.2,
+                            mr: 1.5,
+                            ml: 2,
+                            fontFamily: 'Epilogue',
+
+                          }}
+                        />
+                        <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
+                          {item}
+                        </Typography>
+                      </li>
                     ))}
                   </ul>
                 </Paper>
               )}
 
               {(selectedFilter === "Everything" || selectedFilter === "Improved") && (
-                <Paper sx={{ p: 1, mb: 2, bgcolor: 'grey.200' }}>
-                  <Typography variant="h6">Things can be improved</Typography>
-                  <Divider sx={{ my: 1 }} />
-                  <ul>
+                <Paper sx={{ p: 1, mb: 1, bgcolor: 'grey.200' }}>
+                  <Typography variant="h6" paddingLeft='20px' fontFamily='Roboto'>Things can be improved</Typography>
+
+                  <ul style={{ listStyle: 'none', paddingLeft: 0, marginTop: 8 }}>
                     {array4.map((item, idx) => (
-                      <li key={idx}>{item}</li>
+                      <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 4 }}>
+                        <Box
+                          component="span"
+                          sx={{
+                            width: 3,
+                            height: 3,
+                            bgcolor: 'grey.600',
+                            borderRadius: '50%',
+                            flexShrink: 0,
+                            mt: 1.2,
+                            mr: 1.5,
+                            ml: 2,
+                            fontFamily: 'Epilogue',
+
+                          }}
+                        />
+                        <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
+                          {item}
+                        </Typography>
+                      </li>
                     ))}
                   </ul>
                 </Paper>
@@ -842,12 +924,14 @@ const ProductManagementPage = () => {
                       </Box>
 
                       {/* Custom Legend */}
+
+                      
                       <CustomLegend />
                     </Paper>
 
 
                     {/* Slide 3 - Radial Chart */}
-                    <Paper sx={{ p: 2, width: '100%', bgcolor: '#fff' }}>
+                    <Paper sx={{ p: 2, width: '100%', bgcolor: '#fff', maxWidth: '450px' }}>
                       <Typography variant="body2" fontWeight="800" mb={1} >
                         Previous Company Background
                       </Typography>
@@ -856,47 +940,61 @@ const ProductManagementPage = () => {
                       <Box
                         sx={{
                           position: 'relative',
-                          height: { xs: 200, md: 250 },
+                          height: { xs: 200, md: 250, },
                           width: '100%',
                           mt: 1,
-                          display: 'flex',
+                          display: 'block',
                           alignItems: 'center',
                         }}
                       >
+
                         {/* Labels */}
                         <Box
                           sx={{
                             position: 'absolute',
-                            top: '30%',
-                            left: { xs: 10, md: 20 },
-                            zIndex: 1,
+                            top: '7%',
+                            left: { xs: 10, md: 80 },
+
+
                           }}
                         >
                           {companyBackgroundData.map((item, index) => (
-                            <Typography key={index} sx={{ mb: 1, fontSize: { xs: 10, md: 12 } }}>
-                              {item.name} <strong>{item.value}%</strong>
-                            </Typography>
+                            <Box
+                              key={index}
+                              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+                            >
+                              <Typography sx={{ fontSize: { xs: 10, md: 11 }, color: 'text.secondary' }} > {item.name} </Typography>
+                              <Typography sx={{ ml: 1, fontSize: { xs: 10, md: 11 }, fontWeight: 'bold', color: 'text.primary' }} > {item.value}%  </Typography>
+                            </Box>
                           ))}
+
                         </Box>
 
                         {/* Chart */}
                         <ResponsiveContainer width="100%" height="100%">
                           <RadialBarChart
-                            cx="70%"
-                            cy="50%"
-                            innerRadius="20%"
-                            outerRadius="90%"
-                            barCategoryGap="10%"
+                            cx="42%"
+                            cy="56%"
+                            innerRadius="54%"   // 🔹 Increase inner radius (makes ring thinner)
+                            outerRadius="109%"   // 🔹 Keep outer radius same
+                            barSize={12}         // 🔹 Controls thickness (try 6–10 for fine-tuning)
                             data={companyBackgroundData}
-                            startAngle={90}
+                            barCategoryGap="60%" 
+                            startAngle={91}
                             endAngle={-270}
                           >
-                            <RadialBar
-                              clockWise
-                              dataKey="value"
-                              cornerRadius={3}
-                            // 👇 Removed the background prop to eliminate grey ring
+                            {/* ✅ Force values to be percentages (0–100) */}
+                            <PolarAngleAxis
+                              type="number"
+                              domain={[0, 100]}
+                              tick={false}
                             />
+
+                            <RadialBar dataKey="value" clockWise>
+                              {[...companyBackgroundData].reverse().map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.fill} />
+                              ))}
+                            </RadialBar>
                           </RadialBarChart>
                         </ResponsiveContainer>
                       </Box>
@@ -967,47 +1065,60 @@ const ProductManagementPage = () => {
                       <Box
                         sx={{
                           position: 'relative',
-                          height: { xs: 200, md: 250 },
+                          height: { xs: 200, md: 250, },
                           width: '100%',
                           mt: 1,
                           display: 'block',
                           alignItems: 'center',
                         }}
                       >
+
                         {/* Labels */}
                         <Box
                           sx={{
                             position: 'absolute',
-                            top: '30%',
-                            left: { xs: 10, md: 20 },
-                            zIndex: 1,
+                            top: '7%',
+                            left: { xs: 10, md: 80 },
+
+
                           }}
                         >
                           {companyBackgroundData.map((item, index) => (
-                            <Typography key={index} sx={{ mb: 1, fontSize: { xs: 10, md: 12 } }}>
-                              {item.name} <strong>{item.value}%</strong>
-                            </Typography>
+                            <Box
+                              key={index}
+                              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+                            >
+                              <Typography sx={{ fontSize: { xs: 10, md: 11 }, color: 'text.secondary' }} > {item.name} </Typography>
+                              <Typography sx={{ ml: 1, fontSize: { xs: 10, md: 11 }, fontWeight: 'bold', color: 'text.primary' }} > {item.value}%  </Typography>
+                            </Box>
                           ))}
+
                         </Box>
 
                         {/* Chart */}
                         <ResponsiveContainer width="100%" height="100%">
                           <RadialBarChart
-                            cx="70%"
+                            cx="50%"
                             cy="50%"
-                            innerRadius="20%"
-                            outerRadius="90%"
-                            barCategoryGap="10%"
+                            innerRadius="42%"   // 🔹 Increase inner radius (makes ring thinner)
+                            outerRadius="95%"   // 🔹 Keep outer radius same
+                            barSize={12}         // 🔹 Controls thickness (try 6–10 for fine-tuning)
                             data={companyBackgroundData}
-                            startAngle={90}
+                            startAngle={91}
                             endAngle={-270}
                           >
-                            <RadialBar
-                              clockWise
-                              dataKey="value"
-                              cornerRadius={3}
-                            // 👇 Removed the background prop to eliminate grey ring
+                            {/* ✅ Force values to be percentages (0–100) */}
+                            <PolarAngleAxis
+                              type="number"
+                              domain={[0, 100]}
+                              tick={false}
                             />
+
+                            <RadialBar dataKey="value" clockWise>
+                              {[...companyBackgroundData].reverse().map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.fill} />
+                              ))}
+                            </RadialBar>
                           </RadialBarChart>
                         </ResponsiveContainer>
                       </Box>
@@ -1033,7 +1144,7 @@ const ProductManagementPage = () => {
               variant="contained"
               size="large"
               sx={{
-                
+
                 color: '#fff',
                 backgroundColor: 'primary.main',
                 borderRadius: '100px',
