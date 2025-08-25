@@ -48,16 +48,16 @@ export const navConfig = [
     
     // paths.components
   },
-  {
-    title: 'Analyze Your Resume',
-    icon: <Iconify icon="solar:notebook-bold-duotone" />,
-    path: `${paths.comingSoonWithType('analyze')}`,
-  },
+  // {
+  //   title: 'Analyze Your Resume',
+  //   icon: <Iconify icon="solar:notebook-bold-duotone" />,
+  //   path: `${paths.comingSoonWithType('analyze')}`,
+  // },
 
-  //  {
-  //     title: 'Analyze Your Resume',
-  //     icon: <Iconify icon="solar:notebook-bold-duotone" />,
-  //     path: `${paths.fobo}?retry=true`,
+   {
+      title: 'Analyze Your Resume',
+      icon: <Iconify icon="solar:notebook-bold-duotone" />,
+      path: `${paths.fobo}?retry=true`,
       
-  //   },
+    },
 ];

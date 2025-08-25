@@ -18,8 +18,8 @@ const CareerToolkitHero = () => {
         display: "flex",
         flexDirection: "column",
         justifyContent: {xs:'center', lg:"center"},
-        alignItems:{xs:'left', lg:"center"},
-        textAlign:{xs:'left', lg:"center"},
+        alignItems:{xs:'left', sm:'center', lg:"center"},
+        textAlign:{xs:'left', sm:'center', lg:"center"},
         px: 2,
         
       }}
@@ -31,7 +31,7 @@ const CareerToolkitHero = () => {
         sx={
           {
           fontSize:{xs:'40px', lg:'53px'},
-          width:{xs:'327px', lg:'100%'}      
+          width:{xs:'327px',sm:'100%', lg:'100%'}      
           }
         }
       >
@@ -46,7 +46,7 @@ const CareerToolkitHero = () => {
          {
           {
            fontSize:{ xs:'16px', md:'20px'},
-             width:{xs:'327px', lg:'100%'}  
+             width:{xs:'327px', sm:'100%', lg:'100%'}  
           }
         }
       >

@@ -36,6 +36,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { Controller, useForm } from 'react-hook-form';
 import { enqueueSnackbar, useSnackbar } from 'notistack';
 import axiosInstance from 'src/utils/axios';
@@ -47,6 +48,20 @@ const JobCard = ({ job }) => {
   const navigate = useNavigate();
   const handleClick = () => {
     navigate(`/job-details/${job.id}`);
+  };
+
+  const [bookmarked, setbookmarked] = useState(false);
+
+  const handlebookmark = (e) => {
+    e.stopPropagation();
+    setbookmarked(!bookmarked);
+
+    // 🔹 If you want backend API:
+    // if (!bookmarked) {
+    //   axiosInstance.post('/saved-jobs', { jobId: job.id });
+    // } else {
+    //   axiosInstance.delete(`/saved-jobs/${job.id}`);
+    // }
   };
 
   const [expanded, setExpanded] = useState(false);
@@ -77,13 +92,31 @@ const JobCard = ({ job }) => {
       <Box flex={1} sx={{ display: { xs: 'none', md: 'block' } }}>
         <Stack direction="row" justifyContent="space-between">
           <Box>
-            <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 4 }}>
-              <Typography fontWeight={600}>{job.company}</Typography>
-              <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />
+            <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 4, alignItems: 'center' }}>
+              <Typography fontWeight={600}
+                sx={{
+                  '&:hover': {
+                    color: 'primary.main',
+                    textDecoration: 'underline',
+                  }
+                }}>{job.company}</Typography>
+
+              <IconButton onClick={handlebookmark}>
+                {bookmarked ? (
+                  <BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />
+                ) : (<BookmarkBorderIcon
+                  fontSize="medium" sx={{ color: 'text.secondary' }} />)}
+              </IconButton>
+
             </Grid>
 
             <Stack direction="row" justifyContent="left" spacing={1}>
-              <Typography fontSize="1rem">{job.title}</Typography>
+              <Typography fontSize="1rem" sx={{
+                '&:hover': {
+                  color: 'primary.main',
+                  textDecoration: 'underline',
+                },
+              }} >{job.title}</Typography>
               <Grid
                 sx={{
                   display: 'flex',
@@ -165,7 +198,7 @@ const JobCard = ({ job }) => {
             {/* Collapse link */}
             {expanded && (
               <Typography
-                variant="body2" 
+                variant="body2"
                 color="primary"
                 sx={{ cursor: "pointer", display: "inline" }}
                 onClick={(e) => {
@@ -180,7 +213,13 @@ const JobCard = ({ job }) => {
 
           <Stack direction={{ xs: 'column', md: 'row' }} alignItems="center" spacing={0}>
             <Button
-              onClick={handleClick}
+              // onClick={handleClick}
+              onClick={(e) => {
+                e.stopPropagation();
+
+                window.open(job.redirecturl, '_blank')
+               
+              }}
               variant="contained"
               sx={{
                 bgcolor: '#2A4DD0',
@@ -209,10 +248,31 @@ const JobCard = ({ job }) => {
             <Avatar src={job.logo} alt={job.company} sx={{ width: 48, height: 48 }} />
             <Box>
               <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-                <Typography variant="h6">{job.title}</Typography>
+                <Typography variant="h6" sx={{
+                  '&:hover': {
+                    color: 'primary.main',
+                    textDecoration: 'underline',
+                  },
+                }}>{job.title}</Typography>
+                <IconButton onClick={handlebookmark}>
+                  {bookmarked ? (
+                    <BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />
+                  )
+                    : (
+                      <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary', }} />
+                    )
+                  }
+
+                </IconButton>
+
                 <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />
               </Grid>
-              <Typography fontWeight={600}>{job.company}</Typography>
+              <Typography fontWeight={600} sx={{
+                '&:hover': {
+                  color: 'primary.main',
+                  textDecoration: 'underline',
+                },
+              }}>{job.company}</Typography>
               <Typography variant="body2">{job.location}</Typography>
               <Typography fontSize="12px">
                 {job.applicants} applicants • {job.posted}
@@ -240,7 +300,11 @@ const JobCard = ({ job }) => {
           </Box>
         </Stack>
         <Button
+          onClick={(e) => {
+            e.stopPropagation();
+             window.open(job[0].redirectUrl, '_blank')
 
+          }}
           variant="contained"
           fullWidth
           sx={{
@@ -343,6 +407,7 @@ export default function JobFeedPage() {
           title: job.jobTitle,                       // map jobTitle → title
           location: job.location,
           description: job.description,
+          redirectUrl: job.redirectUrl,
           applicants: Math.floor(Math.random() * 200), // backend missing → fake count
           posted: formatPostedDate(job.createdAt),     // convert createdAt → "Past X days"
           matchScore: `${Math.floor(Math.random() * 30) + 70}%`, // fake for now
