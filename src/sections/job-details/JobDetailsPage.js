@@ -20,54 +20,17 @@ import {
   useTheme,
   useMediaQuery,
   Link,
+  IconButton
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { useNavigate, useParams, } from 'react-router-dom';
 import axiosInstance from 'src/utils/axios';
 import { enqueueSnackbar } from 'notistack';
-// import { jobs } from './jobsData'; 
-
-
-
-// ✅ Job list JSON
-const similarJob = [
-  {
-    id: 1,
-    title: 'Sr. Director AI | Data Science',
-    company: 'Google',
-    salary: '75L - 1Cr',
-    experience: '12-14 years',
-    logo: 'https://logo.clearbit.com/google.com',
-  },
-  {
-    id: 2,
-    title: 'Machine Learning Engineer',
-    company: 'Amazon',
-    salary: '50L - 80L',
-    experience: '8-10 years',
-    logo: 'https://logo.clearbit.com/google.com',
-    // logo: 'https://logo.clearbit.com/amazon.com'
-  },
-  {
-    id: 3,
-    title: 'Data Analyst',
-    company: 'Microsoft',
-    salary: '30L - 50L',
-    experience: '5-7 years',
-    logo: 'https://logo.clearbit.com/google.com',
-    // logo: 'https://logo.clearbit.com/microsoft.com'
-  },
-  {
-    id: 4,
-    title: 'Lead Data Scientist',
-    company: 'Meta',
-    salary: '80L - 1.2Cr',
-    experience: '10-12 years',
-    logo: 'https://logo.clearbit.com/google.com',
-    // logo: 'https://logo.clearbit.com/meta.com'
-  },
-];
+import { isFriday } from 'date-fns';
+import axios from 'axios';
+ 
 
 export default function JobDetailPage() {
   const theme = useTheme();
@@ -76,10 +39,24 @@ export default function JobDetailPage() {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
-
   console.log("dkajskajs-<>", jobs);
+  const [bookmarked, setbookmarked] = useState(false);
+  const [similarJobs, setSimilarJobs] = useState([]);
+ const [showAll, setShowAll] = useState(false);
 
+  const handlebookmark = async (e) => {
+    e.stopPropagation();
+    try {
+      const res = await axiosInstance.post(`jobs/save-job/${job_id}`)
+      if (res.success === 200) {
+        setbookmarked(true);
+      }
 
+    } catch (error) {
+      console.log('falied to save', error);
+    }
+
+  };
 
   // const similarJobs = jobs.filter(j => j.id !== job.id);
   const formatPostedDate = (date) => {
@@ -91,33 +68,72 @@ export default function JobDetailPage() {
   };
 
   useEffect(() => {
+    
     const fetchJob = async () => {
       try {
-        const res = await axiosInstance.get(`/jobs/${job_id}`);
-        const job = res.data; // assuming backend returns a single job object
+        const res = await axios.get(
+          `https://api.staging.altiv.ai/jobs/${job_id}`, // full URL
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-        // 🔹 Map API fields to match your UI
+        console.log("API Response:", res);
+
+        const job = res.data.data; // adjust based on your backend response
+
         const mappedJob = {
           id: job.id,
           company: job.company,
-          title: job.jobTitle,                          // map jobTitle → title
+          title: job.jobTitle,
           location: job.location,
           description: job.description,
-          applicants: Math.floor(Math.random() * 200),  // backend missing → fake count
-          posted: formatPostedDate(job.createdAt),      // convert createdAt → "Past X days"
-          matchScore: `${Math.floor(Math.random() * 30) + 70}%`, // fake for now
-          logo: '/assets/images/liner.png',             // fallback logo
-          level: 'Entry Level',                         // placeholder until backend provides
-          stage: 'Early Stage',
-          classification: 'Growth Stage Startups',
-          category: 'Data Science',
+          applicants: Math.floor(Math.random() * 200),
+          posted: formatPostedDate(job.createdAt),
+          matchScore: `${Math.floor(Math.random() * 30) + 70}%`,
+          logo: "/assets/images/liner.png",
+          level: "Entry Level",
+          stage: "Early Stage",
+          classification: "Growth Stage Startups",
+          category: "Data Science",
           redirectUrl: job.redirectUrl,
         };
-        console.log("zllljsjsjs->", mappedJob);
-        setJobs([mappedJob]); // keep it as an array if your UI expects an array
+
+        console.log("Mapped Job:", mappedJob);
+        setJobs([mappedJob]);
+
+        fetchSimilarJobs(job.id);
+
       } catch (error) {
-        console.error('Error fetching job:', error);
-        enqueueSnackbar('Failed to load job', { variant: 'error' });
+        console.error("Error fetching job:", error);
+        enqueueSnackbar("Failed to load job", { variant: "error" });
+      }
+    };
+
+    const fetchSimilarJobs = async (jobId) => {
+      try {
+        const res = await axiosInstance.post(`/jobs/similar-jobs`, {
+          jobId,
+          limit: 10,   // set how many similar jobs to fetch
+        });
+
+        console.log("Similar Jobs Response:", res.data);
+
+        // Map backend fields into UI-friendly fields
+        const mapped = res.data.data.map((job) => ({
+          id: job.id,
+          title: job.jobTitle,
+          company: job.company,
+          salary: job.salaryRange || "Not Disclosed",
+          experience: job.experience || "N/A",
+          logo: job.companyLogo || "/assets/images/liner.png",
+        }));
+
+        setSimilarJobs(mapped);
+      } catch (error) {
+        console.error("Error fetching similar jobs:", error);
       }
     };
 
@@ -149,35 +165,42 @@ export default function JobDetailPage() {
             {/* Left Panel */}
             <Grid item xs={12} md={8}>
               {console.log("kjhdksjahds", jobs.logo)}
-
-              {jobs.map((job) => (
-                <Card>
+              {jobs.length > 0 && jobs.map((job) => (
+                <Card key={job.id}>
                   <CardContent sx={{ p: { xs: 2, md: 3 }, display: { xs: 'none', md: 'block' } }}>
                     {/* Header */}
                     <Grid container spacing={2} alignItems="center" justifyContent="space-between">
                       <Grid item xs={12} md={8}>
                         <Box display="flex" gap={2} flexWrap="wrap" alignItems="center">
                           <Avatar src={job.logo} sx={{ width: 56, height: 56 }} />
+
+                          <Grid sx={{ display: "flex", flexDirection: "row", gap: 8 }}>
+                            <Typography fontWeight={600}>{job.company}</Typography>
+                            <IconButton onClick={handlebookmark}>
+                              {bookmarked ? (
+                                <BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />
+                              )
+                                : (
+                                  <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary', }} />
+                                )
+                              } </IconButton>
+                          </Grid>
+                          <Grid container gap={3} alignItems="center">
+                            <Typography variant="h5" fontWeight={600}>
+                              {job.title}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              color="primary.main"
+                              bgcolor="#7D5AE21A"
+                              px={1}
+                              py={0.5}
+                              borderRadius={1}
+                            >
+                              {job.posted}
+                            </Typography>
+                          </Grid>
                           <Box>
-                            <Grid sx={{ display: "flex", flexDirection: "row", gap: 8 }}>
-                              <Typography fontWeight={600}>{job.company}</Typography>
-                              <BookmarkBorderIcon fontSize="medium" sx={{ color: "text.secondary" }} />
-                            </Grid>
-                            <Grid container gap={3} alignItems="center">
-                              <Typography variant="h5" fontWeight={600}>
-                                {job.title}
-                              </Typography>
-                              <Typography
-                                variant="body2"
-                                color="primary.main"
-                                bgcolor="#7D5AE21A"
-                                px={1}
-                                py={0.5}
-                                borderRadius={1}
-                              >
-                                {job.posted}
-                              </Typography>
-                            </Grid>
                             <Box display="flex" gap={4} flexWrap="wrap" mt={0.5}>
                               <Typography variant="body2" color="text.secondary">
                                 📍 {job.location}
@@ -185,6 +208,8 @@ export default function JobDetailPage() {
                               <Typography variant="body2" color="text.secondary">
                                 • {job.applicants} applicants
                               </Typography>
+
+
                               <Typography
                                 variant="caption"
                                 color="primary"
@@ -194,6 +219,7 @@ export default function JobDetailPage() {
                               </Typography>
 
                             </Box>
+
                           </Box>
                         </Box>
                       </Grid>
@@ -268,7 +294,7 @@ export default function JobDetailPage() {
                           borderRadius: '10px',
                           width: { xs: '100%', sm: '200px' },
                         }}
-                        onClick={() => navigate('/job-booster')}
+                        onClick={() => navigate(`/job-booster/${job_id}`)}
                       >
                         Boost my application
                       </Button>
@@ -303,10 +329,14 @@ export default function JobDetailPage() {
                               <Typography fontWeight={400} fontSize="16px" color="primary.main">
                                 {job.title}
                               </Typography>
-                              <BookmarkBorderIcon
-                                fontSize="medium"
-                                sx={{ color: "text.secondary", cursor: "pointer" }}
-                              />
+                              <IconButton onClick={handlebookmark}>
+                                {bookmarked ? (
+                                  <BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />
+                                )
+                                  : (
+                                    <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary', }} />
+                                  )
+                                } </IconButton>
                             </Box>
 
                             {/* Job Title + Posted Time */}
@@ -436,8 +466,9 @@ export default function JobDetailPage() {
                         borderRadius: '10px',
                         width: { xs: '100%', sm: '200px' },
                       }}
-                      onClick={() => navigate('/job-booster')}
-                    >
+                        onClick={() => navigate(`/job-booster/${job_id}`)}
+                      >
+                    
                       Boost my application
                     </Button>
                   </CardActions>
@@ -447,41 +478,60 @@ export default function JobDetailPage() {
               </Card>
             </Grid>
 
+
             {/* Right Panel */}
             <Grid item xs={12} md={4}>
               <Box
                 bgcolor="grey.100"
                 p={2}
                 borderRadius={2}
-                sx={{ display: { xs: 'none', md: 'block' } }}
+                sx={{ display: { xs: "none", md: "block" } }}
               >
                 <Typography variant="subtitle1" gutterBottom fontWeight={600}>
                   Similar Jobs
                 </Typography>
+
                 <List disablePadding>
-                  {similarJob.map((job) => (
+                  {(showAll ? similarJobs : similarJobs.slice(0, 5)).map((job) => (
                     <ListItem key={job.id} alignItems="flex-start" sx={{ mb: 1 }}>
                       <ListItemAvatar>
                         <Avatar src={job.logo} />
                       </ListItemAvatar>
                       <ListItemText
-                        primary={job.title}
+                        primary={job.title} 
                         secondary={
                           <Typography variant="body2" color="text.secondary">
-                            Salary: {job.salary} • {job.experience}
+                            {job.company} • {job.salary} • {job.experience}
                           </Typography>
                         }
                       />
                     </ListItem>
                   ))}
+
+                  {similarJobs.length === 0 && (
+                    <Typography variant="body2" color="text.secondary">
+                      No similar jobs found.
+                    </Typography>
+                  )}
                 </List>
-                <Box textAlign="right" mt={1}>
-                  <Link href="#" underline="hover" variant="body2">
-                    View more similar jobs
-                  </Link>
-                </Box>
+
+                {/* Show "View more" only if >5 jobs */}
+                {similarJobs.length > 5 && !showAll && (
+                  <Box textAlign="right" mt={1}>
+                    <Link
+                      component="button"
+                      underline="hover"
+                      variant="body2"
+                      onClick={() => setShowAll(true)}
+                    >
+                      View more similar jobs
+                    </Link>
+                  </Box>
+                )}
               </Box>
             </Grid>
+
+
           </Grid>
 
           {/* Call to Action Buttons */}
@@ -521,7 +571,7 @@ export default function JobDetailPage() {
                 borderRadius: '100px',
                 width: { xs: '100%', sm: '200px' },
               }}
-              onClick={() => navigate('/job-booster')}
+              onClick={() => navigate(`/job-booster/${job_id}`)}
             >
               Boost my application
             </Button>

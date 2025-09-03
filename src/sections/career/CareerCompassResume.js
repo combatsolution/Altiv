@@ -13,69 +13,48 @@ import {
 import ReactFlow, { Background, Handle, Position, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { m } from 'framer-motion';
+import axiosInstance from 'src/utils/axios';
 import CareerCard from './CareerCard';
 
-const mockData = {
-  current: {
+const transformApiData = (apiData) => {
+  if (!apiData) return null;
+
+  const current = {
     id: 'current-node',
-    title: 'Lead Data Scientist',
-    match: 95,
-    rate: '18%',
-    salary: '$50L - $55L',
-    experience: '8-12 years',
-    children: ['next-0', 'next-1'],
-  },
-  next: [
-    {
-      id: 'next-0',
-      title: 'Senior Data Scientist',
-      match: 50,
-      rate: '18%',
-      salary: '$50L - $55L',
-      experience: '8-12 years',
-      parent: 'current-node',
-      children: ['exec-0', 'exec-1'],
-    },
-    {
-      id: 'next-1',
-      title: 'Principal Data Scientist',
-      match: 45,
-      rate: '15%',
-      salary: '$55L - $60L',
-      experience: '10-14 years',
-      parent: 'current-node',
-      children: ['exec-2'],
-    },
-  ],
-  executive: [
-    {
-      id: 'exec-0',
-      title: 'Director Data Science',
-      match: 30,
-      rate: '12%',
-      salary: '$60L - $70L',
-      experience: '12-16 years',
-      parent: 'next-0',
-    },
-    {
-      id: 'exec-1',
-      title: 'VP Data Science',
-      match: 25,
-      rate: '10%',
-      salary: '$70L - $90L',
-      experience: '15+ years',
-      parent: 'next-0',
-    },
-    {
-      id: 'exec-2',
-      title: 'Data Science',
-      match: 25,
-      rate: '10%',
-      salary: '$70L - $90L',
-      experience: '15+ years',
-      parent: 'next-1',
-    },
-  ],
+    title: apiData.currentRole.title,
+    match: apiData.currentRole.match_percentage ?? 0,
+    rate: apiData.currentRole.transition_rate || 'N/A',
+    salary: apiData.currentRole.salary_range || 'N/A',
+    experience: apiData.currentRole.experience_range || 'N/A',
+    children: [],
+  };
+
+  const next = [];
+  const executive = [];
+
+  // Flatten levels into sequential "next" nodes
+  let nextIndex = 0;
+  Object.entries(apiData.levels || {}).forEach(([timeline, roles]) => {
+    roles.forEach((role) => {
+      const nextId = `next-${nextIndex}`;
+      current.children.push(nextId);
+
+      next.push({
+        id: nextId,
+        title: role.title,
+        match: role.match_percentage ?? 0,
+        rate: role.transition_rate || 'N/A',
+        salary: role.salary_range || 'N/A',
+        experience: role.experience_range || 'N/A',
+        parent: current.id,
+        children: [], // executives (future expansion if backend provides)
+      });
+
+      nextIndex += 1;
+    });
+  });
+
+  return { current, next, executive };
 };
 
 export default function CareerPathProjection({ isResume, job, experience }) {
@@ -84,6 +63,8 @@ export default function CareerPathProjection({ isResume, job, experience }) {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [showSwipeHint, setShowSwipeHint] = useState(false);
   const [showReactFlow, setShowReactFlow] = useState(false);
+  const [careerData, setCareerData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Show React Flow if job and experience are provided or if isResume is true
   useEffect(() => {
@@ -172,6 +153,67 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     });
   };
 
+  // Build edges dynamically
+  const rebuildEdges = useCallback((selected) => {
+    const newEdges = [
+      {
+        id: 'edge-label-current-next',
+        source: 'label-current',
+        target: 'label-next',
+        type: 'straight',
+        style: { stroke: '#E6EBF2', strokeWidth: 6 },
+      },
+      {
+        id: 'edge-label-next-exec',
+        source: 'label-next',
+        target: 'label-executive',
+        type: 'straight',
+        style: { stroke: '#E6EBF2', strokeWidth: 6 },
+      },
+    ];
+
+    // Connect current node to its children
+    careerData?.current.children.forEach((childId) => {
+      const isActive =
+        selected.next === childId ||
+        (selected.executive &&
+          careerData.executive.some((e) => e.parent === childId && selected.executive === e.id));
+      newEdges.push({
+        id: `edge-${careerData.current.id}-${childId}`,
+        source: careerData.current.id,
+        target: childId,
+        type: 'bezier',
+        style: {
+          stroke: isActive ? '#1976d2' : '#999',
+          strokeWidth: isActive ? 3 : 1,
+          opacity: isActive ? 1 : 0.6,
+        },
+      });
+    });
+
+    // Connect next level nodes to their executive children
+    careerData?.next.forEach((nextNode) => {
+      if (nextNode.children) {
+        nextNode.children.forEach((childId) => {
+          const isActive = selected.next === nextNode.id && selected.executive === childId;
+          newEdges.push({
+            id: `edge-${nextNode.id}-${childId}`,
+            source: nextNode.id,
+            target: childId,
+            type: 'bezier',
+            style: {
+              stroke: isActive ? '#1976d2' : '#999',
+              strokeWidth: isActive ? 3 : 1,
+              opacity: isActive ? 1 : 0.6,
+            },
+          });
+        });
+      }
+    });
+
+    setEdges(newEdges);
+  }, [careerData]);
+
   // Check if a node should be visible based on its parent's expanded state
   const isNodeVisible = useCallback(
     (node) => {
@@ -189,7 +231,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
         if (isNodeCollapsed('current-node')) return false;
 
         // Find the parent node in the next level
-        const parentNode = mockData.next.find((n) => n.children?.includes(node.id));
+        const parentNode = careerData?.next.find((n) => n.children?.includes(node.id));
         if (!parentNode) return true;
 
         // If parent (next-level node) is collapsed, hide this node
@@ -198,7 +240,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
 
       return true;
     },
-    [isNodeCollapsed]
+    [isNodeCollapsed, careerData?.next]
   );
 
   const nodeTypes = {
@@ -304,11 +346,13 @@ export default function CareerPathProjection({ isResume, job, experience }) {
   // Filter nodes based on expanded state
   const filterNodesByExpandedState = useCallback(
     (nodeList) => nodeList.filter((node) => isNodeVisible(node)),
-    [isNodeVisible] // Rebuild when isNodeVisible changes
+    [isNodeVisible]
   );
 
   // Generate all nodes
   const generateAllNodes = useCallback(() => {
+    if (!careerData) return [];
+    
     const handleNodeClick = (id, level) => {
       setSelectedNodes((prev) => {
         let updated = { ...prev };
@@ -319,16 +363,16 @@ export default function CareerPathProjection({ isResume, job, experience }) {
         } else if (level === 'next') {
           // When clicking next level, ensure current is selected and clear executive
           updated = {
-            current: mockData.current.id,
+            current: careerData.current.id,
             next: id,
             executive: null,
           };
         } else if (level === 'executive') {
           // When clicking executive, find and set its parent next level and current
-          const executiveNode = mockData.executive.find((node) => node.id === id);
+          const executiveNode = careerData.executive.find((node) => node.id === id);
           if (executiveNode) {
             updated = {
-              current: mockData.current.id,
+              current: careerData.current.id,
               next: executiveNode.parent,
               executive: id,
             };
@@ -349,10 +393,10 @@ export default function CareerPathProjection({ isResume, job, experience }) {
         draggable: false,
       },
       {
-        id: mockData.current.id,
+        id: careerData.current.id,
         type: 'career',
         data: {
-          ...mockData.current,
+          ...careerData.current,
           isNew: false,
           onClick: (id) => handleNodeClick(id, 'current'),
         },
@@ -376,7 +420,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       },
     ];
 
-    const nextNodes = mockData.next.map((child, index) => ({
+    const nextNodes = careerData.next.map((child, index) => ({
       id: child.id,
       type: 'career',
       data: {
@@ -392,7 +436,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       targetPosition: Position.Bottom,
     }));
 
-    const executiveNodes = mockData.executive.map((child, index) => ({
+    const executiveNodes = careerData.executive.map((child, index) => ({
       id: child.id,
       type: 'career',
       data: {
@@ -410,7 +454,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
 
     const allNodes = [...baseNodes, ...nextNodes, ...executiveNodes];
     return filterNodesByExpandedState(allNodes);
-  }, [isMdUp, filterNodesByExpandedState]);
+  }, [careerData, isMdUp, filterNodesByExpandedState, rebuildEdges]);
 
   useEffect(() => {
     const startedWith = sessionStorage.getItem('userStartedWith');
@@ -421,70 +465,9 @@ export default function CareerPathProjection({ isResume, job, experience }) {
 
     // instead of only label edges, build full edges set
     rebuildEdges(selectedNodes);
-  }, [generateAllNodes, selectedNodes]);
+  }, [generateAllNodes, selectedNodes, rebuildEdges]);
 
-  // Build edges dynamically
-  const rebuildEdges = (selected) => {
-    const newEdges = [
-      {
-        id: 'edge-label-current-next',
-        source: 'label-current',
-        target: 'label-next',
-        type: 'straight',
-        style: { stroke: '#E6EBF2', strokeWidth: 6 },
-      },
-      {
-        id: 'edge-label-next-exec',
-        source: 'label-next',
-        target: 'label-executive',
-        type: 'straight',
-        style: { stroke: '#E6EBF2', strokeWidth: 6 },
-      },
-    ];
-
-    // Connect current node to its children
-    mockData.current.children.forEach((childId) => {
-      const isActive =
-        selected.next === childId ||
-        (selected.executive &&
-          mockData.executive.some((e) => e.parent === childId && selected.executive === e.id));
-      newEdges.push({
-        id: `edge-${mockData.current.id}-${childId}`,
-        source: mockData.current.id,
-        target: childId,
-        type: 'bezier',
-        style: {
-          stroke: isActive ? '#1976d2' : '#999',
-          strokeWidth: isActive ? 3 : 1,
-          opacity: isActive ? 1 : 0.6,
-        },
-      });
-    });
-
-    // Connect next level nodes to their executive children
-    mockData.next.forEach((nextNode) => {
-      if (nextNode.children) {
-        nextNode.children.forEach((childId) => {
-          const isActive = selected.next === nextNode.id && selected.executive === childId;
-          newEdges.push({
-            id: `edge-${nextNode.id}-${childId}`,
-            source: nextNode.id,
-            target: childId,
-            type: 'bezier',
-            style: {
-              stroke: isActive ? '#1976d2' : '#999',
-              strokeWidth: isActive ? 3 : 1,
-              opacity: isActive ? 1 : 0.6,
-            },
-          });
-        });
-      }
-    });
-
-    setEdges(newEdges);
-  };
-
-  const handleModify = () => {
+  const handleModify = async () => {
     const newErrors = {
       jobTitle: !jobTitle ? 'Please select a job title' : '',
       expYears: !expYears ? 'Please select years of experience' : '',
@@ -492,9 +475,23 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     setErrors(newErrors);
 
     if (!newErrors.jobTitle && !newErrors.expYears) {
-      console.log('Form submitted with:', { jobTitle, expYears });
-      // TODO: Add your form submission logic here
-      setShowReactFlow(true);
+      try {
+        setLoading(true);
+        const payload = {
+          designation: jobTitle,
+          experience: Number(expYears),
+        };
+
+        const res = await axiosInstance.post('/career-compass', payload);
+        const mapped = transformApiData(res.data?.data);
+        setCareerData(mapped);
+
+        setShowReactFlow(true);
+      } catch (err) {
+        console.error('Error fetching career compass:', err);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -655,6 +652,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
                 <Button
                   variant="outlined"
                   onClick={handleModify}
+                  disabled={loading}
                   sx={{
                     minWidth: '180px',
                     height: '48px',
@@ -672,7 +670,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
                     textTransform: 'none',
                   }}
                 >
-                  Modify
+                  {loading ? 'Loading...' : 'Modify'}
                 </Button>
               </Grid>
             </Grid>

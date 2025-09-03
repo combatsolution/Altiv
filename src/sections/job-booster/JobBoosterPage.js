@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Grid,
@@ -15,7 +15,8 @@ import {
   MenuItem
 } from '@mui/material';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import axiosInstance from 'src/utils/axios';
 import PropTypes from 'prop-types';
 import {
   BarChart,
@@ -37,161 +38,11 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { paths } from 'src/routes/paths';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
-
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import Sunburst from "highcharts/modules/sunburst";
+import { useAuthContext } from 'src/auth/hooks';
 
-
-const dataa = [
-  // Root
-  {
-    id: "0.0", parent: "", name: "Education", color: "transparent", // transparent root
-    borderWidth: 0
-  },
-
-  // First Level
-
-  { id: "1.3", parent: "0.0", name: "Others", value: 5, color: '#0BA02C' },
-  { id: "1.2", parent: "0.0", name: "MBA", value: 12, color: '#FF8800' },
-  { id: "1.1", parent: "0.0", name: "Engineering", value: 12, color: '#1976D2' },
-
-  // Second Level under Engineering
-  { id: "2.1", parent: "1.1", name: "IIT / NIT", value: 25, color: '#1BABFE' },
-  { id: "2.2", parent: "1.1", name: "Tier 1", value: 20, color: '#1BABFE' },
-  { id: "2.3", parent: "1.1", name: "Other Engineering", value: 25, color: '#1BABFE' },
-
-  // Second Level under MBA
-  { id: "2.4", parent: "1.2", name: "IIM", value: 10, color: '#FBBC05' },
-  { id: "2.5", parent: "1.2", name: "ISB", value: 8, color: '#FBBC05' },
-  { id: "2.6", parent: "1.2", name: "Other MBA", value: 12, color: '#FBBC05' },
-
-];
-const options = {
-  chart: {
-    height: "80%",
-    events: {
-      render() {
-        const chart = this;
-
-        if (chart.customLabel) {
-          chart.customLabel.destroy();
-        }
-
-        let text = "Education";
-        if (chart.drilldownNode && chart.drilldownNode.name) {
-          text = chart.drilldownNode.name;
-        }
-
-        chart.customLabel = chart.renderer
-          .text(
-            text,
-            chart.plotWidth / 2 + chart.plotLeft,
-            chart.plotHeight / 2 + chart.plotTop
-          )
-          .css({
-            color: "#000",
-            fontSize: '14px',
-            fontWeight: "bold",
-            textAnchor: "middle"
-          })
-          .attr({
-            align: "center"
-          })
-          .add();
-
-        chart.customLabel.attr({
-          x: chart.plotWidth / 2 + chart.plotLeft,
-          y: chart.plotHeight / 2 + chart.plotTop
-        });
-
-
-      }
-    }
-  },
-  credits: {
-    enabled: false
-  },
-
-
-  plotOptions: {
-    sunburst: {
-      allowDrillToNode: true,
-      cursor: 'pointer',
-      startAngle: 80,
-
-      point: {
-        events: {
-          click() {
-            const chart = this.series.chart;
-            chart.drilldownNode = this; // store selected node
-            chart.redraw(); // trigger render update
-          }
-        }
-      }
-    }
-  },
-  title: {
-    text: "", // start empty
-  },
-
-
-  series: [
-    {
-      type: "sunburst",
-      name: "",   // 👈 removes the "Series 1" text
-      data: dataa,
-      fontweight: 200,
-      allowDrillToNode: true,
-      cursor: "pointer",
-      borderWidth: 2,
-      slicedOffset: 10,
-      dataLabels: {
-        rotationMode: 'circular',
-
-        formatter() {
-          const name = (this.point && this.point.name) ? String(this.point.name) : '';
-          // hide labels that match "education" (case-insensitive) or common typo "edcation"
-          if (/education/i.test(name) || /edcation/i.test(name) || /\bedu\b/i.test(name)) {
-            return null; // returning null hides the label
-          }
-          // otherwise show the name and value (keeps your original layout with a <br>)
-          return `${name}<br>${this.point.value}%`;
-        },
-        style: {
-
-          color: '#fff',         // white text
-          fontWeight: 'normal',
-          fontSize: '11px',
-          textOutline: 'none'    // removes black outline
-        }
-      },
-
-      levels: [
-        {
-          level: 1,
-          levelIsConstant: false,
-          dataLabels: {
-            rotationMode: "circular"
-          }
-        },
-        {
-          level: 2,
-          colorByPoint: true,
-          dataLabels: {
-            rotationMode: "circular"
-          }
-        }
-      ]
-    }
-  ],
-  tooltip: {
-    pointFormat: "<b>{point.name}</b> {point.value}%"
-  }
-};
-
-const COLORS = ["#20C997", "#4285F4", "#F4A300", "#FFD43B"];
 
 // Legend data
 const LEGENDS = [
@@ -200,61 +51,6 @@ const LEGENDS = [
   { label: "13 – 15 years", color: "#F4A300" },
   { label: "15+ years", color: "#FFD43B" }
 ];
-
-
-
-const companyBackgroundData = [
-  { name: "Financial Tech", value: 20, fill: " #00C49F" },
-  { name: "Big Tech", value: 25, fill: " #0088FE" },
-  { name: "Enterprise SaaS", value: 35, fill: "#FF8042" },
-  { name: "Internal Promotions", value: 45, fill: "#FACC15" },
-];
-
-
-const array1 = [
-  'Strong experience in cross-functional product development teams.',
-  'Demonstrated leadership in managing end-to-end product lifecycles.',
-  'Proficient in Agile methodologies and sprint planning.',
-  'Hands-on experience with stakeholder and customer research.',
-  'Delivered measurable results through data-driven product strategies.',
-  'Background in driving product innovation in tech-first environments.',
-  'Led successful product launches with cross-departmental collaboration.',
-];
-
-const array2 = [
-  'Skilled in developing go-to-market strategies for digital products.',
-  'Experience in managing SaaS platforms with global user adoption.',
-  'Proficient in conducting competitive market analysis.',
-  'Worked closely with design teams to improve user experience.',
-  'Track record of enhancing product performance through analytics.',
-  'Hands-on experience with stakeholder and customer research.',
-
-];
-
-const array3 = [
-  'Expertise in scaling products from MVP to enterprise adoption.',
-  'Background in cloud-native applications and API integrations.',
-  'Led cross-border teams to deliver international product releases.',
-  'Experienced in budget planning and resource allocation.',
-  'Strong focus on customer-centric product roadmaps.',
-
-];
-
-const array4 = [
-  'Collaborated with C-level executives to define product vision.',
-  'Hands-on experience in B2B and B2C product strategies.',
-  'Proficient in data visualization and KPI reporting.',
-  'Skilled at mentoring junior product managers and interns.',
-];
-
-
-const skills = [
-  { label: "Technical", score: 85 },
-  { label: "Leadership", score: 50 },
-  { label: "Project Management", score: 45 },
-  { label: "Lorem Ipsum", score: 20 },
-];
-
 
 const getBadgeColor = (score) => {
   if (score >= 70) return "green";
@@ -265,8 +61,190 @@ const getBadgeColor = (score) => {
 
 
 const ProductManagementPage = () => {
+
+  const { job_id: jobId } = useParams();   // ✅ get from URL params
   const [selectedFilter, setSelectedFilter] = useState("Everything");
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
+  const [boostData, setBoostData] = useState(null);
+  const [statisticalData, setStatisticalData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { user } = useAuthContext();
+  const lastResume = user.resumes.at(-1).id;
+  console.log("last resume id:", lastResume);
+  const [graphdata, setGraphdata] = useState([]);
+  const [radialchartdata, setRadialchartdata] = useState([]);
+  const [companyBackgroundData, setCompanyBackgroundData] = useState([]);
+
+  // Inside your component
+  const [skills, setSkills] = useState([]);
+
+
+    // ✅ Now it's safe to derive these
+  const matchedItems = boostData?.matched?.category_wise || {};
+  const closeMatchedItems = boostData?.close_matched?.category_wise || {};
+  const notMatchedItems = boostData?.not_matched?.category_wise || {};
+  const improvements = boostData?.improvement_suggestions || [];
+  const resumeId = lastResume;
+  console.log("jobidsdfbhjfv:", jobId);
+  console.log("resumeiddsh:", resumeId);
+
+
+  useEffect(() => {
+    if (!boostData) return;
+    // chips logic
+    const keywords = boostData.matching_keywords || {};
+    const mappedSkills = Object.entries(keywords).map(([key, value]) => ({
+      label: key.replace(/_/g, " "), // turn "technical_skills" -> "technical skills"
+      score: Math.round(value * 100), // convert 0.78 -> 78
+    }));
+
+    setSkills(mappedSkills);
+  }, [boostData]);
+
+
+  const [options, setOptions] = useState({
+    chart: { height: "80%", events: { /* ...same render logic... */ } },
+    credits: { enabled: false },
+    plotOptions: { sunburst: { allowDrillToNode: true, cursor: "pointer" } },
+    title: { text: "" },
+    series: [{
+      type: "sunburst",
+      name: "",
+      data: [],   // <-- will be filled after API fetch
+      borderWidth: 2,
+      /* eslint-disable react/no-this-in-sfc */
+      dataLabels: {
+        rotationMode: "circular",
+        formatter() {
+          const name = this.point?.name || "";
+          if (/education/i.test(name)) return null;
+          return `${name}<br>${this.point.value}%`;
+        },
+        style: { color: "#fff", fontSize: "11px", textOutline: "none" }
+      },
+      /* eslint-disable react/no-this-in-sfc */
+
+      levels: [
+        { level: 1, dataLabels: { rotationMode: "circular" } },
+        { level: 2, colorByPoint: true, dataLabels: { rotationMode: "circular" } }
+      ]
+    }],
+    tooltip: { pointFormat: "<b>{point.name}</b> {point.value}%" }
+  });
+
+
+
+  const COLORS = ["#20C997", "#4285F4", "#F4A300", "#FFD43B" ];
+
+
+  const transformEducationToSunburst = (educationData) => {
+    const sunburstData = [
+      {
+        id: "0.0",
+        parent: " ",
+        color: "transparent",
+        name: "Education"
+      },   // root
+    ];
+
+    let i = 1;
+    Object.entries(educationData).forEach(([field, details]) => {
+      const parentId = `1.${i}`;
+      sunburstData.push({
+        id: parentId,
+        parent: "0.0",
+        name: field,
+        value: details.percentage,
+        color: Highcharts.getOptions().colors[i % 5] // auto-pick color
+      });
+
+      let j = 1;  
+      Object.entries(details.distribution).forEach(([tier, value]) => {
+        sunburstData.push({
+          id: `2.${i}.${j}`,
+          parent: parentId,
+          name: tier,
+          value,
+          color: Highcharts.getOptions().colors[i % 5]
+        });
+        j += 1;
+      });
+
+      i += 1;
+    });
+
+    return sunburstData;
+  };
+
+  useEffect(() => {
+    if (!jobId && !resumeId) return;
+    const fetchBoostData = async () => {
+      try {
+        setLoading(true);
+
+        const payload = {
+          jobId: Number(jobId),
+          resumeId: user.resumes.at(-1).id,
+        };
+        const res = await axiosInstance.post("/jobs/job-boost", payload);
+        setBoostData(res.data?.data);
+        console.log("sfsdfjkhsdf:", res.data?.data);
+      } catch (error) {
+        console.error("Error fetching job boost data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const COLORS = ["#0088FE", "#00C49F", "#FF8042", "#FACC15"];
+
+    const fetchStatisticalData = async () => {
+      try {
+        const res = await axiosInstance.post(`/jobs/job-boost-statistical-data/${Number(jobId)}`);
+        const educationData = res.data?.data?.company_benchmark?.education_background;
+        const experienceData = res.data?.data?.company_benchmark?.experience_years_distribution;
+        const companyBackground = res.data?.data?.company_benchmark?.previous_company_background;
+        console.log("bsdkfb:", companyBackground);
+
+        // Transform education -> sunburst
+        if (educationData) {
+          const sunburstData = transformEducationToSunburst(educationData);
+          setOptions((prev) => ({
+            ...prev,
+            series: [{ ...prev.series[0], data: sunburstData, allowDrillToNode: true, cursor: "pointer" }]
+          }));
+        }
+
+        // Transform experience -> bar chart
+        if (experienceData) {
+          const formattedGraphData = Object.entries(experienceData).map(([range, percentage]) => ({
+            range,
+            percentage
+          }));
+          setGraphdata(formattedGraphData);
+        }
+
+        // Company Background → Radial Chart
+        if (companyBackground) {
+          const formattedRadialData = Object.entries(companyBackground).map(([name, value], idx) => ({
+            name,
+            value,
+            fill: COLORS[idx % COLORS.length]
+          }));
+          setRadialchartdata(formattedRadialData);
+          setCompanyBackgroundData(formattedRadialData);
+        }
+      } catch (err) {
+        console.error("Error fetching statistical data", err);
+      }
+    };
+
+
+
+    fetchBoostData();
+    fetchStatisticalData();
+  }, [jobId, resumeId, user?.resumes]);
+
 
   const sliderSettings = {
     dots: true,
@@ -319,33 +297,9 @@ const ProductManagementPage = () => {
     payload: [],
   };
 
-  const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }) => {
-    const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) / 2;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="#fff"
-        textAnchor="middle"
-        dominantBaseline="middle"
-        fontSize={12}
 
-      >
-        {name} {/* or `${(percent * 100).toFixed(0)}%` */}
-      </text>
-    );
-  };
 
-  const barData = [
-    { name: "8 – 10 years", percentage: 38 },
-    { name: "11 – 12 years", percentage: 48 },
-    { name: "13 – 15 years", percentage: 34 },
-    { name: "15+ years", percentage: 26 }
-  ];
 
   // Custom Legend Component
   const CustomLegend = () => (
@@ -379,30 +333,7 @@ const ProductManagementPage = () => {
     </Stack>
   );
 
-  const renderInnerLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, name, value, index }) => {
-    // Apply fade effect when other segments are hovered
-    const isOtherHovered = hoveredInner !== null && hoveredInner !== index;
-    const opacity = isOtherHovered ? 0.3 : 1;
 
-    const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="white"
-        textAnchor={x > cx ? 'start' : 'end'}
-        dominantBaseline="central"
-        fontSize="11"
-        fontWeight="bold"
-        opacity={opacity}
-      >
-        {name}
-      </text>
-    );
-  };
 
   return (
     <Box sx={{ px: { xs: 0, md: 1 }, py: { xs: 4, md: 2 }, maxWidth: 1300, mx: 'auto' }}>
@@ -722,46 +653,48 @@ const ProductManagementPage = () => {
                 </Stack>
               </Stack>
 
-              {(selectedFilter === "Everything" || selectedFilter === "Matching") && (
-                <Paper sx={{ p: 1, mb: 1, bgcolor: '#e8f5e9' }}>
+
+              {(selectedFilter === "Everything" || selectedFilter === "Matching")
+                && (<Paper sx={{ p: 1, mb: 1, bgcolor: '#e8f5e9' }}>
                   <Typography variant="h6" paddingLeft='25px' color="success.main" fontFamily='Roboto'>
-                    Matching 75%
+                    Matching ({boostData?.matched?.percentage}%)
                   </Typography>
                   <ul style={{ listStyle: 'none', paddingLeft: 0, marginTop: 8 }}>
-                    {array1.map((item, idx) => (
-                      <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 4 }}>
-                        <Box
-                          component="span"
-                          sx={{
-                            width: 3,
-                            height: 3,
-                            bgcolor: 'success.main',
-                            borderRadius: '50%',
-                            flexShrink: 0,
-                            mt: 1.2,
-                            mr: 1.5,
-                            ml: 2,
-                            fontFamily: 'Epiloguelo'
+                    {Object.entries(matchedItems).map(([category, items]) =>
+                      items.map((item, idx) => (
+                        <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 4 }}>
+                          <Box
+                            component="span"
+                            sx={{
+                              width: 3,
+                              height: 3,
+                              bgcolor: 'success.main',
+                              borderRadius: '50%',
+                              flexShrink: 0,
+                              mt: 1.2,
+                              mr: 1.5,
+                              ml: 2,
+                              fontFamily: 'Epiloguelo'
 
-                          }}
-                        />
-                        <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
-                          {item}
-                        </Typography>
-                      </li>
-                    ))}
+                            }}
+                          />
+                          <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
+                            {category}: {item}
+                          </Typography>
+                        </li>
+                      ))
+                    )}
                   </ul>
-                </Paper>
-              )}
+                </Paper>)}
 
-              {(selectedFilter === "Everything" || selectedFilter === "Close Matching") && (
-                <Paper sx={{ p: 1, mb: 1, bgcolor: '#fff3e0' }}>
-                  <Typography variant="h6" paddingLeft='20px' color="warning.main" fontFamily='Roboto'>
-                    Close Matching 65%
-                  </Typography>
+              {(selectedFilter === "Everything" || selectedFilter === "Close Matching") && (<Paper sx={{ p: 1, mb: 1, bgcolor: '#fff3e0' }}>
+                <Typography variant="h6" paddingLeft='20px' color="warning.main" fontFamily='Roboto'>
+                  Close Matching ({boostData?.close_matched?.percentage}%)
+                </Typography>
 
-                  <ul style={{ listStyle: 'none', paddingLeft: 0, marginTop: 8 }}>
-                    {array2.map((item, idx) => (
+                <ul style={{ listStyle: 'none', paddingLeft: 0, marginTop: 8 }}>
+                  {Object.entries(closeMatchedItems).map(([category, items]) =>
+                    items.map((item, idx) => (
                       <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 4 }}>
                         <Box
                           component="span"
@@ -779,77 +712,64 @@ const ProductManagementPage = () => {
                           }}
                         />
                         <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
-                          {item}
+                          {category}: {item}
                         </Typography>
                       </li>
-                    ))}
-                  </ul>
-                </Paper>
-              )}
+                    )))}
+                </ul>
+              </Paper>)}
 
-              {(selectedFilter === "Everything" || selectedFilter === "Not Matching") && (
-                <Paper sx={{ p: 1, mb: 1, bgcolor: '#ffebee' }}>
+              {(selectedFilter === "Everything" || selectedFilter === "Not Matching") &&
+                (<Paper sx={{ p: 1, mb: 1, bgcolor: '#ffebee' }}>
                   <Typography variant="h6" paddingLeft='20px' color="error.main" fontFamily='Roboto'>
-                    Not Matching 65%
+                    Not Matching ({boostData?.not_matched?.percentage}%)
                   </Typography>
 
                   <ul style={{ listStyle: 'none', paddingLeft: 0, marginTop: 8 }}>
-                    {array3.map((item, idx) => (
-                      <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 4 }}>
-                        <Box
-                          component="span"
-                          sx={{
-                            width: 3,
-                            height: 3,
-                            bgcolor: 'error.main',
-                            borderRadius: '50%',
-                            flexShrink: 0,
-                            mt: 1.2,
-                            mr: 1.5,
-                            ml: 2,
-                            fontFamily: 'Epilogue',
+                    {Object.entries(notMatchedItems).map(([category, items]) =>
+                      items.map((item, idx) => (
+                        <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 4 }}>
+                          <Box
+                            component="span"
+                            sx={{
+                              width: 3,
+                              height: 3,
+                              bgcolor: 'error.main',
+                              borderRadius: '50%',
+                              flexShrink: 0,
+                              mt: 1.2,
+                              mr: 1.5,
+                              ml: 2,
+                              fontFamily: 'Epilogue',
 
-                          }}
-                        />
-                        <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
-                          {item}
-                        </Typography>
-                      </li>
-                    ))}
+                            }}
+                          />
+                          <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
+                            {item}
+                          </Typography>
+                        </li>
+                      )))}
                   </ul>
-                </Paper>
-              )}
+                </Paper>)}
 
-              {(selectedFilter === "Everything" || selectedFilter === "Improved") && (
-                <Paper sx={{ p: 1, mb: 1, bgcolor: 'grey.200' }}>
-                  <Typography variant="h6" paddingLeft='20px' fontFamily='Roboto'>Things can be improved</Typography>
+              {(selectedFilter === "Everything" || selectedFilter === "Improved") &&
+                (<Grid item xs={12} md={12}>
+                  <Paper elevation={2} sx={{ p: 2, bgcolor: "#fffbe6", borderRadius: 2 }}>
+                    <Typography variant="h6" color="warning.main" gutterBottom>
+                      Improvements
+                    </Typography>
+                    <ul style={{ margin: 0, paddingLeft: "1.2rem" }}>
+                      {improvements.map((suggestion, idx) => (
+                        <li key={idx}>
+                          <Typography variant="body2" color="text.secondary">
+                            {suggestion}
+                          </Typography>
+                        </li>
+                      ))}
+                    </ul>
+                  </Paper>
+                </Grid>)}
 
-                  <ul style={{ listStyle: 'none', paddingLeft: 0, marginTop: 8 }}>
-                    {array4.map((item, idx) => (
-                      <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 4 }}>
-                        <Box
-                          component="span"
-                          sx={{
-                            width: 3,
-                            height: 3,
-                            bgcolor: 'grey.600',
-                            borderRadius: '50%',
-                            flexShrink: 0,
-                            mt: 1.2,
-                            mr: 1.5,
-                            ml: 2,
-                            fontFamily: 'Epilogue',
-
-                          }}
-                        />
-                        <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
-                          {item}
-                        </Typography>
-                      </li>
-                    ))}
-                  </ul>
-                </Paper>
-              )}
             </Grid>
 
 
@@ -891,28 +811,31 @@ const ProductManagementPage = () => {
                       </Grid>
                     </Box>
 
-
                     {/* Slide 2 - Bar Chart */}
                     <Paper sx={{ p: 2, mb: 2, width: "100%" }}>
-                      <Typography variant="body2" fontWeight="800" mb={1} >
+                      <Typography variant="body2" fontWeight="800" mb={1}>
                         Years of Experience vs Percentage of Directors
                       </Typography>
                       <Divider />
 
-                      {/* Bar Chart */}
                       <Box sx={{ height: { xs: 200, md: 250 }, width: "100%", mt: 1 }}>
                         <ResponsiveContainer width="100%" height="100%">
-                          <BarChart data={barData} barCategoryGap="10%">
-
+                          <BarChart data={graphdata} barCategoryGap="10%">
+                            <XAxis
+                              dataKey="range"
+                              fontSize={12}
+                              axisLine={false}
+                              tickLine={false}
+                            />
                             <YAxis
                               fontSize={12}
-                              domain={[0, 50]}
+                              domain={[0, 50]} // you can also compute max dynamically
                               ticks={[0, 10, 20, 30, 40, 50]}
                               tickFormatter={(value) => `${value}%`}
                             />
-                            <Tooltip cursor={{ fill: 'transparent' }} />
+                            <Tooltip cursor={{ fill: "transparent" }} />
                             <Bar dataKey="percentage">
-                              {barData.map((entry, index) => (
+                              {graphdata.map((entry, index) => (
                                 <Cell
                                   key={`cell-${index}`}
                                   fill={COLORS[index % COLORS.length]}
@@ -923,9 +846,6 @@ const ProductManagementPage = () => {
                         </ResponsiveContainer>
                       </Box>
 
-                      {/* Custom Legend */}
-
-                      
                       <CustomLegend />
                     </Paper>
 
@@ -955,7 +875,6 @@ const ProductManagementPage = () => {
                             top: '7%',
                             left: { xs: 10, md: 80 },
 
-
                           }}
                         >
                           {companyBackgroundData.map((item, index) => (
@@ -963,35 +882,33 @@ const ProductManagementPage = () => {
                               key={index}
                               sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
                             >
-                              <Typography sx={{ fontSize: { xs: 10, md: 11 }, color: 'text.secondary' }} > {item.name} </Typography>
-                              <Typography sx={{ ml: 1, fontSize: { xs: 10, md: 11 }, fontWeight: 'bold', color: 'text.primary' }} > {item.value}%  </Typography>
+                              <Typography sx={{ fontSize: { xs: 10, md: 11 }, color: 'text.secondary' }} >
+                                {item.name} </Typography>
+                              <Typography sx={{
+                                ml: 1, fontSize: { xs: 10, md: 11 }, fontWeight: 'bold',
+                                color: 'text.primary'
+                              }} > {item.value}%  </Typography>
                             </Box>
                           ))}
 
                         </Box>
-
                         {/* Chart */}
                         <ResponsiveContainer width="100%" height="100%">
                           <RadialBarChart
-                            cx="42%"
-                            cy="56%"
-                            innerRadius="54%"   // 🔹 Increase inner radius (makes ring thinner)
-                            outerRadius="109%"   // 🔹 Keep outer radius same
-                            barSize={12}         // 🔹 Controls thickness (try 6–10 for fine-tuning)
-                            data={companyBackgroundData}
-                            barCategoryGap="60%" 
+                            cx="43%"
+                            cy="57%"
+                            innerRadius="51%"
+                            outerRadius="112%"
+                            barSize={12}
+                            data={radialchartdata}
+                            barCategoryGap="60%"
                             startAngle={91}
                             endAngle={-270}
                           >
-                            {/* ✅ Force values to be percentages (0–100) */}
-                            <PolarAngleAxis
-                              type="number"
-                              domain={[0, 100]}
-                              tick={false}
-                            />
+                            <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
 
                             <RadialBar dataKey="value" clockWise>
-                              {[...companyBackgroundData].reverse().map((entry, index) => (
+                              {[...radialchartdata].reverse().map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={entry.fill} />
                               ))}
                             </RadialBar>
@@ -999,6 +916,7 @@ const ProductManagementPage = () => {
                         </ResponsiveContainer>
                       </Box>
                     </Paper>
+
                   </Slider>
                 ) : (
                   <>
@@ -1014,33 +932,30 @@ const ProductManagementPage = () => {
                       </Grid>
                     </Box>
 
-
-                    <Paper sx={{ p: 2, mb: 2, width: "100%", maxWidth: "450px" }}>
+                    <Paper sx={{ p: 2, mb: 2, width: "100%" }}>
                       <Typography variant="body2" fontWeight="800" mb={1}>
                         Years of Experience vs Percentage of Directors
                       </Typography>
                       <Divider />
 
-                      {/* Bar Chart */}
                       <Box sx={{ height: { xs: 200, md: 250 }, width: "100%", mt: 1 }}>
                         <ResponsiveContainer width="100%" height="100%">
-                          <BarChart data={barData} barCategoryGap="10%">
+                          <BarChart data={graphdata} barCategoryGap="10%">
+                            <XAxis
+                              dataKey="range"
+                              fontSize={12}
+                              axisLine={false}
+                              tickLine={false}
+                            />
                             <YAxis
                               fontSize={12}
-                              domain={[0, 50]} // ✅ fixed domain
+                              domain={[0, 50]} // you can also compute max dynamically
                               ticks={[0, 10, 20, 30, 40, 50]}
                               tickFormatter={(value) => `${value}%`}
                             />
-
-                            {/* ✅ Custom Tooltip without index and no vertical line */}
-                            <Tooltip
-                              cursor={false} // removes the vertical cursor line
-                              formatter={(value) => [`${value}%`, "Percentage"]}
-                              labelFormatter={() => ""} // hide the index/label
-                            />
-
+                            <Tooltip cursor={{ fill: "transparent" }} />
                             <Bar dataKey="percentage">
-                              {barData.map((entry, index) => (
+                              {graphdata.map((entry, index) => (
                                 <Cell
                                   key={`cell-${index}`}
                                   fill={COLORS[index % COLORS.length]}
@@ -1051,11 +966,11 @@ const ProductManagementPage = () => {
                         </ResponsiveContainer>
                       </Box>
 
-                      {/* Custom Legend code  */}
                       <CustomLegend />
                     </Paper>
 
 
+                    {/* RADIAL CHART */}
                     <Paper sx={{ p: 2, width: '100%', bgcolor: '#fff', maxWidth: '450px' }}>
                       <Typography variant="body2" fontWeight="800" mb={1} >
                         Previous Company Background
@@ -1080,7 +995,6 @@ const ProductManagementPage = () => {
                             top: '7%',
                             left: { xs: 10, md: 80 },
 
-
                           }}
                         >
                           {companyBackgroundData.map((item, index) => (
@@ -1092,30 +1006,26 @@ const ProductManagementPage = () => {
                               <Typography sx={{ ml: 1, fontSize: { xs: 10, md: 11 }, fontWeight: 'bold', color: 'text.primary' }} > {item.value}%  </Typography>
                             </Box>
                           ))}
-
                         </Box>
+
 
                         {/* Chart */}
                         <ResponsiveContainer width="100%" height="100%">
                           <RadialBarChart
-                            cx="50%"
-                            cy="50%"
-                            innerRadius="42%"   // 🔹 Increase inner radius (makes ring thinner)
-                            outerRadius="95%"   // 🔹 Keep outer radius same
-                            barSize={12}         // 🔹 Controls thickness (try 6–10 for fine-tuning)
-                            data={companyBackgroundData}
+                            cx="40%"
+                            cy="56%"
+                            innerRadius="54%"
+                            outerRadius="110%"
+                            barSize={12}
+                            data={radialchartdata}
+                            barCategoryGap="60%"
                             startAngle={91}
                             endAngle={-270}
                           >
-                            {/* ✅ Force values to be percentages (0–100) */}
-                            <PolarAngleAxis
-                              type="number"
-                              domain={[0, 100]}
-                              tick={false}
-                            />
+                            <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
 
                             <RadialBar dataKey="value" clockWise>
-                              {[...companyBackgroundData].reverse().map((entry, index) => (
+                              {[...radialchartdata].map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={entry.fill} />
                               ))}
                             </RadialBar>
@@ -1144,7 +1054,7 @@ const ProductManagementPage = () => {
               variant="contained"
               size="large"
               sx={{
-
+                mb: { xs: 2, md: 0 },
                 color: '#fff',
                 backgroundColor: 'primary.main',
                 borderRadius: '100px',
@@ -1157,6 +1067,8 @@ const ProductManagementPage = () => {
             >
               Explore more jobs
             </Button>
+            
+           {!user && (
             <Button
               variant="outlined"
               size="large"
@@ -1170,6 +1082,9 @@ const ProductManagementPage = () => {
             >
               Sign up
             </Button>
+
+           )} 
+
           </CardActions>
         </Box>
       </Container>

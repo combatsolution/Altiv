@@ -383,7 +383,7 @@
               <List sx={{ maxHeight: 180, overflowY: 'auto', mb: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
                 {existingResumes.map((r) => (
                   <React.Fragment key={r.id}>
-                    <ListItem
+                    <ListItem 
                       selected={selectedResumeId === r.id}
                       button
                       onClick={() => {
@@ -400,12 +400,12 @@
                       }
                       sx={{ py: 1 }}
                     >
-                      <ListItemText
-                        primary={<a href="#" style={{ textDecoration: 'none', color: 'inherit' }}>{r.fileDetails.fileName}</a>}
-                        secondary={r.uploadedAt}
-                        primaryTypographyProps={{ noWrap: true }}
-                        secondaryTypographyProps={{ noWrap: true }}
-                      />
+                         <ListItemText
+                      primary={<a href="#" style={{ textDecoration: 'none', color: 'inherit' }}>{r.fileDetails.fileName}</a>}
+                      secondary={r.uploadedAt}
+                      primaryTypographyProps={{ noWrap: true }}
+                      secondaryTypographyProps={{ noWrap: true }}
+                    />
                     </ListItem>
                     <Divider />
                   </React.Fragment>

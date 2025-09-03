@@ -5,6 +5,7 @@ import { HOST_API } from 'src/config-global';
 // ----------------------------------------------------------------------
 
 const axiosInstance = axios.create({ baseURL: HOST_API });
+// const axiosInstance = axiosInstance.create({ baseURL: HOST_API });
 
 // const axiosInstance = axios.create({
 //   baseURL: HOST_API,

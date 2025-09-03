@@ -1,3 +1,5 @@
+
+
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -31,11 +33,18 @@ function HomeHero() {
 
   const { currentUser } = useAuthContext();
   const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadedFileDetails, setUploadedFileDetails] = useState(null); // Store uploaded file details
   const [selectedResumeId, setSelectedResumeId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [docIsLoading, setDocIsLoading] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef();
+
+  const getButtonLabel = () => {
+    if (docIsLoading) return 'Uploading...';
+    if (isLoading) return 'Saving...';
+    return 'Continue';
+  };
 
   const handleContinue = () => {
     sessionStorage.setItem('userStartedWith', 'job');
@@ -56,10 +65,38 @@ function HomeHero() {
 
   const handleClose = () => {
     setSelectedFile(null);
+    setUploadedFileDetails(null);
     setError('');
     setUploadType('resume');
     setOpen(false);
     sessionStorage.removeItem('uploadedResumeId');
+  };
+
+  // Upload file to /files API immediately when file is selected
+  const handleFileUpload = async (file) => {
+    try {
+      setDocIsLoading(true);
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // Step 1: upload to /files
+      const response = await axiosInstance.post('/files', formData);
+      const fileDetails = response.data.files[0];
+
+      // Store the uploaded file details for later use
+      setUploadedFileDetails(fileDetails);
+      setSelectedFile(file.name);
+
+      enqueueSnackbar('File uploaded successfully', { variant: 'success' });
+    } catch (err) {
+      console.error('Error uploading file:', err);
+      enqueueSnackbar('File upload failed', { variant: 'error' });
+      setSelectedFile(null);
+      setUploadedFileDetails(null);
+    } finally {
+      setDocIsLoading(false);
+    }
   };
 
   const handleUploadResume = async (fileDetails) => {
@@ -74,11 +111,10 @@ function HomeHero() {
         userId: currentUser?.id || 0,
       };
 
-
       const response = await axiosInstance.post('/resumes', payload);
 
       if (response.data) {
-        enqueueSnackbar('Upload successful', { variant: 'success' });
+        enqueueSnackbar('Resume saved successfully', { variant: 'success' });
         setSelectedResumeId(response?.data?.id);
         sessionStorage.setItem('userStartedWith', 'resume');
         trackEvent({
@@ -87,66 +123,47 @@ function HomeHero() {
           label: 'resume uploaded success',
           value: 'resume uploaded'
         });
+
+        // Navigate to career resume page
+        navigate(paths.careerResume);
       }
     } catch (uploadError) {
-      console.error('Error while uploading resume', uploadError);
-      enqueueSnackbar(uploadError?.response?.data?.message || 'Upload failed', { variant: 'error' });
-      setSelectedFile(null);
+      console.error('Error while saving resume', uploadError);
+      enqueueSnackbar(uploadError?.response?.data?.message || 'Resume save failed', { variant: 'error' });
     } finally {
-      setDocIsLoading(false);
       setIsLoading(false);
     }
   };
 
   const handleDrop = async (acceptedFiles) => {
-    setDocIsLoading(true);
     const file = acceptedFiles[0];
     if (file) {
-      try {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        // Step 1: upload to /files
-        const response = await axiosInstance.post('/files', formData);
-        const uploadedFileDetails = response.data.files[0];
-
-        // Step 2: save to /resumes
-        await handleUploadResume(uploadedFileDetails);
-
-        // For UI display
-        setSelectedFile(uploadedFileDetails.name);
-      } catch (err) {
-        console.error('Error uploading file:', err);
-        enqueueSnackbar('File upload failed', { variant: 'error' });
-      } finally {
-        setDocIsLoading(false);
-      }
+      await handleFileUpload(file);
     }
   };
 
-
-  const handleCloseModel = () => {
-    setSelectedResumeId(false);
-    setSelectedFile(null);
-    setError('');
-    setDocIsLoading(false);
-    setOpen(false);
-  };
-
-
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    setSelectedFile(file.name);
-
     if (file.size > 5 * 1024 * 1024) {
       setError('This document is too large. Please only upload files less than 5MB.');
-    } else {
-      setError('');
+      return;
     }
+
+    setError('');
+    await handleFileUpload(file);
   };
 
+  const handleContinueWithResume = async () => {
+    if (!uploadedFileDetails) {
+      enqueueSnackbar('Please upload a file first', { variant: 'warning' });
+      return;
+    }
+
+    // Call /resumes API with the already uploaded file details
+    await handleUploadResume(uploadedFileDetails);
+  };
 
   return (
     // Keep original layout and add navigation when resume is uploaded
@@ -170,7 +187,7 @@ function HomeHero() {
                 marginTop: 4,
               }}
             >
-              Your career’s secret weapon
+              Your career&apos;s secret weapon
             </Typography>
             <Typography
               variant="body1"
@@ -184,7 +201,7 @@ function HomeHero() {
               }}
             >
               Tired of career uncertainty and endless job searches? Our AI coach guides your next
-              move with data-driven insights while matching you to roles you’re truly qualified for
+              move with data-driven insights while matching you to roles you&apos;re truly qualified for
               — all in one place.
             </Typography>
             <Stack
@@ -367,6 +384,7 @@ function HomeHero() {
                               size="small"
                               onClick={() => {
                                 setSelectedFile(null);
+                                setUploadedFileDetails(null);
                                 setError('');
                               }}
                             >
@@ -388,46 +406,18 @@ function HomeHero() {
                         <Button
                           variant="contained"
                           fullWidth
-                          disabled={!!error || !selectedFile}
-                          onClick={async () => {
-                            try {
-                              setDocIsLoading(true);
-
-                              // Step 1: upload raw file
-                              const file = fileInputRef.current?.files?.[0];
-                              if (!file) {
-                                enqueueSnackbar('Please select a file', { variant: 'warning' });
-                                return;
-                              }
-
-                              const formData = new FormData();
-                              formData.append('file', file);
-
-                              const fileRes = await axiosInstance.post('/files', formData);
-                              const uploadedFileDetails = fileRes.data.files[0];
-
-                              // Step 2: create resume entry in /resumes
-                              await handleUploadResume(uploadedFileDetails);
-
-                              // Step 3: navigate on success
-                              navigate(paths.careerResume);
-                            } catch (err) {
-                              console.error('Upload failed:', err);
-                              enqueueSnackbar('Upload failed, please try again', { variant: 'error' });
-                            } finally {
-                              setDocIsLoading(false);
-                            }
-                          }}
+                          disabled={!uploadedFileDetails || docIsLoading || isLoading}
+                          onClick={handleContinueWithResume}
                           sx={{
                             backgroundColor: '#3f51b5',
                             borderRadius: 999,
                             py: 1.5,
                             textTransform: 'none',
-                            fontWeight: 500,
+                            fontWeight: 500,    
                             '&:hover': { backgroundColor: '#2f3da3' },
                           }}
                         >
-                          {selectedFile ? 'Continue' : 'Upload Resume'}
+                          {getButtonLabel()}
                         </Button>
 
 

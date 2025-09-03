@@ -9,6 +9,8 @@ const Footer = () => {
   return (
     <Box
       component="footer"
+      mx='auto'
+      maxWidth='1500px'
       sx={{
         backgroundColor: "#fff",
         borderTop: "1px solid #e0e0e0",

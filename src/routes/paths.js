@@ -35,7 +35,7 @@ export const paths = {
   careerResume: '/career-compass',
   careerTitle: '/career-title',
   jobFeed: '/job-feed',
-  jobbooster:'job-booster',
+  jobbooster:'job-booster ',
   fobo: '/fobo',
 
   // comingsoonPage:'/comingsoon-Page',

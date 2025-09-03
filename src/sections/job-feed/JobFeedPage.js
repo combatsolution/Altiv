@@ -42,26 +42,27 @@ import { enqueueSnackbar, useSnackbar } from 'notistack';
 import axiosInstance from 'src/utils/axios';
 // import { jobs } from './jobFeedData';
 
-
 const JobCard = ({ job }) => {
   console.log("GSHJSHKSH->", job);
   const navigate = useNavigate();
+  const [bookmarked, setbookmarked] = useState(false);
   const handleClick = () => {
     navigate(`/job-details/${job.id}`);
   };
 
-  const [bookmarked, setbookmarked] = useState(false);
 
-  const handlebookmark = (e) => {
+
+  const handlebookmark = async (e) => {
     e.stopPropagation();
-    setbookmarked(!bookmarked);
 
-    // 🔹 If you want backend API:
-    // if (!bookmarked) {
-    //   axiosInstance.post('/saved-jobs', { jobId: job.id });
-    // } else {
-    //   axiosInstance.delete(`/saved-jobs/${job.id}`);
-    // }
+    try {
+      const res = await axiosInstance.post(`jobs/save-job/${job.id}`);
+      if (res.success === 200) {
+        setbookmarked(true);
+      }
+    } catch (error) {
+      console.error('Failed to save Jobs', error)
+    }
   };
 
   const [expanded, setExpanded] = useState(false);
@@ -101,12 +102,10 @@ const JobCard = ({ job }) => {
                   }
                 }}>{job.company}</Typography>
 
-              <IconButton onClick={handlebookmark}>
-                {bookmarked ? (
-                  <BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />
-                ) : (<BookmarkBorderIcon
-                  fontSize="medium" sx={{ color: 'text.secondary' }} />)}
-              </IconButton>
+              <IconButton onClick={handlebookmark}> 
+                {bookmarked ? (<BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />)
+                 :
+                (<BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />)} </IconButton>
 
             </Grid>
 
@@ -218,7 +217,7 @@ const JobCard = ({ job }) => {
                 e.stopPropagation();
 
                 window.open(job.redirecturl, '_blank')
-               
+
               }}
               variant="contained"
               sx={{
@@ -261,11 +260,9 @@ const JobCard = ({ job }) => {
                     : (
                       <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary', }} />
                     )
-                  }
+                  } </IconButton>
 
-                </IconButton>
 
-                <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />
               </Grid>
               <Typography fontWeight={600} sx={{
                 '&:hover': {
@@ -302,7 +299,7 @@ const JobCard = ({ job }) => {
         <Button
           onClick={(e) => {
             e.stopPropagation();
-             window.open(job[0].redirectUrl, '_blank')
+            window.open(job[0].redirectUrl, '_blank')
 
           }}
           variant="contained"
@@ -501,7 +498,7 @@ export default function JobFeedPage() {
         value={locationFilter}
         onChange={(e) => dispatch(setLocationFilter(e.target.value))}
       >
-        {['Remote job', 'Mumbai'].map((loc) => (
+        {['any','Remote job', 'Mumbai'].map((loc) => (
           <FormControlLabel key={loc} value={loc} control={<Radio />} label={loc} />
         ))}
       </RadioGroup>
