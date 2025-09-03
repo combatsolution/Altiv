@@ -498,7 +498,7 @@ export default function JobFeedPage() {
         value={locationFilter}
         onChange={(e) => dispatch(setLocationFilter(e.target.value))}
       >
-        {['any','Remote job', 'Mumbai'].map((loc) => (
+        {['Remote job', 'Mumbai'].map((loc) => (
           <FormControlLabel key={loc} value={loc} control={<Radio />} label={loc} />
         ))}
       </RadioGroup>

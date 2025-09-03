@@ -364,26 +364,7 @@ const JobBoard = () => {
                         {displayDescription}
                       </Typography>
 
-                      {shouldShowToggle && (
-                        <Button
-                          onClick={() => toggleDescription(job.id)}
-                          size="small"
-                          sx={{
-                            p: 0,
-                            minWidth: 'auto',
-                            color: '#0040D8',
-                            fontSize: { xs: 12, sm: 13 },
-                            textTransform: 'none',
-                            mt: 0.5,
-                            '&:hover': {
-                              bgcolor: 'transparent',
-                              textDecoration: 'underline'
-                            }
-                          }}
-                        >
-                          {isExpanded ? 'Show less' : 'Show more'}
-                        </Button>
-                      )}
+                      
                     </Box>
 
                     {/* Posted date and match score */}
@@ -427,18 +408,18 @@ const JobBoard = () => {
             )}
 
             {/* Pagination Controls */}
-            {jobs.length > 0 && (
+        
               <Box textAlign="center" pt={3}>
                 <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
-                  {visibleJobsCount < jobs.length && (
+                
                     <Button
-                      onClick={handleShowMore}
+                       onClick={()=> navigate('/job-Feed')}
                       variant="outlined"
-                      sx={{
+                     sx={{
                         borderRadius: 999,
                         px: 4,
                         color: "#0040D8",
-                        borderColor: "#0040D8",
+                        borderColor: "2px solid #0040D8",
                         fontSize: { xs: 14, sm: 16 },
                         textTransform: 'none',
                         '&:hover': {
@@ -447,36 +428,12 @@ const JobBoard = () => {
                         }
                       }}
                     >
-                      Show More ({Math.min(5, jobs.length - visibleJobsCount)} more)
+                      Show More
                     </Button>
-                  )}
-
-                  {visibleJobsCount > 5 && (
-                    <Button
-                      onClick={handleShowLess}
-                      variant="text"
-                      sx={{
-                        borderRadius: 999,
-                        px: 4,
-                        color: "#666",
-                        fontSize: { xs: 14, sm: 16 },
-                        textTransform: 'none',
-                        '&:hover': {
-                          bgcolor: 'rgba(0, 0, 0, 0.04)'
-                        }
-                      }}
-                    >
-                      Show Less
-                    </Button>
-                  )}
                 </Stack>
-
-                {/* Job counter */}
-                <Typography variant="caption" color="text.secondary" mt={2} display="block">
-                  Showing {visibleJobsCount} of {jobs.length} jobs
-                </Typography>
               </Box>
-            )}
+
+          
           </Stack>
         </Grid>
       </Grid>
