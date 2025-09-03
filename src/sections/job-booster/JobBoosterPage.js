@@ -196,7 +196,7 @@ const ProductManagementPage = () => {
       }
     };
 
-    const COLORS = ["#0088FE", "#00C49F", "#FF8042", "#FACC15"];
+    
 
     const fetchStatisticalData = async () => {
       try {
@@ -238,9 +238,6 @@ const ProductManagementPage = () => {
         console.error("Error fetching statistical data", err);
       }
     };
-
-
-
     fetchBoostData();
     fetchStatisticalData();
   }, [jobId, resumeId, user?.resumes]);
@@ -628,7 +625,7 @@ const ProductManagementPage = () => {
                     size="medium"
                     variant="outlined"
                     sx={{ color: 'grey.600', borderRadius: '100px', width: '85px', height: '35px', fontSize: '13px' }}
-                    onClick={() => setSelectedFilter("Everything")}   // ✅
+                    onClick={() => setSelectedFilter("Everything")} // ✅
                   >
                     Select All
                   </Button>
