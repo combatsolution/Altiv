@@ -15,12 +15,13 @@ import { useParams } from "react-router-dom";
 import { useSnackbar } from 'notistack'; // Make sure this is imported
 import axiosInstance from 'src/utils/axios';
 import { paths } from "src/routes/paths";
+import { useAuthContext } from "src/auth/hooks";
 
 const JobBoard = () => {
   const navigate = useNavigate();
   const { job_id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
-
+  const { user } = useAuthContext();
   // State for jobs data
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,6 +44,14 @@ const JobBoard = () => {
     if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} weeks ago`;
     return `${Math.floor(diffInDays / 30)} months ago`;
   };
+
+  useEffect(() => {
+    if (!user) {
+      setLoading(false);
+    }
+  }, [user]);
+
+
 
   // Fetch jobs from API
   useEffect(() => {
@@ -87,8 +96,10 @@ const JobBoard = () => {
       }
     };
 
+
+
     fetchJobs();
-  }, [enqueueSnackbar]);
+  }, [user, enqueueSnackbar]);
 
   const handleApply = (job) => {
     if (job.redirectUrl) {
@@ -137,6 +148,31 @@ const JobBoard = () => {
 
   // Get visible jobs
   const visibleJobs = jobs.slice(0, visibleJobsCount);
+
+  if (!user) {
+    return (
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        minHeight="400px"
+        textAlign="center"
+        px={3}
+      >
+        <Typography variant="h6" gutterBottom>
+          Please log in to view job listings
+        </Typography>
+        <Button
+          variant="outlined"
+          onClick={() => navigate(paths.auth.jwt.login)}
+          sx={{ borderRadius: 999, px: 4, mt: 2, color: 'primary.main', border: '2px solid primary.main' }}
+        >
+          Login
+        </Button>
+      </Box>
+    );
+  }
 
   // Loading state
   if (loading) {
@@ -299,7 +335,7 @@ const JobBoard = () => {
                 const displayDescription = isExpanded
                   ? job.description
                   : truncateDescription(job.description);
-                const shouldShowToggle = job.description && job.description.split(' ').length > 45; // ~3 lines worth
+                const shouldShowToggle = job.description && job.description.split(' ').length > 105; // ~3 lines worth
 
                 return (
                   <Paper
@@ -364,7 +400,22 @@ const JobBoard = () => {
                         {displayDescription}
                       </Typography>
 
-                      
+                      {shouldShowToggle && (
+                        <Button
+                          size="small"
+                          onClick={() => toggleDescription(job.id)}
+                          sx={{
+                            mt: 1,
+                            textTransform: "none",
+                            fontSize: 13,
+                            color: "primary.main",
+                            p: 0,
+                            minWidth: "unset",
+                          }}
+                        >
+                          {isExpanded ? "Show less" : "Show More"}
+                        </Button>)}
+
                     </Box>
 
                     {/* Posted date and match score */}
@@ -408,37 +459,36 @@ const JobBoard = () => {
             )}
 
             {/* Pagination Controls */}
-        
-              <Box textAlign="center" pt={3}>
-                <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
-                
-                    <Button
-                       onClick={()=> navigate('/job-Feed')}
-                      variant="outlined"
-                     sx={{
-                        borderRadius: 999,
-                        px: 4,
-                        color: "#0040D8",
-                        borderColor: "2px solid #0040D8",
-                        fontSize: { xs: 14, sm: 16 },
-                        textTransform: 'none',
-                        '&:hover': {
-                          borderColor: "#0040D8",
-                          bgcolor: 'rgba(0, 64, 216, 0.04)'
-                        }
-                      }}
-                    >
-                      Show More
-                    </Button>
-                </Stack>
-              </Box>
 
-          
+            <Box textAlign="center" pt={3}>
+              <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
+
+                <Button
+                  onClick={() => navigate('/job-Feed')}
+                  variant="outlined"
+                  sx={{
+                    borderRadius: 999,
+                    px: 4,
+                    color: "#0040D8",
+                    borderColor: "2px solid #0040D8",
+                    fontSize: { xs: 14, sm: 16 },
+                    textTransform: 'none',
+                    '&:hover': {
+                      borderColor: "#0040D8",
+                      bgcolor: 'rgba(0, 64, 216, 0.04)'
+                    }
+                  }}
+                >
+                  Show More
+                </Button>
+              </Stack>
+            </Box>
           </Stack>
         </Grid>
       </Grid>
     </Box>
   );
+
 };
 
 export default JobBoard;

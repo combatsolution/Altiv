@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Grid,
@@ -78,6 +78,8 @@ const ProductManagementPage = () => {
   // Inside your component
   const [skills, setSkills] = useState([]);
 
+ const COLORS = useMemo(() => ["#20C997", "#4285F4", "#F4A300", "#FFD43B"], []);
+
 
     // ✅ Now it's safe to derive these
   const matchedItems = boostData?.matched?.category_wise || {};
@@ -131,10 +133,6 @@ const ProductManagementPage = () => {
     }],
     tooltip: { pointFormat: "<b>{point.name}</b> {point.value}%" }
   });
-
-
-
-  const COLORS = ["#20C997", "#4285F4", "#F4A300", "#FFD43B" ];
 
 
   const transformEducationToSunburst = (educationData) => {
@@ -196,8 +194,7 @@ const ProductManagementPage = () => {
       }
     };
 
-    
-
+  
     const fetchStatisticalData = async () => {
       try {
         const res = await axiosInstance.post(`/jobs/job-boost-statistical-data/${Number(jobId)}`);
@@ -240,7 +237,7 @@ const ProductManagementPage = () => {
     };
     fetchBoostData();
     fetchStatisticalData();
-  }, [jobId, resumeId, user?.resumes]);
+  }, [jobId ,COLORS , resumeId, user?.resumes]);
 
 
   const sliderSettings = {
@@ -296,8 +293,6 @@ const ProductManagementPage = () => {
 
 
 
-
-
   // Custom Legend Component
   const CustomLegend = () => (
     <Stack
@@ -329,8 +324,6 @@ const ProductManagementPage = () => {
       ))}
     </Stack>
   );
-
-
 
   return (
     <Box sx={{ px: { xs: 0, md: 1 }, py: { xs: 4, md: 2 }, maxWidth: 1300, mx: 'auto' }}>
