@@ -31,7 +31,8 @@ export default function SubHeader({ subtitle, showUploadResume }) {
           <ArrowForwardIosIcon fontSize="small" sx={{ fontSize: '12px' }} />
           <Typography variant="body2">{subtitle}</Typography>
         </Box>
-        {showUploadResume && (
+
+        {showUploadResume === "job" && (
           <Button
             variant="outlined"
             size="medium"
@@ -81,5 +82,5 @@ export default function SubHeader({ subtitle, showUploadResume }) {
 
 SubHeader.propTypes = {
   subtitle: PropTypes.string,
-  showUploadResume: PropTypes.bool,
+  showUploadResume: PropTypes.string, // corrected from bool to string
 };

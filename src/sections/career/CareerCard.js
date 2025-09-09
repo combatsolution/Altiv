@@ -1,3 +1,5 @@
+
+// src/sections/career/CareerCard.js
 import PropTypes from 'prop-types';
 import { Paper, Typography, Box, Button, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +17,7 @@ const badgeStyles = {
   mb: 1,
 };
 
-const matchStyles = {
+const matchStyles = {  
   base: {
     position: 'absolute',
     top: 0,

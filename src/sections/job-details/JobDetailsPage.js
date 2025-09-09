@@ -30,7 +30,7 @@ import axiosInstance from 'src/utils/axios';
 import { enqueueSnackbar } from 'notistack';
 import { isFriday } from 'date-fns';
 import axios from 'axios';
- 
+
 
 export default function JobDetailPage() {
   const theme = useTheme();
@@ -42,7 +42,7 @@ export default function JobDetailPage() {
   console.log("dkajskajs-<>", jobs);
   const [bookmarked, setbookmarked] = useState(false);
   const [similarJobs, setSimilarJobs] = useState([]);
- const [showAll, setShowAll] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   const handlebookmark = async (e) => {
     e.stopPropagation();
@@ -68,7 +68,7 @@ export default function JobDetailPage() {
   };
 
   useEffect(() => {
-    
+
     const fetchJob = async () => {
       try {
         const res = await axios.get(
@@ -170,37 +170,50 @@ export default function JobDetailPage() {
                   <CardContent sx={{ p: { xs: 2, md: 3 }, display: { xs: 'none', md: 'block' } }}>
                     {/* Header */}
                     <Grid container spacing={2} alignItems="center" justifyContent="space-between">
-                      <Grid item xs={12} md={8}>
-                        <Box display="flex" gap={2} flexWrap="wrap" alignItems="center">
-                          <Avatar src={job.logo} sx={{ width: 56, height: 56 }} />
-
-                          <Grid sx={{ display: "flex", flexDirection: "row", gap: 8 }}>
-                            <Typography fontWeight={600}>{job.company}</Typography>
-                            <IconButton onClick={handlebookmark}>
-                              {bookmarked ? (
-                                <BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />
-                              )
-                                : (
-                                  <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary', }} />
+                      <Grid item xs={12} md={12}>
+                        <Box display="flex" flexDirection='row' gap={2} flexWrap="wrap" alignItems="center">
+                          <Avatar src={job.logo} sx={{ width: 56, height: 46 }} />
+                          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <Grid sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+                              <Typography fontWeight={600} sx={{
+                                textAlign: "center", mt: 1,
+                                '&:hover': {
+                                  color: 'primary.main',
+                                  textDecoration: 'underline',
+                                },
+                              }}>{job.company}</Typography>
+                              <IconButton onClick={handlebookmark}>
+                                {bookmarked ? (
+                                  <BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />
                                 )
-                              } </IconButton>
-                          </Grid>
-                          <Grid container gap={3} alignItems="center">
-                            <Typography variant="h5" fontWeight={600}>
-                              {job.title}
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              color="primary.main"
-                              bgcolor="#7D5AE21A"
-                              px={1}
-                              py={0.5}
-                              borderRadius={1}
-                            >
-                              {job.posted}
-                            </Typography>
-                          </Grid>
-                          <Box>
+                                  : (
+                                    <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary', }} />
+                                  )
+                                } </IconButton>
+                            </Grid>
+
+                            <Grid container sx={{ display: "flex", flexDirection: "row", gap: 1 }} >
+                              <Typography fontWeight={600} fontSize='18px' sx={{
+                                '&:hover': {
+                                  color: 'primary.main',
+                                  textDecoration: 'underline',
+                                },
+                              }}>
+                                {job.title}
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="primary.main"
+                                bgcolor="#7D5AE21A"
+                                px={1}
+                                py={0.5}
+                                borderRadius={1}
+                              >
+                                {job.posted}
+                              </Typography>
+                            </Grid>
+
+
                             <Box display="flex" gap={4} flexWrap="wrap" mt={0.5}>
                               <Typography variant="body2" color="text.secondary">
                                 📍 {job.location}
@@ -219,89 +232,46 @@ export default function JobDetailPage() {
                               </Typography>
 
                             </Box>
-
                           </Box>
+
+                          {/* Match Score */}
+                          <Grid item xs={12} md="auto" textAlign={{ xs: "left", md: "center" }}>
+                            <Box
+                              sx={{
+                                bgcolor: "#E9FFE9",
+                                borderRadius: "50%",
+                                width: 80,
+                                height: 80,
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                mx: { md: "auto" },
+                                mt: { xs: 2, md: 0 },
+                              }}
+                            >
+                              <Typography
+                                variant="caption"
+                                fontSize="10px"
+                                color="success.dark"
+                              >
+                                Match Score
+                              </Typography>
+                              <Typography variant="h6" color="success.dark">
+                                {job.matchScore}
+                              </Typography>
+                            </Box>
+                          </Grid>
                         </Box>
                       </Grid>
 
-                      {/* Match Score */}
-                      <Grid item xs={12} md="auto" textAlign={{ xs: "left", md: "center" }}>
-                        <Box
-                          sx={{
-                            bgcolor: "#E9FFE9",
-                            borderRadius: "50%",
-                            width: 80,
-                            height: 80,
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            mx: { md: "auto" },
-                            mt: { xs: 2, md: 0 },
-                          }}
-                        >
-                          <Typography
-                            variant="caption"
-                            fontSize="10px"
-                            color="success.dark"
-                          >
-                            Match Score
-                          </Typography>
-                          <Typography variant="h6" color="success.dark">
-                            {job.matchScore}
-                          </Typography>
-                        </Box>
-                      </Grid>
+
                     </Grid>
 
                     <Divider sx={{ my: 2 }} />
                     {/* Description */}
                     <Typography paragraph>{job.description}</Typography>
-
-
-                    <CardActions
-                      sx={{
-                        display: { xs: 'block', md: 'none' },
-                        flexDirection: { xs: 'column', sm: 'row' },
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        mt: 4,
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        size="large"
-                        onClick={() => window.open(job.redirectUrl, '_blank')}
-                        sx={{
-                          color: '#fff',
-                          backgroundColor: 'primary.main',
-                          borderRadius: '10px',
-                          width: { xs: '100%', sm: '200px' },
-                          '&:hover': {
-                            backgroundColor: 'primary.dark',
-                          },
-                        }}
-                      >
-                        Apply now
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        size="large"
-                        sx={{
-                          mt: 2,
-                          color: '#0040D8',
-                          backgroundColor: '#fff',
-                          borderRadius: '10px',
-                          width: { xs: '100%', sm: '200px' },
-                        }}
-                        onClick={() => navigate(`/job-booster/${job_id}`)}
-                      >
-                        Boost my application
-                      </Button>
-                    </CardActions>
                   </CardContent>
-
-
                 </Card>
               ))}
 
@@ -326,7 +296,12 @@ export default function JobDetailPage() {
                           <Box>
                             {/* Company + Save Icon */}
                             <Box display="flex" alignItems="center" gap={1}>
-                              <Typography fontWeight={400} fontSize="16px" color="primary.main">
+                              <Typography fontWeight={400} fontSize="16px" sx={{
+                                '&:hover': {
+                                  color: 'primary.main',
+                                  textDecoration: 'underline',
+                                },
+                              }}>
                                 {job.title}
                               </Typography>
                               <IconButton onClick={handlebookmark}>
@@ -341,7 +316,12 @@ export default function JobDetailPage() {
 
                             {/* Job Title + Posted Time */}
                             <Box display="flex" alignItems="center" gap={2} mt={0.5}>
-                              <Typography fontSize="12px" fontWeight={400}>
+                              <Typography fontSize="12px" fontWeight={400} sx={{
+                                '&:hover': {
+                                  color: 'primary.main',
+                                  textDecoration: 'underline',
+                                },
+                              }}>
                                 {job.company}
                               </Typography>
                             </Box>
@@ -407,7 +387,7 @@ export default function JobDetailPage() {
                             flexDirection: "column",
                             justifyContent: "center",
                             alignItems: "center",
-                            mt: 2,
+
                           }}
                         >
                           <Typography
@@ -437,7 +417,7 @@ export default function JobDetailPage() {
                       flexDirection: { xs: 'column', sm: 'row' },
                       justifyContent: 'center',
                       alignItems: 'center',
-                      mt: 4,
+                      mt: 2,
                     }}
                   >
                     <Button
@@ -445,6 +425,7 @@ export default function JobDetailPage() {
                       size="large"
                       onClick={() => window.open(jobs[0].redirectUrl, '_blank')}
                       sx={{
+                        marginBottom: { xs: 1, sm: 0 },
                         color: '#fff',
                         backgroundColor: 'primary.main',
                         borderRadius: '10px',
@@ -460,15 +441,13 @@ export default function JobDetailPage() {
                       variant="outlined"
                       size="large"
                       sx={{
-                        mt: 2,
                         color: '#0040D8',
                         backgroundColor: '#fff',
                         borderRadius: '10px',
                         width: { xs: '100%', sm: '200px' },
                       }}
-                        onClick={() => navigate(`/job-booster/${job_id}`)}
-                      >
-                    
+                      onClick={() => navigate(`/job-booster/${job_id}`)}
+                    >
                       Boost my application
                     </Button>
                   </CardActions>
@@ -498,7 +477,7 @@ export default function JobDetailPage() {
                         <Avatar src={job.logo} />
                       </ListItemAvatar>
                       <ListItemText
-                        primary={job.title} 
+                        primary={job.title}
                         secondary={
                           <Typography variant="body2" color="text.secondary">
                             {job.company} • {job.salary} • {job.experience}

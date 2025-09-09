@@ -1,5 +1,3 @@
-
-
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -46,14 +44,18 @@ function HomeHero() {
     return 'Continue';
   };
 
-  const handleContinue = () => {
-    sessionStorage.setItem('userStartedWith', 'job');
+  const handleContinue = (Type) => {
+    sessionStorage.setItem('userStartedWith', Type);
+    sessionStorage.setItem("designation",designation);
+    sessionStorage.setItem("experience",experience);
     if (!designation.trim()) {
       setError('Please enter your designation');
       return;
     }
     setError('');
-    navigate('/career-compass');
+
+    navigate('/career-compass/');
+
   };
 
   const handleOperation = (op) => {
@@ -111,7 +113,9 @@ function HomeHero() {
         userId: currentUser?.id || 0,
       };
 
-      const response = await axiosInstance.post('/resumes', payload);
+      const response = await axiosInstance.post(  
+        currentUser ? '/resumes' : '/resumes/guest-upload', 
+        payload);
 
       if (response.data) {
         enqueueSnackbar('Resume saved successfully', { variant: 'success' });
@@ -503,7 +507,7 @@ function HomeHero() {
                             fontWeight: 500,
                             '&:hover': { backgroundColor: '#2f3da3' },
                           }}
-                          onClick={handleContinue}
+                          onClick={()=>{handleContinue(uploadType)}}
                         >
                           Continue
                         </Button>

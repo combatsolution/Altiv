@@ -102,10 +102,10 @@ const JobCard = ({ job }) => {
                   }
                 }}>{job.company}</Typography>
 
-              <IconButton onClick={handlebookmark}> 
+              <IconButton onClick={handlebookmark}>
                 {bookmarked ? (<BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />)
-                 :
-                (<BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />)} </IconButton>
+                  :
+                  (<BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />)} </IconButton>
 
             </Grid>
 
@@ -141,7 +141,7 @@ const JobCard = ({ job }) => {
               <Typography variant="body2">{job.applicants} applicants</Typography>
             </Stack>
           </Box>
-          <Box
+          {/* <Box
             sx={{
               bgcolor: '#E9FFE9',
               borderRadius: '50%',
@@ -159,7 +159,7 @@ const JobCard = ({ job }) => {
             <Typography variant="h6" color="success.dark">
               {job.matchScore}
             </Typography>
-          </Box>
+          </Box> */}
         </Stack>
 
         <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
@@ -215,7 +215,6 @@ const JobCard = ({ job }) => {
               // onClick={handleClick}
               onClick={(e) => {
                 e.stopPropagation();
-
                 window.open(job.redirecturl, '_blank')
 
               }}
@@ -276,7 +275,7 @@ const JobCard = ({ job }) => {
               </Typography>
             </Box>
           </Stack>
-          <Box
+          {/* <Box
             sx={{
               bgcolor: '#E9FFE9',
               borderRadius: '50%',
@@ -294,25 +293,27 @@ const JobCard = ({ job }) => {
             <Typography variant="body2" color="success.dark">
               {job.matchScore}
             </Typography>
-          </Box>
+          </Box> */}
         </Stack>
         <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            window.open(job[0].redirectUrl, '_blank')
-
-          }}
           variant="contained"
-          fullWidth
+          size="large"
+          onClick={() => window.open(job[0].redirectUrl, '_blank')}
+
           sx={{
-            mt: 2,
-            bgcolor: '#2A4DD0',
-            textTransform: 'none',
-            '&:hover': { bgcolor: '#2A4DD0' },
+            mt:{ xs: 1, sm: 0 },
+            color: '#fff',
+            backgroundColor: 'primary.main',
+            borderRadius: '100px',
+            width: { xs: '100%', sm: '50%' },
+            '&:hover': {
+              backgroundColor: 'primary.dark',
+            },
           }}
         >
           Apply now
         </Button>
+
       </Box>
     </Paper>
   );
@@ -498,7 +499,7 @@ export default function JobFeedPage() {
         value={locationFilter}
         onChange={(e) => dispatch(setLocationFilter(e.target.value))}
       >
-        {['Any','Remote job', 'Mumbai'].map((loc) => (
+        {['Any', 'Remote job', 'Mumbai'].map((loc) => (
           <FormControlLabel key={loc} value={loc} control={<Radio />} label={loc} />
         ))}
       </RadioGroup>
