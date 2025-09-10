@@ -237,7 +237,7 @@ const WorkingProcessSection1 = () => {
          <Box sx={{ mt: isMobile ? 4 : 6, display: 'flex', justifyContent: 'center' }}>
             <Button
               // onClick={handleCheckAI}
-              onClick={() => Navigate(paths.comingSoon)}
+              onClick={() => Navigate(paths.fobo)}
               sx={{
                 fontFamily: 'Inter',
                 fontWeight: 500,

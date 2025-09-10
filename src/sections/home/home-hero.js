@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -7,7 +7,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { blue } from '@mui/material/colors';
 import heroImg from 'src/images/hero-image.png';
 import { Modal, ToggleButton, ToggleButtonGroup, useMediaQuery, useTheme } from '@mui/material';
-import { useState, useRef } from 'react';
+import { useState, useEffect,useRef } from 'react';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
 import { paths } from 'src/routes/paths';
@@ -18,6 +18,7 @@ import { enqueueSnackbar } from 'notistack';
 import axiosInstance from 'src/utils/axios';
 import { useAuthContext } from 'src/auth/hooks';
 import { trackEvent } from 'src/utils/google-analytics';
+import { useSearchParams } from 'src/routes/hook';
 
 function HomeHero() {
   const [open, setOpen] = useState(false);
@@ -25,10 +26,9 @@ function HomeHero() {
   const [uploadType, setUploadType] = useState('resume');
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
   const [experience, setExperience] = useState(0);
   const [designation, setDesignation] = useState('');
-
+  const searchParams = useSearchParams();
   const { currentUser } = useAuthContext();
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadedFileDetails, setUploadedFileDetails] = useState(null); // Store uploaded file details
@@ -101,6 +101,15 @@ function HomeHero() {
     }
   };
 
+  useEffect(() => {
+    const retry = searchParams.get('retry');
+    setUploadType(retry);
+    if (retry) handleOpenModal();
+  }, [searchParams]);
+
+  const handleOpenModal = () => {
+    setOpen(true);
+  }
   const handleUploadResume = async (fileDetails) => {
     try {
       setIsLoading(true);
@@ -232,7 +241,7 @@ function HomeHero() {
                   mb: { xs: '20px', sm: '0' },
                   mt: { xs: '50px', sm: '0' },
                 }}
-                onClick={() => setOpen(true)}
+                onClick={() => handleOpenModal()}
               >
                 Start Free
               </Button>
@@ -517,8 +526,12 @@ function HomeHero() {
                 </Box>
               </Modal>
               <Button
+             
                 variant="outlined"
-                onClick={() => navigate(paths.comingSoon)}
+                // onClick={()=> navigate(`post/how-altiv-works`,'_blank')}
+                component={RouterLink}
+                to='/post/how-altiv-works'
+                target='_blank'
                 sx={{
                   textTransform: 'none',
                   color: '#0040D8',

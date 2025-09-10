@@ -93,6 +93,8 @@ function JobMatchBooster() {
             </Typography>
 
             <Typography
+             
+          
               sx={{
                 fontFamily: 'Inter, sans-serif',
                 fontWeight: 400,
@@ -111,7 +113,7 @@ function JobMatchBooster() {
                    
               }}
             >
-              Boost Your Application Success
+              Boost Your Application success 
             </Typography>
 
             <Typography
@@ -140,6 +142,7 @@ function JobMatchBooster() {
             <Box pt={1} textAlign={{ xs: "center", md: "left" }}>
               <Button
                 variant="contained"
+                onClick={() => navigate(paths.jobFeed)}
                 sx={{
                   width:{
                   xs:'360px'},  
@@ -152,7 +155,7 @@ function JobMatchBooster() {
                    ml:{xs: -1, sm: 2 },
                     '&:hover': { bgcolor: 'primary.dark' },
                 }}
-                onClick={()=>navigate(paths.comingSoon)}
+               
               >
                 Boost My Application
               </Button>

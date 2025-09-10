@@ -101,7 +101,7 @@ function SmartJobFeed() {
             <Box pt={2} display="flex" justifyContent={{ xs: 'center', md: 'flex-start' }}>
               <Button
                 variant="contained"
-                onClick={() => navigate(paths.comingSoon)}
+                onClick={() => navigate(paths.jobFeed)}
                 sx={{
                   width: {
                     xs: '360px',

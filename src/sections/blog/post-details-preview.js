@@ -44,7 +44,7 @@ export default function PostDetailsPreview({
           Cancel
         </Button>
 
-        <LoadingButton
+        <LoadingButton  
           type="submit"
           variant="contained"
           disabled={!isValid}

@@ -132,7 +132,7 @@ function CareerCompass() {
             >
               <Button
                 variant="contained"
-                onClick={() => navigate(paths.comingSoon)}
+                onClick={() => navigate(`${"/"}?retry=resume`)}
                 sx={{
                   width: { xs: '100%', sm: 'auto' },
                   minWidth: 180,
@@ -148,7 +148,7 @@ function CareerCompass() {
               </Button>
               <Button
                 variant="outlined"
-                onClick={() => navigate(paths.comingSoon)}
+              onClick={() => navigate(`${"/"}?retry=job` )}
                 sx={{
                   width: { xs: '100%', sm: 'auto' },
                   minWidth: 180,
@@ -159,7 +159,7 @@ function CareerCompass() {
                   textTransform: 'none',
                 }}
               >
-                Start without Resume
+                Start without Resumes
               </Button>
             </Stack>
           </Stack>

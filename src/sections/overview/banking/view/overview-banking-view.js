@@ -132,6 +132,7 @@ export default function OverviewBankingView() {
                   { label: 'Category 7', value: 12 },
                   { label: 'Category 8', value: 17 },
                   { label: 'Category 9', value: 21 },
+                  
                 ],
                 colors: [
                   theme.palette.primary.main,
