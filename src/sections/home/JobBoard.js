@@ -300,7 +300,8 @@ const JobBoard = () => {
 
             <Box mt={2} textAlign="center">
               <Button
-                onClick={() => navigate(`${paths.fobo}?retry=true`)}
+                onClick={() => navigate(`${'/'}?retry=res`)}
+                
                 variant="outlined"
                 sx={{
                   borderRadius: 999,
