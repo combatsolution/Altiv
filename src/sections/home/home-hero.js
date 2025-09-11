@@ -19,6 +19,7 @@ import axiosInstance from 'src/utils/axios';
 import { useAuthContext } from 'src/auth/hooks';
 import { trackEvent } from 'src/utils/google-analytics';
 import { useSearchParams } from 'src/routes/hook';
+import { RamenDining } from '@mui/icons-material';
 
 function HomeHero() {
   const [open, setOpen] = useState(false);
@@ -44,7 +45,8 @@ function HomeHero() {
     return 'Continue';
   };
 
-  const handleContinue = (Type) => {
+  const handleContinue = (Type) => 
+    {
     sessionStorage.setItem('userStartedWith', Type);
     sessionStorage.setItem("designation",designation);
     sessionStorage.setItem("experience",experience);
@@ -53,7 +55,6 @@ function HomeHero() {
       return;
     }
     setError('');
-
     navigate('/career-compass/');
 
   };
@@ -105,6 +106,7 @@ function HomeHero() {
     const retry = searchParams.get('retry');
     setUploadType(retry);
     if (retry) handleOpenModal();
+  
   }, [searchParams]);
 
   const handleOpenModal = () => {
@@ -528,7 +530,6 @@ function HomeHero() {
               <Button
              
                 variant="outlined"
-                // onClick={()=> navigate(`post/how-altiv-works`,'_blank')}
                 component={RouterLink}
                 to='/post/how-altiv-works'
                 target='_blank'

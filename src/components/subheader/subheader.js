@@ -67,7 +67,9 @@ export default function SubHeader({ subtitle, showUploadResume }) {
                 height: 'auto',
               }}
             />
-            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+            <Box component="span"   
+            onClick={() => navigate(`${"/"}?retry=resume`)}
+            sx={{ display: { xs: 'none', sm: 'inline' }}}>
               Upload resume to unlock your potential
             </Box>
             <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>

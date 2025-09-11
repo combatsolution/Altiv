@@ -21,10 +21,10 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { trackEvent } from 'src/utils/google-analytics';
 
 const jobseekers = [
-  { name: 'Search Jobs', href: paths.comingSoon },
+  { name: 'Search Jobs', href: paths.jobFeed },
   { name: 'Register', href: paths.auth.jwt.register },
-  { name: 'Job Alerts', href: paths.comingSoon },
-  { name: 'Career Advice', href: paths.comingSoon },
+  { name: 'Job Alerts', href: paths.jobFeed },
+  { name: 'Career Advice', href: paths.careerResume },
 ];
 
 const AICareerCoach = [
@@ -38,7 +38,7 @@ const Programs = [
   { name: 'Marketing Track', href: paths.pricings('MT') },
   { name: 'Data Science Track', href: paths.pricings('DS') },
   { name: 'Product Track', href: paths.pricings('PM') },
-  { name: 'Software Eng. Track', href: paths.pricing },
+  // { name: 'Software Eng. Track', href: paths.pricing },
 ];
 
 // const Programs = [
@@ -47,11 +47,12 @@ const Programs = [
 //   { name: 'Product Track', href: paths.pricing },
 //   { name: 'Software Eng. Track', href: paths.pricing },
 // ];
-const Recruiters = [
-  { name: 'Post Jobs', href: paths.comingSoon },
-  { name: 'Register', href: paths.comingSoon },
-  { name: 'Find Candidates', href: paths.comingSoon },
-];
+
+// const Recruiters = [
+//   { name: 'Post Jobs', href: paths.comingSoon },
+//   { name: 'Register', href: paths.comingSoon },
+//   { name: 'Find Candidates', href: paths.comingSoon },
+// ];
 
 const AboutAltiv = [
   { name: 'Blogs', href: paths.Blogs },
@@ -158,7 +159,7 @@ export default function Footer() {
         </Grid>
 
         {/* Jobseekers Column */}
-        <Grid xs={12} md={2} lg={1.5}>
+        <Grid xs={12} md={2} lg={1.9}>
           <Typography variant="subtitle1" fontWeight={700} gutterBottom>
             Jobseekers
           </Typography>
@@ -184,7 +185,7 @@ export default function Footer() {
         </Grid>
 
         {/* AI Career Coach Column */}
-        <Grid xs={12} md={2} lg={1.5}>
+        <Grid xs={12} md={2} lg={1.9}>
           <Typography variant="subtitle1" fontWeight={700} gutterBottom>
             AI Career Coach
           </Typography>
@@ -210,7 +211,7 @@ export default function Footer() {
         </Grid>
 
         {/* Programs Column */}
-        <Grid xs={12} md={2} lg={1.6}>
+        <Grid xs={12} md={2} lg={2}>
           <Typography variant="subtitle1" fontWeight={700} gutterBottom>
             Programs
           </Typography>
@@ -236,7 +237,7 @@ export default function Footer() {
         </Grid>
 
         {/* Recruiters Column */}
-        <Grid xs={12} md={2} lg={1.5}>
+        {/* <Grid xs={12} md={2} lg={1.5}>
           <Typography variant="subtitle1" fontWeight={700} gutterBottom>
             Recruiters
           </Typography>
@@ -259,10 +260,10 @@ export default function Footer() {
               </Link>
             ))}
           </Stack>
-        </Grid>
+        </Grid> */}
 
         {/* About Altiv Column */}
-        <Grid xs={12} md={2} lg={1.5}>
+        <Grid xs={12} md={2} lg={1.9}>
           <Typography variant="subtitle1" fontWeight={700} gutterBottom>
             About Altiv
           </Typography>

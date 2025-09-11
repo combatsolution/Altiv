@@ -39,18 +39,19 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import { Controller, useForm } from 'react-hook-form';
 import { enqueueSnackbar, useSnackbar } from 'notistack';
+import { useAuthContext } from 'src/auth/hooks';
 import axiosInstance from 'src/utils/axios';
+
 // import { jobs } from './jobFeedData';
 
 const JobCard = ({ job }) => {
+
   console.log("GSHJSHKSH->", job);
   const navigate = useNavigate();
   const [bookmarked, setbookmarked] = useState(false);
   const handleClick = () => {
     navigate(`/job-details/${job.id}`);
   };
-
-
 
   const handlebookmark = async (e) => {
     e.stopPropagation();
@@ -324,6 +325,8 @@ JobCard.propTypes = {
 };
 
 export default function JobFeedPage() {
+  const {user} = useAuthContext();
+
   const dispatch = useDispatch();
   console.log('JobFeedPage rendered', dispatch);
   const theme = useTheme();
@@ -393,6 +396,9 @@ export default function JobFeedPage() {
 
 
   useEffect(() => {
+    
+    if(!user) return;
+
     const fetchJobs = async () => {
       try {
         const res = await axiosInstance.get('/jobs');
@@ -424,7 +430,7 @@ export default function JobFeedPage() {
     };
 
     fetchJobs();
-  }, []);
+  }, [user]);
 
 
   const filteredJobs = jobs.filter((job) => {

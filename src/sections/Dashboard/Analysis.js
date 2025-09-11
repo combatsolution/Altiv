@@ -811,8 +811,37 @@ export default function FoboLevelTaskDistribution() {
         </Grid>
 
         {/* CTA Button */}
-        <Grid item xs={12} textAlign="left">
+        <Grid item xs={12} textAlign="left" display='flex' flexDirection='row' justifyContent='center'>
           <Button
+            variant="contained"
+            sx={{
+
+              backgroundColor: '#2C47D3',
+              borderRadius: 10,
+              px: 4,
+              mx: 1,
+              textTransform: 'none',
+              fontWeight: 'bold',
+              '&:hover': {
+                backgroundColor: '#2C47D3',
+                boxShadow: 'none',
+              },
+            }}
+            onClick={() => {
+              trackEvent({
+                category: 'CTA clicked',
+                action: 'button clicked',
+                label: 'Beat FOBO now',
+                value: 'Navigate to pricing',
+              });
+              navigate(paths.pricing);
+            }}
+            aria-label="Navigate to pricing page"
+          >
+            Beat FOBO Now
+          </Button>
+
+           <Button
             variant="contained"
             sx={{
               backgroundColor: '#2C47D3',
@@ -836,7 +865,7 @@ export default function FoboLevelTaskDistribution() {
             }}
             aria-label="Navigate to pricing page"
           >
-            Beat FOBO Now
+             FOBO Pro
           </Button>
         </Grid>
       </Grid>

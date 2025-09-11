@@ -4,12 +4,15 @@ import JobFeedPage from "src/sections/job-feed/JobFeedPage";
 
 export default function Jobfeedpage()
 {
+      const userStartedWith = sessionStorage.getItem("userStartedWith");
     return(
         <>
             <Helmet>
                 <title> Job Feed Page</title>
             </Helmet>
-            <SubHeader subtitle="Job Feed page" />
+            <SubHeader subtitle="Job Feed page" 
+            showUploadResume={userStartedWith} // true or false
+            />
             <JobFeedPage />
         </>
     )
