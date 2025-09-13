@@ -110,8 +110,10 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     };
   }, [showSwipeHint]);
 
-  const [jobTitle, setJobTitle] = useState(localStorage.getItem("designation"));
-  const [expYears, setExpYears] = useState(localStorage.getItem("experience"));
+  const [jobTitle, setJobTitle] = useState(sessionStorage.getItem("designation"));
+  const [expYears, setExpYears] = useState(sessionStorage.getItem("experience"));
+  const [reusmeId, setResumeId] = useState(sessionStorage.getItem("resumeId"));
+
   const [errors, setErrors] = useState({
     jobTitle: '',
     expYears: '',
@@ -155,19 +157,40 @@ export default function CareerPathProjection({ isResume, job, experience }) {
 
   const storedJob = sessionStorage.getItem("designation");
   const storedExp = sessionStorage.getItem("experience");
-  const handleModify = useCallback(async (title, years) => {
-    const newErrors = {
-      jobTitle: !title ? 'Please select a job title' : '',
-      expYears: !years ? 'Please select years of experience' : '',
-    };
-    setErrors(newErrors);
+  const storedResumeId = sessionStorage.getItem("resumeId");
+  const handleModify = useCallback(async (title, years, resumeId) => {
+    if (!resumeId) {
+      const newErrors = {
+        jobTitle: !title ? 'Please select a job title' : '',
+        expYears: !years ? 'Please select years of experience' : '',
+      };
+      setErrors(newErrors);
 
-    if (!newErrors.jobTitle && !newErrors.expYears) {
+      if (!newErrors.jobTitle && !newErrors.expYears) {
+        try {
+          setLoading(true);
+          const payload = {
+            designation: title,
+            experience: Number(years),
+          };
+
+          const res = await axiosInstance.post('/career-compass', payload);
+          const mapped = transformApiData(res.data?.data);
+          console.log("sasasa", res);
+          setCareerData(mapped);
+
+          setShowReactFlow(true);
+        } catch (err) {
+          console.error('Error fetching career compass:', err);
+        } finally {
+          setLoading(false);
+        }
+      }
+    } else {
       try {
         setLoading(true);
         const payload = {
-          designation: title,
-          experience: Number(years),
+          resumeId: Number(resumeId)
         };
 
         const res = await axiosInstance.post('/career-compass', payload);
@@ -187,22 +210,37 @@ export default function CareerPathProjection({ isResume, job, experience }) {
   useEffect(() => {
     if (storedJob && storedExp) {
       setJobTitle(storedJob);
-      setExpYears(storedExp); 
+      setExpYears(storedExp);
+      setResumeId(storedResumeId);
+      // Run modify logic once on mount
+      handleModify(storedJob, storedExp, storedResumeId);
 
-          // Run modify logic once on mount
-    handleModify(storedJob, storedExp);
+      sessionStorage.removeItem('designation');
+      sessionStorage.removeItem('experience');
+      sessionStorage.removeItem('resumeId');
+      sessionStorage.removeItem('userStartedWith');
 
-    sessionStorage.removeItem('designation');
-    sessionStorage.removeItem('experience');
     }
-  }, [handleModify, storedJob, storedExp]);
+
+    if (storedResumeId) {
+      setJobTitle(storedJob);
+      setExpYears(storedExp);
+      setResumeId(storedResumeId);
+      handleModify(storedJob, storedExp, storedResumeId);
+
+      sessionStorage.removeItem('designation');
+      sessionStorage.removeItem('experience');
+      sessionStorage.removeItem('resumeId');
+      sessionStorage.removeItem('userStartedWith');
+    }
+  }, [handleModify, storedJob, storedExp, storedResumeId]);
 
 
   const rebuildEdges = useCallback((selected) => {
     const newEdges = [
       {
         id: 'edge-label-current-next',
-        source: 'label-current',  
+        source: 'label-current',
         target: 'label-next',
         type: 'straight',
         style: { stroke: '#E6EBF2', strokeWidth: 6 },
@@ -217,12 +255,11 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     ];
 
     // Connect current node to its children
-    careerData?.current.children.forEach((childId) => 
-      {
-      console.log("=agasha->",careerData);
+    careerData?.current.children.forEach((childId) => {
+      console.log("=agasha->", careerData);
       const isActive =
         selected.next === childId || (selected.executive && careerData.executive.some((e) => e.parent === childId && selected.executive === e.id));
-      
+
       newEdges.push({
         id: `edge-${careerData.current.id}-${childId}`,
         source: careerData.current.id,
@@ -397,7 +434,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
   // Generate all nodes
   const generateAllNodes = useCallback(() => {
     if (!careerData) return [];
-    
+
     const handleNodeClick = (id, level) => {
       setSelectedNodes((prev) => {
         let updated = { ...prev };
@@ -612,7 +649,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
                     width={24}
                     height={24}
                   />
-                  {console.log("sdsddsdsdssd",expYears)}
+                  {console.log("sdsddsdsdssd", expYears)}
                   <Box sx={{ width: '100%' }}>
                     <Select
                       fullWidth
@@ -672,7 +709,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
               <Grid item xs={12} sm="auto">
                 <Button
                   variant="outlined"
-                 onClick={() => handleModify(jobTitle, expYears)}
+                  onClick={() => handleModify(jobTitle, expYears)}
                   disabled={loading}
                   sx={{
                     minWidth: '180px',

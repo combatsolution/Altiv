@@ -7,7 +7,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { blue } from '@mui/material/colors';
 import heroImg from 'src/images/hero-image.png';
 import { Modal, ToggleButton, ToggleButtonGroup, useMediaQuery, useTheme } from '@mui/material';
-import { useState, useEffect,useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
 import { paths } from 'src/routes/paths';
@@ -24,7 +24,7 @@ import { RamenDining } from '@mui/icons-material';
 function HomeHero() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const [uploadType, setUploadType] = useState('resume');
+  const [uploadType, setUploadType] = useState("resume");
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [experience, setExperience] = useState(0);
@@ -45,11 +45,10 @@ function HomeHero() {
     return 'Continue';
   };
 
-  const handleContinue = (Type) => 
-    {
+  const handleContinue = (Type) => {
     sessionStorage.setItem('userStartedWith', Type);
-    sessionStorage.setItem("designation",designation);
-    sessionStorage.setItem("experience",experience);
+    sessionStorage.setItem("designation", designation);
+    sessionStorage.setItem("experience", experience);
     if (!designation.trim()) {
       setError('Please enter your designation');
       return;
@@ -104,9 +103,10 @@ function HomeHero() {
 
   useEffect(() => {
     const retry = searchParams.get('retry');
-    setUploadType(retry);
-    if (retry) handleOpenModal();
-  
+    if (retry) {
+      setUploadType(retry);
+      handleOpenModal();
+    }
   }, [searchParams]);
 
   const handleOpenModal = () => {
@@ -124,14 +124,15 @@ function HomeHero() {
         userId: currentUser?.id || 0,
       };
 
-      const response = await axiosInstance.post(  
-        currentUser ? '/resumes' : '/resumes/guest-upload', 
+      const response = await axiosInstance.post(
+        currentUser ? '/resumes' : '/resumes/guest-upload',
         payload);
 
       if (response.data) {
         enqueueSnackbar('Resume saved successfully', { variant: 'success' });
         setSelectedResumeId(response?.data?.id);
         sessionStorage.setItem('userStartedWith', 'resume');
+        sessionStorage.setItem('resumeId', response?.data?.id);
         trackEvent({
           category: 'Resume Uploaded',
           action: 'Resume uploaded',
@@ -370,10 +371,11 @@ function HomeHero() {
                             color="textSecondary"
                             mt={1}
                           >
-                            Supported formats: JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT
+                            Supported formats: PDF, DOC ,DOCX
                           </Typography>
                           <input
                             type="file"
+                            accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                             ref={fileInputRef}
                             style={{ display: 'none' }}
                             onChange={handleFileChange}
@@ -428,7 +430,7 @@ function HomeHero() {
                             borderRadius: 999,
                             py: 1.5,
                             textTransform: 'none',
-                            fontWeight: 500,    
+                            fontWeight: 500,
                             '&:hover': { backgroundColor: '#2f3da3' },
                           }}
                         >
@@ -518,7 +520,7 @@ function HomeHero() {
                             fontWeight: 500,
                             '&:hover': { backgroundColor: '#2f3da3' },
                           }}
-                          onClick={()=>{handleContinue(uploadType)}}
+                          onClick={() => { handleContinue(uploadType) }}
                         >
                           Continue
                         </Button>
@@ -528,7 +530,7 @@ function HomeHero() {
                 </Box>
               </Modal>
               <Button
-             
+
                 variant="outlined"
                 component={RouterLink}
                 to='/post/how-altiv-works'

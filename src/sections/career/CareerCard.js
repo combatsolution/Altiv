@@ -185,7 +185,7 @@ export default function CareerCard({
       )}
 
       {/* Details button at bottom right */}
-      <Box sx={{ position: 'absolute', bottom: 16, right: 16 }}>
+      {/* <Box sx={{ position: 'absolute', bottom: 16, right: 16 }}>
         <Button
           variant="outlined"
           size="small"
@@ -197,7 +197,7 @@ export default function CareerCard({
         >
           Details
         </Button>
-      </Box>
+      </Box> */}
     </Paper>
   );
 }

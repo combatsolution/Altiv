@@ -32,7 +32,7 @@ export default function SubHeader({ subtitle, showUploadResume }) {
           <Typography variant="body2">{subtitle}</Typography>
         </Box>
 
-        {showUploadResume === "job" && (
+        {showUploadResume !== "resume" && (
           <Button
             variant="outlined"
             size="medium"

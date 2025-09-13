@@ -15,7 +15,7 @@ export const links = [
   { url: '/fobo', changefreq: 'monthly', priority: 0.6 },
   { url: '/resume-view', changefreq: 'monthly', priority: 0.6 },
   { url: '/Profile', changefreq: 'monthly', priority: 0.6 },
-  { url: '/dashboard-page', changefreq: 'weekly', priority: 0.6 }, // Dynamic, so base route only
+  { url: '/dashboard-page', changefreq: 'weekly', priority: 0.6 },
 
   // Career / Jobs
   { url: '/job-details', changefreq: 'weekly', priority: 0.6 },
