@@ -5,13 +5,13 @@ import { ProfileView } from "src/sections/profile/View";
 
 export default function ProfileViewPage(){
       const userStartedWith = sessionStorage.getItem("userStartedWith");
+      console.log("kjhsakjss->",userStartedWith);
     return(
         <>
             <Helmet>
                 <title>Profile</title>
             </Helmet>
-            <SubHeader subtitle="My Profile"
-               showUploadResume={userStartedWith} // true or false 
+            <SubHeader subtitle="My Profile" showUploadResume={userStartedWith} // true or false 
                />
             <ProfileView />
            

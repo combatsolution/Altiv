@@ -242,10 +242,10 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       sessionStorage.removeItem('designation');
       sessionStorage.removeItem('experience');
       sessionStorage.removeItem('resumeId');
-      sessionStorage.removeItem('userStartedWith');
+      // sessionStorage.removeItem('userStartedWith');
 
     }
-
+    
     if (storedResumeId) {
       setJobTitle(storedJob);
       setExpYears(storedExp);
@@ -255,7 +255,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       sessionStorage.removeItem('designation');
       sessionStorage.removeItem('experience');
       sessionStorage.removeItem('resumeId');
-      sessionStorage.removeItem('userStartedWith');
+      // sessionStorage.removeItem('userStartedWith');
     }
   }, [handleModify, storedJob, storedExp, storedResumeId]);
 

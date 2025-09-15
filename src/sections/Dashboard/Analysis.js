@@ -34,6 +34,7 @@ import { trackEvent } from 'src/utils/google-analytics';
 import { enqueueSnackbar } from 'notistack';
 
 export default function FoboLevelTaskDistribution() {
+  const [showHandTap, setShowHandTap] = useState(true);
   const navigate = useNavigate();
   const params = useParams();
   const theme = useTheme();
@@ -277,11 +278,12 @@ export default function FoboLevelTaskDistribution() {
 
   const handlePieClick = (index, item) => {
     setSelectedSection(item);
+     setShowHandTap(false);
   };
 
-  const handleMouseLeave = () => {
-    setSelectedIndex(null);
-  };
+  // const handleMouseLeave = () => {
+  //   setSelectedIndex(null);
+  // };
 
   const getLevelColor = () => {
     if (data?.FOBO_Score <= 39) return '#00C853';

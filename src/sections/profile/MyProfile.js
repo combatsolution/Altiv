@@ -86,6 +86,8 @@
     const [subscriptions, setSubscriptions] = useState([]); // New state for subscriptions
     const [isSubscriptionsLoading, setIsSubscriptionsLoading] = useState(false);
 
+    const [reusmeId, setResumeId] = useState(sessionStorage.getItem("resumeId"));
+
     // Fetch subscription history
     const fetchSubscriptionHistory = useCallback(async () => {
       setIsSubscriptionsLoading(true);
@@ -614,9 +616,9 @@
           </Box>
 
           {/* Profile Info and Resume Section */}
-          <Grid container spacing={3} mt={3}>
+          <Grid container spacing={3} mt={3} mx={0.2}>
             <Grid item xs={12} lg={8}>
-              <Paper sx={{ p: 3 }}>
+              <Paper sx={{ p:2 }}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                   <Typography fontWeight="600">Profile Information</Typography>
                   <IconButton onClick={() => setOpenEditDialog(true)}>
@@ -668,7 +670,7 @@
 
             <Grid item xs={12} lg={4}>
               {/* Resume Section */}
-              <Paper sx={{ p: 3 }}>
+              <Paper sx={{ p: 3}}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                   <Typography fontWeight="600">Resume</Typography>
                   <Button
@@ -682,6 +684,8 @@
                     Add New Resume
                   </Button>
                 </Box>
+
+                
 
                 <List sx={{ maxHeight: 160, overflow: 'auto', mb: 2 }}>
                   {existingResumes.map((r) => (
@@ -737,6 +741,20 @@
                   style={{ display: 'none' }}
                 />
               </Paper>
+
+              {/* Right Column: Resume and Registered Courses */}
+              <Grid item xs={12} lg={12}>
+                {/* Registered Courses Section */}
+                <Paper sx={{ p: 3, borderRadius: 2,  mt:{xs:2, md:0, lg:1}  }}>
+                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                    <Typography variant="subtitle1" fontWeight="600">
+                      Registered Courses
+                    </Typography>
+                  </Box>
+                  {renderRegisteredCourses()}
+                </Paper>
+              </Grid>
+              
             </Grid>
 
             <Grid sx={{ display: 'flex', flexDirection: {xs:'column', md:'row'}, mt: 2, ml: 2 }}>
@@ -855,18 +873,7 @@
                 </Grid>
               )}
 
-              {/* Right Column: Resume and Registered Courses */}
-              <Grid item xs={12} lg={4}>
-                {/* Registered Courses Section */}
-                <Paper sx={{ p: 3, borderRadius: 2,  mt:{xs:2, md:0}, ml: 2 }}>
-                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                    <Typography variant="subtitle1" fontWeight="600">
-                      Registered Courses
-                    </Typography>
-                  </Box>
-                  {renderRegisteredCourses()}
-                </Paper>
-              </Grid>
+              
             </Grid>
           </Grid>
 
