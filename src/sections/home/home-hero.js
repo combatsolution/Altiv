@@ -19,7 +19,8 @@ import axiosInstance from 'src/utils/axios';
 import { useAuthContext } from 'src/auth/hooks';
 import { trackEvent } from 'src/utils/google-analytics';
 import { useSearchParams } from 'src/routes/hook';
-import { RamenDining } from '@mui/icons-material';
+import { RamenDining } from '@mui/icons-material';  
+import { UploadIllustration } from 'src/assets/illustrations';
 
 function HomeHero() {
   const [open, setOpen] = useState(false);
@@ -154,7 +155,7 @@ function HomeHero() {
   const handleDrop = async (acceptedFiles) => {
     const file = acceptedFiles[0];
     if (file) {
-      await handleFileUpload(file);
+      await handleFileUpload(file); 
     }
   };
 
@@ -250,6 +251,7 @@ function HomeHero() {
               </Button>
               <Modal open={open} onClose={handleClose}>
                 <Box
+                borderRadius='10px'
                   display="flex"
                   justifyContent="center"
                   alignItems="center"
@@ -257,8 +259,9 @@ function HomeHero() {
                 >
                   <Box
                     sx={{
+                      borderRadius:'10px',
                       width: '100%',
-                      maxWidth: 450,
+                      maxWidth: 430,
                       bgcolor: 'white',
                       p: 6,
                       px: 4,
@@ -358,7 +361,8 @@ function HomeHero() {
                           sx={{ cursor: 'pointer' }}
                           onClick={() => fileInputRef.current.click()}
                         >
-                          <CloudUploadIcon fontSize="large" style={{ color: '#0040D8' }} />
+                          {/* <CloudUploadIcon fontSize="large" style={{ color: '#0040D8' }} /> */}
+                                <UploadIllustration sx={{ width: 1, maxWidth: 130 }} />
                           <Typography variant="body1" fontWeight={500} mt={1}>
                             Drag & drop files or{' '}
                             <Box component="span" color="#3f51b5" fontWeight="bold">

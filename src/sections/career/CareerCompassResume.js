@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Grid,
@@ -21,40 +22,56 @@ const transformApiData = (apiData) => {
 
   const current = {
     id: 'current-node',
-    title: apiData.currentRole.title,
-    match: apiData.currentRole.match_percentage ?? 0,
-    rate: apiData.currentRole.transition_rate || 'N/A',
-    salary: apiData.currentRole.salary_range || 'N/A',
-    experience: apiData.currentRole.experience_range || 'N/A',
+    title: apiData.currentRole?.title || 'Unknown Role',
+    match: apiData.currentRole?.match_percentage ?? 0,
+    rate: apiData.currentRole?.transition_rate || 'N/A',
+    salary: apiData.currentRole?.salary_range || 'N/A',
+    experience: apiData.currentRole?.experience_range || 'N/A',
     children: [],
   };
 
   const next = [];
-  const executive = [];
+  const executive = apiData.executive || [];
 
-  // Flatten levels into sequential "next" nodes
-  let nextIndex = 0;
-  Object.entries(apiData.levels || {}).forEach(([timeline, roles]) => {
-    roles.forEach((role) => {
-      const nextId = `next-${nextIndex}`;
-      current.children.push(nextId);
+  const levelKeys = Object.keys(apiData.levels).sort((a, b) => {
+    const getEta = (key) => {
+      const match = key.match(/<=\s*(\d+\.\d+)\s*years/);
+      return match ? parseFloat(match[1]) : 0;
+    };
+    return getEta(a) - getEta(b);
+  });
 
-      next.push({
-        id: nextId,
+  let prevId = current.id;
+  levelKeys.forEach((key, index) => {
+    const roles = apiData.levels[key];
+    roles.forEach((role, rIndex) => {
+      const nodeId = `next-${index}-${rIndex}`;
+      const node = {
+        id: nodeId,
         title: role.title,
         match: role.match_percentage ?? 0,
         rate: role.transition_rate || 'N/A',
         salary: role.salary_range || 'N/A',
         experience: role.experience_range || 'N/A',
-        parent: current.id,
-        children: [], // executives (future expansion if backend provides)
-      });
-
-      nextIndex += 1;
+        children: [],
+        parent: prevId,
+        depth: role.depth,
+        timeline: key,
+      };
+      next.push(node);
+      if (prevId === current.id) {
+        current.children.push(nodeId);
+      } else {
+        const prevNode = next.find((n) => n.id === prevId);
+        if (prevNode) prevNode.children.push(nodeId);
+      }
     });
+    if (roles.length === 1) {
+      prevId = `next-${index}-0`;
+    }
   });
 
-  return { current, next, executive };
+  return { current, next, executive, levelKeys };
 };
 
 export default function CareerPathProjection({ isResume, job, experience }) {
@@ -65,6 +82,12 @@ export default function CareerPathProjection({ isResume, job, experience }) {
   const [showReactFlow, setShowReactFlow] = useState(false);
   const [careerData, setCareerData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [expandedLevels, setExpandedLevels] = useState({});
+  const navigate = useNavigate();
+
+  const goToJobFeed = () => {
+    navigate('/job-feed');   // or paths.jobFeed if you have a `paths` object
+  };
 
   // Show React Flow if job and experience are provided or if isResume is true
   useEffect(() => {
@@ -76,7 +99,6 @@ export default function CareerPathProjection({ isResume, job, experience }) {
   // Show swipe hint on mobile after component mounts
   useEffect(() => {
     if (isMobile) {
-      // const hasSwipedBefore = localStorage.getItem('hasSwiped');
       setShowSwipeHint(true);
     }
   }, [isMobile]);
@@ -134,9 +156,10 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     current: null,
     next: null,
     executive: null,
+    level3: null,
   });
 
-  // Track collapsed state - all nodes are expanded by default
+  // Track collapsed state - all nodes with children are collapsed by default
   const [collapsedNodes, setCollapsedNodes] = useState(new Set());
 
   // Memoize isNodeCollapsed to prevent unnecessary recalculations
@@ -206,8 +229,11 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       }
     }
   }, []); // dependencies used inside the function
+
   // Build edges dynamically
   useEffect(() => {
+    const storedJob = localStorage.getItem('designation');
+    const storedExp = localStorage.getItem('experience');
     if (storedJob && storedExp) {
       setJobTitle(storedJob);
       setExpYears(storedExp);
@@ -234,7 +260,6 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       sessionStorage.removeItem('userStartedWith');
     }
   }, [handleModify, storedJob, storedExp, storedResumeId]);
-
 
   const rebuildEdges = useCallback((selected) => {
     const newEdges = [
@@ -273,22 +298,51 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       });
     });
 
-    // Connect next level nodes to their executive children
-    careerData?.next.forEach((nextNode) => {
-      if (nextNode.children) {
-        nextNode.children.forEach((childId) => {
-          const isActive = selected.next === nextNode.id && selected.executive === childId;
-          newEdges.push({
-            id: `edge-${nextNode.id}-${childId}`,
-            source: nextNode.id,
-            target: childId,
-            type: 'bezier',
-            style: {
-              stroke: isActive ? '#1976d2' : '#999',
-              strokeWidth: isActive ? 3 : 1,
-              opacity: isActive ? 1 : 0.6,
-            },
-          });
+    // Connect current to its children
+    careerData?.current.children.forEach((childId) => {
+      newEdges.push({
+        id: `edge-${careerData.current.id}-${childId}`,
+        source: careerData.current.id,
+        target: childId,
+        type: 'bezier',
+        style: {
+          stroke: selected.next === childId ? '#1976d2' : '#999',
+          strokeWidth: selected.next === childId ? 3 : 1,
+          opacity: selected.next === childId ? 1 : 0.6,
+        },
+      });
+    });
+
+    // Connect next nodes to parents
+    careerData?.next.forEach((node) => {
+      if (node.parent) {
+        newEdges.push({
+          id: `edge-${node.parent}-${node.id}`,
+          source: node.parent,
+          target: node.id,
+          type: 'bezier',
+          style: {
+            stroke: selected.next === node.id ? '#1976d2' : '#999',
+            strokeWidth: selected.next === node.id ? 3 : 1,
+            opacity: selected.next === node.id ? 1 : 0.6,
+          },
+        });
+      }
+    });
+
+    // Connect executive nodes to parents
+    careerData?.executive.forEach((execNode) => {
+      if (execNode.parent) {
+        newEdges.push({
+          id: `edge-${execNode.parent}-${execNode.id}`,
+          source: execNode.parent,
+          target: execNode.id,
+          type: 'bezier',
+          style: {
+            stroke: selected.executive === execNode.id ? '#1976d2' : '#999',
+            strokeWidth: selected.executive === execNode.id ? 3 : 1,
+            opacity: selected.executive === execNode.id ? 1 : 0.6,
+          },
         });
       }
     });
@@ -296,42 +350,31 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     setEdges(newEdges);
   }, [careerData]);
 
-  // Check if a node should be visible based on its parent's expanded state
+  // Check if a node should be visible based on its ancestor's expanded state
   const isNodeVisible = useCallback(
-    (node) => {
-      // Always show current node and labels
-      if (node.id === 'current-node' || node.id.startsWith('label-')) return true;
+    (nodeId) => {
+      if (nodeId === careerData?.current.id || nodeId.startsWith('label-')) return true;
 
-      // For next level nodes, check if top level is expanded
-      if (node.id.startsWith('next-')) {
-        return !isNodeCollapsed('current-node');
-      }
+      const allNextAndExec = [...(careerData?.next || []), ...(careerData?.executive || [])];
+      const node = allNextAndExec.find((n) => n.id === nodeId);
+      if (!node || !node.parent) return !isNodeCollapsed(careerData?.current.id);
 
-      // For executive level nodes
-      if (node.id.startsWith('exec-')) {
-        // If top level is collapsed, hide all executive nodes
-        if (isNodeCollapsed('current-node')) return false;
-
-        // Find the parent node in the next level
-        const parentNode = careerData?.next.find((n) => n.children?.includes(node.id));
-        if (!parentNode) return true;
-
-        // If parent (next-level node) is collapsed, hide this node
-        return !isNodeCollapsed(parentNode.id);
-      }
-
-      return true;
+      if (isNodeCollapsed(node.parent)) return false;
+      return isNodeVisible(node.parent);
     },
-    [isNodeCollapsed, careerData?.next]
+    [isNodeCollapsed, careerData]
   );
 
   const nodeTypes = {
     career: ({ data, id }) => {
       const { isNew, onClick } = data;
       const isSelected =
-        selectedNodes.current === id || selectedNodes.next === id || selectedNodes.executive === id;
-      const isVisible = isNodeVisible({ id });
-      const hasChildren = id === 'current-node' || id.startsWith('next-');
+        selectedNodes.current === id ||
+        selectedNodes.next === id ||
+        selectedNodes.executive === id ||
+        selectedNodes.level3 === id;
+      const isVisible = isNodeVisible(id);
+      const hasChildren = data.children.length > 0;
       const isExpanded = !isNodeCollapsed(id);
 
       return (
@@ -390,13 +433,14 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     },
     label: ({ data, id }) => {
       const isCurrentLevel = id === 'label-current' && selectedNodes.current;
-      const isNextLevel = id === 'label-next' && selectedNodes.next;
+      const isNextLevel = id.startsWith('label-next') && selectedNodes.next;
       const isExecutiveLevel = id === 'label-executive' && selectedNodes.executive;
       const isActive = isCurrentLevel || isNextLevel || isExecutiveLevel;
 
       return (
         <m.div
           style={{
+
             padding: 10,
             background: isActive ? theme.palette.primary.main : '#fff',
             color: isActive ? '#fff' : '#000',
@@ -404,7 +448,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
             borderRadius: '25px',
             fontSize: '12px',
             textAlign: 'center',
-            width: '64px',
+            width: 'auto',
             height: '64px',
             whiteSpace: 'pre-line',
             zIndex: 9999,
@@ -425,46 +469,9 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     },
   };
 
-  // Filter nodes based on expanded state
-  const filterNodesByExpandedState = useCallback(
-    (nodeList) => nodeList.filter((node) => isNodeVisible(node)),
-    [isNodeVisible]
-  );
-
   // Generate all nodes
   const generateAllNodes = useCallback(() => {
     if (!careerData) return [];
-
-    const handleNodeClick = (id, level) => {
-      setSelectedNodes((prev) => {
-        let updated = { ...prev };
-
-        if (level === 'current') {
-          // When clicking current, clear all selections
-          updated = { current: id, next: null, executive: null };
-        } else if (level === 'next') {
-          // When clicking next level, ensure current is selected and clear executive
-          updated = {
-            current: careerData.current.id,
-            next: id,
-            executive: null,
-          };
-        } else if (level === 'executive') {
-          // When clicking executive, find and set its parent next level and current
-          const executiveNode = careerData.executive.find((node) => node.id === id);
-          if (executiveNode) {
-            updated = {
-              current: careerData.current.id,
-              next: executiveNode.parent,
-              executive: id,
-            };
-          }
-        }
-
-        rebuildEdges(updated);
-        return updated;
-      });
-    };
 
     const baseNodes = [
       {
@@ -480,43 +487,69 @@ export default function CareerPathProjection({ isResume, job, experience }) {
         data: {
           ...careerData.current,
           isNew: false,
-          onClick: (id) => handleNodeClick(id, 'current'),
+          // onClick: (id) => handleNodeClick(id),
+          nClick: () => goToJobFeed(),
         },
         position: { x: isMdUp ? 150 : 80, y: 0 },
         sourcePosition: Position.Top,
         targetPosition: Position.Bottom,
       },
-      {
-        id: 'label-next',
+    ];
+
+    // Add level labels
+    careerData.levelKeys.forEach((key, index) => {
+      baseNodes.push({
+        id: `label-next-${index}`,
         type: 'label',
-        data: { label: 'Next Level 2-4 yrs' },
-        position: { x: 0, y: isMdUp ? 200 : 200 },
+        data: { label: key.replace('next_', 'Next ') },
+        position: { x: 0, y: 200 + index * 200 },
         draggable: false,
-      },
-      {
+      });
+    });
+
+    if (careerData.executive.length > 0) {
+      baseNodes.push({
         id: 'label-executive',
         type: 'label',
         data: { label: 'Executive Level' },
-        position: { x: 0, y: isMdUp ? 400 : 400 },
+        position: { x: 0, y: 200 + careerData.levelKeys.length * 200 },
         draggable: false,
-      },
-    ];
+      });
+    }
 
-    const nextNodes = careerData.next.map((child, index) => ({
-      id: child.id,
-      type: 'career',
-      data: {
-        ...child,
-        isNew: false,
-        onClick: (id) => handleNodeClick(id, 'next'),
-      },
-      position: {
-        x: (isMdUp ? 150 : 80) + index * (isMdUp ? 400 : 300),
-        y: isMdUp ? 200 : 200,
-      },
-      sourcePosition: Position.Top,
-      targetPosition: Position.Bottom,
-    }));
+    // Group next nodes by depth and position accordingly
+    const nextNodes = [];
+    const depths = {};
+    careerData.next.forEach((role) => {
+      const d = role.depth || 1;
+      if (!depths[d]) depths[d] = [];
+      depths[d].push(role);
+    });
+
+    Object.keys(depths)
+      .sort((a, b) => a - b)
+      .forEach((d, dIndex) => {
+        const rolesAtDepth = depths[d];
+        rolesAtDepth.forEach((role, rIndex) => {
+          nextNodes.push({
+            id: role.id,
+            type: 'career',
+            data: {
+              ...role,
+              isNew: false,
+              onClick: () => goToJobFeed(),
+              // onClick: (id) => handleNodeClick(id),
+
+            },
+            position: {
+              x: (isMdUp ? 150 : 80) + rIndex * (isMdUp ? 400 : 300),
+              y: (isMdUp ? 200 : 200) + dIndex * 200,
+            },
+            sourcePosition: Position.Top,
+            targetPosition: Position.Bottom,
+          });
+        });
+      });
 
     const executiveNodes = careerData.executive.map((child, index) => ({
       id: child.id,
@@ -524,19 +557,32 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       data: {
         ...child,
         isNew: false,
-        onClick: (id) => handleNodeClick(id, 'executive'),
+        // onClick: (id) => handleNodeClick(id),
+        onClick: () => goToJobFeed(),
+
       },
       position: {
         x: (isMdUp ? 150 : 80) + index * (isMdUp ? 400 : 300),
-        y: isMdUp ? 400 : 400,
+        y: isMdUp ? 200 + careerData.levelKeys.length * 200 : 200 + careerData.levelKeys.length * 200,
       },
       sourcePosition: Position.Top,
       targetPosition: Position.Bottom,
     }));
 
     const allNodes = [...baseNodes, ...nextNodes, ...executiveNodes];
-    return filterNodesByExpandedState(allNodes);
-  }, [careerData, isMdUp, filterNodesByExpandedState, rebuildEdges]);
+    return allNodes.filter((node) => isNodeVisible(node.id));
+  }, [careerData, isMdUp, isNodeVisible, rebuildEdges]);
+
+  useEffect(() => {
+    if (careerData) {
+      const initialCollapsed = new Set(
+        [...careerData.next, ...careerData.executive]
+          .filter((node) => node.children.length > 0)
+          .map((node) => node.id)
+      );
+      setCollapsedNodes(initialCollapsed);
+    }
+  }, [careerData]);
 
   useEffect(() => {
     const startedWith = sessionStorage.getItem('userStartedWith');
@@ -545,12 +591,8 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     const generatedNodes = generateAllNodes();
     setNodes(generatedNodes);
 
-    // instead of only label edges, build full edges set
     rebuildEdges(selectedNodes);
   }, [generateAllNodes, selectedNodes, rebuildEdges]);
-
-
-
 
   return (
     <Box sx={{ bgcolor: 'white', p: { xs: 1, sm: 2, md: 3 } }}>
@@ -769,7 +811,6 @@ export default function CareerPathProjection({ isResume, job, experience }) {
                   top: '50%',
                   right: 16,
                   transform: 'translateY(-50%)',
-                  // backgroundColor: 'rgba(0, 64, 216, 0.9)',
                   color: 'white',
                   padding: '8px 16px',
                   borderRadius: '20px',
@@ -784,9 +825,6 @@ export default function CareerPathProjection({ isResume, job, experience }) {
                   },
                 }}
               >
-                {/* <Typography variant="body2" sx={{ fontSize: '14px' }}>
-                  Swipe right
-                </Typography> */}
                 <Box
                   component="img"
                   src="/assets/icons/careerCompass/swipe_right.png"
@@ -807,17 +845,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
                 fitView={false}
                 onPaneClick={handleSwipe}
                 nodesDraggable={false}
-                // nodesConnectable={false}
-                // elementsSelectable={false}
-                // panOnDrag={[0, 1, 2]} // Allow pan with left, right, and middle mouse buttons
-                // panOnScroll
-                // zoomOnScroll={!isMobile}
-                // zoomOnPinch
-                // preventScrolling={false}
-                // defaultViewport={{ x: 0, y: 0, zoom: 1 }}
-                // minZoom={0.5}
-                // maxZoom={2}
-                onNodeContextMenu={(e) => e.preventDefault()} // Prevent context menu on nodes
+                onNodeContextMenu={(e) => e.preventDefault()}
               >
                 <Background />
                 <Controls position="top-right" />
@@ -840,6 +868,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
               </Box>
             )}
             <Button
+              onClick={goToJobFeed}
               size={isMdUp ? 'medium' : 'small'}
               sx={{
                 borderRadius: 5,
