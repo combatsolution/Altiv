@@ -58,8 +58,8 @@
 
       try {
         const res = await axiosInstance.post(`jobs/save-job/${job.id}`);
-        if (res.success === 200) {
-          setbookmarked(true);
+        if (res.status  === 200) {
+         setbookmarked((prev) => !prev); // toggle on/off
         }
       } catch (error) {
         console.error('Failed to save Jobs', error)
@@ -216,7 +216,7 @@
                 // onClick={handleClick}
                 onClick={(e) => {
                   e.stopPropagation();
-                  window.open(job.redirecturl, '_blank')
+                  window.open(job.redirectUrl, '_blank')
 
                 }}
                 variant="contained"
@@ -299,7 +299,7 @@
           <Button
             variant="contained"
             size="large"
-            onClick={() => window.open(job[0].redirectUrl, '_blank')}
+            onClick={() => window.open(job.redirectUrl, '_blank')}
 
             sx={{
               mt:{ xs: 1, sm: 0 },
@@ -451,7 +451,8 @@
 
       if (jobCategories.length > 0) matches = matches && jobCategories.includes(job.category);
       if (levelFilter) matches = matches && job.level === levelFilter;
-      if (locationFilter) matches = matches && job.location === locationFilter;
+      if (locationFilter && locationFilter !== 'All') { matches = matches && job.location === locationFilter;}
+      // if (locationFilter) matches = matches && job.location === locationFilter;
       if (companyStage) matches = matches && job.stage === companyStage;
       if (classification) matches = matches && job.classification === classification;
 
@@ -505,7 +506,7 @@
           value={locationFilter}
           onChange={(e) => dispatch(setLocationFilter(e.target.value))}
         >
-          {['Any', 'Remote job', 'Mumbai'].map((loc) => (
+          {['All', 'Remote job', 'Mumbai'].map((loc) => (
             <FormControlLabel key={loc} value={loc} control={<Radio />} label={loc} />
           ))}
         </RadioGroup>

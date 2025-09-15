@@ -830,7 +830,7 @@ export default function FoboLevelTaskDistribution() {
           <Button
             variant="contained"
             sx={{
-
+              width:'20%',
               backgroundColor: '#2C47D3',
               borderRadius: 10,
               px: 4,
@@ -859,6 +859,7 @@ export default function FoboLevelTaskDistribution() {
           <Button
             variant="contained"
             sx={{
+              width:'20%',
               backgroundColor: '#2C47D3',
               borderRadius: 10,
               px: 4,
@@ -876,7 +877,7 @@ export default function FoboLevelTaskDistribution() {
                 label: 'Beat FOBO now',
                 value: 'Navigate to pricing',
               });
-              navigate(paths.pricing);
+              // navigate(paths.pricing);
             }}
             aria-label="Navigate to pricing page"
           >

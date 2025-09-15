@@ -83,8 +83,9 @@ const JobBoard = () => {
             job.workLocation || 'Hybrid',
             ...(job.tags || []) // if backend provides additional tags
           ],
-        }));
 
+        }));
+        console.log('dsj', mappedJobs);
         setJobs(mappedJobs);
         setError(null);
       } catch (err) {
@@ -101,15 +102,15 @@ const JobBoard = () => {
     fetchJobs();
   }, [user, enqueueSnackbar]);
 
-  const handleApply = (job) => {
-    if (job.redirectUrl) {
-      // If job has a redirect URL, open it
-      window.open(job.redirectUrl, '_blank');
-    } else {
-      // Navigate to job details page
-      navigate(`${paths.jobDetails}/${job.id}`);
-    }
-  };
+  // const handleApply = (job) => {
+  //   if (job.redirectUrl) {
+  //     // Navigate to job details page
+  //     navigate(`${paths.jobDetails}/${job.id}`);
+  //   } else {
+  //      // If job has a redirect URL, open it
+  //     window.open(job.redirectUrl, '_blank');
+  //   }
+  // };
 
   // Pagination handlers
 
@@ -148,6 +149,7 @@ const JobBoard = () => {
 
   // Get visible jobs
   const visibleJobs = jobs.slice(0, visibleJobsCount);
+  console.log('dsd', visibleJobs);
 
   if (!user) {
     return (
@@ -301,7 +303,7 @@ const JobBoard = () => {
             <Box mt={2} textAlign="center">
               <Button
                 onClick={() => navigate(`${'/'}?retry=res`)}
-                
+
                 variant="outlined"
                 sx={{
                   borderRadius: 999,
@@ -437,8 +439,9 @@ const JobBoard = () => {
                     </Stack>
 
                     <Box textAlign={{ xs: 'left', sm: 'right' }} mt={2}>
+
                       <Button
-                        onClick={(() => handleApply(job))}
+                        onClick={() => navigate(`${paths.jobDetails}/${job.id}`)}   // 👈 use job.id here
                         variant="contained"
                         sx={{
                           borderRadius: 999,
@@ -446,9 +449,7 @@ const JobBoard = () => {
                           bgcolor: "primary.main",
                           fontSize: { xs: 14, sm: 16 },
                           textTransform: 'none',
-                          '&:hover': {
-                            bgcolor: "primary.dark",
-                          }
+                          '&:hover': { bgcolor: "primary.dark" },
                         }}
                       >
                         Apply →

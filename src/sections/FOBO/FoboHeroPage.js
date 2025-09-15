@@ -147,7 +147,7 @@
           sessionStorage.setItem('xbszyaef', encryptedLinkedInUrl);
         }
 
-        navigate(paths.dashboardPage);
+        navigate(paths.Analysis);
         trackEvent({
           category: 'Navigation',
           action: 'Fobo score',

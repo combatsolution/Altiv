@@ -31,7 +31,7 @@ export const paths = {
   attributions: '/attributions',
   AitrainingpolicyView: '/ai-training-policy',
   TermsAndConditions: '/termsandconditions',
-  jobDetails: (job_id) => `/job-details/${job_id}`,
+  jobDetails:`/job-details`,
   careerResume: '/career-compass',
   careerTitle: '/career-title',
   jobFeed: '/job-feed',
@@ -39,7 +39,7 @@ export const paths = {
   fobo: '/fobo',
 
   // comingsoonPage:'/comingsoon-Page',
-  dashboardPage: `/dashboard-page`,
+  Analysis: `/Analysis`,
   ResumeView: '/resume-view',
   Profile: '/Profile',
   comingSoon: '/coming-soon',

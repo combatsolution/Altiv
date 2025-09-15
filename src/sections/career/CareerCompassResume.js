@@ -232,8 +232,6 @@ export default function CareerPathProjection({ isResume, job, experience }) {
 
   // Build edges dynamically
   useEffect(() => {
-    const storedJob = localStorage.getItem('designation');
-    const storedExp = localStorage.getItem('experience');
     if (storedJob && storedExp) {
       setJobTitle(storedJob);
       setExpYears(storedExp);
@@ -488,7 +486,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
           ...careerData.current,
           isNew: false,
           // onClick: (id) => handleNodeClick(id),
-          nClick: () => goToJobFeed(),
+          
         },
         position: { x: isMdUp ? 150 : 80, y: 0 },
         sourcePosition: Position.Top,
@@ -537,7 +535,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
             data: {
               ...role,
               isNew: false,
-              onClick: () => goToJobFeed(),
+             
               // onClick: (id) => handleNodeClick(id),
 
             },
@@ -558,7 +556,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
         ...child,
         isNew: false,
         // onClick: (id) => handleNodeClick(id),
-        onClick: () => goToJobFeed(),
+        // onClick: () => goToJobFeed(),
 
       },
       position: {
@@ -571,7 +569,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
 
     const allNodes = [...baseNodes, ...nextNodes, ...executiveNodes];
     return allNodes.filter((node) => isNodeVisible(node.id));
-  }, [careerData, isMdUp, isNodeVisible, rebuildEdges]);
+  }, [careerData, isMdUp, isNodeVisible, ]);
 
   useEffect(() => {
     if (careerData) {

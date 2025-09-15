@@ -42,7 +42,7 @@ function HomeHero() {
 
   const getButtonLabel = () => {
     if (docIsLoading) return 'Uploading...';
-    if (isLoading) return 'Saving...';
+    if (isLoading) return 'Analysing ...';
     return 'Continue';
   };
 
@@ -73,6 +73,7 @@ function HomeHero() {
     setUploadType('resume');
     setOpen(false);
     sessionStorage.removeItem('uploadedResumeId');
+   navigate('/', { replace: true });
   };
 
   // Upload file to /files API immediately when file is selected
@@ -230,6 +231,8 @@ function HomeHero() {
               <Button
                 variant="contained"
                 size="large"
+                onClick={() => navigate(`${"/"}?retry=resume`)}
+                
                 sx={{
                   bgcolor: '#0040D8',
                   '&:hover': { bgcolor: blue[700] },
@@ -245,7 +248,7 @@ function HomeHero() {
                   mb: { xs: '20px', sm: '0' },
                   mt: { xs: '50px', sm: '0' },
                 }}
-                onClick={() => handleOpenModal()}
+                // onClick={() => handleOpenModal()}
               >
                 Start Free
               </Button>
@@ -300,6 +303,7 @@ function HomeHero() {
                       <ToggleButton
                         value="resume"
                         disableRipple
+                         onClick={() => navigate(`${"/"}?retry=resume`)}
                         sx={{
                           textTransform: 'none',
                           px: 4,
@@ -325,6 +329,7 @@ function HomeHero() {
                       <ToggleButton
                         value="job"
                         disableRipple
+                          onClick={() => navigate(`${"/"}?retry=job` )}
                         sx={{
                           textTransform: 'none',
                           px: 4,

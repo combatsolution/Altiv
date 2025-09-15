@@ -519,7 +519,7 @@
                   </Typography>
                 </div>
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={4}>  
                 {/* FOBO Label and Score */}
                 <div style={{ textAlign: 'center', marginTop: 10 }}>
                   <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO SCORE</div>
@@ -835,7 +835,7 @@
                               sessionStorage.setItem('xbszyaef', encryptedUrl);
                             }
 
-                            navigate(paths.dashboardPage);
+                            navigate(paths.Analysis);
                           }}
                           sx={{
                             position: 'absolute',
