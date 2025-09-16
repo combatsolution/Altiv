@@ -22,7 +22,6 @@ const ROOTS = {
 
 export const paths = {
   SubscriptionSuccess: '/payment/success',
-  //  SubscriptionSuccess:'/successpage',
   subscription: '/subscription',
 
   // footer
@@ -49,7 +48,7 @@ export const paths = {
   maintenance: '/maintenance',
   pricing: '/pricing',
 
-  payment: (planId) => `/payment/${planId}`,
+  payment: `/payment/plan`,
   about: '/about-us',
   contact: '/contact-us',
   faqs: '/faqs',

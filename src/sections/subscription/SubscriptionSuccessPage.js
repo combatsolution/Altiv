@@ -16,8 +16,7 @@ import { useSearchParams } from 'react-router-dom';
 import axiosInstance, { endpoints } from 'src/utils/axios';
 
 const SubscriptionSuccessCard = () => {
-  const [searchParams] = useSearchParams();
-  const subscriptionId = searchParams.get('subscriptionId');
+  const subscriptionId = sessionStorage.getItem('subscriptionId');
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 

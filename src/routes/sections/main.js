@@ -131,7 +131,7 @@ export const mainRoutes = [
       {
         children: [
            { path: 'payment', element: <Paymentdetails /> },
-           { path: 'payment/:planId', element: <PaymentPage /> },   // ⬅︎ move it here
+           { path: 'payment/plan', element: <PaymentPage /> },   // ⬅︎ move it here
         ],
       },
 

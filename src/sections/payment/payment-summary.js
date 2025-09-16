@@ -14,7 +14,8 @@ import planStarterIcon from 'src/assets/icons/plan-starter-icon';
 
 export default function PaymentSummary({ sx, ...other }) {
   const navigate = useNavigate();
-  const { planId } = useParams();
+  const planId = sessionStorage.getItem('planId');
+  console.log(sessionStorage.getItem('planId'))
   const { user } = useAuthContext();
   const [planData, setPlanData] = useState(null);
   const [country, setCountry] = useState(null);
@@ -109,7 +110,8 @@ export default function PaymentSummary({ sx, ...other }) {
           const verifyRes = await axiosInstance.post('/subscriptions/callback/verify', inputData);
           console.log('Verification response:', verifyRes.data);
           if (verifyRes.data.success) {
-            navigate(`/payment/success?subscriptionId=${payment.subscriptionId}`,{replace: true});
+            sessionStorage.setItem('subscriptionId', payment.subscriptionId);
+            navigate(`/payment/success`,{replace: true});
             window.location.reload();
           } else {
             navigate('/pricing');

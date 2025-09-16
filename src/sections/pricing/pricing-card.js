@@ -211,7 +211,8 @@ export default function PricingCard({ card, sx, ...other }) {
                 sessionStorage.setItem('redirectAfterLogin', paths.payment(id));
                 navigate(paths.auth.jwt.login);
               } else {
-                navigate(paths.payment(id));
+                sessionStorage.setItem('planId', id);
+                navigate(paths.payment);
               }
             }
           }}
