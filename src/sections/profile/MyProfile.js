@@ -88,6 +88,16 @@
 
     const [reusmeId, setResumeId] = useState(sessionStorage.getItem("resumeId"));
 
+    const hasResumes = existingResumes && existingResumes.length > 0;
+    const hasCourses = subscriptions && subscriptions.length > 0;
+    const [showResume, setShowResume] = useState(false);
+    const [showCourses, setShowCourses] = useState(false);
+  
+    useEffect(() => {
+    setShowResume(hasResumes);
+    setShowCourses(hasCourses);
+    }, [hasResumes, hasCourses]);
+
     // Fetch subscription history
     const fetchSubscriptionHistory = useCallback(async () => {
       setIsSubscriptionsLoading(true);
@@ -616,10 +626,10 @@
           </Box>
 
           {/* Profile Info and Resume Section */}
-          <Grid container spacing={3} mt={3} mx={0.2}>
-            <Grid item xs={12} lg={8}>
+          <Grid container spacing={0.5} mt={3} mx={0.2}>
+            <Grid item xs={12} lg={showResume || showCourses ? 8:12}>
               <Paper sx={{ p:2 }}>
-                <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={0}>
                   <Typography fontWeight="600">Profile Information</Typography>
                   <IconButton onClick={() => setOpenEditDialog(true)}>
                     <Box component="img" src={Writelogo} alt="Edit" sx={{ height: 20 }} />
@@ -667,10 +677,13 @@
                 </Stack>
               </Paper>
             </Grid>
-
+            {showResume &&(
             <Grid item xs={12} lg={4}>
               {/* Resume Section */}
-              <Paper sx={{ p: 3}}>
+              <Paper sx={{  
+                p:{ xs:1,md:3}
+
+              }}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                   <Typography fontWeight="600">Resume</Typography>
                   <Button
@@ -684,9 +697,6 @@
                     Add New Resume
                   </Button>
                 </Box>
-
-                
-
                 <List sx={{ maxHeight: 160, overflow: 'auto', mb: 2 }}>
                   {existingResumes.map((r) => (
                     <React.Fragment key={r.id}>
@@ -741,23 +751,9 @@
                   style={{ display: 'none' }}
                 />
               </Paper>
+            </Grid>)}
 
-              {/* Right Column: Resume and Registered Courses */}
-              <Grid item xs={12} lg={12}>
-                {/* Registered Courses Section */}
-                <Paper sx={{ p: 3, borderRadius: 2,  mt:{xs:2, md:0, lg:1}  }}>
-                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                    <Typography variant="subtitle1" fontWeight="600">
-                      Registered Courses
-                    </Typography>
-                  </Box>
-                  {renderRegisteredCourses()}
-                </Paper>
-              </Grid>
-              
-            </Grid>
-
-            <Grid sx={{ display: 'flex', flexDirection: {xs:'column', md:'row'}, mt: 2, ml: 2 }}>
+            <Grid sx={{ display: 'flex', flexDirection: {xs:'column', md:'row'} }}>
               {/* Profile analytics section */}
               {lastFOBOData && (
                 <Grid item xs={12} lg={8}>
@@ -873,11 +869,25 @@
                 </Grid>
               )}
 
+              {/* Right Column: Resume and Registered Courses */}
+            {showCourses && (
+               <Grid  item xs={6} lg={4} >
+                {/* Registered Courses Section */}
+                <Paper sx={{ p: 3, borderRadius: 2, ml:{xs:0, lg:1},  mt:{xs:2, md:0, lg:1}, mr:{xs:2, lg:0}  }}>
+                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                    <Typography variant="subtitle1" fontWeight="600">
+                      Registered Courses
+                    </Typography>
+                  </Box>
+                  {renderRegisteredCourses()}
+                </Paper>
+              </Grid>
+           )} 
               
             </Grid>
           </Grid>
 
-          {/* <Grid container spacing={3} mt={1} ></Grid> */}
+         
         </Container>
 
         {/* Confirm Delete Dialog */}

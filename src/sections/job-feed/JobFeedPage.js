@@ -325,7 +325,7 @@
   };
 
   export default function JobFeedPage() {
-    const {user} = useAuthContext();
+
 
     const dispatch = useDispatch();
     console.log('JobFeedPage rendered', dispatch);
@@ -396,9 +396,6 @@
 
 
     useEffect(() => {
-      
-      if(!user) return;
-
       const fetchJobs = async () => {
         try {
           const res = await axiosInstance.get('/jobs');
@@ -430,7 +427,7 @@
       };
 
       fetchJobs();
-    }, [user]);
+    });
 
 
     const filteredJobs = jobs.filter((job) => {

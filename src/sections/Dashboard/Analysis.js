@@ -675,6 +675,7 @@ export default function FoboLevelTaskDistribution() {
                 />
 
                 {/* 👆 Add this overlay */}
+                {showHandTap  &&(
                 <Box
                   sx={{
                     position: 'absolute',
@@ -687,6 +688,7 @@ export default function FoboLevelTaskDistribution() {
                 >
                   <img src={HandTapGif} alt="Tap to interact" width={60} height={60} />
                 </Box>
+                )}
               </Box>
             </Box>
 
