@@ -392,7 +392,6 @@
       return 'All time';
     };
 
-
     useEffect(() => {
       const fetchJobs = async () => {
         try {

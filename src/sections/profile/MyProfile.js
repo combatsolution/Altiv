@@ -628,7 +628,7 @@
           {/* Profile Info and Resume Section */}
           <Grid container spacing={0.5} mt={3} mx={0.2}>
             <Grid item xs={12} lg={showResume || showCourses ? 8:12}>
-              <Paper sx={{ p:2 }}>
+              <Paper sx={{ p:{xs:'0', lg:'29px'}}}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={0}>
                   <Typography fontWeight="600">Profile Information</Typography>
                   <IconButton onClick={() => setOpenEditDialog(true)}>
