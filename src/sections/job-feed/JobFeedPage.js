@@ -325,8 +325,6 @@
   };
 
   export default function JobFeedPage() {
-
-
     const dispatch = useDispatch();
     console.log('JobFeedPage rendered', dispatch);
     const theme = useTheme();
@@ -398,7 +396,7 @@
     useEffect(() => {
       const fetchJobs = async () => {
         try {
-          const res = await axiosInstance.get('/jobs');
+           const res = await axiosInstance.get('/jobs');
           const apiJobs = res.data;
 
           // 🔹 Map API fields to match your UI
@@ -427,7 +425,7 @@
       };
 
       fetchJobs();
-    });
+    },[] );
 
 
     const filteredJobs = jobs.filter((job) => {
