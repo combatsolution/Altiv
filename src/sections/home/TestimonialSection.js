@@ -390,6 +390,7 @@ function TestimonialSection() {
   const [index, setIndex] = useState(0);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+const visibleBlogs = blogs.slice(0, 3);
 
 const fallbackImages = [
   'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600',  // tech circuit board
@@ -441,7 +442,7 @@ const getRandomImage = () =>
 
   const handleNext = () => {
     setIndex((prev) => {
-      const newIndex = (prev + 1) % blogs.length;
+      const newIndex = (prev + 1) % visibleBlogs.length;
       goToIndex(thumbCarousel.carouselRef, newIndex);
       goToIndex(rightCarousel.carouselRef, newIndex);
       return newIndex;
@@ -480,7 +481,7 @@ const getRandomImage = () =>
       {/* Mobile Carousel View */}
       {isMobile ? (
         <Carousel dots={false} arrows={false} autoplay autoplaySpeed={2000} slidesToShow={1}>
-          {blogs.map((item, i) => (
+          {visibleBlogs.map((item, i) => (
             <Box sx={{ px: 1 }} key={i}>
               <Box
                 sx={{
@@ -703,7 +704,7 @@ const getRandomImage = () =>
             {/* Right thumbnails */}
             <Grid item xs={12} md={3} sx={{ display: { xs: 'none', md: 'block' } }}>
               <Carousel ref={rightCarousel.carouselRef} {...rightCarousel.carouselSettings}>
-                {blogs.map((item, i) => (
+                {visibleBlogs.map((item, i) => (
                   <Box
                     key={i}
                     component="img"
@@ -724,7 +725,7 @@ const getRandomImage = () =>
       )}
 
       {/* Pagination (desktop only) */}
-      {!isMobile && blogs.length > 0 && (
+      {!isMobile && visibleBlogs.length > 0 && (
         <Stack
           direction="row"
           justifyContent="space-between"
@@ -736,7 +737,7 @@ const getRandomImage = () =>
           fontFamily="Roboto, sans-serif"
         >
           <Typography variant="body2" color="text.secondary">
-            {index + 1}/{blogs.length} Articles
+            {index + 1}/{visibleBlogs.length} Articles
           </Typography>
           <Button
             onClick={handleNext}

@@ -681,7 +681,8 @@
             <Grid item xs={12} lg={4}>
               {/* Resume Section */}
               <Paper sx={{  
-                p:{ xs:1,md:3}
+                p:{ xs:1,md:3},
+                height:'260px'
 
               }}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
@@ -761,6 +762,7 @@
                     <Paper
                       elevation={3}
                       sx={{
+                        mt:1,
                         position: 'relative',
                         p: 2,
                         bgcolor: 'rgba(255,255,255,0.9)',
@@ -871,9 +873,10 @@
 
               {/* Right Column: Resume and Registered Courses */}
             {showCourses && (
-               <Grid  item xs={6} lg={4} >
+               <Grid  item xs={12} lg={4}>  
                 {/* Registered Courses Section */}
-                <Paper sx={{ p: 3, borderRadius: 2, ml:{xs:0, lg:1},  mt:{xs:2, md:0, lg:1}, mr:{xs:2, lg:0}  }}>
+                <Paper sx={{ p: 4, h:{xs:0, lg:'250px'}, borderRadius: 2, ml:{xs:0, lg:1},  
+                mt:{xs:2, md:0, lg:1},   }}>
                   <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                     <Typography variant="subtitle1" fontWeight="600">
                       Registered Courses

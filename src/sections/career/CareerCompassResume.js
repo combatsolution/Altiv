@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react'; 
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import {
+  Divider,
   Box,
   Grid,
   Typography,
@@ -245,7 +246,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       // sessionStorage.removeItem('userStartedWith');
 
     }
-    
+
     if (storedResumeId) {
       setJobTitle(storedJob);
       setExpYears(storedExp);
@@ -486,7 +487,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
           ...careerData.current,
           isNew: false,
           // onClick: (id) => handleNodeClick(id),
-          
+
         },
         position: { x: isMdUp ? 150 : 80, y: 0 },
         sourcePosition: Position.Top,
@@ -535,7 +536,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
             data: {
               ...role,
               isNew: false,
-             
+
               // onClick: (id) => handleNodeClick(id),
 
             },
@@ -569,7 +570,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
 
     const allNodes = [...baseNodes, ...nextNodes, ...executiveNodes];
     return allNodes.filter((node) => isNodeVisible(node.id));
-  }, [careerData, isMdUp, isNodeVisible, ]);
+  }, [careerData, isMdUp, isNodeVisible,]);
 
   useEffect(() => {
     if (careerData) {
@@ -865,6 +866,8 @@ export default function CareerPathProjection({ isResume, job, experience }) {
                 </Typography>
               </Box>
             )}
+           
+            
             <Button
               onClick={goToJobFeed}
               size={isMdUp ? 'medium' : 'small'}
@@ -891,3 +894,4 @@ CareerPathProjection.propTypes = {
   job: PropTypes.string,
   experience: PropTypes.number,
 };
+
