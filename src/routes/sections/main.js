@@ -47,7 +47,7 @@ const FoboPage = lazy(() => import('src/pages/Fobo/fobo-view'));
 
 const ProfilePage = lazy(() => import('src/pages/profile/Profile-view'));
 
-const DashboardPage = lazy(() => import('src/pages/dashboard/dashboard-view'));
+const Analysis = lazy(() => import('src/pages/dashboard/dashboard-view'));
 const Comingsoon = lazy(() => import('src/pages/Coming-soon/coming-view'));
 // const ResumeViewPage = lazy(() => import('src/pages/Resume/resume-view'));
 const Policy = lazy(() => import('src/pages/Policies/policies-view'));
@@ -105,7 +105,7 @@ export const mainRoutes = [
       },
   
       { path: 'coming-soon/:type', element: <Comingsoon /> },
-      { path: 'dashboard-page', element: <DashboardPage /> },
+      { path: 'Analysis', element: <Analysis /> },
       { path: 'coming-soon', element: <Comingsoon /> },
       //  {path: 'resume-view', element: < ResumeViewPage/>},
       { path: 'privacy-policy', element: <Policy /> },

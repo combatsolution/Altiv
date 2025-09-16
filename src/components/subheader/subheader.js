@@ -82,6 +82,7 @@ export default function SubHeader({ subtitle, showUploadResume }) {
   );
 }
 
+
 SubHeader.propTypes = {
   subtitle: PropTypes.string,
   showUploadResume: PropTypes.string, // corrected from bool to string

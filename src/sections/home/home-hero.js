@@ -19,7 +19,8 @@ import axiosInstance from 'src/utils/axios';
 import { useAuthContext } from 'src/auth/hooks';
 import { trackEvent } from 'src/utils/google-analytics';
 import { useSearchParams } from 'src/routes/hook';
-import { RamenDining } from '@mui/icons-material';
+import { RamenDining } from '@mui/icons-material';  
+import { UploadIllustration } from 'src/assets/illustrations';
 
 function HomeHero() {
   const [open, setOpen] = useState(false);
@@ -41,7 +42,7 @@ function HomeHero() {
 
   const getButtonLabel = () => {
     if (docIsLoading) return 'Uploading...';
-    if (isLoading) return 'Saving...';
+    if (isLoading) return 'Analysing ...';
     return 'Continue';
   };
 
@@ -72,6 +73,7 @@ function HomeHero() {
     setUploadType('resume');
     setOpen(false);
     sessionStorage.removeItem('uploadedResumeId');
+   navigate('/', { replace: true });
   };
 
   // Upload file to /files API immediately when file is selected
@@ -154,7 +156,7 @@ function HomeHero() {
   const handleDrop = async (acceptedFiles) => {
     const file = acceptedFiles[0];
     if (file) {
-      await handleFileUpload(file);
+      await handleFileUpload(file); 
     }
   };
 
@@ -229,6 +231,8 @@ function HomeHero() {
               <Button
                 variant="contained"
                 size="large"
+                onClick={() => navigate(`${"/"}?retry=resume`)}
+                
                 sx={{
                   bgcolor: '#0040D8',
                   '&:hover': { bgcolor: blue[700] },
@@ -244,12 +248,13 @@ function HomeHero() {
                   mb: { xs: '20px', sm: '0' },
                   mt: { xs: '50px', sm: '0' },
                 }}
-                onClick={() => handleOpenModal()}
+                // onClick={() => handleOpenModal()}
               >
                 Start Free
               </Button>
               <Modal open={open} onClose={handleClose}>
                 <Box
+                borderRadius='10px'
                   display="flex"
                   justifyContent="center"
                   alignItems="center"
@@ -257,8 +262,9 @@ function HomeHero() {
                 >
                   <Box
                     sx={{
+                      borderRadius:'10px',
                       width: '100%',
-                      maxWidth: 450,
+                      maxWidth: 430,
                       bgcolor: 'white',
                       p: 6,
                       px: 4,
@@ -297,6 +303,7 @@ function HomeHero() {
                       <ToggleButton
                         value="resume"
                         disableRipple
+                         onClick={() => navigate(`${"/"}?retry=resume`)}
                         sx={{
                           textTransform: 'none',
                           px: 4,
@@ -322,6 +329,7 @@ function HomeHero() {
                       <ToggleButton
                         value="job"
                         disableRipple
+                          onClick={() => navigate(`${"/"}?retry=job` )}
                         sx={{
                           textTransform: 'none',
                           px: 4,
@@ -358,7 +366,8 @@ function HomeHero() {
                           sx={{ cursor: 'pointer' }}
                           onClick={() => fileInputRef.current.click()}
                         >
-                          <CloudUploadIcon fontSize="large" style={{ color: '#0040D8' }} />
+                          {/* <CloudUploadIcon fontSize="large" style={{ color: '#0040D8' }} /> */}
+                                <UploadIllustration sx={{ width: 1, maxWidth: 130 }} />
                           <Typography variant="body1" fontWeight={500} mt={1}>
                             Drag & drop files or{' '}
                             <Box component="span" color="#3f51b5" fontWeight="bold">

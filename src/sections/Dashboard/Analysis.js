@@ -4,7 +4,7 @@ import { useAuthContext } from 'src/auth/hooks';
 import React, { useEffect, useMemo, useState } from 'react';
 import CryptoJS from 'crypto-js';
 import { m } from 'framer-motion';
-
+import HandTapGif from 'src/assets/icons/Handtap.gif';
 import {
   Box,
   Typography,
@@ -34,6 +34,7 @@ import { trackEvent } from 'src/utils/google-analytics';
 import { enqueueSnackbar } from 'notistack';
 
 export default function FoboLevelTaskDistribution() {
+  const [showHandTap, setShowHandTap] = useState(true);
   const navigate = useNavigate();
   const params = useParams();
   const theme = useTheme();
@@ -271,17 +272,18 @@ export default function FoboLevelTaskDistribution() {
       console.error('error', error);
       setIsError(true);
     } finally {
-      setIsLoading(false);  
+      setIsLoading(false);
     }
   };
 
   const handlePieClick = (index, item) => {
     setSelectedSection(item);
+     setShowHandTap(false);
   };
 
-  const handleMouseLeave = () => {
-    setSelectedIndex(null);
-  };
+  // const handleMouseLeave = () => {
+  //   setSelectedIndex(null);
+  // };
 
   const getLevelColor = () => {
     if (data?.FOBO_Score <= 39) return '#00C853';
@@ -313,7 +315,7 @@ export default function FoboLevelTaskDistribution() {
   //   }
   // };
 
-  
+
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, index }) => {
     const RADIAN = Math.PI / 180;
@@ -436,7 +438,7 @@ export default function FoboLevelTaskDistribution() {
           <GaugeChart
             id="fobo-gauge"
             nrOfLevels={3}
-            arcsLength={[0.39, 0.3, 0.31]}  
+            arcsLength={[0.39, 0.3, 0.31]}
             colors={['#00C853', '#FFB300', '#D32F2F']}
             percent={percent}
             arcPadding={0}
@@ -671,8 +673,25 @@ export default function FoboLevelTaskDistribution() {
                   outerRadius={isMobile ? 100 : 130}
                   onSliceClick={handlePieClick}
                 />
+
+                {/* 👆 Add this overlay */}
+                {showHandTap  &&(
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '38%',
+                    left: '40%',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: 2,
+                    pointerEvents: 'none',
+                  }}
+                >
+                  <img src={HandTapGif} alt="Tap to interact" width={60} height={60} />
+                </Box>
+                )}
               </Box>
             </Box>
+
             {!selectedSection ? (
               <Stack spacing={1.5} direction="column">
                 {[
@@ -815,7 +834,7 @@ export default function FoboLevelTaskDistribution() {
           <Button
             variant="contained"
             sx={{
-
+              width:'20%',
               backgroundColor: '#2C47D3',
               borderRadius: 10,
               px: 4,
@@ -841,9 +860,10 @@ export default function FoboLevelTaskDistribution() {
             Beat FOBO Now
           </Button>
 
-           <Button
+          <Button
             variant="contained"
             sx={{
+              width:'20%',
               backgroundColor: '#2C47D3',
               borderRadius: 10,
               px: 4,
@@ -861,11 +881,11 @@ export default function FoboLevelTaskDistribution() {
                 label: 'Beat FOBO now',
                 value: 'Navigate to pricing',
               });
-              navigate(paths.pricing);
+              // navigate(paths.pricing);
             }}
             aria-label="Navigate to pricing page"
           >
-             FOBO Pro
+            FOBO Pro
           </Button>
         </Grid>
       </Grid>

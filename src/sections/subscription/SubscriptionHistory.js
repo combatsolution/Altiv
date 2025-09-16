@@ -137,6 +137,7 @@ export default function SubscriptionHistory() {
   const [service, setService] = useState(1); // Default to 0 (Marketing)
   const [subscriptions, setSubscriptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [reusmeId, setResumeId] = useState(sessionStorage.getItem("resumeId"));
 
   // Plan categories for filtering
   const planCategories = useMemo(() => [

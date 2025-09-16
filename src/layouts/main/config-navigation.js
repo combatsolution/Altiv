@@ -17,7 +17,7 @@ export const navConfig = [
    {
     title: 'AI Career Coach',
     icon: <Iconify icon="solar:home-2-bold-duotone" />,
-    // path: paths.dashboardPage||`${paths.comingSoonWithType('dashboardPage')}`,
+    // path: paths.Analysis||`${paths.comingSoonWithType('Analysis')}`,
     path:'/',
   },
   

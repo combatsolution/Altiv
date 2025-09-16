@@ -50,14 +50,14 @@ export default function Upload({
   const hasError = isDragReject || !!error;
 
   const renderPlaceholder = (
-    <Stack spacing={3} alignItems="center" justifyContent="center" flexWrap="wrap">
-      <UploadIllustration sx={{ width: 1, maxWidth: 200 }} />
-      <Stack spacing={1} sx={{ textAlign: 'center' }}>
+    <Stack spacing={0} alignItems="center" justifyContent="center" flexWrap="wrap">
+      <UploadIllustration sx={{ width: 1, maxWidth: 130 }} />
+      <Stack spacing={0} sx={{ textAlign: 'center' }}>
         <Typography variant="h6">Drop or Select file</Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           Drop files here or click
           <Box
-            component="span"
+            component="span"  
             sx={{
               mx: 0.5,
               color: 'primary.main',
@@ -128,7 +128,7 @@ export default function Upload({
       <Box
         {...getRootProps()}
         sx={{
-          p: 5,
+          p: 4,
           outline: 'none',
           borderRadius: 1,
           cursor: 'pointer',

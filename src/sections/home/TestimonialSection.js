@@ -714,7 +714,7 @@ const getRandomImage = () =>
                       goToIndex(thumbCarousel.carouselRef, i);
                       goToIndex(rightCarousel.carouselRef, i);  
                     }}
-                    sx={{ width: 'auto', height: 393, pl:0.5, cursor: 'pointer', objectFit: 'fit' }}
+                    sx={{ width: 'auto', height: 393, pl:0.5, cursor: 'pointer', objectFit: 'cover' }}
                   />
                 ))}
               </Carousel>
