@@ -13,8 +13,13 @@ import {
 import ReactFlow, { Background, Handle, Position, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { m } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { paths } from 'src/routes/paths';
 import axiosInstance from 'src/utils/axios';
 import CareerCard from './CareerCard';
+
+
+
 
 const transformApiData = (apiData) => {
   if (!apiData) return null;
@@ -81,6 +86,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
   const [showReactFlow, setShowReactFlow] = useState(false);
   const [careerData, setCareerData] = useState(null);
   const [loading, setLoading] = useState(false);
+   const navigate = useNavigate();
   const [expandedLevels, setExpandedLevels] = useState({});
   // Show React Flow if job and experience are provided or if isResume is true
   useEffect(() => {
@@ -857,6 +863,7 @@ console.log("lkjlkja");
               </Box>
             )}
             <Button
+              onClick={() => navigate(paths.jobFeed)}
               size={isMdUp ? 'medium' : 'small'}
               sx={{
                 borderRadius: 5,
