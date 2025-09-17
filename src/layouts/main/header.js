@@ -146,17 +146,28 @@
                     Subscriptions
                   </Typography>
 
-
-                  <Typography
+                    <Typography
                     variant="body2"
                     sx={{
                       cursor: 'pointer',
                       fontSize: 15,
                       whiteSpace: 'nowrap',
                     }}
-                    onClick={() => navigate(paths.comingSoon)}
+                    onClick={() => navigate(paths.appliedjobs)}
                   >
-                    My Jobs
+                    Applied Jobs
+                  </Typography>
+
+                   <Typography
+                    variant="body2"
+                    sx={{
+                      cursor: 'pointer',
+                      fontSize: 15,
+                      whiteSpace: 'nowrap',
+                    }}
+                    onClick={() => navigate(paths.savejobs)}
+                  >
+                    Saved Jobs
                   </Typography>
 
 

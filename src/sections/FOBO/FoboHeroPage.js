@@ -57,7 +57,7 @@
     const [isLoading, setIsLoading] = useState(false);
     const [linkedInUrl, setLinkedInUrl] = useState('');
     const [error, setError] = useState('');
-
+    const [reusmeId, setResumeId] = useState(sessionStorage.getItem("resumeId"));
     useEffect(() => {
       if (currentUser) {
         setExistingResumes(currentUser.resumes || []);

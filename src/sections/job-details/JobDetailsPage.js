@@ -46,17 +46,18 @@ export default function JobDetailPage() {
 
   const handlebookmark = async (e) => {
     e.stopPropagation();
+
     try {
-      const res = await axiosInstance.post(`jobs/save-job/${job_id}`)
-      if (res.success === 200) {
-        setbookmarked(true);
+      const res = await axiosInstance.post(`jobs/save-job/${job_id}`);
+      if (res.status === 200) {
+        setbookmarked((prev) => !prev); // toggle on/off
       }
-
     } catch (error) {
-      console.log('falied to save', error);
+      console.error('Failed to save Jobs', error)
     }
-
   };
+
+
 
   // const similarJobs = jobs.filter(j => j.id !== job.id);
   const formatPostedDate = (date) => {
@@ -183,13 +184,9 @@ export default function JobDetailPage() {
                                 },
                               }}>{job.company}</Typography>
                               <IconButton onClick={handlebookmark}>
-                                {bookmarked ? (
-                                  <BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />
-                                )
-                                  : (
-                                    <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary', }} />
-                                  )
-                                } </IconButton>
+                                {bookmarked ? (<BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />)
+                                  :
+                                  (<BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />)} </IconButton>
                             </Grid>
 
                             <Grid container sx={{ display: "flex", flexDirection: "row", gap: 1 }} >
@@ -264,8 +261,6 @@ export default function JobDetailPage() {
                           </Grid>
                         </Box>
                       </Grid>
-
-
                     </Grid>
 
                     <Divider sx={{ my: 2 }} />
@@ -553,6 +548,7 @@ export default function JobDetailPage() {
               onClick={() => navigate(`/job-booster/${job_id}`)}
             >
               Boost my application
+              
             </Button>
           </CardActions>
         </Container>

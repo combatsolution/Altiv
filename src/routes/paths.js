@@ -23,6 +23,8 @@ const ROOTS = {
 export const paths = {
   SubscriptionSuccess: '/payment/success',
   subscription: '/subscription',
+  savejobs:'/savejobs',
+  appliedjobs:'/appliedjobs',
 
   // footer
   Blogs: '/post',
