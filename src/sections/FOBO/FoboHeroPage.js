@@ -144,7 +144,7 @@ export default function FoboHeroPage() {
         sessionStorage.setItem('xbszyaef', encryptedLinkedInUrl);
       }
 
-      navigate(paths.dashboardPage);
+      navigate(paths.Analysis);
       trackEvent({
         category: 'Navigation',
         action: 'Fobo score',
@@ -336,7 +336,7 @@ export default function FoboHeroPage() {
       </Grid>
 
       {/* Modal */}
-      <Modal open={open} onClose={handleCloseModel}>
+      <Modal open={open} onClose={handleCloseModel} disableScrollLock={false}>
         <Box
           sx={{
             width: { xs: '90%', sm: '80%', md: '550px' },
@@ -357,10 +357,10 @@ export default function FoboHeroPage() {
           </IconButton>
 
           <Typography variant="h5" mb={1}>
-            Double your chances
+            Magic happens many ways
           </Typography>
           <Typography variant="body2" mb={3}>
-            Upload resume + LinkedIn Profile URL for best results Either works, both work better
+          Upload a resume, select an existing one, or add LinkedIn URL
           </Typography>
 
           {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -391,7 +391,8 @@ export default function FoboHeroPage() {
                     sx={{ py: 1 }}
                   >
                     <ListItemText
-                      primary={<a href="#" style={{ textDecoration: 'none', color: 'inherit' }}>{r.fileDetails.fileName}</a>}
+                      primary={<a href="#" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        {r?.fileDetails?.fileName }</a>}
                       secondary={r.uploadedAt}
                       primaryTypographyProps={{ noWrap: true }}
                       secondaryTypographyProps={{ noWrap: true }}
