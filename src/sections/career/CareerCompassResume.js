@@ -18,9 +18,6 @@ import { paths } from 'src/routes/paths';
 import axiosInstance from 'src/utils/axios';
 import CareerCard from './CareerCard';
 
-
-
-
 const transformApiData = (apiData) => {
   if (!apiData) return null;
 

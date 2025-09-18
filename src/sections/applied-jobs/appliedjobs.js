@@ -71,7 +71,7 @@ const Appliedjobs = () => {
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 3, md: 5 } }}>
       <Typography variant="h4" fontWeight={600} gutterBottom>
-        Saved Jobs
+        Applied Jobs
       </Typography>
 
       {loading && (
