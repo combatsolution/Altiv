@@ -111,19 +111,28 @@ const ProductManagementPage = () => {
     title: { text: "" },
     series: [{
       type: "sunburst",
-      name: "",
+      name: "Education",  
       data: [],   // <-- will be filled after API fetch
-      borderWidth: 2,
-      /* eslint-disable react/no-this-in-sfc */
-      dataLabels: {
-        rotationMode: "circular",
-        formatter() {
-          const name = this.point?.name || "";
-          if (/education/i.test(name)) return null;
-          return `${name}<br>${this.point.value}%`;
-        },
-        style: { color: "#fff", fontSize: "11px", textOutline: "none" }
-      },
+      borderWidth: 2,/* eslint-disable react/no-this-in-sfc */
+
+  dataLabels: {
+    rotationMode: "circular",
+    formatter() {
+      const name = this.point?.name || "";
+      if (/^education$/i.test(name)) {
+        // root label
+        return `<span style="color:black;font-size:16px;font-weight:700">${name}</span>`;
+      }
+      return `${name}<br>${this.point.value}%`;
+    },
+    style: {
+      color: "#fff",       // default for other labels
+      fontSize: "11px",
+      textOutline: "none",
+    },
+  },
+
+
       /* eslint-disable react/no-this-in-sfc */
 
       levels: [
@@ -140,30 +149,40 @@ const ProductManagementPage = () => {
       {
         id: "0.0",
         parent: " ",
+        textcolor:'black',
+        name: "Education",
         color: "transparent",
-        name: "Education"
+       dataLabels: { color: "#000" },
       },   // root
     ];
 
+      const mainColors = ["#1976D2", "#FF8800", "#0BA02C"];
+       const mainColor = ["#1BABFE", "#FBBC05", ];
+
+  
     let i = 1;
     Object.entries(educationData).forEach(([field, details]) => {
       const parentId = `1.${i}`;
+  const parentColor = mainColors[(i - 1) % mainColors.length];
       sunburstData.push({
         id: parentId,
         parent: "0.0",
         name: field,
         value: details.percentage,
-        color: Highcharts.getOptions().colors[i % 5] // auto-pick color
+         color: parentColor,
       });
+
 
       let j = 1;  
       Object.entries(details.distribution).forEach(([tier, value]) => {
+       
+  const childColor = mainColor[(i - 1) % mainColor.length];
         sunburstData.push({
           id: `2.${i}.${j}`,
           parent: parentId,
           name: tier,
           value,
-          color: Highcharts.getOptions().colors[i % 5]
+        color: childColor,
         });
         j += 1;
       });
@@ -334,11 +353,11 @@ const ProductManagementPage = () => {
             {/* desktop Left Column */}
             <Grid item xs={12} lg={6} order={{ xs: 2, md: 1 }} sx={{ maxWidth: { xs: "100%", lg: "550px" } }}>
               <Grid sx={{ display: { xs: 'none', lg: 'block' }, mb: 2 }} >
-                <Typography variant="h5" fontSize="20px" fontWeight="bold"  >
+                <Typography  fontSize="30px"  fontWeight="700"  >
                   Product Management at Mastercard
                 </Typography>
-                <Typography variant="body2" color="text.secondary"  >
-                  Match analysis and background
+                <Typography  fontSize="20px"  fontWeight="400" color="text.secondary"  >
+                  Match analysis and background 
                 </Typography>
               </Grid>
 
@@ -922,10 +941,10 @@ const ProductManagementPage = () => {
                       </Grid>
                     </Box>
 
-                    <Paper sx={{ p: 2, mb: 2, width: "100%" }}>
+                    <Paper sx={{ p: 2, mb: 2, width: "100%", maxWidth: '450px'  }}>
                       <Typography variant="body2" fontWeight="800" mb={1}>
                         Years of Experience vs Percentage of Directors
-                      </Typography>
+                      </Typography> 
                       <Divider />
 
                       <Box sx={{ height: { xs: 200, md: 250 }, width: "100%", mt: 1 }}>

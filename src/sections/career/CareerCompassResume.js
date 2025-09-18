@@ -86,6 +86,10 @@ export default function CareerPathProjection({ isResume, job, experience }) {
    const navigate = useNavigate();
   const [expandedLevels, setExpandedLevels] = useState({});
   // Show React Flow if job and experience are provided or if isResume is true
+
+  const des =sessionStorage.getItem('designation')? sessionStorage.getItem('designation') :"Software developer";
+  const exp =sessionStorage.getItem('experience') ? sessionStorage.getItem('experience') : "5";
+
   useEffect(() => {
     if (isResume || (job && experience)) {
       setShowReactFlow(true);
@@ -128,8 +132,9 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     };
   }, [showSwipeHint]);
 
-  const [jobTitle, setJobTitle] = useState(sessionStorage.getItem('designation'));
-  const [expYears, setExpYears] = useState(sessionStorage.getItem('experience'));
+  const [jobTitle, setJobTitle] = useState (des);
+  const [expYears, setExpYears] =  useState (exp);
+
   const [errors, setErrors] = useState({
     jobTitle: '',
     expYears: '',
@@ -143,7 +148,6 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     'Data Scientist',
   ];
   const [userStartedWith, setUserStartedWith] = useState(null);
-
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [selectedNodes, setSelectedNodes] = useState({
@@ -226,8 +230,9 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     if (storedJob && storedExp) {
       setJobTitle(storedJob);
       setExpYears(storedExp);
+      sessionStorage.removeItem("designation");
+      sessionStorage.removeItem("experience");
     }
-
     handleModify();
   }, [handleModify]);
 
@@ -580,7 +585,7 @@ console.log("dskdjsdsd->",depths);
   useEffect(() => {
     const startedWith = sessionStorage.getItem('userStartedWith');
     setUserStartedWith(startedWith);
-console.log("lkjlkja");
+
     const generatedNodes = generateAllNodes();
     setNodes(generatedNodes);
 

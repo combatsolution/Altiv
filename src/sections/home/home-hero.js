@@ -48,7 +48,7 @@ function HomeHero() {
 
   const handleContinue = (Type) => {
     sessionStorage.setItem('userStartedWith', Type);
-    sessionStorage.setItem("designation", designation);
+    sessionStorage.setItem("designation", designation,);
     sessionStorage.setItem("experience", experience);
     if (!designation.trim()) {
       setError('Please enter your designation');

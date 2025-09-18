@@ -40,7 +40,7 @@ export const paths = {
   fobo: '/fobo',
 
   // comingsoonPage:'/comingsoon-Page',
-  Analysis: `/Analysis`,
+  Analysis: `/analysis`,
   ResumeView: '/resume-view',
   Profile: '/Profile',
   comingSoon: '/coming-soon',

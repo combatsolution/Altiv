@@ -402,9 +402,9 @@ export default function JobFeedPage() {
   };
 
   const {
-    dateFilter = '',
-    jobCategories = [],
-    levelFilter = '',
+    dateFilter = 'All time',
+    jobCategories = ['Data Science'],
+    levelFilter = 'All',
     locationFilter = '',
     companyStage = '',
     classification = '',

@@ -57,7 +57,7 @@
     const [isLoading, setIsLoading] = useState(false);
     const [linkedInUrl, setLinkedInUrl] = useState('');
     const [error, setError] = useState('');
-    const [reusmeId, setResumeId] = useState(sessionStorage.getItem("resumeId"));
+
     useEffect(() => {
       if (currentUser) {
         setExistingResumes(currentUser.resumes || []);
@@ -147,7 +147,7 @@
           sessionStorage.setItem('xbszyaef', encryptedLinkedInUrl);
         }
 
-        navigate(paths.Analysis);
+        navigate(paths.dashboardPage);
         trackEvent({
           category: 'Navigation',
           action: 'Fobo score',
@@ -346,21 +346,19 @@
         </Grid>
 
         {/* Modal */}
-        <Modal open={open} onClose={handleCloseModel}  >
+        <Modal open={open} onClose={handleCloseModel}>
           <Box
             sx={{
-              width: { xs: '90%', sm: '80%', md: '450px' },
+              width: { xs: '90%', sm: '80%', md: '550px' },
               maxWidth: '100%',
               bgcolor: 'background.paper',
               p: { xs: 2, sm: 3 },
               boxShadow: 5,
               borderRadius: 2,
-              my: 3,
+              my: 4,
               mx: 'auto',
-              // maxHeight: { xs: '90vh', sm: '85vh' },
-              // overflowY: 'auto',
-              Height:'unset',
-             overflow: 'visible',
+              maxHeight: { xs: '90vh', sm: '85vh' },
+              overflowY: 'auto',
               position: 'relative',
             }}
           >
@@ -382,10 +380,10 @@
             </Typography>
 
             {existingResumes.length > 0 && (
-              <List sx={{ maxHeight: 180, overflowY: 'auto', mb: 200, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
+              <List sx={{ maxHeight: 180, overflowY: 'auto', mb: 2, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
                 {existingResumes.map((r) => (
                   <React.Fragment key={r.id}>
-                    <ListItem 
+                    <ListItem
                       selected={selectedResumeId === r.id}
                       button
                       onClick={() => {
@@ -402,12 +400,12 @@
                       }
                       sx={{ py: 1 }}
                     >
-                         <ListItemText
-                      primary={<a href="#" style={{ textDecoration: 'none', color: 'inherit' }}>{r.fileDetails.fileName}</a>}
-                      secondary={r.uploadedAt}
-                      primaryTypographyProps={{ noWrap: true }}
-                      secondaryTypographyProps={{ noWrap: true }}
-                    />
+                      <ListItemText
+                        primary={<a href="#" style={{ textDecoration: 'none', color: 'inherit' }}>{r.fileDetails.fileName}</a>}
+                        secondary={r.uploadedAt}
+                        primaryTypographyProps={{ noWrap: true }}
+                        secondaryTypographyProps={{ noWrap: true }}
+                      />
                     </ListItem>
                     <Divider />
                   </React.Fragment>
@@ -416,7 +414,7 @@
             )}
 
             {selectedFile?.fileUrl ? (
-              <Box sx={{ px: 0, py: 0, border: '1px dashed', borderColor: 'divider', borderRadius: 2, mb: 2 }}>
+              <Box sx={{ px: 2, py: 2, border: '1px dashed', borderColor: 'divider', borderRadius: 2, mb: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                   <InsertDriveFileIcon sx={{ mr: 1 }} />
                   <Typography variant="body2" noWrap>
@@ -443,7 +441,7 @@
               </Box>
             ) : (
               <Upload
-                sx={{ mb: 2,  }}
+                sx={{ mb: 2 }}
                 loading={!!docIsLoading}
                 placeholder="Drop or Select Resume"
                 accept={{
@@ -463,7 +461,7 @@
               placeholder="https://www.linkedin.com/in/yourprofile"
               value={linkedInUrl}
               onChange={(e) => setLinkedInUrl(e.target.value)}
-              sx={{ mb: 1}}
+              sx={{ mb: 3 }}
             />
 
             <Button
@@ -477,9 +475,9 @@
               }
               sx={{
                 bgcolor: indigo[500],
-                '&:hover': { bgcolor: indigo[700]   },
+                '&:hover': { bgcolor: indigo[700] },
                 borderRadius: 50,
-                py: 1,
+                py: 1.5,
                 textTransform: 'none',
                 fontWeight: 500,
               }}

@@ -59,6 +59,7 @@ export default function FoboLevelTaskDistribution() {
   const [decryptedId, setDecryptedId] = useState('');
   const [decryptedLinkedinUrl, setDecryptedLinkedinUrl] = useState('');
   const { user } = useAuthContext();
+  const [userStartedWith, setUserStartedWith] = useState(null);
 
   // Generate 4 shades (lighter to darker)
   const shades = [0.4, 0.6, 0.8, 1].map((opacity) =>
@@ -67,6 +68,9 @@ export default function FoboLevelTaskDistribution() {
 
   // Check subscription status
   useEffect(() => {
+
+    const startedWith = sessionStorage.getItem("userStartedWith")
+    setUserStartedWith(startedWith);
     const checkSubscription = async () => {
       if (!user) {
         setHasActiveSubscription(false);
