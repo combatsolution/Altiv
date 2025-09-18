@@ -4,14 +4,14 @@ import SavedJobsPage from "src/sections/savejobs/savejobspage";
 
 export default function jobs()
 { 
-    // const userStartedWith = sessionStorage.getItem("userStartedWith");
+     const userStartedWith = sessionStorage.getItem("userStartedWith");
 
     return(
         <>
             <Helmet>
                 <title> Save Jobs</title>
             </Helmet>
-            <SubHeader subtitle="Saved Jobs"    />
+            <SubHeader subtitle="Saved Jobs"   showUploadResume={userStartedWith}  />
             < SavedJobsPage/>
         </>
     )

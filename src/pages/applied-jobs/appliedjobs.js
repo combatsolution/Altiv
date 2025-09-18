@@ -5,13 +5,13 @@ import Appliedjobs from "src/sections/applied-jobs/appliedjobs";
 
 export default function apply()
 { 
-    // const userStartedWith = sessionStorage.getItem("userStartedWith");
+     const userStartedWith = sessionStorage.getItem("userStartedWith");
     return(
         <>
             <Helmet>
                 <title> Applied Jobs</title>
             </Helmet>
-            <SubHeader subtitle="Applied Jobs"    />
+            <SubHeader subtitle="Applied Jobs"  showUploadResume={userStartedWith}   />
             < Appliedjobs/>
         </> 
     )
