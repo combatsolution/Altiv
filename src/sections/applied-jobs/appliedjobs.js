@@ -117,7 +117,7 @@ const Appliedjobs = () => {
                     </Typography>
                   </Stack>
                   <IconButton onClick={() => toggleBookmark(job.id)} size="small">
-                    {isBookmarked ? (
+                    {isBookmarked  || job.isSaved ?(
                       <BookmarkIcon color="primary" />
                     ) : (
                       <BookmarkBorderIcon color="action" />
@@ -195,15 +195,15 @@ const Appliedjobs = () => {
                     variant="contained"
                     onClick={() => window.open(job.redirectUrl, '_blank')}
                     sx={{
-                      bgcolor: 'primary.main',
+                      bgcolor:job.isApplied ? 'primary.dark': 'primary.main',
                       textTransform: 'none',
                       fontWeight: 600,
                       py: 1.2,
                       fontSize: 15,
-                      '&:hover': { bgcolor: 'primary.dark' },
+                      '&:hover': { bgcolor: job.isApplied ? 'success.dark' : 'primary' },
                     }}
                   >
-                    Apply Now
+                  {job.isApplied === true? "Applied" : "Apply Now"}
                   </Button>
                 </Box>
               </JobCard>

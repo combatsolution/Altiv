@@ -249,7 +249,7 @@ const JobCard = ({ job }) => {
                 onClick={(e) => handleApply(e)}
                 variant="contained"
                 sx={{
-                  bgcolor: job.isApplied ? 'success.main' : '#2A4DD0',
+                  bgcolor: job.isApplied ? 'primary.dark' : 'primary.main',
                   borderRadius: 1,
                   px: 2,
                   py: 1.5,
@@ -257,7 +257,7 @@ const JobCard = ({ job }) => {
                   fontWeight: 500,
                   width: { xs: '100%', md: '140px' },
                   height: 40,
-                  '&:hover': { bgcolor: job.isApplied ? 'success.dark' : '#2A4DD0' },
+                  '&:hover': { bgcolor: job.isApplied ? 'primary.dark' : 'primary.main' },
                 }}
               >
                 {job?.isApplied === true ? 'Applied' : 'Apply Now'}

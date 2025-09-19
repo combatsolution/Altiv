@@ -3,7 +3,7 @@ import SubHeader from "src/components/subheader/subheader";
 import Appliedjobs from "src/sections/applied-jobs/appliedjobs";
 
 
-export default function apply()
+export default function applyjob()
 { 
      const userStartedWith = sessionStorage.getItem("userStartedWith");
     return(
@@ -15,5 +15,5 @@ export default function apply()
             < Appliedjobs/>
         </> 
     )
-}   
+}       
 
