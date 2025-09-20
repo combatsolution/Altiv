@@ -13,7 +13,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { paths } from 'src/routes/paths';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import axios from 'axios';
 import { enqueueSnackbar } from 'notistack';
 import axiosInstance from 'src/utils/axios';
 import { useAuthContext } from 'src/auth/hooks';
@@ -48,7 +47,7 @@ function HomeHero() {
 
   const handleContinue = (Type) => {
     sessionStorage.setItem('userStartedWith', Type);
-    sessionStorage.setItem("designation", designation,);
+    sessionStorage.setItem("designation", designation);
     sessionStorage.setItem("experience", experience);
     if (!designation.trim()) {
       setError('Please enter your designation');
