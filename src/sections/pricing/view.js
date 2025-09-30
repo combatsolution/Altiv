@@ -9,7 +9,6 @@ import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import axiosInstance from 'src/utils/axios';
 import { _pricingPlans } from 'src/_mock';
-import axios from 'axios';
 import PricingCard from './pricing-card';
 
 // Category configuration

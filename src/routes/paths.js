@@ -25,6 +25,7 @@ export const paths = {
   subscription: '/subscription',
   savejobs:'/savejobs',
   appliedjobs:'/appliedjobs',
+  pricingdetail:'/pricing-detail',
 
   // footer
   Blogs: '/post',
