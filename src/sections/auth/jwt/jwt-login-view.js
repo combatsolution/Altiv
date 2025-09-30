@@ -83,13 +83,19 @@ export default function JwtLoginView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await login?.(data.email, data.password);
-      enqueueSnackbar('Login success', { variant: 'success' });
+      const res =await login?.(data.email, data.password);
+      const{permissions=[]} = res ||{};
+      if( permissions.includes ('admin')){
+        setErrorMsg("admin not allowed to login");
+        return;
+      }
+        enqueueSnackbar('Login success', { variant: 'success' }); 
       const redirectAfterLogin = sessionStorage.getItem('redirectAfterLogin');
       if (redirectAfterLogin) {
         sessionStorage.removeItem('redirectAfterLogin');
       }
-      console.log("hdsahdu",redirectAfterLogin)
+      // permissions.includes('admin')
+      // ? setErrorMsg('Admin are not allowed to login'):
       router.replace(redirectAfterLogin || returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);

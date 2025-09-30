@@ -29,9 +29,9 @@ import { useNavigate, useParams, } from 'react-router-dom';
 import axiosInstance from 'src/utils/axios';
 import { enqueueSnackbar } from 'notistack';
 import { isFriday } from 'date-fns';
-import axios from 'axios';
 
 
+  
 export default function JobDetailPage() {
   const theme = useTheme();
   const { job_id } = useParams();
@@ -57,8 +57,6 @@ export default function JobDetailPage() {
     }
   };
 
-
-
   // const similarJobs = jobs.filter(j => j.id !== job.id);
   const formatPostedDate = (date) => {
     if (!date) return "Recently Posted";
@@ -72,14 +70,15 @@ export default function JobDetailPage() {
 
     const fetchJob = async () => {
       try {
-        const res = await axios.get(
-          `https://api.staging.altiv.ai/jobs/${job_id}`, // full URL
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const res = await axiosInstance.get(`/jobs/${job_id}`);
+          // `https://api.staging.altiv.ai/jobs/${job_id}`, // full URL
+          
+          // {
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   },
+          // }
+      
 
         console.log("API Response:", res);
 

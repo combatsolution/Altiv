@@ -39,13 +39,6 @@ const categoryHeadings = {
     subtitle:
       'Accelerate your AI-Enhanced Product Evolution - Build and scale AI-powered products that deliver real value',
   },
-  
-  // 'Software Engineering': {
-  //   value: 3,
-  //   title: 'AI Software Engineering Excellence',   
-  //   subtitle:
-  //     'Accelerate your AI-Driven Software Evolution - Build scalable and efficient AI-powered applications',
-  // },
 };
 
 export default function PricingView() {
@@ -77,7 +70,6 @@ export default function PricingView() {
     }
   }; 
 
- 
 
   // Handle initial load and query parameter changes
   useEffect(() => {
