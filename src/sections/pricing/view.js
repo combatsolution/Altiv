@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -8,8 +8,6 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import axiosInstance from 'src/utils/axios';
-import { _pricingPlans } from 'src/_mock';
-import axios from 'axios';
 import PricingCard from './pricing-card';
 
 // Category configuration
@@ -43,7 +41,6 @@ const categoryHeadings = {
 
 export default function PricingView() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState(0);
    const [plansData, setPlansData] = useState([]);
   const [heading, setHeading] = useState('');

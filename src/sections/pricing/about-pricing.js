@@ -11,7 +11,7 @@ import { useAuthContext } from 'src/auth/hooks';
 import axiosInstance from 'src/utils/axios';
 
 
-export default function PricingCard({ card, sx, ...other }) {
+export default function AboutPricing({ card, sx, ...other }) {
   const navigate = useNavigate();
   const { user } = useAuthContext();
 

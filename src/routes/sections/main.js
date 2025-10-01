@@ -18,7 +18,7 @@ const Page404 = lazy(() => import('src/pages/404'));
 const FaqsPage = lazy(() => import('src/pages/faqs'));
 const AboutPage = lazy(() => import('src/pages/about-us'));
 const ContactPage = lazy(() => import('src/pages/contact-us'));
-const PricingPage = lazy(() => import('src/pages/pricing'));
+const PricingPage = lazy(() => import('src/sections/pricing/view/pricing-view'));
 const PaymentPage = lazy(() => import('src/pages/payment'));
 const ComingSoonPage = lazy(() => import('src/pages/coming-soon'));
 const MaintenancePage = lazy(() => import('src/pages/maintenance'));
@@ -71,7 +71,7 @@ export const mainRoutes = [
         </Suspense>
       </MainLayout>
     ),
-    children: [
+    children: [ 
 
       { path: 'attributions', element: <AttributionsView /> },
       { path: 'ai-training-policy', element: <AitrainingpolicyView /> },
@@ -95,7 +95,6 @@ export const mainRoutes = [
       { path: 'termsandconditions', element: <TermsCondition /> },
 
       { path: 'fobo', element: <FoboPage /> },
-
 
       {
         path: 'Profile',
