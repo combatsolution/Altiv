@@ -1,12 +1,13 @@
+
 import AboutPricing from '../about-pricing';
 import PricingCard from '../pricing-card';
-import PricingCard from '../about-pricing';
+import PricingCardView from '../view';
 
 export default function PricingView() {
   return (
     <>
     <AboutPricing/>
-    <PricingView/>
+    <PricingCardView/>
     <PricingCard/>
     </>
   );

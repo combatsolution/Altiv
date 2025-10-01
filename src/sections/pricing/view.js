@@ -39,7 +39,7 @@ const categoryHeadings = {
   },
 };
 
-export default function PricingView() {
+export default function PricingCardView() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState(0);
    const [plansData, setPlansData] = useState([]);
