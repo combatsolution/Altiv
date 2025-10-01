@@ -43,29 +43,31 @@ const metrics = [
 
 export default function AIReadinessDashboard() {
   return (
-    <Box sx={{ bgcolor: "#f4f7fb", minHeight: "80vh", py: 4 }}>
+    <Box sx={{ bgcolor: "#f4f7fb", minHeight: "80vh", py: 0 }}>
       {/* Header */}
       <Box
+        alignItems={{ xs: "center", md: "center" }}
         sx={{
+            
         //   bgcolor: "linear-gradient(90deg, #2563eb 0%, #06b6d4 100%)",
           bgcolor:"#2563eb",
           color: "white",
           px: { xs: 3, md: 8 },
           py: 3,
           display: "flex",
-          alignItems: "center",
+     
           justifyContent: "space-between",
           flexDirection: { xs: "column", md: "row" },
           gap: 0,
           mb: 4,
-          borderRadius: "0 0 12px 12px",
+         
         }}
       >
         {/* Left Section */}
         <Box display="flex" alignItems="center" gap={2}>
           <Avatar
             sx={{
-              bgcolor: "white",
+              bgcolor: "white", 
               width: 90,
               height: 40,
               borderRadius: "8px",
@@ -109,7 +111,7 @@ export default function AIReadinessDashboard() {
 
       {/* Metrics Grid */}
       <Container maxWidth="lg">
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           {metrics.map((metric, index) => (
             <Grid item xs={12} sm={6} md={3} key={index}>
               <MotionPaper
@@ -132,6 +134,7 @@ export default function AIReadinessDashboard() {
                   flexDirection: "row",
                   alignItems:"center",
                   justifyContent: "center",
+                  width:'280px',
                   
                 }}
               >

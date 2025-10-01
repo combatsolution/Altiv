@@ -885,7 +885,7 @@ export default function FoboLevelTaskDistribution() {
                 label: 'Beat FOBO now',
                 value: 'Navigate to pricing',
               });
-              // navigate(paths.pricing);
+             navigate(paths.aireadliness);
             }}
             aria-label="Navigate to pricing page"
           >
