@@ -5,10 +5,11 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import { m } from "framer-motion";
+import DashboardTabs from "./dashboard_tab";
 
 // Motion wrapper for Paper
 const MotionPaper = m(Paper);
-
+const handleSectionChange = "Executive Summary"; // Placeholder for section change handler
 // Data for metric cards
 const metrics = [
   {
@@ -107,7 +108,6 @@ export default function AIReadinessDashboard() {
         </Button>
       </Box>
 
-      {/* Metrics Grid */}
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           {metrics.map((metric, index) => (
@@ -181,6 +181,8 @@ export default function AIReadinessDashboard() {
           ))}
         </Grid>
       </Container>
+
+      <DashboardTabs onSectionChange={handleSectionChange} />
     </Box>
   );
 }
