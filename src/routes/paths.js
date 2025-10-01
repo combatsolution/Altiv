@@ -26,6 +26,7 @@ export const paths = {
   savejobs:'/savejobs',
   appliedjobs:'/appliedjobs',
   pricingdetail:'/pricing-detail',
+  aireadliness: '/ai-readiness-analysis',
 
   // footer
   Blogs: '/post',

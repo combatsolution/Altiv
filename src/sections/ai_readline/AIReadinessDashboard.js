@@ -19,7 +19,7 @@ const metrics = [
     icon: <TrackChangesIcon sx={{ fontSize: 28, color: "#3b82f6" }} />,
   },
   {
-    title: "Transformation Timeline",
+    title: "Transformation Timeline ",   
     value: "36",
     subtitle: "Months",
     color: "#f59e0b",
@@ -56,7 +56,7 @@ export default function AIReadinessDashboard() {
           alignItems: "center",
           justifyContent: "space-between",
           flexDirection: { xs: "column", md: "row" },
-          gap: 2,
+          gap: 0,
           mb: 4,
           borderRadius: "0 0 12px 12px",
         }}
@@ -122,10 +122,9 @@ export default function AIReadinessDashboard() {
                   boxShadow: "0px 8px 25px rgba(0,0,0,0.15)",
                 }}
                 sx={{
-                  p: 3,
-                  textAlign: "center",
+
                   borderRadius: 3,
-                  cursor: "pointer",
+                  cursor: "pointer",    
                   background: "white",
                   borderTop: `4px solid ${metric.color}`, // Top border highlight
                   minHeight: 180,
@@ -133,6 +132,7 @@ export default function AIReadinessDashboard() {
                   flexDirection: "row",
                   alignItems:"center",
                   justifyContent: "center",
+                  
                 }}
               >
                 {/* Icon with circular background */}
@@ -141,12 +141,12 @@ export default function AIReadinessDashboard() {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    width: 56,
+                    width: 60,
                     height: 56,
                     borderRadius: "50%",
                     bgcolor: `${metric.color}1A`, // light background
-                    mx: "auto",
-                    mb: 2,
+                    // mx: "auto",
+                    mr:1
                   }}
                 >
                   {metric.icon}
@@ -154,31 +154,25 @@ export default function AIReadinessDashboard() {
                 <Box sx={{
                     display: "flex",
                     flexDirection:"column",
-                    justifyContent:"left",
-                    alignItems:"left",
-                    ml:2,
-                    gap:1
+                    
                 }}>
              
-              
-
-                {/* Title */}
+               {/* Title */}
                 <Typography variant="subtitle1" fontWeight="600" sx={{
                     display: "flex",
-                    flexDirection:"column",
-                    justifyContent:"left",
-                    alignItems:"left",
+                    textalign:'left',
+                    wordBreak:'break-word',
                     color:'text.secondary', 
                     }}>
                   {metric.title}
                 </Typography>
                    {/* Metric Value */}
-                  <Typography variant="h3" fontWeight="bold" color="primary.main">
+                  <Typography variant="h3" fontWeight="bold"    sx={{ textAlign: "left" }} color="primary.main">
                   {metric.value}
                 </Typography>
 
                 {/* Subtitle */}
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary"    sx={{ textAlign: "left" }}>
                   {metric.subtitle}
                 </Typography>
                 </Box>

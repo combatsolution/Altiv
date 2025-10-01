@@ -60,6 +60,7 @@ const TermsCondition = lazy(() => import('src/pages/Policies/Terms&ConditionsPag
 const Paymentdetails = lazy(() => import('src/sections/payment/view/payment-view'));
 const ProductPricing = lazy(() => import('src/sections/pricing/view'));
 const Pricingdetailview = lazy(() => import('src/sections/pricing_details/view/pricingdetail-view'));
+const Aieadlinessview =lazy(()=> import ('src/sections/ai_readline/view/aireadliness-view'));
 
 // ---------------------------- -----------------------------------------
 
@@ -72,8 +73,8 @@ export const mainRoutes = [
         </Suspense>
       </MainLayout>
     ),
-    children: [ 
-
+    children: [
+       {path:'ai-readiness-analysis', element:<Aieadlinessview/>},
       {path:'pricing-detail', element:<Pricingdetailview/>},
       { path: 'attributions', element: <AttributionsView /> },
       { path: 'ai-training-policy', element: <AitrainingpolicyView /> },
