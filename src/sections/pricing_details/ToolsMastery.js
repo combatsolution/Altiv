@@ -38,10 +38,11 @@ export default function ToolsMastery() {
   return (
     <Box sx={{ py: 6, px: { xs: 2, sm: 6 } }}>
       <Typography
-        variant="h5"
+        variant="h3"  
         align="center"
         fontWeight="bold"
-        sx={{ mb: 4 }}
+        sx={{ mb: 4, color:theme.palette.primary.dark }}
+        
       >
         Tools you’ll master
       </Typography>
@@ -66,7 +67,7 @@ export default function ToolsMastery() {
 
           <Grid container spacing={2}>
             {section.tools.map((tool, idx) => (
-              <Grid item xs={12} sm={6} sm={section.tools.length === 1 ? 12 : 6} key={idx}>
+              <Grid item xs={12}  sm={section.tools.length === 1 ? 12 : 6} key={idx}>
                 <Card
                   sx={{
                     height: "100%",

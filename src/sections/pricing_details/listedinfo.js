@@ -44,7 +44,7 @@ export default function ListedInfo() {
     >
       {/* Heading */}
       <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-        <Box component="span" sx={{ color: 'primary.main' }}>
+        <Box component="span" sx={{ color: theme.palette.primary.dark}}>
           Key outcomes
         </Box>
       </Typography>

@@ -7,11 +7,11 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider'; 
+import Divider from '@mui/material/Divider';
 import { MotionViewport } from 'src/components/animate';
 
-const FAQS = [  
-  { 
+const FAQS = [
+  {
     question: "Do I need coding experience?",
     answer: "No. All workflows are no-code with step-by-step templates.",
   },
@@ -32,7 +32,7 @@ export default function FAQSection() {
     <Container
       component={MotionViewport}
       sx={{
-        py: { xs: 8, md: 12 },
+        py: { xs: 8, md: 4 },
         maxWidth: { xs: '100% !important', md: '1000px !important' },
       }}
     >
@@ -41,22 +41,14 @@ export default function FAQSection() {
           variant="h3"
           sx={{
             fontWeight: 'bold',
-            color: theme.palette.primary.main,
+            color: theme.palette.primary.dark,
             mb: 1,
-            fontSize: { xs: '1.5rem', md: '2rem' },
+            fontSize: { xs: '1.5rem', md: '1.6rem' },
           }}
         >
           FAQs
         </Typography>
-        <Typography
-          sx={{
-            color: theme.palette.text.secondary,
-            fontSize: '1rem',
-            mb: 2,
-          }}
-        >
-          Get answers to common questions about government bond investments.
-        </Typography>
+
       </Box>
 
       {FAQS.map((faq, idx) => (
@@ -96,11 +88,22 @@ export default function FAQSection() {
           </Accordion>
 
           {/* ✅ Show divider only if not the last FAQ */}
-          {idx < FAQS.length - 1 && (
-            <Divider sx={{ bgcolor: 'grey.300', my: 1 }} />
+          {idx < FAQS.length && (
+            <Divider sx={{ bgcolor: 'grey.100', my: 1 }} />
           )}
-        </Box>
-      ))}
+        </Box>))}
+      <Box
+        sx={{ mt: 4, textAlign: 'center' }}>
+        <Typography
+          sx={{
+            color: theme.palette.primary.main,
+            fontSize: '1rem',
+            mb: 2,
+          }}
+        >
+          Future-proof your marketing career today
+        </Typography>
+      </Box>
     </Container>
   );
 }

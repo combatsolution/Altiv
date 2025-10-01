@@ -21,7 +21,7 @@ export default function AIMarketingBuilder() {
     >
       <Container maxWidth="md">
         {/* Title */}
-        <Typography variant="h4" fontWeight="bold" gutterBottom>
+        <Typography variant="h3" fontWeight="bold" gutterBottom>
           AI Marketing Foundation Builder
         </Typography>
 
@@ -61,6 +61,7 @@ export default function AIMarketingBuilder() {
               <Paper
                 elevation={0}
                 sx={{
+                  width:'100%',
                   bgcolor: "rgba(255,255,255,0.15)",
                   color: "white",
                   textAlign: "center",

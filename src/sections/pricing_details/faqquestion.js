@@ -47,7 +47,7 @@
             variant="h3"
             sx={{
               fontWeight: 'bold',
-              color: theme.palette.primary.main,
+              color: theme.palette.primary.dark,
               mb: 1,
               fontSize: { xs: '1.5rem', md: '2rem' }
             }}

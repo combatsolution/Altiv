@@ -13,7 +13,7 @@ export default function Program() {
       <Container maxWidth="md">
         {/* Title */}
         <Typography
-          variant="h4"
+          variant="h3"
           fontWeight="bold"
           gutterBottom
           sx={{ color: "#0d2c9b" }}
@@ -23,8 +23,8 @@ export default function Program() {
 
         {/* Subtitle */}
         <Typography
-          variant="subtitle1"
-          sx={{ mb: 3, color: "black", fontSize: "1.1rem" }}
+          variant="regular"
+          sx={{  color: "black", fontSize: "20px", py:3 }}
         >
           Generative AI is rewriting every marketing playbook—from copywriting to
           analytics. This program arms you with{" "}
@@ -36,8 +36,11 @@ export default function Program() {
           variant="subtitle2"
           sx={{
             fontStyle: "italic",
-            color: "grey.600",
-            fontSize: "1rem",
+            color: "grey.500",  
+            textAlign: "left",
+            fontSize:'18px',  
+            px:10,
+            my:2
           }}
         >
           “IDC forecasts the AI market to surpass{" "}
