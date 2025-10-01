@@ -43,7 +43,8 @@ const metrics = [
 
 export default function AIReadinessDashboard() {
   return (
-    <Box sx={{ bgcolor: "#f4f7fb", minHeight: "80vh", py: 0 }}>
+    <Box sx={{ bgcolor: "#f4f7fb", minHeight: "400px", 
+    my: 5, mx:'auto', maxWidth: { xs: '100%', md: '1330px', lg: '1350px' }   }}>
       {/* Header */}
       <Box
         alignItems={{ xs: "center", md: "center" }}
