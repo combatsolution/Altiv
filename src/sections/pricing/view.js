@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import axiosInstance from 'src/utils/axios';
+import { _pricingPlans } from 'src/_mock';
 import PricingCard from './pricing-card';
 
 // Category configuration
