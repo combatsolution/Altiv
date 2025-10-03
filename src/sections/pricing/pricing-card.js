@@ -225,247 +225,167 @@
 //   sx: PropTypes.object,
 // };
 
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Box, Stack, Button, Divider, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from 'src/auth/hooks';
+import axiosInstance from 'src/utils/axios';
+import Iconify from 'src/components/iconify';
 
-  import PropTypes from 'prop-types';
-  import { useEffect, useState } from 'react';
-  import { alpha } from '@mui/material/styles';
-  import { Box, Stack, Button, Divider, Typography } from '@mui/material';
-  import { useNavigate } from 'react-router-dom';
+export default function PricingCard({ card, sx, ...other }) {
+  const navigate = useNavigate();
+  const { user } = useAuthContext();
 
-  import { paths } from 'src/routes/paths';
-  import Label from 'src/components/label';
-  import Iconify from 'src/components/iconify';
-  import { useAuthContext } from 'src/auth/hooks';
-  import axiosInstance from 'src/utils/axios';
-  import { status } from 'nprogress';
-  import { maxHeight } from '@mui/system';
+  const [activePlan, setActivePlan] = useState(null);
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [courseData, setCourseData] = useState([]);
 
-  export default function PricingCard({ card, sx, ...other }) {
-    const navigate = useNavigate();
-    const { user } = useAuthContext();
-
-    const [activePlan, setActivePlan] = useState(null);
-    const [subscriptions, setSubscriptions] = useState([]);
-    const [courseData, setCourseData] = useState([]);
-
-    useEffect(() => {
-      if (user?.currentPlanId) {
-        setActivePlan(user.currentPlanId);
-      }
-    }, [user]);
-
-    useEffect(() => {
-      const fetchPlans = async () => {
-        try {
-          const response = await axiosInstance.get(`/subscriptions/user`);
-          console.log('Fetched Plans:', response.data);
-          if (response?.data) {
-            // Filter subscriptions with status === 'success' and extract course names
-            const courseNames = response.data
-              .filter((sub) => sub?.status === 'success')
-              .map((sub) => sub?.planData?.courses?.courseName)
-              .filter(Boolean); // removes undefined/null course names
-
-            setSubscriptions(response.data); // keep all subscriptions if needed
-            setCourseData(courseNames); // save only course names with 'success' status
-          }
-        } catch (error) {
-          console.error('Error fetching plans:', error);
-        }
-      };
-      fetchPlans();
-    }, []);
-
-    useEffect(() => {
-      if (subscriptions?.length > 0) {
-        const courses = subscriptions
-          .map((sub) => sub?.planData?.courses?.courseName)
-          .filter(Boolean);
-        setCourseData(courses);
-      }
-    }, [subscriptions]);
-    console.log('Course Data:', courseData);
-
-    const { id, courses = {}, price, paymentType, recurringPeriod, access, features } = card;
-
-    const isCurrentPlan = activePlan === id;
-    const isAlreadyPurchased = courseData.includes(courses?.courseName);
-
-    let buttonLabel = 'Pay Now';
-
-    if (isCurrentPlan) {
-      buttonLabel = 'Current Plan';
-    } else if (access) {
-      buttonLabel = 'Free';
-    } else if (isAlreadyPurchased) {
-      buttonLabel = 'Already Purchased';
-    } else if (price === 0) {
-      buttonLabel = 'Free';
+  useEffect(() => {
+    if (user?.currentPlanId) {
+      setActivePlan(user.currentPlanId);
     }
+  }, [user]);
 
-    const renderSubscription = (
-      <Stack spacing={1} display="flex" alignItems="center" width="100%">
-        <Typography variant="h4" sx={{ textTransform: 'capitalize' }}>
-          {courses?.courseName || 'Course'}
-        </Typography>
-        <Box width="100%" display="flex" justifyContent="center">
-          <Typography variant="subtitle2" align="center" color="success.lighter">
-            {courses?.courseName}
-          </Typography>
-        </Box>
-      </Stack>
-    );
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const response = await axiosInstance.get(`/subscriptions/user`);
+        if (response?.data) {
+          const courseNames = response.data
+            .filter((sub) => sub?.status === 'success')
+            .map((sub) => sub?.planData?.courses?.courseName)
+            .filter(Boolean);
 
-    const renderPrice = access ? (
-      <Typography variant="h2" sx={{ mb: 0 }}>
-        Free
-      </Typography>
-    ) : (
-      <Stack direction="column" justifyContent="center" alignItems="flex-end">
-        <Stack direction="row" justifyContent="center" alignItems="center">
-          <Typography variant="h4" sx={{ mr: 1 }}>
-            ₹ 
-          </Typography>
-          <Typography variant="h2" color="primary" sx={{ mr: 2 }}>
-            {price}
-          </Typography>
-        </Stack>
-        <Typography
-          component="span"
-          sx={{
-            alignSelf: 'center',
-            color: 'text.disabled',
-            ml: 1,
-            typography: 'body2',
-          }}
-        > 
-          {paymentType === 'oneTime' ? 'One Time Payment' : recurringPeriod}
-        </Typography>
-      </Stack>
-    );
+          setSubscriptions(response.data);
+          setCourseData(courseNames);
+        }
+      } catch (error) {
+        console.error('Error fetching plans:', error);
+      }
+    };
+    fetchPlans();
+  }, []);
 
-    const renderList = (
-      <Stack spacing={2} sx={{ width: '100%', mt: -3 }}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Box component="span" sx={{ typography: 'overline' }}>
-            Features
-          </Box>
-        </Stack>
-        <Stack spacing={1}>
-          {features?.length ? (
-            features.map((feature, idx) => (
-              <Stack direction="row" spacing={1} key={idx}>
-                <Iconify icon="eva:checkmark-fill" width={20} sx={{ color: 'green' }} />
-                <Typography variant="body2">{feature}</Typography>
-              </Stack>
-            ))
-          ) : (
-            <>
-              <Stack direction="row" spacing={1}>
-                <Iconify icon="eva:checkmark-fill" width={20} sx={{ color: 'green' }} />
-                <Typography variant="body2">Fast performance</Typography>
-              </Stack>
-              <Stack direction="row" spacing={1}>
-                <Iconify icon="eva:checkmark-fill" width={20} sx={{ color: 'green' }} />
-                <Typography variant="body2">User-friendly interface</Typography>
-              </Stack>
-              <Stack direction="row" spacing={1}>
-                <Iconify icon="eva:checkmark-fill" width={20} sx={{ color: 'green' }} />
-                <Typography variant="body2">Secure data handling</Typography>
-              </Stack>
-            </>
-          )}
-        </Stack>
-      </Stack>
-    );
+  const { id, courses = {}, price, paymentType, recurringPeriod, access, features } = card;
+
+  const isCurrentPlan = activePlan === id;
+  const isAlreadyPurchased = courseData.includes(courses?.courseName);
+
+  let buttonLabel = 'Pay Now';
+  if (isCurrentPlan) buttonLabel = 'Current Plan';
+  else if (access) buttonLabel = 'Free';
+  else if (isAlreadyPurchased) buttonLabel = 'Already Purchased';
+  else if (price === 0) buttonLabel = 'Free';
+
   return (
     <Stack
-      spacing={3}
+      spacing={{ xs: 2, sm: 3 }}
       sx={{
-        p: { xs: 2, sm: 3, md: 4 },  
+        p: { xs: 2, sm: 3, md: 4 },
         borderRadius: 2,
         boxShadow: 3,
-        bgcolor: 'background.paper',  
-        position: 'relative', 
-        maxWidth:{xs:'100%', sm:360, md:400},
-        maxHeight:{xs:'100%', sm:420},
-        // ...sx,
+        bgcolor: 'background.paper',
+        position: 'relative',
+        width: '100%',
+        maxWidth: { xs: '100%', sm: 380, md: 420 },
+        minHeight: { xs: 'auto', sm: 420 },
+        textAlign: { xs: 'center', sm: 'left' },
+        ...sx,
       }}
-      // {...other}
+      {...other}
     >
-      {/* price pill */}  
+      {/* Price pill */}
       <Box
         sx={{
-          position: 'absolute', 
+          position: 'absolute',
           top: { xs: 8, sm: 16 },
-        right: { xs: 8, sm: 16 },
-        px: { xs: 1, sm: 1.5 },
+          right: { xs: 8, sm: 16 },
+          px: { xs: 1, sm: 1.5 },
           py: 0.5,
           borderRadius: '24px',
           bgcolor: 'success.main',
           color: 'common.white',
           fontWeight: 600,
-          fontSize: 14,
+          fontSize: { xs: 12, sm: 14 },
         }}
       >
         {access ? 'Free' : `₹${price}${paymentType === 'monthly' ? '/mo' : ''}`}
       </Box>
 
-      {/* Title & tagline */} 
-      <Stack spacing={1} alignItems="flex-start">
-        <Typography variant="h5" fontWeight={700}>
+      {/* Title & tagline */}
+      <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start' }}>
+        <Typography
+          variant="h6"
+          fontWeight={700}
+          sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}
+        >
           {courses?.courseName}
         </Typography>
-        <Typography variant="subtitle2" color="text.secondary">
-          {card.tagline || 'AaI Mrketing Builder'}
+        <Typography variant="body2" color="text.secondary">
+          {card.tagline || 'AI Marketing Builder'}
         </Typography>
       </Stack>
 
       {/* Description */}
       {card.description && (
-        <Typography variant="body2" color="text.secondary">
-          {card.description }
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}
+        >
+          {card.description}
         </Typography>
       )}
 
       <Divider />
 
       {/* Features */}
-      <Stack spacing={1}>
-              
+      <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start' }}>
         {(features ?? []).map((feature, i) => (
-          <Stack key={i} direction="row" spacing={1} alignItems="center">
-            <Iconify icon="eva:checkmark-fill" width={20} sx={{ color: 'success.main' }} />
-            <Typography variant="body2">
-              {/* {feature} */}
+          <Stack
+            key={i}
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            justifyContent={{ xs: 'center', sm: 'flex-start' }}
+          >
+            <Iconify icon="eva:checkmark-fill" width={18} sx={{ color: 'success.main' }} />
+            <Typography variant="body2" sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}>
+              {feature}
             </Typography>
           </Stack>
         ))}
       </Stack>
-      <Box 
-      sx={{
-      width: '100%',
-      bgcolor: 'grey.200',   
-      p: 2,                  
 
-      }}>
-  {/* Key outcomes (optional) */}
-      <Typography variant="subtitle2" fontWeight={600} color='black' >Key Outcomes:</Typography>
-      {card.keyOutcomes && (
-        <>
-          <Divider />
-    
+      {/* Key Outcomes */}
+      {card.keyOutcomes?.length > 0 && (
+        <Box
+          sx={{
+            width: '100%',
+            bgcolor: 'grey.200',
+            p: { xs: 1.5, sm: 2 },
+            borderRadius: 1,
+          }}
+        >
+          <Typography variant="subtitle2" fontWeight={600} color="black">
+            Key Outcomes:
+          </Typography>
+          <Divider sx={{ my: 1 }} />
           <Stack spacing={0.5}>
             {card.keyOutcomes.map((o, idx) => (
-              <Typography key={idx} variant="body2">  
+              <Typography
+                key={idx}
+                variant="body2"
+                sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}
+              >
                 • {o}
               </Typography>
             ))}
           </Stack>
-        </>
+        </Box>
       )}
-      </Box>
-    
+
       <Box sx={{ flexGrow: 1 }} />
 
       {/* CTA */}
@@ -475,21 +395,21 @@
         variant="contained"
         disabled={isCurrentPlan || access || isAlreadyPurchased || price === 0}
         sx={{
+          fontSize: { xs: '0.85rem', sm: '1rem' },
           bgcolor: isCurrentPlan ? 'success.main' : 'primary.main',
           '&:hover': {
             bgcolor: isCurrentPlan ? 'success.dark' : 'primary.dark',
           },
         }}
-        onClick={()=> navigate('/payment')}
+        onClick={() => navigate('/payment')}
       >
         {buttonLabel}
-      </Button> 
+      </Button>
     </Stack>
   );
+}
 
-  }
-
-  PricingCard.propTypes = {
-    card: PropTypes.object.isRequired,
-    sx: PropTypes.object,
-  };
+PricingCard.propTypes = {
+  card: PropTypes.object.isRequired,
+  sx: PropTypes.object,
+};
