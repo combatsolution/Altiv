@@ -1,7 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Tabs, Tab, Box, useMediaQuery, useTheme, CircularProgress } from "@mui/material";
-import axiosInstance from "src/utils/axios";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import {
+  Tabs,
+  Tab,
+  Box,
+  useMediaQuery,
+  useTheme,
+  CircularProgress,
+} from "@mui/material";
+import axiosInstance from 'src/utils/axios';
+import { useNavigate } from "react-router";
 
 const sections = [
   "Executive Summary",
