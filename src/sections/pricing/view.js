@@ -11,6 +11,7 @@ import axiosInstance from 'src/utils/axios';
 import { _pricingPlans } from 'src/_mock';
 import PricingCard from './pricing-card';
 
+
 // Category configuration
 const planCategories = [
   { label: 'Marketing', value: 1, type: 'MT' },
@@ -44,7 +45,7 @@ export default function PricingView() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState(0);
-   const [plansData, setPlansData] = useState([]);
+  const [plansData, setPlansData] = useState([]);
   const [heading, setHeading] = useState('');
   const [subHeading, setSubHeading] = useState('');
   // const [plansData, setCourses] = useState([]);
@@ -61,13 +62,13 @@ export default function PricingView() {
       const response = await axiosInstance.get(`/plans/plan-by-type/${categoryValue}`);
       if (response && response.data) {
         // setPlansData(response.data);
-         const finalPlansData = response?.data?.length > 0 ? response?.data?.filter((res) => !res?.isFreePlan) : [];
+        const finalPlansData = response?.data?.length > 0 ? response?.data?.filter((res) => !res?.isFreePlan) : [];
         setPlansData(finalPlansData);
       }
     } catch (error) {
       console.error('Error fetching plans:', error);
     }
-  }; 
+  };
 
 
   // Handle initial load and query parameter changes
@@ -97,6 +98,7 @@ export default function PricingView() {
   };
 
   return (
+
     <Container
       sx={{
         pt: { xs: 10, md: 3 },
@@ -104,6 +106,26 @@ export default function PricingView() {
         minHeight: 1,
       }}
     >
+
+      <Box sx={{
+        width: '100%',
+        height: '300px',
+        background: 'linear-gradient(90deg, #4B69E9 5%, #00A3FF 100%)',
+        display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            my:4,
+            textAlign:'center',
+      }} >
+        <Typography sx={{
+          color:'#fff',
+        }}>
+          <h1 >Accelerate Your AI Evolution </h1>
+          <h4 > Transform your career with cutting-edge AI programs designed for real-world impact.</h4>
+        </Typography>
+
+      </Box>
+
       {/* Buttons Above Headings */}
       <Stack
         direction="row"
@@ -119,10 +141,10 @@ export default function PricingView() {
             sx={{
               fontSize: '17px',
               px: 2,
-              py: 1,
+              py: 0.5,
               textTransform: 'none',
               backgroundColor: selectedCategory === category.value ? '#0040D8' : 'transparent',
-              color: selectedCategory === category.value ? '#fff' : '#0040D8',
+              color: selectedCategory === category.value ? '#fff' : '#94979cff',
               '&:hover': {
                 backgroundColor: selectedCategory === category.value ? '#0040D8' : '#e6e6e6',
               },
@@ -155,21 +177,21 @@ export default function PricingView() {
 
       {/* Pricing Cards */}
       <Box
-        sx={{display:'flex', justifyContent:'center', alignItems:'center'}}
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
         gap={{ xs: 3, md: 2 }}
         display="grid"
         gridTemplateColumns={{ xs: '1fr', md: 'repeat(3, 1fr)' }}
-        
+
       >
         {plansData.length > 0 ? (
-          plansData.map(( card, index) => (
+          plansData.map((card, index) => (
             <Paper
               key={card.id}
               elevation={2}
               sx={{
                 px: 1,
                 borderRadius: 2,
-                width:'30%',
+                width: '30%',
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
