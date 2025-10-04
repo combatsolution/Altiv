@@ -12,12 +12,17 @@ export default function AboutView() {
   return (
     <>
  
-   <AIMarketingBuilder/>
-   <Program/>
+    <AIMarketingBuilder/>
+
+    <Program/>
+
     <ListedInfo/>
-     <FAQSection/>
+
+    <FAQSection/>
+
     <ToolsMastery/>
-     <ListedJourney/>
+
+    <ListedJourney/>
 
 
     </>
