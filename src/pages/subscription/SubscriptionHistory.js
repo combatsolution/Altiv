@@ -3,14 +3,14 @@ import SubHeader from "src/components/subheader/subheader";
 import SubscriptionHistory from "src/sections/subscription/SubscriptionHistory";
 
 export default function Subscriptionpage()
-{
+{ const userStartedWith = sessionStorage.getItem("userStartedWith");
     return(
         <>
             <Helmet>
                 <title> Subscription</title>
             </Helmet>
-            <SubHeader subtitle="Subscription" />
+            <SubHeader subtitle="Subscription"   showUploadResume={userStartedWith}  />
             <SubscriptionHistory />
         </>
     )
-}
+}   

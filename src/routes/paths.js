@@ -23,6 +23,10 @@ const ROOTS = {
 export const paths = {
   SubscriptionSuccess: '/payment/success',
   subscription: '/subscription',
+  savejobs:'/savejobs',
+  appliedjobs:'/appliedjobs',
+  pricingdetail:'/pricing-detail',
+  aireadliness: '/ai-readiness-analysis',
 
   // footer
   Blogs: '/post',
@@ -38,7 +42,7 @@ export const paths = {
   fobo: '/fobo',
 
   // comingsoonPage:'/comingsoon-Page',
-  Analysis: `/Analysis`,
+  Analysis: `/analysis`,
   ResumeView: '/resume-view',
   Profile: '/Profile',
   comingSoon: '/coming-soon',

@@ -7,7 +7,7 @@ export default function FoboViewPage()
         <>
             <Helmet>
                 <title>Fobo</title>
-            </Helmet>
+            </Helmet  >
             <FoboView />
         </>
     )

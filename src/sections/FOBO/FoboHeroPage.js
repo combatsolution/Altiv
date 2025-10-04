@@ -98,10 +98,7 @@
       try {
         await axiosInstance.delete(`/resumes/${id}`);
         setExistingResumes((prev) => prev.filter((resume) => resume.id !== id));
-        if (selectedResumeId === id) {
-          setSelectedResumeId(null);
-          setSelectedFile(null);
-        };
+        if (selectedResumeId === id) setSelectedResumeId(null);
         trackEvent({
           category: 'Resume Deleted',
           action: 'resume deleted',
@@ -114,7 +111,8 @@
       }
     };
 
-    const handleContinue = () => {
+    const handleContinue = (Type) => {
+      sessionStorage.setItem("userStartedWith", Type);
       if (
         !selectedFile &&
         !selectedResumeId &&
@@ -159,7 +157,6 @@
       }
     };
 
-
     const handleUploadResume = async (file) => {
       try {
         setIsLoading(true);
@@ -170,6 +167,7 @@
         if (response.data) {
           enqueueSnackbar('Upload successful', { variant: 'success' });
           setSelectedResumeId(response?.data?.id);
+          sessionStorage.setItem('userStartedWith', 'resume');
           trackEvent({
             category: 'Resume Uploaded',
             action: 'Resume uploaded',
@@ -201,10 +199,6 @@
 
 
     const handleCloseModel = () => {
-      setSelectedResumeId(false);
-      setSelectedFile(null);
-      setError('');
-      setDocIsLoading(false);
       setOpen(false);
     }
 
@@ -229,7 +223,6 @@
             item
             xs={12}
             md={6}
-          
             order={{ xs: 2, md: 1 }}
             sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
           >
@@ -243,7 +236,6 @@
                   fontWeight="bold"
                   color="text.primary"
                   sx={{
-                    mt:0,
                     fontSize: { xs: '1rem', sm: '1.2rem', md: '1.5rem' },
                   }}
                 >
@@ -346,21 +338,21 @@
         </Grid>
 
         {/* Modal */}
-        <Modal open={open} onClose={handleCloseModel}  >
+        <Modal open={open} onClose={handleCloseModel} 
+        // disableScrollLock={false}
+        >
           <Box
             sx={{
-              width: { xs: '90%', sm: '80%', md: '450px' },
+              width: { xs: '90%', sm: '80%', md: '520px' },
               maxWidth: '100%',
               bgcolor: 'background.paper',
-              p: { xs: 2, sm: 3 },
+              p: { xs: 2, sm: 2 },
               boxShadow: 5,
               borderRadius: 2,
-              my: 3,
+              my: 4,
               mx: 'auto',
-              // maxHeight: { xs: '90vh', sm: '85vh' },
-              // overflowY: 'auto',
-              Height:'unset',
-             overflow: 'visible',
+              maxHeight: { xs: '95vh', sm: '89vh', },
+              overflowY: 'hidden',
               position: 'relative',
             }}
           >
@@ -372,7 +364,7 @@
               Magic happens many ways
             </Typography>
             <Typography variant="body2" mb={3}>
-              Upload a resume, select an existing one, or add LinkedIn URL
+            Upload a resume, select an existing one, or add LinkedIn URL
             </Typography>
 
             {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -382,10 +374,14 @@
             </Typography>
 
             {existingResumes.length > 0 && (
-              <List sx={{ maxHeight: 180, overflowY: 'auto', mb: 200, border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
+              <List sx={{ 
+                maxHeight: "100px", overflowY: 'auto', mb: 2,
+                 border: '1px solid', borderColor: 'divider', 
+                 borderRadius: 1 }}>
+
                 {existingResumes.map((r) => (
                   <React.Fragment key={r.id}>
-                    <ListItem 
+                    <ListItem
                       selected={selectedResumeId === r.id}
                       button
                       onClick={() => {
@@ -402,12 +398,13 @@
                       }
                       sx={{ py: 1 }}
                     >
-                         <ListItemText
-                      primary={<a href="#" style={{ textDecoration: 'none', color: 'inherit' }}>{r.fileDetails.fileName}</a>}
-                      secondary={r.uploadedAt}
-                      primaryTypographyProps={{ noWrap: true }}
-                      secondaryTypographyProps={{ noWrap: true }}
-                    />
+                      <ListItemText
+                        primary={<a href="#" style={{ textDecoration: 'none', color: 'inherit' }}>
+                          {r?.fileDetails?.fileName }</a>}
+                        secondary={r.uploadedAt}
+                        primaryTypographyProps={{ noWrap: true }}
+                        secondaryTypographyProps={{ noWrap: true }}
+                      />
                     </ListItem>
                     <Divider />
                   </React.Fragment>
@@ -416,12 +413,12 @@
             )}
 
             {selectedFile?.fileUrl ? (
-              <Box sx={{ px: 0, py: 0, border: '1px dashed', borderColor: 'divider', borderRadius: 2, mb: 2 }}>
+              <Box sx={{ px: 2, py: 2, border: '1px dashed', borderColor: 'divider', borderRadius: 2, mb: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                   <InsertDriveFileIcon sx={{ mr: 1 }} />
                   <Typography variant="body2" noWrap>
                     {selectedFile.fileName} ({(selectedFile.size / 1024).toFixed(1)} KB)
-                  </Typography> 
+                  </Typography>
                 </Box>
                 <Typography variant="body2">
                   <a href={selectedFile.fileUrl} target="_blank" rel="noopener noreferrer">
@@ -433,7 +430,6 @@
                   size="small"
                   sx={{ mt: 2 }}
                   onClick={() => {
-                    setSelectedResumeId(null);
                     setSelectedFile(null);
                     setDocIsLoading(false);
                   }}
@@ -443,7 +439,7 @@
               </Box>
             ) : (
               <Upload
-                sx={{ mb: 2,  }}
+                sx={{ mb: 2 }}
                 loading={!!docIsLoading}
                 placeholder="Drop or Select Resume"
                 accept={{
@@ -463,7 +459,7 @@
               placeholder="https://www.linkedin.com/in/yourprofile"
               value={linkedInUrl}
               onChange={(e) => setLinkedInUrl(e.target.value)}
-              sx={{ mb: 1}}
+              sx={{ mb: 2 }}
             />
 
             <Button
@@ -477,7 +473,7 @@
               }
               sx={{
                 bgcolor: indigo[500],
-                '&:hover': { bgcolor: indigo[700]   },
+                '&:hover': { bgcolor: indigo[700] },
                 borderRadius: 50,
                 py: 1,
                 textTransform: 'none',

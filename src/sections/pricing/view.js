@@ -9,7 +9,6 @@ import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import axiosInstance from 'src/utils/axios';
 import { _pricingPlans } from 'src/_mock';
-import axios from 'axios';
 import PricingCard from './pricing-card';
 
 // Category configuration
@@ -39,13 +38,6 @@ const categoryHeadings = {
     subtitle:
       'Accelerate your AI-Enhanced Product Evolution - Build and scale AI-powered products that deliver real value',
   },
-  
-  // 'Software Engineering': {
-  //   value: 3,
-  //   title: 'AI Software Engineering Excellence',   
-  //   subtitle:
-  //     'Accelerate your AI-Driven Software Evolution - Build scalable and efficient AI-powered applications',
-  // },
 };
 
 export default function PricingView() {
@@ -77,7 +69,6 @@ export default function PricingView() {
     }
   }; 
 
- 
 
   // Handle initial load and query parameter changes
   useEffect(() => {

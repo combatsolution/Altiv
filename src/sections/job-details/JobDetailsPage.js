@@ -29,9 +29,9 @@ import { useNavigate, useParams, } from 'react-router-dom';
 import axiosInstance from 'src/utils/axios';
 import { enqueueSnackbar } from 'notistack';
 import { isFriday } from 'date-fns';
-import axios from 'axios';
 
 
+  
 export default function JobDetailPage() {
   const theme = useTheme();
   const { job_id } = useParams();
@@ -46,16 +46,15 @@ export default function JobDetailPage() {
 
   const handlebookmark = async (e) => {
     e.stopPropagation();
+
     try {
-      const res = await axiosInstance.post(`jobs/save-job/${job_id}`)
-      if (res.success === 200) {
-        setbookmarked(true);
+      const res = await axiosInstance.post(`jobs/save-job/${job_id}`);
+      if (res.status === 200) {
+        setbookmarked((prev) => !prev); // toggle on/off
       }
-
     } catch (error) {
-      console.log('falied to save', error);
+      console.error('Failed to save Jobs', error)
     }
-
   };
 
   // const similarJobs = jobs.filter(j => j.id !== job.id);
@@ -71,14 +70,15 @@ export default function JobDetailPage() {
 
     const fetchJob = async () => {
       try {
-        const res = await axios.get(
-          `https://api.staging.altiv.ai/jobs/${job_id}`, // full URL
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const res = await axiosInstance.get(`/jobs/${job_id}`);
+          // `https://api.staging.altiv.ai/jobs/${job_id}`, // full URL
+          
+          // {
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   },
+          // }
+      
 
         console.log("API Response:", res);
 
@@ -183,13 +183,9 @@ export default function JobDetailPage() {
                                 },
                               }}>{job.company}</Typography>
                               <IconButton onClick={handlebookmark}>
-                                {bookmarked ? (
-                                  <BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />
-                                )
-                                  : (
-                                    <BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary', }} />
-                                  )
-                                } </IconButton>
+                                {bookmarked ? (<BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />)
+                                  :
+                                  (<BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />)} </IconButton>
                             </Grid>
 
                             <Grid container sx={{ display: "flex", flexDirection: "row", gap: 1 }} >
@@ -264,8 +260,6 @@ export default function JobDetailPage() {
                           </Grid>
                         </Box>
                       </Grid>
-
-
                     </Grid>
 
                     <Divider sx={{ my: 2 }} />
@@ -553,6 +547,7 @@ export default function JobDetailPage() {
               onClick={() => navigate(`/job-booster/${job_id}`)}
             >
               Boost my application
+              
             </Button>
           </CardActions>
         </Container>

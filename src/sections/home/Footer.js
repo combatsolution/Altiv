@@ -153,7 +153,6 @@ const Footer = () => {
             </Box>
           </Box>
         </Grid>
-
       </Grid>
     </Box>
   );

@@ -17,7 +17,7 @@
   import { useResponsive } from 'src/hooks/use-responsive';
   import { bgBlur } from 'src/theme/css';
   import { paths } from 'src/routes/paths';
-  import { useAuthContext } from 'src/auth/hooks';
+  import { useAuthContext } from 'src/auth/hooks';  
   import { varHover } from 'src/components/animate';
   import Altivlogo from 'src/images/Altivlogo.png';
   import { trackEvent } from 'src/utils/google-analytics';
@@ -146,17 +146,28 @@
                     Subscriptions
                   </Typography>
 
-
-                  <Typography
+                    <Typography
                     variant="body2"
                     sx={{
                       cursor: 'pointer',
                       fontSize: 15,
                       whiteSpace: 'nowrap',
                     }}
-                    onClick={() => navigate(paths.comingSoon)}
+                    onClick={() => navigate(paths.appliedjobs)}
                   >
-                    My Jobs
+                    Applied Jobs
+                  </Typography>
+
+                   <Typography
+                    variant="body2"
+                    sx={{
+                      cursor: 'pointer',
+                      fontSize: 15,
+                      whiteSpace: 'nowrap',
+                    }}
+                    onClick={() => navigate(paths.savejobs)}
+                  >
+                    Saved Jobs
                   </Typography>
 
 

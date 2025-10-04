@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Grid,
@@ -14,6 +13,8 @@ import {
 import ReactFlow, { Background, Handle, Position, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { m } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { paths } from 'src/routes/paths';
 import axiosInstance from 'src/utils/axios';
 import CareerCard from './CareerCard';
 
@@ -82,14 +83,13 @@ export default function CareerPathProjection({ isResume, job, experience }) {
   const [showReactFlow, setShowReactFlow] = useState(false);
   const [careerData, setCareerData] = useState(null);
   const [loading, setLoading] = useState(false);
+   const navigate = useNavigate();
   const [expandedLevels, setExpandedLevels] = useState({});
-  const navigate = useNavigate();
-
-  const goToJobFeed = () => {
-    navigate('/job-feed');   // or paths.jobFeed if you have a `paths` object
-  };
-
   // Show React Flow if job and experience are provided or if isResume is true
+
+  const des =sessionStorage.getItem('designation')? sessionStorage.getItem('designation') :"Software developer";
+  const exp =sessionStorage.getItem('experience') ? sessionStorage.getItem('experience') : "5";
+
   useEffect(() => {
     if (isResume || (job && experience)) {
       setShowReactFlow(true);
@@ -132,9 +132,8 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     };
   }, [showSwipeHint]);
 
-  const [jobTitle, setJobTitle] = useState(sessionStorage.getItem("designation"));
-  const [expYears, setExpYears] = useState(sessionStorage.getItem("experience"));
-  const [reusmeId, setResumeId] = useState(sessionStorage.getItem("resumeId"));
+  const [jobTitle, setJobTitle] = useState (des);
+  const [expYears, setExpYears] =  useState (exp);
 
   const [errors, setErrors] = useState({
     jobTitle: '',
@@ -149,7 +148,6 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     'Data Scientist',
   ];
   const [userStartedWith, setUserStartedWith] = useState(null);
-
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [selectedNodes, setSelectedNodes] = useState({
@@ -177,48 +175,43 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       return newCollapsed;
     });
   };
-
-  const storedJob = sessionStorage.getItem("designation");
-  const storedExp = sessionStorage.getItem("experience");
-  const storedResumeId = sessionStorage.getItem("resumeId");
-  const handleModify = useCallback(async (title, years, resumeId) => {
-    if (!resumeId) {
-      const newErrors = {
-        jobTitle: !title ? 'Please select a job title' : '',
-        expYears: !years ? 'Please select years of experience' : '',
-      };
-      setErrors(newErrors);
-
-      if (!newErrors.jobTitle && !newErrors.expYears) {
-        try {
-          setLoading(true);
-          const payload = {
-            designation: title,
-            experience: Number(years),
-          };
-
-          const res = await axiosInstance.post('/career-compass', payload);
-          const mapped = transformApiData(res.data?.data);
-          console.log("sasasa", res);
-          setCareerData(mapped);
-
-          setShowReactFlow(true);
-        } catch (err) {
-          console.error('Error fetching career compass:', err);
-        } finally {
-          setLoading(false);
-        }
-      }
-    } else {
+  useEffect(() => {
+    const fetchCareerData = async () => {
       try {
-        setLoading(true);
         const payload = {
-          resumeId: Number(resumeId)
+          designation: jobTitle,
+          experience: Number(expYears),
         };
 
         const res = await axiosInstance.post('/career-compass', payload);
         const mapped = transformApiData(res.data?.data);
-        console.log("sasasa", res);
+        setCareerData(mapped);
+      } catch (error) {
+        console.error('Failed to load career data', error);
+      }
+    };
+
+    if (jobTitle && expYears) {
+      fetchCareerData();
+    }
+  }, [jobTitle, expYears]);
+
+  const handleModify = useCallback(async () => {
+    const newErrors = {
+      jobTitle: !jobTitle ? 'Please select a job title' : '',
+      expYears: !expYears ? 'Please select years of experience' : '',
+    };
+    setErrors(newErrors);
+    if (!newErrors.jobTitle && !newErrors.expYears) {
+      try {
+        setLoading(true);
+        const payload = {
+          designation: jobTitle,
+          experience: Number(expYears),
+        };
+
+        const res = await axiosInstance.post('/career-compass', payload);
+        const mapped = transformApiData(res.data?.data);
         setCareerData(mapped);
 
         setShowReactFlow(true);
@@ -228,125 +221,109 @@ export default function CareerPathProjection({ isResume, job, experience }) {
         setLoading(false);
       }
     }
-  }, []); // dependencies used inside the function
 
-  // Build edges dynamically
+  }, [jobTitle, expYears]);
+
   useEffect(() => {
+    const storedJob = sessionStorage.getItem('designation');
+    const storedExp = sessionStorage.getItem('experience');
     if (storedJob && storedExp) {
       setJobTitle(storedJob);
       setExpYears(storedExp);
-      setResumeId(storedResumeId);
-      // Run modify logic once on mount
-      handleModify(storedJob, storedExp, storedResumeId);
-
-      sessionStorage.removeItem('designation');
-      sessionStorage.removeItem('experience');
-      sessionStorage.removeItem('resumeId');
-      // sessionStorage.removeItem('userStartedWith');
-
+      sessionStorage.removeItem("designation");
+      sessionStorage.removeItem("experience");
     }
-    
-    if (storedResumeId) {
-      setJobTitle(storedJob);
-      setExpYears(storedExp);
-      setResumeId(storedResumeId);
-      handleModify(storedJob, storedExp, storedResumeId);
+    handleModify();
+  }, [handleModify]);
 
-      sessionStorage.removeItem('designation');
-      sessionStorage.removeItem('experience');
-      sessionStorage.removeItem('resumeId');
-      // sessionStorage.removeItem('userStartedWith');
-    }
-  }, [handleModify, storedJob, storedExp, storedResumeId]);
+  const rebuildEdges = useCallback(
+    (selected) => {
+      const newEdges = [];
 
-  const rebuildEdges = useCallback((selected) => {
-    const newEdges = [
-      {
-        id: 'edge-label-current-next',
-        source: 'label-current',
-        target: 'label-next',
-        type: 'straight',
-        style: { stroke: '#E6EBF2', strokeWidth: 6 },
-      },
-      {
-        id: 'edge-label-next-exec',
-        source: 'label-next',
-        target: 'label-executive',
-        type: 'straight',
-        style: { stroke: '#E6EBF2', strokeWidth: 6 },
-      },
-    ];
+      const isActive = (sourceId, targetId) => {
+        if (selected.current === sourceId && selected.next === targetId) return true;
+        if (selected.next === sourceId && selected.executive === targetId) return true;
+        if (selected.executive === sourceId && selected.level3 === targetId) return true;
+        return false;
+      };
 
-    // Connect current node to its children
-    careerData?.current.children.forEach((childId) => {
-      console.log("=agasha->", careerData);
-      const isActive =
-        selected.next === childId || (selected.executive && careerData.executive.some((e) => e.parent === childId && selected.executive === e.id));
-
-      newEdges.push({
-        id: `edge-${careerData.current.id}-${childId}`,
-        source: careerData.current.id,
-        target: childId,
-        type: 'bezier',
-        style: {
-          stroke: isActive ? '#1976d2' : '#999',
-          strokeWidth: isActive ? 3 : 1,
-          opacity: isActive ? 1 : 0.6,
-        },
-      });
-    });
-
-    // Connect current to its children
-    careerData?.current.children.forEach((childId) => {
-      newEdges.push({
-        id: `edge-${careerData.current.id}-${childId}`,
-        source: careerData.current.id,
-        target: childId,
-        type: 'bezier',
-        style: {
-          stroke: selected.next === childId ? '#1976d2' : '#999',
-          strokeWidth: selected.next === childId ? 3 : 1,
-          opacity: selected.next === childId ? 1 : 0.6,
-        },
-      });
-    });
-
-    // Connect next nodes to parents
-    careerData?.next.forEach((node) => {
-      if (node.parent) {
+      // Connect labels
+      let prevLabel = 'label-current';
+      careerData?.levelKeys.forEach((_, index) => {
+        const nextLabel = `label-next-${index}`;
         newEdges.push({
-          id: `edge-${node.parent}-${node.id}`,
-          source: node.parent,
-          target: node.id,
-          type: 'bezier',
-          style: {
-            stroke: selected.next === node.id ? '#1976d2' : '#999',
-            strokeWidth: selected.next === node.id ? 3 : 1,
-            opacity: selected.next === node.id ? 1 : 0.6,
-          },
+          id: `edge-${prevLabel}-${nextLabel}`,
+          source: prevLabel,
+          target: nextLabel,
+          type: 'straight',
+          style: { stroke: '#E6EBF2', strokeWidth: 6 },
+        });
+        prevLabel = nextLabel;
+      });
+
+      if (careerData?.executive.length > 0) {
+        newEdges.push({
+          id: `edge-${prevLabel}-label-executive`,
+          source: prevLabel,
+          target: 'label-executive',
+          type: 'straight',
+          style: { stroke: '#E6EBF2', strokeWidth: 6 },
         });
       }
-    });
 
-    // Connect executive nodes to parents
-    careerData?.executive.forEach((execNode) => {
-      if (execNode.parent) {
+      // Connect current to its children
+      careerData?.current.children.forEach((childId) => {
         newEdges.push({
-          id: `edge-${execNode.parent}-${execNode.id}`,
-          source: execNode.parent,
-          target: execNode.id,
+          id: `edge-${careerData.current.id}-${childId}`,
+          source: careerData.current.id,
+          target: childId,
           type: 'bezier',
           style: {
-            stroke: selected.executive === execNode.id ? '#1976d2' : '#999',
-            strokeWidth: selected.executive === execNode.id ? 3 : 1,
-            opacity: selected.executive === execNode.id ? 1 : 0.6,
+            stroke: isActive(careerData.current.id, childId) ? '#1976d2' : '#999',
+            strokeWidth: isActive(careerData.current.id, childId) ? 3 : 1,
+            opacity: isActive(careerData.current.id, childId) ? 1 : 0.6,
           },
         });
-      }
-    });
+      });
 
-    setEdges(newEdges);
-  }, [careerData]);
+      // Connect next nodes to parents
+      careerData?.next.forEach((node) => {
+        if (node.parent) {
+          newEdges.push({
+            id: `edge-${node.parent}-${node.id}`,
+            source: node.parent,
+            target: node.id,
+            type: 'bezier',
+            style: {
+              stroke: isActive(node.parent, node.id) ? '#1976d2' : '#999',
+              strokeWidth: isActive(node.parent, node.id) ? 3 : 1,
+              opacity: isActive(node.parent, node.id) ? 1 : 0.6,
+            },
+          });
+        }
+      });
+
+      // Connect executive nodes to parents
+      careerData?.executive.forEach((execNode) => {
+        if (execNode.parent) {
+          newEdges.push({
+            id: `edge-${execNode.parent}-${execNode.id}`,
+            source: execNode.parent,
+            target: execNode.id,
+            type: 'bezier',
+            style: {
+              stroke: isActive(execNode.parent, execNode.id) ? '#1976d2' : '#999',
+              strokeWidth: isActive(execNode.parent, execNode.id) ? 3 : 1,
+              opacity: isActive(execNode.parent, execNode.id) ? 1 : 0.6,
+            },
+          });
+        }
+      });
+
+      setEdges(newEdges);
+    },
+    [careerData]
+  );
 
   // Check if a node should be visible based on its ancestor's expanded state
   const isNodeVisible = useCallback(
@@ -438,7 +415,6 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       return (
         <m.div
           style={{
-
             padding: 10,
             background: isActive ? theme.palette.primary.main : '#fff',
             color: isActive ? '#fff' : '#000',
@@ -469,14 +445,43 @@ export default function CareerPathProjection({ isResume, job, experience }) {
 
   // Generate all nodes
   const generateAllNodes = useCallback(() => {
+  console.log("dfskjhkjsdhg" );
     if (!careerData) return [];
+    const handleNodeClick = (id) => {
+      setSelectedNodes((prev) => {
+        const currentSelected = id;
+        const path = [];
+        const allNextAndExec = [...careerData.next, ...careerData.executive];
+console.log("dfsg", allNextAndExec )
+        while (currentSelected) {
+          path.unshift(currentSelected);
+          if (currentSelected === careerData.current.id) break;
+          console.log("AAAAAAA->",currentSelected);
+          console.log("BBBBBBB->",allNextAndExec);
+          // const node = allNextAndExec.find((n) => n.id === currentSelected);
+          // if (!node) break;
+          // currentSelected = node.parent;
+        }
 
-    const baseNodes = [
+        const updated = 
+        {
+          current: path[0] || null,
+          next: path[1] || null,
+          executive: path[2] || null,
+          level3: path[3] || null,
+        };
+
+        rebuildEdges(updated);
+        return updated;
+      });
+    };
+console.log("lkhlkhlaks",careerData);
+    const baseNodes = [ 
       {
         id: 'label-current',
         type: 'label',
         data: { label: 'Current Role' },
-        position: { x: 0, y: 0 },
+        position: { x: 15, y: 0 },
         draggable: false,
       },
       {
@@ -485,8 +490,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
         data: {
           ...careerData.current,
           isNew: false,
-          // onClick: (id) => handleNodeClick(id),
-          
+          onClick: (id) => handleNodeClick(id),
         },
         position: { x: isMdUp ? 150 : 80, y: 0 },
         sourcePosition: Position.Top,
@@ -523,7 +527,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       if (!depths[d]) depths[d] = [];
       depths[d].push(role);
     });
-
+console.log("dskdjsdsd->",depths);
     Object.keys(depths)
       .sort((a, b) => a - b)
       .forEach((d, dIndex) => {
@@ -535,9 +539,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
             data: {
               ...role,
               isNew: false,
-             
-              // onClick: (id) => handleNodeClick(id),
-
+              onClick: (id) => handleNodeClick(id),
             },
             position: {
               x: (isMdUp ? 150 : 80) + rIndex * (isMdUp ? 400 : 300),
@@ -555,9 +557,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       data: {
         ...child,
         isNew: false,
-        // onClick: (id) => handleNodeClick(id),
-        // onClick: () => goToJobFeed(),
-
+        onClick: (id) => handleNodeClick(id),
       },
       position: {
         x: (isMdUp ? 150 : 80) + index * (isMdUp ? 400 : 300),
@@ -569,7 +569,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
 
     const allNodes = [...baseNodes, ...nextNodes, ...executiveNodes];
     return allNodes.filter((node) => isNodeVisible(node.id));
-  }, [careerData, isMdUp, isNodeVisible, ]);
+  }, [careerData, isMdUp, isNodeVisible, rebuildEdges]);
 
   useEffect(() => {
     if (careerData) {
@@ -590,7 +590,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     setNodes(generatedNodes);
 
     rebuildEdges(selectedNodes);
-  }, [generateAllNodes, selectedNodes, rebuildEdges]);
+  }, [generateAllNodes, rebuildEdges, selectedNodes]);
 
   return (
     <Box sx={{ bgcolor: 'white', p: { xs: 1, sm: 2, md: 3 } }}>
@@ -689,7 +689,6 @@ export default function CareerPathProjection({ isResume, job, experience }) {
                     width={24}
                     height={24}
                   />
-                  {console.log("sdsddsdsdssd", expYears)}
                   <Box sx={{ width: '100%' }}>
                     <Select
                       fullWidth
@@ -749,7 +748,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
               <Grid item xs={12} sm="auto">
                 <Button
                   variant="outlined"
-                  onClick={() => handleModify(jobTitle, expYears)}
+                  onClick={handleModify}
                   disabled={loading}
                   sx={{
                     minWidth: '180px',
@@ -866,7 +865,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
               </Box>
             )}
             <Button
-              onClick={goToJobFeed}
+              onClick={() => navigate(paths.jobFeed)}
               size={isMdUp ? 'medium' : 'small'}
               sx={{
                 borderRadius: 5,

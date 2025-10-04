@@ -19,6 +19,7 @@
   src: local('CircularStd'), url('CircularStd-Bold.otf') format('opentype'); */
 /* } */
 
+
 @font-face {
   font-family: 'Inter';
   font-style: normal;
@@ -54,7 +55,7 @@
 @font-face {
   font-family: 'Roboto-Bold';
   font-style: normal;
-  font-weight: 700;
+  font-weight: 400;
   font-display: swap;
   src: local('Roboto-Bold'), url('Roboto-Bold.ttf') format('opentype');
 }
