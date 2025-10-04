@@ -5,14 +5,15 @@ import PropTypes from "prop-types";
 
 export default function AnalysisCard({ title, badge, evidence, gap }) {
   const badgeStyles = {
-    HIGH: { bg: "#e0f2f1", color: "#00796b" },
+    HIGH:   { bg: "#e0f2f1", color: "#00796b" },
     MEDIUM: { bg: "#fff3e0", color: "#ef6c00" },
-    LOW: { bg: "#fce4ec", color: "#c2185b" },
+    LOW:    { bg: "#fce4ec", color: "#c2185b" },
   };
 
   return (
     <Card
       sx={{
+       
         borderRadius: 2,
         boxShadow: 2,
         p: 1,
@@ -21,7 +22,8 @@ export default function AnalysisCard({ title, badge, evidence, gap }) {
     >
       <CardContent>
         {/* Title + Badge */}
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box display="flex"  justifyContent="space-between" alignItems="center"
+      >
           <Typography
             variant="subtitle1"
             sx={{ fontWeight: "bold", color: "#1976d2" }}

@@ -267,105 +267,160 @@ export default function PricingCard({ card, sx, ...other }) {
     fetchPlans();
   }, []);
 
-  const { id, courses = {}, price, paymentType, recurringPeriod, access, features } = card;
+  // ✅ Destructure card safely
+  const {
+    id,
+    courses: {
+      courseName,
+      heading,
+      description,
+      features = [],
+      keyOutcomes = [],
+    } = {},
+    price,
+    paymentType,
+    recurringPeriod,
+    access,
+  } = card;
 
   const isCurrentPlan = activePlan === id;
-  const isAlreadyPurchased = courseData.includes(courses?.courseName);
+  const isAlreadyPurchased = courseData.includes(courseName);
 
   let buttonLabel = 'Pay Now';
   if (isCurrentPlan) buttonLabel = 'Current Plan';
-  else if (access) buttonLabel = 'Free';
+  else if (access || price === 0) buttonLabel = 'Free';
   else if (isAlreadyPurchased) buttonLabel = 'Already Purchased';
-  else if (price === 0) buttonLabel = 'Free';
-
   return (
     <Stack
       spacing={{ xs: 2, sm: 3 }}
       sx={{
+        position: 'relative',
         p: { xs: 2, sm: 3, md: 4 },
         borderRadius: 2,
         boxShadow: 3,
         bgcolor: 'background.paper',
-        position: 'relative',
         width: '100%',
         maxWidth: { xs: '100%', sm: 380, md: 420 },
         minHeight: { xs: 'auto', sm: 420 },
         textAlign: { xs: 'center', sm: 'left' },
+        overflow: 'hidden',
         ...sx,
       }}
       {...other}
     >
-      {/* Price pill */}
+      {/* 🔵 Gradient background only at the top */}
       <Box
         sx={{
           position: 'absolute',
-          top: { xs: 8, sm: 16 },
-          right: { xs: 8, sm: 16 },
-          px: { xs: 1, sm: 1.5 },
-          py: 0.5,
-          borderRadius: '24px',
-          bgcolor: 'success.main',
-          color: 'common.white',
-          fontWeight: 600,
-          fontSize: { xs: 12, sm: 14 },
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '30%', // adjust height as needed
+          background: 'linear-gradient(90deg, #4B69E9 5%, #00A3FF 100%)',
+
+          zIndex: 0,
         }}
-      >
-        {access ? 'Free' : `₹${price}${paymentType === 'monthly' ? '/mo' : ''}`}
+      />
+
+      {/* 🔲 Foreground content */}
+      <Box sx={{ position: 'relative', zIndex: 1 }}>
+        {/* Price pill */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: { xs: 8, sm: 2, },
+            right: { xs: 8, sm: 2, md: 2 },
+            px: { xs: 1, sm: 2 },
+            py: 0.5,
+            borderRadius: '24px',
+            bgcolor: 'success.main',
+            color: 'common.white',
+            fontWeight: 600,
+            fontSize: { xs: 12, sm: 14 },
+          }}
+        >
+          {access ? 'Free' : `₹${price}${paymentType === 'monthly' ? '/mo' : ''}`}
+        </Box>
+
+        {/* Title + tagline */}
+        <Stack
+          spacing={0.5}
+          alignItems={{ xs: 'center', sm: 'flex-start' }}
+          sx={{ mb: 1, mt: 1 }}
+        >
+          {heading && (
+            <Typography variant="subtitle2" color="common.white">
+              {heading}
+            </Typography>
+          )}
+          <Typography
+            variant="h6"
+            fontWeight={700}
+            color="common.white"
+            sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}
+          >
+            {courseName}
+          </Typography>
+
+        </Stack>
+
+        {/* Description */}
+        {description && (
+          <Typography
+            variant="body2"
+            color="common.white"
+            sx={{
+              fontSize: { xs: '0.85rem', sm: '0.9rem' },
+              maxWidth: '90%',
+
+            }}
+          >
+            {description}
+          </Typography>
+        )}
       </Box>
 
-      {/* Title & tagline */}
-      <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start' }}>
-        <Typography
-          variant="h6"
-          fontWeight={700}
-          sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}
-        >
-          {courses?.courseName}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {card.tagline || 'AI Marketing Builder'}
-        </Typography>
-      </Stack>
+      {/* Add space after the gradient section */}
+      <Box sx={{ mt: { xs: 6, sm: 8 } }} />
 
-      {/* Description */}
-      {card.description && (
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}
-        >
-          {card.description}
-        </Typography>
-      )}
-
-      <Divider />
+      <Divider sx={{ my: 2 }} />
 
       {/* Features */}
-      <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start' }}>
-        {(features ?? []).map((feature, i) => (
-          <Stack
-            key={i}
-            direction="row"
-            spacing={1}
-            alignItems="center"
-            justifyContent={{ xs: 'center', sm: 'flex-start' }}
-          >
-            <Iconify icon="eva:checkmark-fill" width={18} sx={{ color: 'success.main' }} />
-            <Typography variant="body2" sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}>
-              {feature}
-            </Typography>
-          </Stack>
-        ))}
-      </Stack>
+      {features.length > 0 && (
+        <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start' }}>
+          {features.map((feature, i) => (
+            <Stack
+              key={i}
+              direction="row"
+              spacing={1}
+              alignItems="center"
+              justifyContent={{ xs: 'center', sm: 'flex-start' }}
+            >
+              <Iconify
+                icon="eva:checkmark-fill"
+                width={18}
+                sx={{ color: 'success.main' }}
+              />
+              <Typography
+                variant="body2"
+                sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}
+              >
+                {feature}
+              </Typography>
+            </Stack>
+          ))}
+        </Stack>
+      )}
 
       {/* Key Outcomes */}
-      {card.keyOutcomes?.length > 0 && (
+      {keyOutcomes.length > 0 && (
         <Box
           sx={{
             width: '100%',
             bgcolor: 'grey.200',
             p: { xs: 1.5, sm: 2 },
             borderRadius: 1,
+            mt: 2,
           }}
         >
           <Typography variant="subtitle2" fontWeight={600} color="black">
@@ -373,7 +428,7 @@ export default function PricingCard({ card, sx, ...other }) {
           </Typography>
           <Divider sx={{ my: 1 }} />
           <Stack spacing={0.5}>
-            {card.keyOutcomes.map((o, idx) => (
+            {keyOutcomes.map((o, idx) => (
               <Typography
                 key={idx}
                 variant="body2"
@@ -388,7 +443,7 @@ export default function PricingCard({ card, sx, ...other }) {
 
       <Box sx={{ flexGrow: 1 }} />
 
-      {/* CTA */}
+      {/* CTA Button */}
       <Button
         fullWidth
         size="large"
@@ -400,6 +455,7 @@ export default function PricingCard({ card, sx, ...other }) {
           '&:hover': {
             bgcolor: isCurrentPlan ? 'success.dark' : 'primary.dark',
           },
+          mt: 2,
         }}
         onClick={() => navigate('/payment')}
       >
@@ -407,6 +463,8 @@ export default function PricingCard({ card, sx, ...other }) {
       </Button>
     </Stack>
   );
+
+
 }
 
 PricingCard.propTypes = {

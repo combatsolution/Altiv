@@ -6,6 +6,7 @@ import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import { m } from "framer-motion";
 
+
 // Motion wrapper for Paper
 const MotionPaper = m(Paper);
 const handleSectionChange = "Executive Summary"; // Placeholder for section change handler
@@ -43,7 +44,7 @@ const metrics = [
 
 export default function AIReadinessDashboard() {
   return (
-    <Box sx={{ bgcolor: "#f4f7fb", minHeight: "400px", 
+    <Box sx={{ bgcolor: "#f4f7fb", minHeight: "370px", 
     my: 5, mx:'auto', maxWidth: { xs: '100%', md: '1330px', lg: '1350px' }   }}>
       {/* Header */}
       <Box
@@ -146,7 +147,7 @@ export default function AIReadinessDashboard() {
                   alignItems: "center",
                   justifyContent: "center",
                   p: 2,
-                  mt: 2,
+                  
                 }}
               >
                 {/* Icon */}
@@ -199,7 +200,7 @@ export default function AIReadinessDashboard() {
       </Container>
 
 
-      {/* <DashboardTabs onSectionChange={handleSectionChange} /> */}
+    
     </Box>
   );
 }

@@ -1,7 +1,9 @@
 import React from "react";
 import { Grid, Box, Typography, Button } from "@mui/material";
+import Divider from '@mui/material/Divider';
 import TwitterIcon from "@mui/icons-material/Twitter";
 import AnalysisCard from "./AnalysisCard";
+
 
 const analysisData = [
   {
@@ -49,13 +51,25 @@ const analysisData = [
 ];
 
 export default function CurrentStateAnalysis() {
+
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{
+      p: 3, mx: "auto",
+      maxWidth: { xs: '100%', md: '400px', lg: '1200px' },
+      width: '100%',
+    }}>
       {/* Header */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6" sx={{ fontWeight: "bold", color: "#1976d2" }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}
+        sx={{
+          my: 3,
+          borderBottom: (theme) => `2px solid ${theme.palette.grey[300]}`, // ✅ line below
+        }}>
+        <Typography variant="h4" sx={{
+          fontWeight: "bold", color: "#1976d2"
+        }}>
           Current State Analysis
         </Typography>
+
         <Button
           size="small"
           variant="contained"
@@ -68,6 +82,7 @@ export default function CurrentStateAnalysis() {
         >
           Tweet
         </Button>
+
       </Box>
 
       {/* Grid of Cards */}
