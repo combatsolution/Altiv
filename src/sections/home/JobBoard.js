@@ -16,6 +16,7 @@ import { useSnackbar } from 'notistack'; // Make sure this is imported
 import axiosInstance from 'src/utils/axios';
 import { paths } from "src/routes/paths";
 import { useAuthContext } from "src/auth/hooks";
+import { trackEvent } from 'src/utils/google-analytics';
 
 const JobBoard = () => {
   const navigate = useNavigate();
@@ -102,17 +103,7 @@ const JobBoard = () => {
     fetchJobs();
   }, [user, enqueueSnackbar]);
 
-  // const handleApply = (job) => {
-  //   if (job.redirectUrl) {
-  //     // Navigate to job details page
-  //     navigate(`${paths.jobDetails}/${job.id}`);
-  //   } else {
-  //      // If job has a redirect URL, open it
-  //     window.open(job.redirectUrl, '_blank');
-  //   }
-  // };
 
-  // Pagination handlers
 
   const handleShowMore = () => {
     setVisibleJobsCount(prev => Math.min(prev + 5, jobs.length));
@@ -167,7 +158,15 @@ const JobBoard = () => {
         </Typography>
         <Button
           variant="outlined"
-          onClick={() => navigate(paths.auth.jwt.login)}
+          onClick={() => {
+               trackEvent({
+              category: 'CTA clicked',
+              action: 'button clicked',
+              label: 'Login to view jobs',
+              value: 'Navigate to login',
+            });
+
+            navigate(paths.auth.jwt.login)}}
           sx={{ borderRadius: 999, px: 4, mt: 2, color: 'primary.main', border: '2px solid primary.main' }}
         >
           Login
@@ -302,7 +301,16 @@ const JobBoard = () => {
 
             <Box mt={2} textAlign="center">
               <Button
-                onClick={() => navigate(`${'/'}?retry=res`)}
+                onClick={() =>{
+                  
+                  trackEvent({
+                    category: 'CTA clicked',
+                    action: 'button clicked',
+                    label: 'Upload Resume',
+                    value: '',
+                  });
+
+                  navigate(`${'/'}?retry=res`)}}
 
                 variant="outlined"
                 sx={{
@@ -441,7 +449,14 @@ const JobBoard = () => {
                     <Box textAlign={{ xs: 'left', sm: 'right' }} mt={2}>
 
                       <Button
-                        onClick={() => navigate(`${paths.jobDetails}/${job.id}`)}   // 👈 use job.id here
+                        onClick={() =>{ 
+                          trackEvent({
+                        category: 'CTA clicked',
+                        action: 'button clicked',
+                        label: `Apply for ${job.title}`,
+                        value: '',
+                      });
+                          navigate(`${paths.jobDetails}/${job.id}`)}}   // 👈 use job.id here
                         variant="contained"
                         sx={{
                           borderRadius: 999,
@@ -466,7 +481,16 @@ const JobBoard = () => {
               <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
 
                 <Button
-                  onClick={() => navigate('/job-Feed')}
+                  onClick={() => {
+
+                    trackEvent({
+                      category: 'CTA clicked',
+                      action: 'button clicked',
+                      label: 'Show More Jobs Click',
+                      value: '',
+                    });
+                    navigate('/job-Feed')
+                  }}
                   variant="outlined"
                   sx={{
                     borderRadius: 999,

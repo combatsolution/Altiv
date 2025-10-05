@@ -1,10 +1,19 @@
 import React from 'react';
 import { Box, Container, Typography, Divider, useMediaQuery, useTheme } from '@mui/material';
 import Link from '@mui/material/Link';
+import { trackEvent } from 'src/utils/google-analytics';
 
 export default function TermsAndConditionsPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const handleEmailClick = () => {
+    trackEvent({
+      category: 'Email Click',
+      action: 'Clicked',
+      label: '@altlegaliv.ai',
+      value:'',
+    });
+  };
 
   const sections = [
     {
@@ -90,8 +99,11 @@ export default function TermsAndConditionsPage() {
       content: [
         <>
           Questions? Contact us at{' '}
-          <Link href="mailto:legal@altiv.ai" color="primary" underline="hover">
-            legal@altiv.ai
+          <Link href="mailto:legal@altiv.ai" 
+         onClick={handleEmailClick} // ✅ Track email click
+
+          color="primary" underline="hover">
+            @altlegaliv.ai
           </Link>
           .
         </>,
@@ -130,6 +142,7 @@ export default function TermsAndConditionsPage() {
           <Typography variant="h6" fontWeight="bold" gutterBottom>
             {section.title}
           </Typography>
+
           {section.content.map((point, idx) => (
             <Typography key={idx} variant="body1" color="text.secondary" sx={{ mb: 1 }}>
               • {typeof point === 'string' ? point : point}

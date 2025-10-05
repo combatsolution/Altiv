@@ -36,6 +36,7 @@ import {
 } from '@mui/icons-material';
 import { m } from 'framer-motion';
 import { useNavigate } from 'react-router';
+import { trackEvent } from 'src/utils/google-analytics';
 
 const MotionBox = m(Box);
 const MotionGrid = m(Grid);
@@ -78,17 +79,43 @@ export default function AboutUsPage() {
   const theme = useTheme();
   const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  
+  // ✅ Track section visibility (optional enhancement)
+  const handleSectionView = (section) => {
+    trackEvent({
+      category: 'Section View',
+      action: 'Viewed',
+      label: "section",
+      Value:'',
+    });
+  };
+
+  // ✅ Track CTA clicks
+  const handleCTAClick = () => {
+    trackEvent({
+      category: 'CTA Click',
+      action: 'Button Clicked',
+      label: 'Start Your AI-Ready Journey',
+      value: '',
+    });
+    navigate('/');
+  };
+
+  // ✅ Track card hover or click
+  const handleCardInteraction = (title) => {
+    trackEvent({
+      category: 'Card Interaction',
+      action: 'Clicked',
+      label: title,
+      value:'',
+    });
+  };
 
   return (
     <Container maxWidth="lg" sx={{ py: 8 }}>
-      <MotionBox
-        textAlign="center"
-        mb={8}
-        variants={fadeIn}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-      >
+    <MotionBox textAlign="center" mb={8} variants={fadeInUp} initial="hidden" whileInView="visible"
+        viewport={{ once: true, amount: 0.5 }} 
+        onViewportEnter={() => handleSectionView('About Header')}>
         <Chip
           label="AI Career Intelligence"
           color="primary"
@@ -248,6 +275,7 @@ export default function AboutUsPage() {
                   p: 3,
                   textAlign: 'center',
                 }}
+                 onClick={() => handleCardInteraction(item.title)} // ✅ track click
               >
                 <MotionBox
                   variants={iconVariants}
@@ -297,7 +325,7 @@ export default function AboutUsPage() {
         </Typography>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
           <Button
-            onClick={() => navigate('/')}
+            onClick={handleCTAClick} // ✅ tracked click
             variant="contained"
             color="primary"
             size="large"

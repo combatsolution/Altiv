@@ -369,7 +369,7 @@
 // export default TestimonialSection;
 
 
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -382,25 +382,24 @@ import {
 } from '@mui/material';
 import Carousel, { useCarousel } from 'src/components/carousel';
 import axiosInstance from 'src/utils/axios'; // ✅ Import axios instance
-
-
+import { trackEvent } from 'src/utils/google-analytics';
 
 function TestimonialSection() {
   const [blogs, setBlogs] = useState([]);
   const [index, setIndex] = useState(0);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-const visibleBlogs = blogs.slice(0, 3);
+  const visibleBlogs = blogs.slice(0, 3);
 
-const fallbackImages = [
-  'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600',  // tech circuit board
-  'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=600',  // coding / laptop screen
-  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600',  // developer working
-  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&w=800&h=600',  // same-theme alternate
-];
+  const fallbackImages = [
+    'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600',  // tech circuit board
+    'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=600',  // coding / laptop screen
+    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600',  // developer working
+    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&w=800&h=600',  // same-theme alternate
+  ];
 
-const getRandomImage = () =>
-  fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
+  const getRandomImage = () =>
+    fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
 
   // ✅ Fetch blogs from API
   useEffect(() => {
@@ -445,6 +444,13 @@ const getRandomImage = () =>
       const newIndex = (prev + 1) % visibleBlogs.length;
       goToIndex(thumbCarousel.carouselRef, newIndex);
       goToIndex(rightCarousel.carouselRef, newIndex);
+      trackEvent({
+        category: 'Testimonial Carousel',
+        action: 'Next Button Click',
+        label: `Next Button Click`,
+        value: "",
+      });
+
       return newIndex;
     });
   };
@@ -497,7 +503,7 @@ const getRandomImage = () =>
                 <Box
                   component="img"
                   // src={item.coverUrl}
-                  src={getRandomImage() ||item.coverUrl  }
+                  src={getRandomImage() || item.coverUrl}
                   alt={item.title}
                   sx={{
                     width: '100%',
@@ -533,7 +539,7 @@ const getRandomImage = () =>
                 >
                   <Box
                     component="img"
-                   src={getRandomImage() || t.coverUrl  }
+                    src={getRandomImage() || t.coverUrl}
                     alt={t.name}
                     sx={{
                       width: "60px",
@@ -551,21 +557,21 @@ const getRandomImage = () =>
                       {item.tags}
                     </Typography>
 
-                     {/* Date */}
-                <Typography
-                  sx={{
-                    width: '150px',
-                    fontSize: 14,
-                    color: 'text.secondary',
-                    fontFamily: 'Inter, sans-serif',
-                  }}
-                >
-                  {new Date(item.createdAt).toLocaleDateString('en-US', {
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })}
-                </Typography>
+                    {/* Date */}
+                    <Typography
+                      sx={{
+                        width: '150px',
+                        fontSize: 14,
+                        color: 'text.secondary',
+                        fontFamily: 'Inter, sans-serif',
+                      }}
+                    >
+                      {new Date(item.createdAt).toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                    </Typography>
                   </Grid>
                 </Grid>
 
@@ -583,7 +589,7 @@ const getRandomImage = () =>
                   {item.description}
                 </Typography>
 
-                 <Box mt={2}>
+                <Box mt={2}>
                   <Link
                     href={`/post/${t.slug}`}
                     underline="hover"
@@ -629,7 +635,7 @@ const getRandomImage = () =>
               <Box
                 component="img"
                 // src={t.coverUrl}
-                src={getRandomImage() || t.coverUrl  }
+                src={getRandomImage() || t.coverUrl}
                 alt="Main"
                 sx={{
                   width: 'auto',
@@ -691,6 +697,15 @@ const getRandomImage = () =>
                       display: 'inline-flex',
                       alignItems: 'center',
                     }}
+
+                    onClick={() =>
+                      trackEvent({
+                        category: 'Blog Interaction',
+                        action: 'Read More Click',
+                        label: 'ReadMore button Clicked',
+                        value: '',
+                      })
+                    }
                   >
                     Read more{' '}
                     <Box component="span" ml={1}>
@@ -708,14 +723,21 @@ const getRandomImage = () =>
                   <Box
                     key={i}
                     component="img"
-                    src={getRandomImage() ||item.coverUrl  }
+                    src={getRandomImage() || item.coverUrl}
                     alt={`Blog ${i + 1}`}
                     onClick={() => {
                       setIndex(i);
                       goToIndex(thumbCarousel.carouselRef, i);
-                      goToIndex(rightCarousel.carouselRef, i);  
+                      goToIndex(rightCarousel.carouselRef, i);
+                      trackEvent({
+                        category: 'Testimonial Carousel',
+                        action: 'Thumbnail Click',
+                        label: visibleBlogs[i]?.title || 'Unknown',
+                        value: "",
+                      });
+
                     }}
-                    sx={{ width: 'auto', height: 393, pl:0.5, cursor: 'pointer', objectFit: 'cover' }}
+                    sx={{ width: 'auto', height: 393, pl: 0.5, cursor: 'pointer', objectFit: 'cover' }}
                   />
                 ))}
               </Carousel>

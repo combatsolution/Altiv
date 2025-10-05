@@ -4,6 +4,8 @@ import jobFeedImage from 'src/images/smartjob.png';
 import SmartJoblogo from 'src/images/smartjoblogo.png';
 import { useNavigate } from 'react-router-dom';
 import { paths } from 'src/routes/paths';
+import { trackEvent } from 'src/utils/google-analytics';
+
 
 function SmartJobFeed() {
   const navigate = useNavigate();
@@ -101,13 +103,21 @@ function SmartJobFeed() {
             <Box pt={2} display="flex" justifyContent={{ xs: 'center', md: 'flex-start' }}>
               <Button
                 variant="contained"
-                onClick={() => navigate(paths.jobFeed)}
+                onClick={() => {
+                  trackEvent({
+                    category: 'Smart Job Feed',
+                    action: 'Access Personal Matches Click',
+                    label: 'Access Personal Matches Button',
+                    value: '',
+                  });
+                  navigate(paths.jobFeed)
+                }}
                 sx={{
                   width: {
                     xs: '360px',
                   },
                   bgcolor: 'primary.main',
-                   color: '#fff',
+                  color: '#fff',
                   borderRadius: '999px',
                   px: { xs: 3, sm: 4 },
                   py: { xs: 1, sm: 1.5 },
@@ -115,7 +125,7 @@ function SmartJobFeed() {
                   ml: { xs: -1, sm: 2 },
                   '&:hover': { bgcolor: 'primary.dark' },
                 }}
-                
+
               >
                 Access Personal Matches
               </Button>

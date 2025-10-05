@@ -12,7 +12,8 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 // theme
 import { bgGradient } from 'src/theme/css';
-import { MotionContainer, varFade } from 'src/components/animate';
+import { MotionContainer, varFade } from 'src/components/animate';  
+import { trackEvent } from 'src/utils/google-analytics';
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +42,26 @@ const CONTACT_SECTIONS = [
 
 export default function ContactHero() {
   const theme = useTheme();
+
+    const handleSocialClick = (platform) => {
+    trackEvent({
+      category: 'Social Click',
+      action: 'Clicked',
+      label: platform,
+      value:'',
+    });
+  };
+
+  // ✅ Track email click
+  const handleEmailClick = () => {
+    trackEvent({
+      category: 'Email Click',
+      action: 'Clicked',
+      label: 'hello@altiv.ai',
+      value:''
+    });
+  };
+
 
   return (
     <Box
@@ -102,7 +123,7 @@ export default function ContactHero() {
                 mt: 3,
                 px: { xs: 2, md: 0 },
                 textAlign: { xs: 'center', md: 'left' },
-                maxWidth: { md: 700 },
+                maxWidth: { md: 700 },  
                 mx: { xs: 'auto', md: 0 },
               }}
             >
@@ -165,6 +186,7 @@ export default function ContactHero() {
                   variant="body2"
                   component="a"
                   href="mailto:hello@altiv.ai"
+                    onClick={handleEmailClick} // ✅ Track email click
                   sx={{
                     mt: 1,
                     color: 'common.white',
@@ -206,6 +228,7 @@ export default function ContactHero() {
                         href={item.href}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() => handleSocialClick(item.name)} 
                         sx={{
                           display: 'flex',
                           alignItems: 'center',

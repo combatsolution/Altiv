@@ -2,7 +2,7 @@
 import ReactGA from 'react-ga4';
 
 export const initGA = () => {
-  ReactGA.initialize('G-KD9BB3N9E5');
+  ReactGA.initialize('G-ED24P8B9ZD');
 };
 
 export const trackEvent = ({ category, action, label, value }) => {

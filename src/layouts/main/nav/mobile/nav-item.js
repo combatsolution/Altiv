@@ -17,7 +17,7 @@ import { ListItem } from './styles';
 export default function NavItem({ item, open, active, externalLink, ...other }) {
   const { title, path, icon, children } = item;
 
-  const handleNavClick = () => {
+  const handleNavClick = () => {  
     trackEvent({
       category: 'Navigation',
       action: 'Link Click',

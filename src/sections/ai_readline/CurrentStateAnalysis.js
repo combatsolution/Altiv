@@ -2,7 +2,7 @@ import React from "react";
 import { Grid, Box, Typography, Button } from "@mui/material";
 import Divider from '@mui/material/Divider';
 import TwitterIcon from "@mui/icons-material/Twitter";
-import AnalysisCard from "./AnalysisCard";
+import AnalysisCard from "./analysiscard";
 
 
 const analysisData = [
@@ -50,8 +50,8 @@ const analysisData = [
   },
 ];
 
-export default function CurrentStateAnalysis() {
-
+export default function CurrentStateAnalysis({data}) {
+console.log("jsondgdh", JSON.stringify(data));
   return (
     <Box sx={{
       p: 3, mx: "auto",

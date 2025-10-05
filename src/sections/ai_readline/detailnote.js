@@ -53,7 +53,7 @@ const successMetrics = [
   { head: "Revenue Impact", text: "15% increase in strategic partnerships" },
 ];
 
-export default function QuickStartGuide() {
+export default function DetailNotes() {
   return (
     <Box sx={{ p: 3, mx: "auto", maxWidth: { xs: "100%", md: "1200px" } }}>
       {/* Header */}
@@ -68,9 +68,10 @@ export default function QuickStartGuide() {
         }}
       >
         <Typography variant="h4" sx={{ fontWeight: "bold", color: "#1e40af" }}>
-          4-Week Quick Start Guide
+       Detailed Analysis Notes
+
         </Typography>
-        <Button
+        <Button 
           size="small"
           variant="contained"
           startIcon={<ShareIcon />}

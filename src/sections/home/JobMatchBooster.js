@@ -4,6 +4,7 @@ import boosterImage from "src/images/jobmatch.png";
 import Jobmatchlogo from "src/images/jobmatchlogo.png";
 import {useNavigate} from 'react-router-dom';
 import { paths } from "src/routes/paths";
+import { trackEvent } from 'src/utils/google-analytics';
 
 function JobMatchBooster() {
   const navigate = useNavigate();
@@ -142,7 +143,15 @@ function JobMatchBooster() {
             <Box pt={1} textAlign={{ xs: "center", md: "left" }}>
               <Button
                 variant="contained"
-                onClick={() => navigate(paths.jobFeed)}
+                onClick={() =>{
+                  
+                  trackEvent({
+      category: 'JobMatchBooster',
+      action: 'Boost My Application Click',
+      label: 'Boost My Application Button',
+      value:'',
+    });
+navigate(paths.jobFeed)}}
                 sx={{
                   width:{
                   xs:'360px'},  

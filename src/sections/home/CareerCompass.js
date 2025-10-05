@@ -4,9 +4,11 @@ import TimerImage from 'src/Fogoimages/timerlogo.webp';
 import demoImage from 'src/images/human.png';
 import { useNavigate } from 'react-router-dom';
 import { paths } from 'src/routes/paths';
+import { trackEvent } from 'src/utils/google-analytics';
 
 function CareerCompass() {
   const navigate = useNavigate();
+
 
   return (
     <Box
@@ -72,9 +74,9 @@ function CareerCompass() {
                   },
                   lineHeight: '30px', // or '64px' if specific line-height is needed
                   letterSpacing: '1%',
-                   display: 'flex', // alignItems: 'center',
+                  display: 'flex', // alignItems: 'center',
                   justifyContent: { xs: 'left', md: 'flex-start' },
-                  mx:{xs:1, md:0},
+                  mx: { xs: 1, md: 0 },
                   color: '#0040D8',
                 }}
               >
@@ -91,8 +93,8 @@ function CareerCompass() {
                 lineHeight: 'normal', // or '64px' if specific line-height is needed
                 letterSpacing: '0.64px',
                 justifyContent: { xs: 'left', md: 'flex-start' },
-                mx:{xs:1, md:0},
-              
+                mx: { xs: 1, md: 0 },
+
                 color: '#090808',
                 mb: '0px', // mimics paragraph spacing
                 textAlign: 'left',
@@ -114,7 +116,7 @@ function CareerCompass() {
                 lineHeight: 1.6,
                 color: 'text.secondary',
                 textAlign: 'left',
-                mx:{xs:1, md:0},
+                mx: { xs: 1, md: 0 },
               }}
             >
               Discover where you stand and where you could go next. Get personalized career
@@ -132,7 +134,15 @@ function CareerCompass() {
             >
               <Button
                 variant="contained"
-                onClick={() => navigate(`${"/"}?retry=resume`)}
+                onClick={() => {
+                  trackEvent({
+                    category: 'Career Compass',
+                    action: 'Analyze Resume Click',
+                    label: 'Analyze my Resume Button',
+                    value: ''
+                  });
+                  navigate(`${"/"}?retry=resume`)
+                }}
                 sx={{
                   width: { xs: '100%', sm: 'auto' },
                   minWidth: 180,
@@ -142,13 +152,22 @@ function CareerCompass() {
                   color: '#fff',
                   textTransform: 'none',
                   '&:hover': { bgcolor: '#0033b3' },
+
                 }}
               >
                 Analyze my Resume
               </Button>
               <Button
                 variant="outlined"
-              onClick={() => navigate(`${"/"}?retry=job` )}
+                onClick={() => {
+                  trackEvent({
+                    category: 'Career Compass',
+                    action: 'Start Without Resume Click',
+                    label: 'Start without Resume Button',
+                    value:'',
+                  });
+                  navigate(`${"/"}?retry=job`)
+                }}
                 sx={{
                   width: { xs: '100%', sm: 'auto' },
                   minWidth: 180,
@@ -165,8 +184,8 @@ function CareerCompass() {
           </Stack>
         </Grid>
       </Grid>
-    </Box>
-  );
+    </Box >
+  );  
 }
 
 export default CareerCompass;

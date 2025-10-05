@@ -344,24 +344,20 @@ export default function Footer() {
             <Button
               onClick={handleSubmit(onSubmit)}
               variant="outlined"
+              disabled={loading}
               sx={{
                 height: '40px',
                 borderRadius: '4px',
-                backgroundColor: 'common.white',
                 color: 'primary.dark',
                 border: '1px solid',
                 borderColor: 'primary.main',
                 fontWeight: 600,
                 textTransform: 'none',
                 px: 3,
-                whiteSpace: 'nowrap',
-                '&:hover': {
-                  borderColor: 'primary.dark',
-                  color: 'primary.dark',
-                },
+                '&:hover': { borderColor: 'primary.dark' },
               }}
             >
-              Subscribe
+              {loading ? 'Subscribing...' : 'Subscribe'}
             </Button>
           </Box>
 
@@ -371,6 +367,13 @@ export default function Footer() {
               href="https://twitter.com/altivai"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackEvent({
+                 category: 'Social Click',
+                  action: 'Click', 
+                  label: 'Twitter',
+                  value: '',
+                })}
+
               sx={{
                 display: 'flex',
                 alignItems: 'center',
@@ -393,6 +396,8 @@ export default function Footer() {
               href="https://www.linkedin.com/company/altivai"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackEvent({ category: 'Social Click', action: 'Click', label: 'LinkedIn',  value: '',})}
+
               sx={{
                 display: 'flex',
                 alignItems: 'center',
@@ -411,6 +416,8 @@ export default function Footer() {
               href="https://instagram.com/altiv.ai"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackEvent({ category: 'Social Click', action: 'Click', label: 'Instagram',  value: '', })}
+
               sx={{
                 display: 'flex',
                 alignItems: 'center',

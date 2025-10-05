@@ -1,18 +1,26 @@
 
-
-
-
 import React from 'react';
 import { Box, Typography, Button, useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { paths } from 'src/routes/paths';
 import { useTheme } from '@mui/material/styles';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { trackEvent } from 'src/utils/google-analytics';
+
 
 const FoboHeroSection = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+   const handleCTAClick = () => {
+    trackEvent({
+      category: 'CTA clicked',
+      action: 'button clicked',
+      label: 'Boost My Application',
+      value: 'Navigate to Coming Soon',
+    });
+    navigate(paths.comingSoon);
+  };
 
   return (
     <Box
@@ -104,7 +112,7 @@ const FoboHeroSection = () => {
 
       {/* Call-to-Action Button */}
       <Button
-        onClick={() => navigate(paths.comingSoon)}
+        onClick={handleCTAClick}
         sx={{
           mt: 5,
           px: 4,

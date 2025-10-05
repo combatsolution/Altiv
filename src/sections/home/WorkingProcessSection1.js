@@ -7,7 +7,8 @@ import CloudCircleIcon from '@mui/icons-material/CloudCircle';
 import SavedSearchIcon from '@mui/icons-material/SavedSearch';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { paths } from 'src/routes/paths';
-import {  useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
+import { trackEvent } from 'src/utils/google-analytics';
 
 const steps = [
   {
@@ -174,7 +175,7 @@ const WorkingProcessSection1 = () => {
                       fontSize: { xs: 13, sm: 14 },
                       lineHeight: 1.5,
                       color: '#C3DCFF',
-                      fontFamily: 'Inter',  
+                      fontFamily: 'Inter',
                     }}
                   >
                     {step.description}
@@ -232,31 +233,40 @@ const WorkingProcessSection1 = () => {
             );
           })}
 
-         
+
         </Box>
-         <Box sx={{ mt: isMobile ? 4 : 6, display: 'flex', justifyContent: 'center' }}>
-            <Button
-              // onClick={handleCheckAI}
-              onClick={() => Navigate(paths.fobo)}
-              sx={{
-                fontFamily: 'Inter',
-                fontWeight: 500,
-                fontSize: isMobile ? '16px' : '16px',
-                textTransform: 'none',
-                bgcolor: '#0A65CC',
-                borderRadius: isMobile ? '24px' : '24px',
-                px: isMobile ? 3 : 4,
-                py: 1.5,
-                minWidth: isMobile ? '100%' : 'auto',
-                transition: 'background-color 0.2s ease',
-                '&:hover': {
-                  bgcolor: '#0954A6',
-                },
-              }}
-            >
-              Check AI readiness
-            </Button>
-          </Box>
+        <Box sx={{ mt: isMobile ? 4 : 6, display: 'flex', justifyContent: 'center' }}>
+          <Button
+            // onClick={handleCheckAI}
+
+            onClick={() => {
+              trackEvent({
+                category: 'WorkingProcessSection1',
+                action: 'Check AI readiness Click',
+                label: 'Check AI readiness Button',
+                value: ''
+              });
+              Navigate(paths.fobo)
+            }}
+            sx={{
+              fontFamily: 'Inter',
+              fontWeight: 500,
+              fontSize: isMobile ? '16px' : '16px',
+              textTransform: 'none',
+              bgcolor: '#0A65CC',
+              borderRadius: isMobile ? '24px' : '24px',
+              px: isMobile ? 3 : 4,
+              py: 1.5,
+              minWidth: isMobile ? '100%' : 'auto',
+              transition: 'background-color 0.2s ease',
+              '&:hover': {
+                bgcolor: '#0954A6',
+              },
+            }}
+          >
+            Check AI readiness
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

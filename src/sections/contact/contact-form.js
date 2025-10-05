@@ -4,6 +4,7 @@ import { m } from 'framer-motion';
 import axiosInstance from 'src/utils/axios';
 import { useSnackbar } from 'notistack';
 import contactImg from 'src/Fogoimages/contactimg.webp';
+import { trackEvent } from 'src/utils/google-analytics'; // ✅ Added import
 
 // @mui
 import {
@@ -18,6 +19,16 @@ import { MotionViewport, varFade } from 'src/components/animate';
 
 export default function ContactForm() {
   const { enqueueSnackbar } = useSnackbar();
+    const handlesubmitClick = () => {
+    trackEvent({
+      category: 'Submit  Click',
+      action: 'button Clicked',
+      label: 'Submitted Form',
+      Value:'',
+    });
+  };
+
+  
 
   const [form, setForm] = useState({
     name: '',
@@ -122,6 +133,7 @@ export default function ContactForm() {
             component="img"
             src={contactImg}
             alt="Contact Illustration"
+            onClick={handlesubmitClick}
             sx={{
               display:{xs:'none', lg:'block'},
               width: '750px',

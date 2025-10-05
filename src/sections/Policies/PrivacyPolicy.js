@@ -20,6 +20,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import GavelIcon from '@mui/icons-material/Gavel';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import { m } from 'framer-motion';
+import { trackEvent } from 'src/utils/google-analytics'; // ✅ Import GA event tracker
 
 const MotionBox = m(Box);
 const MotionCard = m(Card);
@@ -107,6 +108,16 @@ const PrivacyPolicyPage = () => {
     },
   ];
 
+  // ✅ Handle GA event for "Contact Us" button
+  const handleContactClick = () => {
+    trackEvent({
+      category: 'CTA clicked',
+      action: 'Email button clicked',
+      label: 'Privacy Policy Contact',
+      value: 'Open mailto privacy@altiv.ai',
+    });
+  };
+
   return (
     <Container maxWidth="lg" sx={{ py: isMobile ? 4 : 8 }}>
       <MotionBox
@@ -189,7 +200,7 @@ const PrivacyPolicyPage = () => {
         ))}
       </Grid>
 
-      {/* Contact Us Button */}
+      {/* Contact Us Button with Tracking */}
       <MotionBox
         mt={8}
         textAlign="center"
@@ -205,7 +216,11 @@ const PrivacyPolicyPage = () => {
           Questions about your data? Reach out anytime.
         </Typography>
 
-        <a href="mailto:privacy@altiv.ai" style={{ textDecoration: 'none' }}>
+        <a
+          href="mailto:privacy@altiv.ai"
+          onClick={handleContactClick} // ✅ Track event here
+          style={{ textDecoration: 'none' }}
+        >
           <Box
             component={m.button}
             whileHover={{ scale: 1.05 }}

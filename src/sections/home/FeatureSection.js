@@ -4,6 +4,7 @@ import { Grid, Box, Typography,IconButton } from '@mui/material';
 import { fontFamily } from '@mui/system';
 import { PlayArrow, Pause } from '@mui/icons-material';
 import videoFile from 'src/video/altiv_video.mp4';
+import { trackEvent } from 'src/utils/google-analytics';
 
 const FeatureSection = () => {
   const videoRef = useRef(null);
@@ -13,8 +14,20 @@ const FeatureSection = () => {
     if (videoRef.current) {
       if (isPlaying) {
         videoRef.current.pause();
+        trackEvent({
+        category: 'Video',
+        action: 'Pause',
+        label: 'Feature Section Video',
+        value: 'User paused the video',
+      });
       } else {
         videoRef.current.play();
+        trackEvent({
+        category: 'Video',
+        action: 'Play',
+        label: 'Feature Section Video',
+        value: 'User started the video',
+      });
       };
       setIsPlaying(!isPlaying);
     }

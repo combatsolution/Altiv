@@ -57,6 +57,7 @@ export default function StrategicObjectives() {
         sx={{
 
           pb: 2,
+          my:2,
           borderBottom: (theme) => `2px solid ${theme.palette.grey[300]}`,
         }}>
         <Typography variant="h4" sx={{ fontWeight: "bold", color: "#1e40af" }}>

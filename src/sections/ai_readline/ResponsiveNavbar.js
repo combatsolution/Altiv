@@ -1,127 +1,158 @@
-import React, { useState, useEffect } from "react";
-import { Tabs, Tab, Box, useMediaQuery, useTheme, CircularProgress } from "@mui/material";
+import { useState, useEffect } from "react";
+import {
+  Tabs,
+  Tab,
+  Box,
+  useMediaQuery,
+  useTheme,
+  CircularProgress,
+} from "@mui/material";
 import axiosInstance from "src/utils/axios";
-import { useNavigate } from "react-router-dom";
+import AIReadinessDashboard from "./AIReadinessDashboard";
+import StrategicObjectives from "./strategicobjectives";
+import CapabilityBuilding from "./capabilitybuilding";
+import ToolStack from "./toolstack";
+import QuickStartGuide from "./quickstartguide";
+import TopTasksExposureAnalysis from "./taskautomation";
+import SkillErosionProjection from "./skillerosionprojection";
+import DetailNotes from "./detailnote";
+import CurrentStateAnalysis from "./currentStateanalysis";
+import TransformationRoadmap from "./transformationroadmap";
+import ExecutiveSummary from "./executivesummary";
 
 const sections = [
-  "Executive Summary",
-  "Current State",
-  "Strategic Objectives",
-  "Transformation Roadmap",
-  "Capability Building",
-  "Tool Stack",
-  "Quick Start",
-  "Skill Erosion",
-  "Task Automation",
-  "Detailed Notes",
+  { label: "Executive Summary", component: ExecutiveSummary },
+  { label: "Current State", component: CurrentStateAnalysis },
+  { label: "Strategic Objectives", component: StrategicObjectives },
+  { label: "Transformation Roadmap", component: TransformationRoadmap },
+  { label: "Capability Building", component: CapabilityBuilding },
+  { label: "Tool Stack", component: ToolStack },
+  { label: "Quick Start", component: QuickStartGuide },
+  { label: "Skill Erosion", component: SkillErosionProjection },
+  { label: "Task Automation", component: TopTasksExposureAnalysis },
+  { label: "Detailed Notes", component: DetailNotes },
 ];
 
 export default function ResponsiveNavbar() {
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [profileAnalytics, setProfileAnalytics] = useState(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const navigate = useNavigate();
 
-useEffect(() => {
-  const payload = {
-    resumeId: 668,
-    linkedInUrl: "https://www.linkedin.com/in/shubham-shahane-22552b186/",
-    viewDetails: true,
-    smartInsights: true,
-    isFoboPro: true,
-    isComprehensiveMode: true,
-  };
+  useEffect(() => {
+    const payload = {
+      resumeId: 668,
+      linkedInUrl:
+        "https://www.linkedin.com/in/shubham-shahane-22552b186/",
+      viewDetails: true,
+      smartInsights: true,
+      isFoboPro: true,
+      isComprehensiveMode: true,
+    };
 
-  const fetchProfileAnalytics = async () => {
-    try {
-      const response = await axiosInstance.post("/profile-analytics", payload);
-      console.log("Profile Analytics:", response.data);
-       console.log("comprehensive_analysis:", response.data.data.comprehensive_analysis);
+    const fetchProfileAnalytics = async () => {
+      try {
+        const response = await axiosInstance.post("/profile-analytics", payload);
+        setProfileAnalytics(response.data);
+        localStorage.setItem("profileAnalytics", JSON.stringify(response.data));
+      } catch (error) {
+        console.error("Error fetching profile analytics:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-
-      localStorage.setItem("profileAnalytics", JSON.stringify(response.data));
-    } catch (error) {
-      console.error("Error fetching profile analytics:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchProfileAnalytics();
-}, []); // ✅ no missing dependency warning
- 
+    fetchProfileAnalytics();
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    const route = `/profile/${sections[newValue].toLowerCase().replace(/\s+/g, "-")}`;
-    navigate(route);
   };
 
-  // ✅ Show loader while data is being fetched
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "80vh" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "-10vh",
+        }}
+      >
         <CircularProgress size={40} />
       </Box>
     );
   }
 
-  // ✅ Once data is ready, render navbar
+  const SelectedComponent = sections[value].component;
+
   return (
-    <Box sx={{ minHeight: "80px" }}>
+    <Box sx={{ minHeight: "1px" }}>
+      {/* ✅ Tabs Container */}
       <Box
         sx={{
-          position: "relative",
           borderRadius: 2,
           boxShadow: 1,
-          mb: 10,
+          mb: 1,
           mt: 2,
           bgcolor: "#ffffff",
-          mx: { xs: 2, md: "auto" },
-          py: { xs: 2, md: 0 },
-          maxWidth: { xs: "100%", md: "1275px" },
+          mx: "auto",
+          px:2,
+          py: { xs: 1.5, md: 1.5 },
+          maxWidth: "1275px",
           width: "100%",
-          display: "flex",
-          justifyContent: "center",
+          overflow: "hidden", // ✅ prevent overflow
         }}
       >
         <Tabs
           value={value}
           onChange={handleChange}
-          variant="scrollable"
+          variant={isMobile ? "scrollable" : "fullWidth"} // ✅ fullWidth on desktop
           scrollButtons={isMobile ? "auto" : false}
+          allowScrollButtonsMobile
+          centered={!isMobile}
           sx={{
+            width: "100%",
             "& .MuiTabs-flexContainer": {
-              justifyContent: "center",
+              justifyContent: isMobile ? "flex-start" : "space-between", // ✅ evenly spread
               flexWrap: "nowrap",
             },
             "& .MuiTab-root": {
-              minWidth: "auto !important",
-              padding: "6px 12px",
-              fontSize: "11px",
+              flex: 1,
+              minWidth: "auto",
+              px: { xs: 1.5, md: 2 },
+              py: 0.8,
+              fontSize: { xs: "11px", md: "13px" },
               textTransform: "none",
-              marginRight: "40px",
+              color: "#333",
+              borderRadius: "6px",
+              transition: "all 0.2s ease-in-out",
             },
-            "& .MuiTab-root:last-of-type": {
-              marginRight: 0,
+            "& .Mui-selected": {
+              background: "linear-gradient(90deg, #2563eb 40%, #00A3FF 100%)",
+              color: "#fff !important",
             },
             "& .MuiTabs-indicator": {
               display: "none",
             },
-            "& .Mui-selected": {
-              background: "linear-gradient(90deg, #2563eb 40%, #00A3FF 100%)",
-              color: "#ffffff !important",
-              borderRadius: "6px",
-              px: 1,
-              py: 0.5,
-            },
           }}
         >
           {sections.map((section, index) => (
-            <Tab key={index} label={section} disableRipple />
+            <Tab key={index} label={section.label} disableRipple />
           ))}
         </Tabs>
+      </Box>
+
+      {/* ✅ Selected Tab Content */}
+      <Box
+        sx={{
+          px: { xs: 2, md: 0 },
+          maxWidth: "1200px",
+          mx: "auto",
+        }}
+      >
+        <SelectedComponent data={profileAnalytics} />
       </Box>
     </Box>
   );
