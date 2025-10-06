@@ -339,7 +339,7 @@ export default function PricingCard({ card, sx, ...other }) {
             fontSize: { xs: 12, sm: 14 },
           }}
         >
-          {access ? 'Free' : `₹${price}${paymentType === 'monthly' ? '/mo' : ''}`}
+          {access ? 'Free' : `${price}${paymentType === 'monthly' ? '/mo' : ''}`}
         </Box>
 
         {/* Title + tagline */}

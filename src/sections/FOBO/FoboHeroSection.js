@@ -19,7 +19,7 @@ const FoboHeroSection = () => {
       label: 'Boost My Application',
       value: 'Navigate to Coming Soon',
     });
-    navigate(paths.comingSoon);
+    navigate(paths.jobFeed);
   };
 
   return (

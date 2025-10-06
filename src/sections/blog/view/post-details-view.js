@@ -146,7 +146,6 @@ export default function PostDetailsView() {
 
         <Stack direction="row" sx={{ mb: 3, mt: 5 }}>
           <Typography variant="h4">Comments</Typography>
-
           <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
             ({post.comments.length})
           </Typography>
@@ -168,6 +167,7 @@ export default function PostDetailsView() {
       {postError && renderError}
 
       {post && renderPost}
+      
     </Container>
   );
 }

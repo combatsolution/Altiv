@@ -14,7 +14,7 @@ import {
   Select,
   MenuItem
 } from '@mui/material';
-
+import { trackEvent } from 'src/utils/google-analytics';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from 'src/utils/axios';
 import PropTypes from 'prop-types';
@@ -271,6 +271,60 @@ const ProductManagementPage = () => {
   const [hoveredInner, setHoveredInner] = useState(null);
   const [hoveredOuter, setHoveredOuter] = useState(null);
   const navigate = useNavigate();
+ // Filter change handler with tracking
+  const handleFilterChange = (filterValue) => {
+    setSelectedFilter(filterValue);
+    trackEvent({
+      category: 'Job Detail',
+      action: 'Filter Changed',
+      label: `Filter: ${filterValue}`,
+      value: filterValue
+    });
+  };
+
+  // Select All handler
+  const handleSelectAll = () => {
+    setSelectedFilter("Everything");
+    trackEvent({
+      category: 'Job Detail',
+      action: 'Select All Clicked',
+      label: 'Select All Filter',
+      value: ''
+    });
+  };
+
+  // Clear All handler
+  const handleClearAll = () => {
+    setSelectedFilter("Empty");
+    trackEvent({
+      category: 'Job Detail',
+      action: 'Clear All Clicked',
+      label: 'Clear All Filter',
+      value: ''
+    });
+  };
+
+  // Explore jobs handler
+  const handleExploreJobs = () => {
+    trackEvent({
+      category: 'Job Detail',
+      action: 'Explore More Jobs Clicked',
+      label: 'Navigate to Job Feed',
+      value: ''
+    });
+    navigate('/job-feed');
+  };
+
+  // Sign up handler
+  const handleSignUp = () => {
+    trackEvent({
+      category: 'Job Detail',
+      action: 'Sign Up Clicked',
+      label: 'Navigate to Registration',
+      value: ''
+    });
+  };
+
 
   /* eslint-disable react/prop-types */
   const CustomTooltip = ({ active, payload }) => {
@@ -401,7 +455,7 @@ const ProductManagementPage = () => {
                     <FormControl size="small" variant="outlined" sx={{ minWidth: 180 }}>
                       <Select
                         value={selectedFilter}
-                        onChange={(e) => setSelectedFilter(e.target.value)}
+                        onChange={(e) => handleFilterChange(e.target.value)}
                         displayEmpty
                         renderValue={(selected) => selected}
                         sx={{
@@ -438,7 +492,8 @@ const ProductManagementPage = () => {
                       size="medium"
                       variant="outlined"
                       sx={{ color: 'grey.600', borderRadius: '100px', width: '110px', height: '35px', fontSize: '13px' }}
-                      onClick={() => setSelectedFilter("Everything")}   // ✅
+                      onClick={handleSelectAll}
+
                     >
                       Select All
                     </Button>
@@ -447,7 +502,8 @@ const ProductManagementPage = () => {
                       size="medium"
                       variant="outlined"
                       sx={{ color: 'grey.600', borderRadius: '100px', width: '110px', height: '35px', fontSize: '13px' }}
-                      onClick={() => setSelectedFilter("Empty")}
+                      onClick={handleClearAll}
+
                     >
                       Clear All
                     </Button>
@@ -551,7 +607,7 @@ const ProductManagementPage = () => {
                     <FormControl size="small" variant="outlined" sx={{ minWidth: 180 }}>
                       <Select
                         value={selectedFilter}
-                        onChange={(e) => setSelectedFilter(e.target.value)}
+                        onChange={(e) => handleFilterChange(e.target.value)}
                         displayEmpty
                         renderValue={(selected) => selected}
                         sx={{
@@ -637,7 +693,8 @@ const ProductManagementPage = () => {
                     size="medium"
                     variant="outlined"
                     sx={{ color: 'grey.600', borderRadius: '100px', width: '85px', height: '35px', fontSize: '13px' }}
-                    onClick={() => setSelectedFilter("Everything")} // ✅
+                 onClick={handleSelectAll}
+
                   >
                     Select All
                   </Button>
@@ -646,7 +703,7 @@ const ProductManagementPage = () => {
                     size="medium"
                     variant="outlined"
                     sx={{ color: 'grey.600', borderRadius: '100px', width: '80px', height: '35px', fontSize: '13px' }}
-                    onClick={() => setSelectedFilter("Empty")}
+onClick={handleClearAll}
                   >
                     Clear All
                   </Button>
@@ -1072,7 +1129,8 @@ const ProductManagementPage = () => {
                   backgroundColor: 'primary.dark',
                 },
               }}
-              onClick={() => navigate('/job-feed')}
+            onClick={handleExploreJobs}
+a
             >
               Explore more jobs
             </Button>
@@ -1088,6 +1146,8 @@ const ProductManagementPage = () => {
                 width: { xs: '100%', sm: '200px' },
               }}
               href={paths.auth.jwt.register}
+              onClick={handleSignUp}
+
             >
               Sign up
             </Button>

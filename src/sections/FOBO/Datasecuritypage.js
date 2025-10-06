@@ -15,6 +15,7 @@ import { m } from 'framer-motion';
 
 import { paths } from 'src/routes/paths';
 import security from 'src/Fogoimages/flowstructure.webp';
+import { trackEvent } from 'src/utils/google-analytics';
 
 const MotionBox = m(Box);
 
@@ -191,7 +192,15 @@ export default function Datasecuritypage() {
                 <Button
                   variant="contained"
                   // onClick={() => navigate('/?retry=true')}
-                   onClick={() => navigate('/privacy-policy')}
+                   onClick={() =>{
+                   trackEvent({
+                    category:'CTA Clicked',
+                    action:'Button Clicked',
+                    label:'Read More Clicked',
+                    value:''
+                   });
+                   
+                   navigate('/privacy-policy')}}
                   size="large"
                   sx={{
                     px: { xs: 3, sm: 4 },

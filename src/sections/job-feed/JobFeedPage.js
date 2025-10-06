@@ -23,6 +23,7 @@ import {
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { trackEvent } from 'src/utils/google-analytics';
 import {
   setLocationFilter,
   setLevelFilter,
@@ -50,12 +51,20 @@ const JobCard = ({ job }) => {
   const navigate = useNavigate();
   const handleApply = async (e) => {
     e.stopPropagation();
+    // 🔹 Track Google Analytics event
+    trackEvent({
+      category: 'Job Interaction',
+      action: 'Apply Clicked',
+      label: "Job Title",
+      value: "",
+    });
+
     try {
       // POST call to apply endpoint
       const res = await axiosInstance.post(`jobs/apply-job/${job.id}`);
       if (res.status === 200 || res.data?.success) {
         if (job.redirectUrl) {
-            window.open(job.redirectUrl, '_blank'); // redirect link
+          window.open(job.redirectUrl, '_blank'); // redirect link
         }
       }
     } catch (error) {
@@ -71,6 +80,13 @@ const JobCard = ({ job }) => {
 
   const handlebookmark = async (e) => {
     e.stopPropagation();
+    // 🔹 Track bookmark event
+    trackEvent({
+      category: 'Job Interaction',
+      action: 'bookmark Checking',
+      label: 'jobBookmarked',
+      value: "",
+    });
 
     try {
       const res = await axiosInstance.post(`jobs/save-job/${job.id}`);
@@ -123,7 +139,7 @@ const JobCard = ({ job }) => {
                   }}>{job.company}</Typography>
 
                 <IconButton onClick={handlebookmark}>
-                  {bookmarked || job.isSaved? (<BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />)
+                  {bookmarked || job.isSaved ? (<BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />)
                     :
                     (<BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />)} </IconButton>
 
@@ -355,7 +371,7 @@ JobCard.propTypes = {
 
 export default function JobFeedPage() {
   const { job_id } = useParams();
-    console.log("kjhjkahsa->", job_id);
+  console.log("kjhjkahsa->", job_id);
   const dispatch = useDispatch();
   console.log('JobFeedPage rendered', dispatch);
   const theme = useTheme();
@@ -385,6 +401,12 @@ export default function JobFeedPage() {
       });
 
       if (response.data?.success) {
+        trackEvent({
+          category: 'Subscription',
+          action: 'Email Subscribed',
+          label: email,
+          value: 'Job Alerts',
+        });
         enqueueSnackbar('Successfully subscribed!', { variant: 'success' });
         reset();
       } else {
@@ -414,7 +436,7 @@ export default function JobFeedPage() {
 
   const formatPostedDate = (createdAt) => {
     const diffDays = Math.floor((Date.now() - new Date(createdAt)) / 86400000);
-    console.log("agdjhdgas->",diffDays);
+    console.log("agdjhdgas->", diffDays);
     if (diffDays <= 7) return 'Past 7 days';
     if (diffDays <= 15) return 'Past 15 days';
     if (diffDays <= 30) return 'Past 30 days';
@@ -426,7 +448,7 @@ export default function JobFeedPage() {
       try {
         const res = await axiosInstance.get('/jobs');
         const apiJobs = res.data;
-        console.log("hasdhasldkhalds->",apiJobs);
+        console.log("hasdhasldkhalds->", apiJobs);
 
         // 🔹 Map API fields to match your UI
         const mappedJobs = apiJobs.map((job) => ({
@@ -478,14 +500,14 @@ export default function JobFeedPage() {
 
     // ---- Date filter ----
     if (dateFilter && dateFilter !== 'All time') {
-   
+
       const allowed = dateFilter;
       if (allowed !== null && job.createdAt) {
         // const diffDays =
         //   (Date.now() - new Date(job.createdAt).getTime()) /
         //   (1000 * 60 * 60 * 24);
-        const diffDays=job.posted;
-        
+        const diffDays = job.posted;
+
         if (diffDays > allowed) matches = false;
       }
     }
@@ -513,7 +535,16 @@ export default function JobFeedPage() {
         <RadioGroup
           name="dateFilter"
           value={dateFilter}
-          onChange={(e) => dispatch(setDateFilter(e.target.value))}
+          onChange={(e) => {
+            trackEvent({
+              category: 'Job Filter',
+              action: 'Date Filter Changed',
+              label: 'Date Filter Changed',
+              value: '',
+            });
+            dispatch(setDateFilter(e.target.value))
+          }}
+
         >
           {['All time', 'Past 7 days', 'Past 15 days', 'Past 30 days'].map((d) => (
             <FormControlLabel key={d} value={d} control={<Radio />} label={d} />
@@ -658,7 +689,17 @@ export default function JobFeedPage() {
 
             {visibleJobs < filteredJobs.length && (
               <Box textAlign="center" mt={2}>
-                <Button onClick={() => setVisibleJobs((prev) => prev + 3)} variant="outlined">
+                <Button onClick={() => {
+                  trackEvent({
+                    category: 'Job Feed',
+                    action: 'Show More Clicked',
+                    label: `Showing more data`,
+                    value: visibleJobs + 3,
+                  });
+                  setVisibleJobs((prev) => prev + 3)
+                }}
+
+                  variant="outlined">
                   Show More
                 </Button>
               </Box>

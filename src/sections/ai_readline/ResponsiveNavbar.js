@@ -22,7 +22,7 @@ import ExecutiveSummary from "./executivesummary";
 
 const sections = [
   { label: "Executive Summary", component: ExecutiveSummary },
-  { label: "Current State", component: CurrentStateAnalysis },
+  { label: "Current State", component: CurrentStateAnalysis},
   { label: "Strategic Objectives", component: StrategicObjectives },
   { label: "Transformation Roadmap", component: TransformationRoadmap },
   { label: "Capability Building", component: CapabilityBuilding },
@@ -98,9 +98,10 @@ export default function ResponsiveNavbar() {
           mt: 2,
           bgcolor: "#ffffff",
           mx: "auto",
+          
           px:2,
           py: { xs: 1.5, md: 1.5 },
-          maxWidth: "1275px",
+          maxWidth: "1200px",
           width: "100%",
           overflow: "hidden", // ✅ prevent overflow
         }}
@@ -123,7 +124,7 @@ export default function ResponsiveNavbar() {
               minWidth: "auto",
               px: { xs: 1.5, md: 2 },
               py: 0.8,
-              fontSize: { xs: "11px", md: "13px" },
+              fontSize: { xs: "10px", md: "12px" },
               textTransform: "none",
               color: "#333",
               borderRadius: "6px",
@@ -152,7 +153,8 @@ export default function ResponsiveNavbar() {
           mx: "auto",
         }}
       >
-        <SelectedComponent data={profileAnalytics} />
+        {/* <SelectedComponent data={profileAnalytics} /> */}
+        <SelectedComponent />
       </Box>
     </Box>
   );

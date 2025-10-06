@@ -50,8 +50,7 @@ const analysisData = [
   },
 ];
 
-export default function CurrentStateAnalysis({data}) {
-console.log("jsondgdh", JSON.stringify(data));
+export default function CurrentStateAnalysis() {
   return (
     <Box sx={{
       p: 3, mx: "auto",
