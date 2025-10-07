@@ -371,7 +371,7 @@ export default function Footer() {
                  category: 'Social Click',
                   action: 'Click', 
                   label: 'Twitter',
-                  value: '',
+                  value: 100,
                 })}
 
               sx={{
@@ -396,7 +396,7 @@ export default function Footer() {
               href="https://www.linkedin.com/company/altivai"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => trackEvent({ category: 'Social Click', action: 'Click', label: 'LinkedIn',  value: '',})}
+              onClick={() => trackEvent({ category: 'Social Click', action: 'Click', label: 'LinkedIn',  value: 102,})}
 
               sx={{
                 display: 'flex',
@@ -416,7 +416,7 @@ export default function Footer() {
               href="https://instagram.com/altiv.ai"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => trackEvent({ category: 'Social Click', action: 'Click', label: 'Instagram',  value: '', })}
+              onClick={() => trackEvent({ category: 'Social Click', action: 'Click', label: 'Instagram',  value: 101, })}
 
               sx={{
                 display: 'flex',

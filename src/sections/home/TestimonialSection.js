@@ -448,7 +448,7 @@ function TestimonialSection() {
         category: 'Testimonial Carousel',
         action: 'Next Button Click',
         label: `Next Button Click`,
-        value: "",
+        value: 10,
       });
 
       return newIndex;
@@ -703,7 +703,7 @@ function TestimonialSection() {
                         category: 'Blog Interaction',
                         action: 'Read More Click',
                         label: 'ReadMore button Clicked',
-                        value: '',
+                        value: 9,
                       })
                     }
                   >
@@ -733,7 +733,7 @@ function TestimonialSection() {
                         category: 'Testimonial Carousel',
                         action: 'Thumbnail Click',
                         label: visibleBlogs[i]?.title || 'Unknown',
-                        value: "",
+                        value: 11,
                       });
 
                     }}

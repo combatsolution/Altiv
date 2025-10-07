@@ -13,7 +13,6 @@ export default function PostDetailsHomePage() {
   const { title } = params;
   const searchParams = useSearchParams();
   const categoryId = searchParams.get('category') ? parseInt(searchParams.get('category'), 10) : null;
-
   const { post, postError, postLoading } = useGetPost(`${title}`);
 
   return (
@@ -23,8 +22,6 @@ export default function PostDetailsHomePage() {
         <meta name="description" content={post.metaDescription} />
         <meta name="canonical" content={post.metaCanonicalURL} />
         <meta name="keywords" content={post.metaTags} />
-
-
 
         <script type="application/ld+json">
           {JSON.stringify({

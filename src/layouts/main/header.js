@@ -51,7 +51,7 @@ export default function Header() {
       category: 'User',
       action: 'Sign Out',
       label: 'Profile Menu logout',
-      value: '',
+      value: 97,
     });
     logout(); // Call logout to clear auth context
     localStorage.removeItem('token'); // Clear specific auth-related keys (optional, if logout doesn't handle it)
@@ -107,7 +107,7 @@ export default function Header() {
                   category: 'Navigation',
                   action: 'Logo Clicked',
                   label: 'Header Logo',
-                  value: '',
+                  value: 1,
                 });
                 navigate('/')
               }}
@@ -117,7 +117,7 @@ export default function Header() {
                     category: 'Navigation',
                     action: 'Logo Keyboard Clicked',
                     label: 'Header Logo',
-                    value: '',
+                    value: 1,
                   });
                   navigate('/');
                 }
@@ -164,7 +164,7 @@ export default function Header() {
                         category: 'Profile Navigation',
                         action: 'Clicked',
                         label: item.name,
-                        value: '',
+                        value:96,
                       });
                       navigate(item.path);
                     }}
@@ -203,7 +203,7 @@ export default function Header() {
                       category: 'Navigation',
                       action: 'button clicked',
                       label: 'Sign Up',
-                      value: 'sign-up-page'
+                      value: 98,
                     })}
                     sx={{
                       bgcolor: '#2A4DD0',
@@ -232,7 +232,7 @@ export default function Header() {
                           category: 'User',
                           action: 'Avatar Clicked',
                           label: 'Profile Icon',
-                          value: 'profile-page',
+                          value: 99,
                         });navigate(paths.Profile)}}
                       sx={{
                         width: 40,

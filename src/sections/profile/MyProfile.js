@@ -159,7 +159,7 @@ export default function MyProfile() {
     category: 'Profile',
     action: 'Viewed Profile Page',
     label: user?.email || 'Anonymous',
-    value:''
+    value:79,
   });
 
     }
@@ -213,7 +213,7 @@ export default function MyProfile() {
       category: 'Resume',
       action: 'Attempt Upload',
       label: 'profile',
-      value: '',
+      value: 80,
     });
 
     const validTypes = [
@@ -252,7 +252,7 @@ export default function MyProfile() {
         category: 'Resume',
         action: 'Upload Success',
         label: "Resume Uploaded",
-        value: '',
+        value: 81,
       });
 
 
@@ -271,7 +271,7 @@ export default function MyProfile() {
       category: 'Resume',
       action: 'Selected Resume',
       label: selected?.fileDetails?.fileName || 'Unknown Resume',
-      value: '',
+      value: 82,
     });
 
     setError(null);
@@ -284,7 +284,7 @@ export default function MyProfile() {
       category: 'Resume',
       action: 'Delete Clicked',
       label: deleted?.fileDetails?.fileName || 'Unknown Resume',
-      value: '',
+      value: 81,
     });
 
     try {
@@ -296,6 +296,7 @@ export default function MyProfile() {
         category: 'Resume',
         action: 'Deleted Successfully',
         label: deleted?.fileDetails?.fileName || 'Unknown Resume',
+        value:81,
       });
     } catch (err) {
       console.error(err);
@@ -388,7 +389,7 @@ export default function MyProfile() {
                   category: 'LMS',
                   action: 'Course Clicked',
                   label: sub.planname,
-                  value: '',
+                  value: 85,
                 });
 
                 lmsredirect(sub.lmsId); // Pass lmsId directly
@@ -657,7 +658,7 @@ export default function MyProfile() {
                     category: 'Profile',
                     action: 'Upgrade Plan Clicked',
                     label: 'Upgrade Plan',
-                    value: '',
+                    value: 83,
                   });
                   navigate(paths.pricing)
                 }}
@@ -697,6 +698,7 @@ export default function MyProfile() {
                     category: 'Profile',
                     action: 'Edit Profile Clicked',
                     label: 'Edit Profile',
+                    value:86,
                   });
                   setOpenEditDialog(true)
                 }}>
@@ -733,7 +735,7 @@ export default function MyProfile() {
                           category: 'Profile',
                           action: 'Change Password Clicked',
                           label: 'Password is c anged',
-                          value: '',
+                          value: 86,
                         });
                         setOpenPasswordModal(true)
                       }}>

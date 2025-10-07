@@ -149,7 +149,7 @@ function JobMatchBooster() {
       category: 'JobMatchBooster',
       action: 'Boost My Application Click',
       label: 'Boost My Application Button',
-      value:'',
+      value:15,
     });
 navigate(paths.jobFeed)}}
                 sx={{

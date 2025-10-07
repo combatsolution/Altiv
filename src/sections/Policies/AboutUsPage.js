@@ -86,7 +86,7 @@ export default function AboutUsPage() {
       category: 'Section View',
       action: 'Viewed',
       label: "section",
-      Value:'',
+      Value:49,
     });
   };
 
@@ -96,7 +96,7 @@ export default function AboutUsPage() {
       category: 'CTA Click',
       action: 'Button Clicked',
       label: 'Start Your AI-Ready Journey',
-      value: '',
+      value: 49,
     });
     navigate('/');
   };
@@ -107,7 +107,7 @@ export default function AboutUsPage() {
       category: 'Card Interaction',
       action: 'Clicked',
       label: title,
-      value:'',
+      value:50,
     });
   };
 

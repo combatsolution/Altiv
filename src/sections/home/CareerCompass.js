@@ -139,7 +139,7 @@ function CareerCompass() {
                     category: 'Career Compass',
                     action: 'Analyze Resume Click',
                     label: 'Analyze my Resume Button',
-                    value: ''
+                    value: 12,
                   });
                   navigate(`${"/"}?retry=resume`)
                 }}
@@ -164,7 +164,7 @@ function CareerCompass() {
                     category: 'Career Compass',
                     action: 'Start Without Resume Click',
                     label: 'Start without Resume Button',
-                    value:'',
+                    value:13,
                   });
                   navigate(`${"/"}?retry=job`)
                 }}

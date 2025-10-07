@@ -278,7 +278,7 @@ const ProductManagementPage = () => {
       category: 'Job Detail',
       action: 'Filter Changed',
       label: `Filter: ${filterValue}`,
-      value: filterValue
+      value: 75,
     });
   };
 
@@ -289,7 +289,7 @@ const ProductManagementPage = () => {
       category: 'Job Detail',
       action: 'Select All Clicked',
       label: 'Select All Filter',
-      value: ''
+      value: 76,
     });
   };
 
@@ -300,7 +300,7 @@ const ProductManagementPage = () => {
       category: 'Job Detail',
       action: 'Clear All Clicked',
       label: 'Clear All Filter',
-      value: ''
+      value: 77,
     });
   };
 
@@ -321,7 +321,7 @@ const ProductManagementPage = () => {
       category: 'Job Detail',
       action: 'Sign Up Clicked',
       label: 'Navigate to Registration',
-      value: ''
+      value: 78,
     });
   };
 

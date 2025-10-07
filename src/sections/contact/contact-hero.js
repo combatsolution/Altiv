@@ -48,7 +48,7 @@ export default function ContactHero() {
       category: 'Social Click',
       action: 'Clicked',
       label: platform,
-      value:'',
+      value: 52,
     });
   };
 
@@ -58,7 +58,7 @@ export default function ContactHero() {
       category: 'Email Click',
       action: 'Clicked',
       label: 'hello@altiv.ai',
-      value:''
+      value:51,
     });
   };
 

@@ -197,7 +197,7 @@ export default function Datasecuritypage() {
                     category:'CTA Clicked',
                     action:'Button Clicked',
                     label:'Read More Clicked',
-                    value:''
+                    value:57,
                    });
                    
                    navigate('/privacy-policy')}}

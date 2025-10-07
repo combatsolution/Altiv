@@ -56,7 +56,7 @@ const JobCard = ({ job }) => {
       category: 'Job Interaction',
       action: 'Apply Clicked',
       label: "Job Title",
-      value: "",
+      value: 66,
     });
 
     try {
@@ -85,7 +85,7 @@ const JobCard = ({ job }) => {
       category: 'Job Interaction',
       action: 'bookmark Checking',
       label: 'jobBookmarked',
-      value: "",
+      value: 68,
     });
 
     try {
@@ -405,7 +405,7 @@ export default function JobFeedPage() {
           category: 'Subscription',
           action: 'Email Subscribed',
           label: email,
-          value: 'Job Alerts',
+          value: 67,
         });
         enqueueSnackbar('Successfully subscribed!', { variant: 'success' });
         reset();
@@ -540,7 +540,7 @@ export default function JobFeedPage() {
               category: 'Job Filter',
               action: 'Date Filter Changed',
               label: 'Date Filter Changed',
-              value: '',
+              value: 65,
             });
             dispatch(setDateFilter(e.target.value))
           }}
@@ -694,7 +694,7 @@ export default function JobFeedPage() {
                     category: 'Job Feed',
                     action: 'Show More Clicked',
                     label: `Showing more data`,
-                    value: visibleJobs + 3,
+                    value: 64,
                   });
                   setVisibleJobs((prev) => prev + 3)
                 }}

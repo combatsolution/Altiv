@@ -244,7 +244,7 @@ const WorkingProcessSection1 = () => {
                 category: 'WorkingProcessSection1',
                 action: 'Check AI readiness Click',
                 label: 'Check AI readiness Button',
-                value: ''
+                value: 16,
               });
               Navigate(paths.fobo)
             }}

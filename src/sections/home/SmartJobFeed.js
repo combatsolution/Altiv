@@ -108,7 +108,7 @@ function SmartJobFeed() {
                     category: 'Smart Job Feed',
                     action: 'Access Personal Matches Click',
                     label: 'Access Personal Matches Button',
-                    value: '',
+                    value: 14,
                   });
                   navigate(paths.jobFeed)
                 }}

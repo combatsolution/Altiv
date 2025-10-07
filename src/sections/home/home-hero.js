@@ -18,7 +18,7 @@ import axiosInstance from 'src/utils/axios';
 import { useAuthContext } from 'src/auth/hooks';
 import { trackEvent } from 'src/utils/google-analytics';
 import { useSearchParams } from 'src/routes/hook';
-import { RamenDining } from '@mui/icons-material';  
+import { RamenDining } from '@mui/icons-material';
 import { UploadIllustration } from 'src/assets/illustrations';
 
 function HomeHero() {
@@ -56,6 +56,13 @@ function HomeHero() {
     setError('');
     navigate('/career-compass/');
 
+    trackEvent({
+      category: 'HomeHero',
+      action: 'Continue with Job Title',
+      label: designation,
+      value: 87,
+    });
+
   };
 
   const handleOperation = (op) => {
@@ -72,13 +79,26 @@ function HomeHero() {
     setUploadType('resume');
     setOpen(false);
     sessionStorage.removeItem('uploadedResumeId');
-   navigate('/', { replace: true });
+    navigate('/', { replace: true });
+    trackEvent({
+      category: 'HomeHero',
+      action: 'Modal Closed',
+      label: 'User closed modal',
+      value: 88,
+    });
   };
 
   // Upload file to /files API immediately when file is selected
   const handleFileUpload = async (file) => {
     try {
       setDocIsLoading(true);
+      trackEvent({
+        category: 'Resume Upload',
+        action: 'File Selected',
+        label: file.name,
+        value: 4,
+      });
+
 
       const formData = new FormData();
       formData.append('file', file);
@@ -97,6 +117,13 @@ function HomeHero() {
       enqueueSnackbar('File upload failed', { variant: 'error' });
       setSelectedFile(null);
       setUploadedFileDetails(null);
+      trackEvent({
+        category: 'Resume Upload',
+        action: 'Upload Failed',
+        label: file.name,
+        value: 5,
+      });
+
     } finally {
       setDocIsLoading(false);
     }
@@ -107,11 +134,24 @@ function HomeHero() {
     if (retry) {
       setUploadType(retry);
       handleOpenModal();
+      trackEvent({
+        category: 'HomeHero',
+        action: 'Modal Opened',
+        label: retry,
+        value: 89,
+      });
     }
   }, [searchParams]);
 
   const handleOpenModal = () => {
     setOpen(true);
+    trackEvent({
+      category: 'HomeHero',
+      action: 'Modal Opened',
+      label: uploadType,
+      value: 90,
+    });
+
   }
   const handleUploadResume = async (fileDetails) => {
     try {
@@ -136,9 +176,9 @@ function HomeHero() {
         sessionStorage.setItem('resumeId', response?.data?.id);
         trackEvent({
           category: 'Resume Uploaded',
-          action: 'Resume uploaded',
-          label: 'resume uploaded success',
-          value: 'resume uploaded'
+          action: 'Resume saved',
+          label: 'resume saved success',
+          value: 6,
         });
 
         // Navigate to career resume page
@@ -147,6 +187,14 @@ function HomeHero() {
     } catch (uploadError) {
       console.error('Error while saving resume', uploadError);
       enqueueSnackbar(uploadError?.response?.data?.message || 'Resume save failed', { variant: 'error' });
+
+      trackEvent({
+        category: 'Resume Upload',
+        action: 'Resume Save Failed',
+        label: fileDetails?.fileName,
+        value: 91,
+      });
+
     } finally {
       setIsLoading(false);
     }
@@ -155,7 +203,7 @@ function HomeHero() {
   const handleDrop = async (acceptedFiles) => {
     const file = acceptedFiles[0];
     if (file) {
-      await handleFileUpload(file); 
+      await handleFileUpload(file);
     }
   };
 
@@ -165,6 +213,13 @@ function HomeHero() {
 
     if (file.size > 5 * 1024 * 1024) {
       setError('This document is too large. Please only upload files less than 5MB.');
+
+      trackEvent({
+        category: 'Resume Upload',
+        action: 'Upload Failed - File Too Large',
+        label: file.name,
+        value: 92,
+      });
       return;
     }
 
@@ -175,8 +230,22 @@ function HomeHero() {
   const handleContinueWithResume = async () => {
     if (!uploadedFileDetails) {
       enqueueSnackbar('Please upload a file first', { variant: 'warning' });
+      trackEvent({
+        category: 'Resume Upload',
+        action: 'Continue Blocked - No File',
+        label: 'No file Found',
+        value: 93
+      });
+
       return;
     }
+
+    trackEvent({
+      category: 'Resume Upload',
+      action: 'Continue With Resume',
+      label: uploadedFileDetails.fileName,
+      value: 94
+    });
 
     // Call /resumes API with the already uploaded file details
     await handleUploadResume(uploadedFileDetails);
@@ -230,8 +299,17 @@ function HomeHero() {
               <Button
                 variant="contained"
                 size="large"
-                onClick={() => navigate(`${"/"}?retry=resume`)}
-                
+                onClick={() => {
+                  trackEvent({
+                    category: 'HomeHero',
+                    action: 'Start Free Clicked',
+                    label: 'Start free Button Home page',
+                    value: '2'
+                  });
+
+                  navigate(`${"/"}?retry=resume`)
+                }}
+
                 sx={{
                   bgcolor: '#0040D8',
                   '&:hover': { bgcolor: blue[700] },
@@ -247,13 +325,13 @@ function HomeHero() {
                   mb: { xs: '20px', sm: '0' },
                   mt: { xs: '50px', sm: '0' },
                 }}
-                // onClick={() => handleOpenModal()}
+              // onClick={() => handleOpenModal()}
               >
                 Start Free
               </Button>
               <Modal open={open} onClose={handleClose}>
                 <Box
-                borderRadius='10px'
+                  borderRadius='10px'
                   display="flex"
                   justifyContent="center"
                   alignItems="center"
@@ -261,7 +339,7 @@ function HomeHero() {
                 >
                   <Box
                     sx={{
-                      borderRadius:'10px',
+                      borderRadius: '10px',
                       width: '100%',
                       maxWidth: 430,
                       bgcolor: 'white',
@@ -302,7 +380,7 @@ function HomeHero() {
                       <ToggleButton
                         value="resume"
                         disableRipple
-                         onClick={() => navigate(`${"/"}?retry=resume`)}
+                        onClick={() => navigate(`${"/"}?retry=resume`)}
                         sx={{
                           textTransform: 'none',
                           px: 4,
@@ -328,7 +406,7 @@ function HomeHero() {
                       <ToggleButton
                         value="job"
                         disableRipple
-                          onClick={() => navigate(`${"/"}?retry=job` )}
+                        onClick={() => navigate(`${"/"}?retry=job`)}
                         sx={{
                           textTransform: 'none',
                           px: 4,
@@ -366,7 +444,7 @@ function HomeHero() {
                           onClick={() => fileInputRef.current.click()}
                         >
                           {/* <CloudUploadIcon fontSize="large" style={{ color: '#0040D8' }} /> */}
-                                <UploadIllustration sx={{ width: 1, maxWidth: 130 }} />
+                          <UploadIllustration sx={{ width: 1, maxWidth: 130 }} />
                           <Typography variant="body1" fontWeight={500} mt={1}>
                             Drag & drop files or{' '}
                             <Box component="span" color="#3f51b5" fontWeight="bold">
@@ -543,6 +621,14 @@ function HomeHero() {
                 component={RouterLink}
                 to='/post/how-altiv-works'
                 target='_blank'
+                onClick={() =>
+                  trackEvent({
+                    category: 'HomeHero',
+                    action: 'Know How it Works Clicked',
+                    label: 'View blog',
+                    value: 3,
+                  })
+                }
                 sx={{
                   textTransform: 'none',
                   color: '#0040D8',

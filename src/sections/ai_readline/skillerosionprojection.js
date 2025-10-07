@@ -51,7 +51,7 @@ const coreSkills = [
 ];
 
 
-const SkillErosionProjection = ()=>{
+export default function SkillErosionProjection(){
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box display="flex" justifyContent="space-between" mb={3}>
@@ -157,4 +157,3 @@ const SkillErosionProjection = ()=>{
   );
 };
 
-export default SkillErosionProjection;

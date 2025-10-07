@@ -12,12 +12,12 @@ const FoboHeroSection = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-   const handleCTAClick = () => {
+  const handleCTAClick = () => {
     trackEvent({
       category: 'CTA clicked',
       action: 'button clicked',
-      label: 'Boost My Application',
-      value: 'Navigate to Coming Soon',
+      label: 'Boost My Application page',
+      value: 56,
     });
     navigate(paths.jobFeed);
   };

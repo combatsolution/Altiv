@@ -18,7 +18,7 @@ const FeatureSection = () => {
         category: 'Video',
         action: 'Pause',
         label: 'Feature Section Video',
-        value: 'User paused the video',
+        value: 7,
       });
       } else {
         videoRef.current.play();
@@ -26,7 +26,7 @@ const FeatureSection = () => {
         category: 'Video',
         action: 'Play',
         label: 'Feature Section Video',
-        value: 'User started the video',
+        value: 8,
       });
       };
       setIsPlaying(!isPlaying);

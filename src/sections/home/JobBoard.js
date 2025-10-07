@@ -163,7 +163,7 @@ const JobBoard = () => {
               category: 'CTA clicked',
               action: 'button clicked',
               label: 'Login to view jobs',
-              value: 'Navigate to login',
+              value: 95,
             });
 
             navigate(paths.auth.jwt.login)}}
@@ -307,7 +307,7 @@ const JobBoard = () => {
                     category: 'CTA clicked',
                     action: 'button clicked',
                     label: 'Upload Resume',
-                    value: '',
+                    value: 17,
                   });
 
                   navigate(`${'/'}?retry=res`)}}
@@ -454,7 +454,7 @@ const JobBoard = () => {
                         category: 'CTA clicked',
                         action: 'button clicked',
                         label: `Apply for ${job.title}`,
-                        value: '',
+                        value: 18,
                       });
                           navigate(`${paths.jobDetails}/${job.id}`)}}   // 👈 use job.id here
                         variant="contained"
@@ -487,7 +487,7 @@ const JobBoard = () => {
                       category: 'CTA clicked',
                       action: 'button clicked',
                       label: 'Show More Jobs Click',
-                      value: '',
+                      value: 19,
                     });
                     navigate('/job-Feed')
                   }}

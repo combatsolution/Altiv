@@ -50,7 +50,7 @@
         category: 'Job Interaction',
         action: bookmarked ? 'Unbookmark Job' : 'Bookmark Job',
         label: 'Detail page Bookmarked',
-        value: '',
+        value: 71,
       });
 
       try {
@@ -79,8 +79,8 @@
           trackEvent({
             category: 'Job Detail',
             action: 'Viewed Job',
-            label: 'Viwed Jobs',
-            value: '',
+            label: 'Viewed Jobs',
+            value: 69,
           });
           const res = await axiosInstance.get(`/jobs/${job_id}`);
           console.log("zxzzxResponse:", res);
@@ -425,7 +425,7 @@
                             category: 'Job Interaction',
                             action: 'Apply Now Clicked',
                             label: 'Applied for jobs',
-                            value: "",
+                            value:70,
                           });
 
                           window.open(jobs[0].redirectUrl, '_blank')
@@ -513,7 +513,7 @@
                             category: 'Job Detail',
                             action: 'View More Similar Jobs',
                             label: 'View Similar Jobs',
-                            value: '',
+                            value: 74,
                           });
                         }}
                       >
@@ -569,7 +569,7 @@
                     category: 'Job Interaction',
                     action: 'Boost Application Clicked',
                     label: 'To Checked Boost data on jobooster page',
-                    value: '',
+                    value: 73,
                   });
 
                   navigate(`/job-booster/${job_id}`)

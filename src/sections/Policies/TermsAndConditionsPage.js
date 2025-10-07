@@ -11,7 +11,7 @@ export default function TermsAndConditionsPage() {
       category: 'Email Click',
       action: 'Clicked',
       label: '@altlegaliv.ai',
-      value:'',
+      value:54,
     });
   };
 

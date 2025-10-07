@@ -114,7 +114,7 @@ const PrivacyPolicyPage = () => {
       category: 'CTA clicked',
       action: 'Email button clicked',
       label: 'Privacy Policy Contact',
-      value: 'Open mailto privacy@altiv.ai',
+      value: 55,
     });
   };
 

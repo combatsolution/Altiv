@@ -24,7 +24,7 @@ export default function ContactForm() {
       category: 'Submit  Click',
       action: 'button Clicked',
       label: 'Submitted Form',
-      Value:'',
+      Value:53,
     });
   };
 
