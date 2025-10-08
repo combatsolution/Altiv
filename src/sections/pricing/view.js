@@ -377,8 +377,9 @@ export default function PricingView() {
       <Box
         sx={{
           width: '100%',
-          height: { xs: 240, md: 300 },
-          background: 'linear-gradient(90deg, #4B69E9 5%, #00A3FF 100%)',
+          height: { xs: 240, md: '100%' },
+          // background: 'linear-gradient(90deg, #4B69E9 5%, #00A3FF 100%)',
+          bgcolor:'primary.main',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
@@ -394,7 +395,7 @@ export default function PricingView() {
         </Typography>
       </Box>
 
-      {/* 🔘 Category Buttons */}
+      {/*  Category Buttons */}
       <Stack direction="row" justifyContent="left" spacing={2} sx={{ mb: 3, flexWrap: 'wrap' }}>
         {planCategories.map((category) => (
           <Button

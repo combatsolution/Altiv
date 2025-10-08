@@ -30,7 +30,6 @@ export function useGetPost(slug) {
   const URL = slug ? `${endpoints.post.details}${slug}` : null;
 
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
-
   const memoizedValue = useMemo(
     () => ({
       post: data?.blogs?.[0] || data,
@@ -181,16 +180,16 @@ export function useGetCategoriesPost(filterString, categoryId) {
 
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
 
-   const memoizedValue = useMemo(
-     () => ({
-       posts: data?.blogs || [],
-       postsLoading: URL ? isLoading : false,
-       postsError: error,
-       postsValidating: isValidating,
-       postsEmpty: !isLoading && !data?.blogs?.length,
-     }),
-     [URL, data?.blogs, error, isLoading, isValidating]
-   );
+  const memoizedValue = useMemo(
+    () => ({
+      posts: data?.blogs || [],
+      postsLoading: URL ? isLoading : false,
+      postsError: error,
+      postsValidating: isValidating,
+      postsEmpty: !isLoading && !data?.blogs?.length,
+    }),
+    [URL, data?.blogs, error, isLoading, isValidating]
+  );
 
   return memoizedValue;
 }

@@ -544,15 +544,15 @@ function TestimonialSection() {
                     sx={{
                       width: "60px",
                       height: "60px",
-
                       borderRadius: 15,
-                      m: 3,
+                      ml:2,
+                    
                     }}
                   />
                   <Grid sx={{ display: 'flex', flexDirection: 'column' }} >
                     {/* Name + Title */}
                     <Typography
-                      sx={{ width: '150px', fontWeight: 700, fontFamily: 'Inter, sans-serif' }}
+                      sx={{ fontSize:'14px', width: '200px', fontWeight: 700, fontFamily: 'Inter, sans-serif' }}
                     >
                       {item.tags}
                     </Typography>
@@ -728,8 +728,8 @@ function TestimonialSection() {
                     onClick={() => {
                       setIndex(i);
                       goToIndex(thumbCarousel.carouselRef, i);
-                      goToIndex(rightCarousel.carouselRef, i);
-                      trackEvent({
+                      goToIndex(rightCarousel.carouselRef, i);  
+                      trackEvent({  
                         category: 'Testimonial Carousel',
                         action: 'Thumbnail Click',
                         label: visibleBlogs[i]?.title || 'Unknown',
@@ -737,7 +737,7 @@ function TestimonialSection() {
                       });
 
                     }}
-                    sx={{ width: 'auto', height: 393, pl: 0.5, cursor: 'pointer', objectFit: 'cover' }}
+                    sx={{ width: 'auto', height: 193, pl: 0.5, cursor: 'pointer', objectFit: 'cover' }}
                   />
                 ))}
               </Carousel>

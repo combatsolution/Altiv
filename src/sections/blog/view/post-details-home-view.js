@@ -211,6 +211,7 @@
 // }
 
 
+
 /* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -245,12 +246,8 @@ import { PostDetailsSkeleton } from '../post-skeleton';
 
 // ----------------------------------------------------------------------
 
-export default function PostDetailsHomeView() {
-  const { id } = useParams();
-  const [searchParams] = useSearchParams();
-  const categoryId = searchParams.get('category');
-
-  const { post, postLoading, postError } = useGetPost(id);
+export default function PostDetailsHomeView({post, postError, postLoading, categoryId }) {
+  
 
   const {
     comments = [],
@@ -410,6 +407,8 @@ export default function PostDetailsHomeView() {
       {postError && renderError}
       {post && renderPost}
     </>
+
+    
   );
 }
 

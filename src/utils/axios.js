@@ -25,16 +25,14 @@ export default axiosInstance;
 
 export const fetcher = async (args) => {
   const [url, config] = Array.isArray(args) ? args : [args];
-
   const res = await axiosInstance.get(url, { ...config });
-
   return res.data;
 };
-
 // ----------------------------------------------------------------------
 
 export const endpoints = {
   chat: '/api/chat',
+  posts: '/post/',
   kanban: '/api/kanban',
   calendar: '/api/calendar',
   auth: {

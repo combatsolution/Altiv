@@ -36,6 +36,7 @@
   import { m } from 'framer-motion';
   import { useSearchParams } from 'src/routes/hook';
   import { trackEvent } from 'src/utils/google-analytics';
+import axios from 'axios';
 
   const MotionBox = m(Box);
   const MotionImage = m(Box);
@@ -75,7 +76,7 @@
         category: 'CTA Clicked',
         action: 'button clicked',
         label: 'Check your score',
-        value: 'resume upload popup'
+        value: 104,
       });
     }
 
@@ -103,7 +104,7 @@
           category: 'Resume Deleted',
           action: 'resume deleted',
           label: 'Delete Resume',
-          value: 'resume deleted'
+          value: 105,
         });
       } catch (err) {
         console.error('Delete error:', err);
@@ -150,7 +151,7 @@
           category: 'Navigation',
           action: 'Fobo score',
           label: 'Continue to fobo score',
-          value: 'Fobo analysis page'
+          value:106,
         });
       } catch (err) {
         console.error('Error during encryption or navigation:', err);
@@ -161,7 +162,7 @@
       try {
         setIsLoading(true);
         const response = await axiosInstance.post(
-          currentUser ? '/resumes' : '/resumes/guest-upload',
+          currentUser ?await axiosInstance.post('/resumes'): await axios.post('/resumes/guest-upload'),
           { fileDetails: file }
         );
         if (response.data) {
@@ -172,7 +173,7 @@
             category: 'Resume Uploaded',
             action: 'Resume uploaded',
             label: 'resume uploaded success',
-            value: 'resume uploaded'
+            value: 107,
           });
         }
       } catch (uploadError) {

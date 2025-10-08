@@ -7,7 +7,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { blue } from '@mui/material/colors';
 import heroImg from 'src/images/hero-image.png';
 import { Modal, ToggleButton, ToggleButtonGroup, useMediaQuery, useTheme } from '@mui/material';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
 import { paths } from 'src/routes/paths';
@@ -20,6 +20,7 @@ import { trackEvent } from 'src/utils/google-analytics';
 import { useSearchParams } from 'src/routes/hook';
 import { RamenDining } from '@mui/icons-material';
 import { UploadIllustration } from 'src/assets/illustrations';
+import { current } from '@reduxjs/toolkit';
 
 function HomeHero() {
   const [open, setOpen] = useState(false);
@@ -38,6 +39,7 @@ function HomeHero() {
   const [docIsLoading, setDocIsLoading] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef();
+  console.log("currentUserfromcontext:", currentUser);
 
   const getButtonLabel = () => {
     if (docIsLoading) return 'Uploading...';
@@ -129,21 +131,8 @@ function HomeHero() {
     }
   };
 
-  useEffect(() => {
-    const retry = searchParams.get('retry');
-    if (retry) {
-      setUploadType(retry);
-      handleOpenModal();
-      trackEvent({
-        category: 'HomeHero',
-        action: 'Modal Opened',
-        label: retry,
-        value: 89,
-      });
-    }
-  }, [searchParams]);
-
-  const handleOpenModal = () => {
+  // 👇 define handleOpenModal first
+  const handleOpenModal = useCallback(() => {
     setOpen(true);
     trackEvent({
       category: 'HomeHero',
@@ -151,8 +140,24 @@ function HomeHero() {
       label: uploadType,
       value: 90,
     });
+  }, [uploadType]);
 
-  }
+  // 👇 then your effect
+  useEffect(() => {
+    handleOpenModal();
+    const retry = searchParams.get('retry');
+    if (retry) {
+      setUploadType(retry);
+      trackEvent({
+        category: 'HomeHero',
+        action: 'Modal Opened',
+        label: retry,
+        value: 89,
+      });
+    }
+  }, [searchParams, handleOpenModal]);
+
+
   const handleUploadResume = async (fileDetails) => {
     try {
       setIsLoading(true);
@@ -162,7 +167,6 @@ function HomeHero() {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         isDeleted: false,
-        userId: currentUser?.id || 0,
       };
 
       const response = await axiosInstance.post(
@@ -619,7 +623,7 @@ function HomeHero() {
 
                 variant="outlined"
                 component={RouterLink}
-                to='/post/how-altiv-works'
+                to='/post/how-altivs-ai-unlocks-your-true-career-potential'
                 target='_blank'
                 onClick={() =>
                   trackEvent({

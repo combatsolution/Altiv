@@ -225,6 +225,8 @@
 //   sx: PropTypes.object,
 // };
 
+
+
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Box, Stack, Button, Divider, Typography } from '@mui/material';
@@ -267,21 +269,57 @@ export default function PricingCard({ card, sx, ...other }) {
     fetchPlans();
   }, []);
 
-  // ✅ Destructure card safely
+  // ✅ Destructure card safely 
+  // const {
+  //   id,
+  //   courses: {
+  //     courseName,
+  //     heading,
+  //     description,
+  //     features = [],
+  //     keyOutcomes = [],
+  //   } = {},
+  //   price,
+  //   paymentType,
+  //   recurringPeriod,
+  //   access,
+  // } = card;
+
   const {
-    id,
-    courses: {
-      courseName,
-      heading,
-      description,
-      features = [],
-      keyOutcomes = [],
-    } = {},
-    price,
-    paymentType,
-    recurringPeriod,
-    access,
-  } = card;
+  id,
+  courses,
+  price,
+  paymentType,
+  recurringPeriod,
+  access,
+} = card || {};
+
+const courseName = courses?.courseName || '';
+const heading = courses?.heading || '';
+const description = courses?.description || '';
+const features = courses?.features || [];
+const keyOutcomes = courses?.keyOutcomes || [];
+
+ // ✅ Add this check here — right before the main return
+  if (!courseName && features.length === 0 && keyOutcomes.length === 0) {
+    return (
+      <Box
+        textAlign="center"
+        py={6}
+        sx={{
+          borderRadius: 2,
+          boxShadow: 2,
+          bgcolor: 'background.paper',
+        }}
+      >
+        <Typography variant="h6" color="text.secondary">
+          🚫 No data found for this plan
+        </Typography>
+      </Box>
+    );
+  }
+
+
 
   const isCurrentPlan = activePlan === id;
   const isAlreadyPurchased = courseData.includes(courseName);
@@ -296,16 +334,23 @@ export default function PricingCard({ card, sx, ...other }) {
       sx={{
         position: 'relative',
         p: { xs: 2, sm: 3, md: 4 },
-        borderRadius: 2,
-        boxShadow: 3,
+        borderRadius: 3,
+        boxShadow: 4,
         bgcolor: 'background.paper',
-        width: '100%',
-        maxWidth: { xs: '100%', sm: 380, md: 420 },
-        minHeight: { xs: 'auto', sm: 420 },
-        textAlign: { xs: 'center', sm: 'left' },
+        width: { xs: '100%', sm: 360, md: 380 },
+        minHeight: { xs: 480, sm: 520, md: 560 }, // 🔹 ensures all cards have same height
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'left',
+        mx: 'auto', // 🔹 centers the card horizontally
+        textAlign: {xs:'center',md:'left'},
         overflow: 'hidden',
+        transition: 'transform 0.3s ease',
+        '&:hover': { transform: 'translateY(-4px)' },
         ...sx,
       }}
+
       {...other}
     >
       {/* 🔵 Gradient background only at the top */}
@@ -315,9 +360,8 @@ export default function PricingCard({ card, sx, ...other }) {
           top: 0,
           left: 0,
           width: '100%',
-          height: '30%', // adjust height as needed
+          height: '28%', // adjust height as needed
           background: 'linear-gradient(90deg, #4B69E9 5%, #00A3FF 100%)',
-
           zIndex: 0,
         }}
       />
@@ -381,19 +425,18 @@ export default function PricingCard({ card, sx, ...other }) {
       </Box>
 
       {/* Add space after the gradient section */}
-      <Box sx={{ mt: { xs: 6, sm: 8 } }} />
 
-      <Divider sx={{ my: 2 }} />
+      <Divider sx={{ my: 0 }} />
 
       {/* Features */}
-      {features.length > 0 && (
+      {features?.length > 0 && (
         <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start' }}>
           {features.map((feature, i) => (
             <Stack
               key={i}
               direction="row"
               spacing={1}
-              alignItems="center"
+              alignItems="left"
               justifyContent={{ xs: 'center', sm: 'flex-start' }}
             >
               <Iconify
@@ -455,7 +498,6 @@ export default function PricingCard({ card, sx, ...other }) {
           '&:hover': {
             bgcolor: isCurrentPlan ? 'success.dark' : 'primary.dark',
           },
-          mt: 2,
         }}
         onClick={() => navigate('/payment')}
       >
