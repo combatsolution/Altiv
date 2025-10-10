@@ -31,7 +31,7 @@ function HomeHero() {
   const [experience, setExperience] = useState(0);
   const [designation, setDesignation] = useState('');
   const searchParams = useSearchParams();
-  const { currentUser } = useAuthContext();
+  const { user: currentUser } = useAuthContext();
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadedFileDetails, setUploadedFileDetails] = useState(null); // Store uploaded file details
   const [selectedResumeId, setSelectedResumeId] = useState(null);
@@ -39,7 +39,7 @@ function HomeHero() {
   const [docIsLoading, setDocIsLoading] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef();
-  console.log("currentUserfromcontext:", currentUser);
+  
 
   const getButtonLabel = () => {
     if (docIsLoading) return 'Uploading...';

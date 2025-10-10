@@ -64,6 +64,7 @@ import axios from 'axios';
         setExistingResumes(currentUser.resumes || []);
       }
     }, [currentUser]);
+    console.log("FOBOCuser",  currentUser);
 
     useEffect(() => {
       const retry = searchParams.get('retry');
@@ -158,12 +159,19 @@ import axios from 'axios';
       }
     };
 
-    const handleUploadResume = async (file) => {
+    const handleUploadResume = async (fileDetails) => {
       try {
         setIsLoading(true);
+        
+      const payload = {
+        fileDetails,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        isDeleted: false,
+      };
         const response = await axiosInstance.post(
-          currentUser ?await axiosInstance.post('/resumes'): await axios.post('/resumes/guest-upload'),
-          { fileDetails: file }
+        currentUser ? '/resumes' : '/resumes/guest-upload',
+          payload
         );
         if (response.data) {
           enqueueSnackbar('Upload successful', { variant: 'success' });

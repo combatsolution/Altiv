@@ -234,6 +234,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from 'src/auth/hooks';
 import axiosInstance from 'src/utils/axios';
 import Iconify from 'src/components/iconify';
+import { paths } from 'src/routes/paths';
 
 export default function PricingCard({ card, sx, ...other }) {
   const navigate = useNavigate();
@@ -360,8 +361,9 @@ const keyOutcomes = courses?.keyOutcomes || [];
           top: 0,
           left: 0,
           width: '100%',
-          height: '28%', // adjust height as needed
-          background: 'linear-gradient(90deg, #4B69E9 5%, #00A3FF 100%)',
+          height: '32%', // adjust height as needed
+          // background: 'linear-gradient(90deg, #4B69E9 5%, #00A3FF 100%)',
+           bgcolor:'primary.main',
           zIndex: 0,
         }}
       />
@@ -416,7 +418,6 @@ const keyOutcomes = courses?.keyOutcomes || [];
             sx={{
               fontSize: { xs: '0.85rem', sm: '0.9rem' },
               maxWidth: '90%',
-
             }}
           >
             {description}
@@ -499,7 +500,11 @@ const keyOutcomes = courses?.keyOutcomes || [];
             bgcolor: isCurrentPlan ? 'success.dark' : 'primary.dark',
           },
         }}
-        onClick={() => navigate('/payment')}
+        onClick={() =>
+        { if(!user){
+          navigate(paths.auth.jwt.login);
+        }else{
+          navigate('/payment')}}}
       >
         {buttonLabel}
       </Button>
