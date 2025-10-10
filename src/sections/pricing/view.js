@@ -242,25 +242,25 @@ import PricingCard from './pricing-card';
 // Category configuration
 const planCategories = [
   { label: 'Marketing', value: 1, type: 'MT' },
-  { label: 'Data Science', value: 2, type: 'DS' },
-  { label: 'Product Management', value: 3, type: 'PM' },
+  { label: 'Data Science', value: 0, type: 'DS' },
+  { label: 'Product Management', value: 2, type: 'PM' },
 ];
 
 const categoryHeadings = {
   Marketing: {
     value: 1,
-    title: 'Marketing Mastery',
+    title: 'Marketing Mastery', 
     subtitle:
       'Accelerate your AI Marketing Evolution - Transform your marketing strategies with cutting-edge AI tools and frameworks',
   },
   'Data Science': {
-    value: 2,
+    value: 0,
     title: 'Data Science Leadership',
     subtitle:
       'Accelerate your AI-Driven Data Science Evolution - Master the implementation of AI solutions at scale',
   },
   'Product Management': {
-    value: 3,
+    value: 2,
     title: 'AI Product Innovation',
     subtitle:
       'Accelerate your AI-Enhanced Product Evolution - Build and scale AI-powered products that deliver real value',

@@ -271,55 +271,20 @@ export default function PricingCard({ card, sx, ...other }) {
   }, []);
 
   // ✅ Destructure card safely 
-  // const {
-  //   id,
-  //   courses: {
-  //     courseName,
-  //     heading,
-  //     description,
-  //     features = [],
-  //     keyOutcomes = [],
-  //   } = {},
-  //   price,
-  //   paymentType,
-  //   recurringPeriod,
-  //   access,
-  // } = card;
-
   const {
-  id,
-  courses,
-  price,
-  paymentType,
-  recurringPeriod,
-  access,
-} = card || {};
-
-const courseName = courses?.courseName || '';
-const heading = courses?.heading || '';
-const description = courses?.description || '';
-const features = courses?.features || [];
-const keyOutcomes = courses?.keyOutcomes || [];
-
- // ✅ Add this check here — right before the main return
-  if (!courseName && features.length === 0 && keyOutcomes.length === 0) {
-    return (
-      <Box
-        textAlign="center"
-        py={6}
-        sx={{
-          borderRadius: 2,
-          boxShadow: 2,
-          bgcolor: 'background.paper',
-        }}
-      >
-        <Typography variant="h6" color="text.secondary">
-          🚫 No data found for this plan
-        </Typography>
-      </Box>
-    );
-  }
-
+    id,
+    courses: {
+      courseName,
+      heading,
+      description,
+      features = [],
+      keyOutComes = [], // ✅ correct name
+    } = {},
+    price,
+    paymentType,
+    recurringPeriod,
+    access,
+  } = card;
 
 
   const isCurrentPlan = activePlan === id;
@@ -345,7 +310,7 @@ const keyOutcomes = courses?.keyOutcomes || [];
         justifyContent: 'space-between',
         alignItems: 'left',
         mx: 'auto', // 🔹 centers the card horizontally
-        textAlign: {xs:'center',md:'left'},
+        textAlign: { xs: 'center', md: 'left' },
         overflow: 'hidden',
         transition: 'transform 0.3s ease',
         '&:hover': { transform: 'translateY(-4px)' },
@@ -361,9 +326,9 @@ const keyOutcomes = courses?.keyOutcomes || [];
           top: 0,
           left: 0,
           width: '100%',
-          height: '32%', // adjust height as needed
+          height: '30%', // adjust height as needed
           // background: 'linear-gradient(90deg, #4B69E9 5%, #00A3FF 100%)',
-           bgcolor:'primary.main',
+          bgcolor: 'primary.main',
           zIndex: 0,
         }}
       />
@@ -412,17 +377,17 @@ const keyOutcomes = courses?.keyOutcomes || [];
 
         {/* Description */}
         {description && (
-          <Typography
-            variant="body2"
-            color="common.white"
-            sx={{
-              fontSize: { xs: '0.85rem', sm: '0.9rem' },
-              maxWidth: '90%',
-            }}
-          >
-            {description}
-          </Typography>
-        )}
+  <Box
+    sx={{
+      color: 'common.white',
+      fontSize: { xs: '0.85rem', sm: '0.9rem' },
+      maxWidth: '90%',
+      '& p': { margin: 0 }, // optional: removes <p> default margin
+    }}
+    dangerouslySetInnerHTML={{ __html: description }}
+  />
+)}
+
       </Box>
 
       {/* Add space after the gradient section */}
@@ -457,7 +422,7 @@ const keyOutcomes = courses?.keyOutcomes || [];
       )}
 
       {/* Key Outcomes */}
-      {keyOutcomes.length > 0 && (
+      {Array.isArray(keyOutComes) && keyOutComes.length > 0 && (
         <Box
           sx={{
             width: '100%',
@@ -472,18 +437,19 @@ const keyOutcomes = courses?.keyOutcomes || [];
           </Typography>
           <Divider sx={{ my: 1 }} />
           <Stack spacing={0.5}>
-            {keyOutcomes.map((o, idx) => (
+            {keyOutComes.map((outcome, idx) => (
               <Typography
                 key={idx}
                 variant="body2"
                 sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}
               >
-                • {o}
+                • {outcome.heading}
               </Typography>
             ))}
           </Stack>
         </Box>
       )}
+
 
       <Box sx={{ flexGrow: 1 }} />
 
@@ -500,11 +466,13 @@ const keyOutcomes = courses?.keyOutcomes || [];
             bgcolor: isCurrentPlan ? 'success.dark' : 'primary.dark',
           },
         }}
-        onClick={() =>
-        { if(!user){
-          navigate(paths.auth.jwt.login);
-        }else{
-          navigate('/payment')}}}
+        onClick={() => {
+          if (!user) {
+            navigate(paths.auth.jwt.login);
+          } else {
+            navigate('/payment')
+          }
+        }}
       >
         {buttonLabel}
       </Button>
