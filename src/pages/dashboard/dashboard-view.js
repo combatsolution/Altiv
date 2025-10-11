@@ -4,14 +4,16 @@ import { DashboardView } from "src/sections/Dashboard/View";
 
 export default function DashboardViewPage()
 { 
-    const userStartedWith = sessionStorage.getItem("userStartedWith");
+const userStartedWith = sessionStorage.getItem("userStartedWith");
 
     return(
         <>
             <Helmet>
                 <title>Dashboard</title>
             </Helmet>
-             <SubHeader subtitle="FOBO" showUploadResume={userStartedWith}  />
+             <SubHeader subtitle="FOBO" 
+             showUploadResume={userStartedWith}
+             />
            
             <DashboardView />
         </>

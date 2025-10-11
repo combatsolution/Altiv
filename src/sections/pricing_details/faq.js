@@ -27,20 +27,23 @@ const FAQS = [
   },
 ];
 
-export default function ListedJourney({price}) {
+export default function ListedJourney({ price }) {
   const theme = useTheme();
 
   return (
     <Container
       component={MotionViewport}
       sx={{
-        py: { xs: 8, md: 4 },
-        maxWidth: { xs: '100% !important', md: '1000px !important' },
+        maxWidth: '100%',
+        width: '100%',
+        py: { xs: 4, md: 4 },
       }}
     >
       <Box sx={{ textAlign: 'center', mb: 4 }}>
+         <Divider sx={{my:3, width:'100%'}}/>
+        
         <Typography
-          variant="h3"
+          variant="h2"
           sx={{
             fontWeight: 'bold',
             color: theme.palette.primary.dark,
@@ -97,15 +100,17 @@ export default function ListedJourney({price}) {
       <Box
         sx={{ mt: 4, textAlign: 'center' }}>
         <Typography
+          variant="h2"
           sx={{
-            color: theme.palette.primary.main,
-            fontWeight: 300,
-            fontSize: '24px',
-            mb: 2,
+            fontWeight: 'bold',
+            color: theme.palette.primary.dark,
+            mb: 1,
+            fontSize: { xs: '1.5rem', md: '1.6rem' },
           }}
         >
           Future-proof your marketing career today
         </Typography>
+
         <Box sx={{ mt: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
           {/* Primary Button */}
           <Button
@@ -115,7 +120,7 @@ export default function ListedJourney({price}) {
               px: 2,
               py: 1,
               fontWeight: 600,
-              fontSize: '12px',
+              fontSize: '15px',
               borderRadius: 1,
             }}
           >
@@ -131,7 +136,7 @@ export default function ListedJourney({price}) {
               px: 1,
               py: 1,
               fontWeight: 600,
-              fontSize: '12px',
+              fontSize: '15px',
               borderRadius: 2,
 
             }}

@@ -114,7 +114,9 @@ import axios from 'axios';
     };
 
     const handleContinue = (Type) => {
+      console.log("ddsdsds->",Type);
       sessionStorage.setItem("userStartedWith", Type);
+
       if (
         !selectedFile &&
         !selectedResumeId &&
@@ -176,8 +178,8 @@ import axios from 'axios';
         if (response.data) {
           enqueueSnackbar('Upload successful', { variant: 'success' });
           setSelectedResumeId(response?.data?.id);
-          sessionStorage.setItem('userStartedWith', 'resume');
-          trackEvent({
+         sessionStorage.setItem('userStartedWith', 'resume');
+          trackEvent({  
             category: 'Resume Uploaded',
             action: 'Resume uploaded',
             label: 'resume uploaded success',
@@ -474,7 +476,7 @@ import axios from 'axios';
             <Button
               variant="contained"
               fullWidth
-              onClick={handleContinue}
+              onClick={()=>(handleContinue("resume"))}
               disabled={
                 !selectedFile &&
                 !selectedResumeId &&

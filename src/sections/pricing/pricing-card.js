@@ -72,7 +72,7 @@ export default function PricingCard({ card, sx, ...other }) {
         position: 'relative',
         p: { xs: 2.5, sm: 3 },
         borderRadius: 3,
-        boxShadow: 4,
+        // boxShadow: 4,
         bgcolor: 'background.paper',
         width: { xs: '100%', sm: 360, md: 380 },
         height: { xs: 'auto', sm: 560, md:590 }, // ✅ uniform card height
@@ -81,7 +81,7 @@ export default function PricingCard({ card, sx, ...other }) {
         justifyContent: 'space-between',
         overflow: 'hidden',
         transition: 'transform 0.3s ease',
-        '&:hover': { transform: 'translateY(-4px)' },
+        '&:hover': { transform: 'translateY(-2px)' },
         textAlign: { xs: 'center', md: 'left' },
         ...sx,
       }}
@@ -150,13 +150,14 @@ export default function PricingCard({ card, sx, ...other }) {
           />
         )}
 
-        <Divider sx={{ my: 2 }} />
+        <Divider sx={{ my: 3 }} />
 
         {/* Features */}
         {features?.length > 0 && (
           <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start' }}>
-            {features.map((feature, i) => (
-              <Stack key={i} direction="row" spacing={1} alignItems="center">
+            {features.map((feature, i) => 
+            (
+              <Stack key={i} direction="row" spacing={1} alignItems="center" sx={{}}>
                 <Iconify icon="eva:checkmark-fill" width={18} sx={{ color: 'success.main' }} />
                 <Typography variant="body2" sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}>
                   {feature}

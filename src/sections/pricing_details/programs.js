@@ -6,8 +6,10 @@ export default function Program() {
     <Box
       sx={{
         bgcolor: "white",
-        py: 8,
+        pt: 4,
         textAlign: "center",
+            maxWidth: '100%',
+         width:'100%',
       }}
     >
       <Container maxWidth="md">
@@ -16,7 +18,7 @@ export default function Program() {
           variant="h3"
           fontWeight="bold"
           gutterBottom
-          sx={{ color: "#0d2c9b" }}
+          sx={{ color: "#0d2c9b",mb:2 }}
         >
           Why this program?
         </Typography>

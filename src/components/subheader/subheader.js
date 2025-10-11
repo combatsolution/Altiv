@@ -1,6 +1,8 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { Box, Container, Typography, Button } from '@mui/material';
+
+
+import { Box, Container, Typography, Button, Grid } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
@@ -8,10 +10,10 @@ import { useNavigate } from 'react-router';
 export default function SubHeader({ subtitle, showUploadResume }) {
   const navigate = useNavigate();
 
+  const hasUploadedResume = showUploadResume === 'resume'; // ✅ reactively tied to prop
+
   return (
-    <Box
-      sx={{ backgroundColor: '#E9F4FF', py: 1.5, width: '100%', zIndex: 10, position: 'relative' }}
-    >
+    <Box sx={{ backgroundColor: '#E9F4FF', py: 1.5, width: '100%', position: 'relative' }}>
       <Container
         sx={{
           display: 'flex',
@@ -32,58 +34,86 @@ export default function SubHeader({ subtitle, showUploadResume }) {
           <Typography variant="body2">{subtitle}</Typography>
         </Box>
 
-        {showUploadResume !== "resume" && (
+        {/* ✅ Show Upload Resume Button only if no resume uploaded */}
+        {!hasUploadedResume && (
           <Button
             variant="outlined"
             size="medium"
             sx={{
-              fontSize: { xs: '14px', sm: '16px', md: '16px' },
-              fontFamily: 'Roboto',
-              fontWeight: 400,
-              lineHeight: '120%',
-              letterSpacing: '0%',
-              ml: 'auto',
-              mb: { xs: 1, sm: 0 },
-              display: 'flex',
-              alignItems: 'center',
-              gap: { xs: 0.5, sm: 1 },
-              py: { xs: 0.75, sm: 1 },
-              px: { xs: 1.5, sm: 2 },
+              fontSize: { xs: '14px', sm: '16px' },
+              border: '1px solid #4C95EB',
               textTransform: 'none',
-              whiteSpace: 'nowrap',
-              minWidth: 'auto',
-              border: '1px solid',
-              borderColor: '#4C95EB',
+              ml: 'auto',
             }}
+            onClick={() => navigate(`${"/"}?retry=resume`)}
           >
             <img
               src="/assets/icons/careerCompass/upload_icon.svg"
               alt="upload_icon"
               height={24}
               width={24}
-              style={{
-                display: 'block',
-                width: { xs: '20px', sm: '24px' },
-                height: 'auto',
-              }}
+              style={{ marginRight: 8 }}
             />
-            <Box component="span"   
-            onClick={() => navigate(`${"/"}?retry=resume`)}
-            sx={{ display: { xs: 'none', sm: 'inline' }}}>
-              Upload resume to unlock your potential
-            </Box>
-            <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>
-              Upload resume
-            </Box>
+            Upload resume to unlock your potential
           </Button>
+        )}
+
+        {/* ✅ Show Buttons only when resume is uploaded */}
+        {hasUploadedResume && (
+          <Grid
+            item
+            xs={12}
+            textAlign="left"
+            display="flex"
+            flexDirection="row"
+            justifyContent="center"
+          >
+            <Button
+              variant="contained"
+              sx={{
+                width: '175px',
+                backgroundColor: '#2C47D3',
+                borderRadius: 10,
+                px: 4,
+                mx: 1,
+                textTransform: 'none',
+                fontWeight: 'bold',
+                '&:hover': {
+                  backgroundColor: '#2C47D3',
+                  boxShadow: 'none',
+                },
+              }}
+              onClick={() => navigate('/pricing')}
+            >
+              Beat FOBO Now
+            </Button>
+
+            <Button
+              variant="contained"
+              sx={{
+                width: '175px',
+                backgroundColor: '#2C47D3',
+                borderRadius: 10,
+                px: 4,
+                textTransform: 'none',
+                fontWeight: 'bold',
+                '&:hover': {
+                  backgroundColor: '#2C47D3',
+                  boxShadow: 'none',
+                },
+              }}
+              onClick={() => navigate('/aireadliness')}
+            >
+              FOBO Pro
+            </Button>
+          </Grid>
         )}
       </Container>
     </Box>
   );
 }
 
-
 SubHeader.propTypes = {
   subtitle: PropTypes.string,
-  showUploadResume: PropTypes.string, // corrected from bool to string
+  showUploadResume: PropTypes.string,
 };

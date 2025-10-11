@@ -13,9 +13,9 @@ import {
 
 import { useParams, } from 'react-router-dom';
 import Program from './programs';
-import ListedInfo from "./listedinfo"; // ✅ import child component
-import FAQSection from './faqquestion';
-import ListedJourney from "./listedjourney";
+import ListedInfo from "./keyoutcomes"; // ✅ import child component
+import ProgramModule from './programmodule';
+import ListedJourney from "./faq";
 import ToolsMastery from './ToolsMastery'
 
 export default function AIMarketingBuilder() {
@@ -23,13 +23,13 @@ export default function AIMarketingBuilder() {
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   console.log("ID_is->", id);
-const [currency, setCurrency] = useState('USD'); // or 'INR'
-const convertPrice = (price) => {
-  const rate = 83; // 1 USD = 83 INR
-  return currency === 'USD'
-    ? `$${price.toLocaleString()}`
-    : `₹${(price * rate).toLocaleString('en-IN')}`;
-};
+  const [currency, setCurrency] = useState('USD'); // or 'INR'
+  const convertPrice = (price) => {
+    const rate = 83; // 1 USD = 83 INR
+    return currency === 'USD'
+      ? `$${price.toLocaleString()}`
+      : `₹${(price * rate).toLocaleString('en-IN')}`;
+  };
 
   // const keyOutComes = planData?.courses?.keyOutComes || [];
 
@@ -91,21 +91,23 @@ const convertPrice = (price) => {
   return (
     <Box
       sx={{
+
         bgcolor: "primary.main",
         color: "white",
-        pt: 1,
+        py: 0,
         textAlign: "center",
+
       }}
     >
       <Container maxWidth="md">
         {/* Title */}
-        <Typography variant="h3" fontWeight="bold" gutterBottom>
+        <Typography variant="h3" fontWeight="bold" gutterBottom sx={{pt:4}}>
           {courseName}
         </Typography>
 
         {/* Subtitle */}
-        <Typography variant="subtitle1" sx={{ opacity: 0.85, mb: 3 }}>
-          {heading || "Cohort-based course · No coding required"}
+        <Typography variant="subtitle1" sx={{ opacity: 0.85, mb: 1 }}>
+          {"4-month, hands-on cohort · No coding required" || heading}
         </Typography>
 
         {/* Price Button */}
@@ -121,7 +123,7 @@ const convertPrice = (price) => {
             borderRadius: "50px",
             boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
             "&:hover": { bgcolor: "#00e676" },
-            mb: 6,
+            mb: 2,
           }}
         >
           {planData.isFreePlan ? "Free" : `$${price.toLocaleString()}`}
@@ -145,6 +147,7 @@ const convertPrice = (price) => {
                   borderRadius: 2,
                   p: 3,
                   fontSize: "1rem",
+                  mb: 4
                 }}
               >
                 <Typography variant="subtitle1" fontWeight="bold">
@@ -158,19 +161,19 @@ const convertPrice = (price) => {
 
         {/* Description */}
 
-        <Box sx={{ my: 1, textAlign: 'center' }}>
+        {/* <Box sx={{ my: 1, textAlign: 'center' }}>
           <div
             dangerouslySetInnerHTML={{ __html: description || "<p>No description available</p>" }}
           />
-        </Box>
+        </Box> */}
       </Container>
 
 
       <Box sx={{ bgcolor: '#fff' }}>
         <Program />
         <ListedInfo keyOutComes={keyOutComes} />
-        <FAQSection programModules={programModules} /> {/* Pass as prop */}
-        <ToolsMastery/>
+        <ProgramModule programModules={programModules} /> {/* Pass as prop */}
+        <ToolsMastery />
         <ListedJourney price={planData.price} />
 
       </Box>

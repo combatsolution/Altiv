@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import { MotionViewport } from 'src/components/animate';
 import { Icon } from '@iconify/react';
 import PropTypes from 'prop-types';
-
+import Divider from '@mui/material/Divider';
 // ----------------------------------------------------------------------
 
 export default function ListedInfo({ keyOutComes = [] }) {
@@ -30,39 +30,35 @@ export default function ListedInfo({ keyOutComes = [] }) {
     <Container
       component={MotionViewport}
       sx={{
-         maxWidth: '100%',
-         width:'100%',
-    py: { xs: 10, md: 10 },
-    textAlign: 'center',
-  
-
-      
-    boxShadow: 'none', // remove possible shadows
-
+        maxWidth: '100%',
+        width: '100%',
+        py: { xs: 1, md: 2 },
+        textAlign: 'center',
+    
       }}
     >
+      <Divider sx={{ my: 3 }} />
       {/* Heading */}
       <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-        <Box component="span" sx={{ 
-          // color: theme.palette.primary.dark
-          color:'primary.main'
-         }}>
+        <Box component="span" sx={{
+          color: 'primary.dark'
+        }}>
           Key outcomes
         </Box>
       </Typography>
 
       {/* Outcomes Grid */}
-      <Grid container spacing={4} sx={{ mt: 6, justifyContent: 'center' }}>
+      <Grid container spacing={4} sx={{ mt: 1, justifyContent: 'center' }}>
         {keyOutComes.map((item, index) => (
           <Grid key={item.id || index} xs={12} md={4}>
             <Paper
               elevation={5}
               sx={{
                 p: 4,
-                height: { xs: 200, md: 150 },
+                height: { xs: 150, md: 150 },
                 borderRadius: 2,
                 textAlign: 'center',
-                    bgcolor: 'background.paper', // or 'white' if you want white cards only
+                bgcolor: 'background.paper', // or 'white' if you want white cards only
 
               }}
             >
@@ -115,7 +111,7 @@ export default function ListedInfo({ keyOutComes = [] }) {
                 variant="body2"
                 sx={{
                   color: 'text.secondary',
-                  fontSize: { xs: 12, md: 14 },
+                  fontSize: { xs: 14, md: 14 },
                 }}
               >
                 {item.description}

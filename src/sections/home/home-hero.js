@@ -144,10 +144,11 @@ function HomeHero() {
 
   // 👇 then your effect
   useEffect(() => {
-    handleOpenModal();
+    // handleOpenModal();
     const retry = searchParams.get('retry');
     if (retry) {
       setUploadType(retry);
+      setOpen(true);
       trackEvent({
         category: 'HomeHero',
         action: 'Modal Opened',
@@ -155,7 +156,7 @@ function HomeHero() {
         value: 89,
       });
     }
-  }, [searchParams, handleOpenModal]);
+  }, [searchParams]);
 
 
   const handleUploadResume = async (fileDetails) => {

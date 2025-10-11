@@ -9,6 +9,7 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
+import Divider from '@mui/material/Divider';
 
 const toolsData = [
   {
@@ -36,13 +37,21 @@ export default function ToolsMastery() {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Box sx={{ py: 6, px: { xs: 2, sm: 6 } }}>
+
+    <Box sx={{
+      mx:'auto',
+      maxWidth: '1200px',
+      width: '100%',
+      
+      py: 1, px: { xs: 2, sm: 3 }
+    }}>
+      <Divider sx={{ my: 3, width: '100%' }} />
       <Typography
-        variant="h3"  
+        variant="h3"
         align="center"
         fontWeight="bold"
-        sx={{ mb: 4, color:theme.palette.primary.dark }}
-        
+        sx={{ mb: 2, color: theme.palette.primary.dark }}
+
       >
         Tools you’ll master
       </Typography>
@@ -60,14 +69,14 @@ export default function ToolsMastery() {
           <Typography
             variant="subtitle1"
             fontWeight="bold"
-            sx={{ mb: 2, color:'#000' }}
+            sx={{ mb: 2, color: '#000' }}
           >
             {section.category}
           </Typography>
 
           <Grid container spacing={2}>
             {section.tools.map((tool, idx) => (
-              <Grid item xs={12}  sm={section.tools.length === 1 ? 12 : 6} key={idx}>
+              <Grid item xs={12} sm={section.tools.length === 1 ? 12 : 6} key={idx}>
                 <Card
                   sx={{
                     height: "100%",
