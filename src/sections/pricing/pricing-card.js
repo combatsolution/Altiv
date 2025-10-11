@@ -397,9 +397,9 @@ export default function PricingCard({ card, sx, ...other }) {
 
           {/* Features */}
           {features?.length > 0 && (
-            <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start' }}>
+            <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start'}}>
               {features.map((feature, i) => (
-                <Stack key={i} direction="row" spacing={1} alignItems="center">
+                <Stack key={i} direction="row" spacing={1} alignItems="center" sx={{pt:2}}>
                   <Iconify icon="eva:checkmark-fill" width={18} sx={{ color: 'success.main' }} />
                   <Typography variant="body2" sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}>
                     {feature}
