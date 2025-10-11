@@ -346,7 +346,8 @@ export default function PricingView() {
           justifyContent: 'flex-end',mb:2
         }}
       >
-        <FormControl size="small" sx={{ minWidth: 120, bgcolor: '#fff', borderRadius:2, borderColor:'primary.main' }}>
+        <FormControl size="small" sx={{ minWidth: 120, bgcolor: '#fff',
+           borderRadius:2, borderColor:'primary.main' }}>
           <Select
             value={currency}
             onChange={handleCurrencyChange}

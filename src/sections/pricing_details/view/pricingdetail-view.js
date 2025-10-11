@@ -13,11 +13,10 @@ export default function AboutView() {
     <>
  
    <AIMarketingBuilder/>
-   <Program/>
-    <ListedInfo/>
-     <FAQSection/>
-    <ToolsMastery/>
-     <ListedJourney/>
+   {/* <Program/> */}
+    {/* <ListedInfo/> */}
+     {/* <FAQSection/> */}
+     {/* <ListedJourney/> */}
 
 
     </>

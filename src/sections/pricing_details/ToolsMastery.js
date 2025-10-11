@@ -60,7 +60,7 @@ export default function ToolsMastery() {
           <Typography
             variant="subtitle1"
             fontWeight="bold"
-            sx={{ mb: 2 }}
+            sx={{ mb: 2, color:'#000' }}
           >
             {section.category}
           </Typography>

@@ -75,7 +75,11 @@ export const mainRoutes = [
     ),
     children: [
        {path:'ai-readiness-analysis', element:<Aieadlinessview/>},
+      //  <Route path="/plans/:id" element={<AIMarketingBuilder />} />
+
       {path:'pricing-detail', element:<Pricingdetailview/>},
+      {path:'pricing-detail/:id', element:<Pricingdetailview/>},
+
       { path: 'attributions', element: <AttributionsView /> },
       { path: 'ai-training-policy', element: <AitrainingpolicyView /> },
       { path: 'about-us', element: <AboutUsPage /> },

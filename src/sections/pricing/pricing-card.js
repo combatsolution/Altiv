@@ -224,9 +224,6 @@
 //   card: PropTypes.object.isRequired,
 //   sx: PropTypes.object,
 // };
-
-
-
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Box, Stack, Button, Divider, Typography } from '@mui/material';
@@ -270,7 +267,6 @@ export default function PricingCard({ card, sx, ...other }) {
     fetchPlans();
   }, []);
 
-  // ✅ Destructure card safely 
   const {
     id,
     courses: {
@@ -278,14 +274,12 @@ export default function PricingCard({ card, sx, ...other }) {
       heading,
       description,
       features = [],
-      keyOutComes = [], // ✅ correct name
+      keyOutComes = [],
     } = {},
     price,
     paymentType,
-    recurringPeriod,
     access,
   } = card;
-
 
   const isCurrentPlan = activePlan === id;
   const isAlreadyPurchased = courseData.includes(courseName);
@@ -294,56 +288,62 @@ export default function PricingCard({ card, sx, ...other }) {
   if (isCurrentPlan) buttonLabel = 'Current Plan';
   else if (access || price === 0) buttonLabel = 'Free';
   else if (isAlreadyPurchased) buttonLabel = 'Already Purchased';
+
   return (
     <Stack
-      spacing={{ xs: 2, sm: 3 }}
+      spacing={2}
       sx={{
         position: 'relative',
-        p: { xs: 2, sm: 3, md: 4 },
+        p: { xs: 2.5, sm: 3 },
         borderRadius: 3,
         boxShadow: 4,
         bgcolor: 'background.paper',
         width: { xs: '100%', sm: 360, md: 380 },
-        minHeight: { xs: 480, sm: 520, md: 560 }, // 🔹 ensures all cards have same height
+        height: { xs: 'auto', sm: 580 }, // ✅ Uniform fixed height
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        alignItems: 'left',
-        mx: 'auto', // 🔹 centers the card horizontally
-        textAlign: { xs: 'center', md: 'left' },
         overflow: 'hidden',
         transition: 'transform 0.3s ease',
         '&:hover': { transform: 'translateY(-4px)' },
+        textAlign: { xs: 'center', md: 'left' },
         ...sx,
       }}
-
       {...other}
     >
-      {/* 🔵 Gradient background only at the top */}
+      {/* Top Gradient */}
       <Box
         sx={{
           position: 'absolute',
           top: 0,
           left: 0,
           width: '100%',
-          height: '30%', // adjust height as needed
-          // background: 'linear-gradient(90deg, #4B69E9 5%, #00A3FF 100%)',
+          height: '28%',
           bgcolor: 'primary.main',
           zIndex: 0,
         }}
       />
 
-      {/* 🔲 Foreground content */}
-      <Box sx={{ position: 'relative', zIndex: 1 }}>
-        {/* Price pill */}
+      {/* Foreground Content */}
+      <Box
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Price Tag */}
         <Box
           sx={{
             position: 'absolute',
-            top: { xs: 8, sm: 2, },
-            right: { xs: 8, sm: 2, md: 2 },
-            px: { xs: 1, sm: 2 },
+            top: 8,
+            right: 8,
+            px: 2,
             py: 0.5,
-            borderRadius: '24px',
+            borderRadius: '20px',
             bgcolor: 'success.main',
             color: 'common.white',
             fontWeight: 600,
@@ -353,12 +353,8 @@ export default function PricingCard({ card, sx, ...other }) {
           {access ? 'Free' : `${price}${paymentType === 'monthly' ? '/mo' : ''}`}
         </Box>
 
-        {/* Title + tagline */}
-        <Stack
-          spacing={0.5}
-          alignItems={{ xs: 'center', sm: 'flex-start' }}
-          sx={{ mb: 1, mt: 1 }}
-        >
+        {/* Title */}
+        <Stack spacing={0.5} alignItems={{ xs: 'center', sm: 'flex-start' }} sx={{ mt: 1.5, mb: 1 }}>
           {heading && (
             <Typography variant="subtitle2" color="common.white">
               {heading}
@@ -372,114 +368,127 @@ export default function PricingCard({ card, sx, ...other }) {
           >
             {courseName}
           </Typography>
-
         </Stack>
 
-        {/* Description */}
-        {description && (
-  <Box
-    sx={{
-      color: 'common.white',
-      fontSize: { xs: '0.85rem', sm: '0.9rem' },
-      maxWidth: '90%',
-      '& p': { margin: 0 }, // optional: removes <p> default margin
-    }}
-    dangerouslySetInnerHTML={{ __html: description }}
-  />
-)}
-
-      </Box>
-
-      {/* Add space after the gradient section */}
-
-      <Divider sx={{ my: 0 }} />
-
-      {/* Features */}
-      {features?.length > 0 && (
-        <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start' }}>
-          {features.map((feature, i) => (
-            <Stack
-              key={i}
-              direction="row"
-              spacing={1}
-              alignItems="left"
-              justifyContent={{ xs: 'center', sm: 'flex-start' }}
-            >
-              <Iconify
-                icon="eva:checkmark-fill"
-                width={18}
-                sx={{ color: 'success.main' }}
-              />
-              <Typography
-                variant="body2"
-                sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}
-              >
-                {feature}
-              </Typography>
-            </Stack>
-          ))}
-        </Stack>
-      )}
-
-      {/* Key Outcomes */}
-      {Array.isArray(keyOutComes) && keyOutComes.length > 0 && (
+        {/* Scrollable content area to prevent card stretch */}
         <Box
           sx={{
-            width: '100%',
-            bgcolor: 'grey.200',
-            p: { xs: 1.5, sm: 2 },
-            borderRadius: 1,
-            mt: 2,
+            flexGrow: 1,
+            overflowY: 'auto',
+            pr: 1,
+            '&::-webkit-scrollbar': { width: '4px' },
+            '&::-webkit-scrollbar-thumb': { bgcolor: 'grey.400', borderRadius: 2 },
           }}
         >
-          <Typography variant="subtitle2" fontWeight={600} color="black">
-            Key Outcomes:
-          </Typography>
-          <Divider sx={{ my: 1 }} />
-          <Stack spacing={0.5}>
-            {keyOutComes.map((outcome, idx) => (
-              <Typography
-                key={idx}
-                variant="body2"
-                sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}
-              >
-                • {outcome.heading}
+          {/* Description */}
+          {description && (
+            <Box
+              sx={{
+                color: 'common.white',
+                fontSize: { xs: '0.85rem', sm: '0.9rem' },
+                maxWidth: '90%',
+                '& p': { margin: 0 },
+              }}
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
+          )}
+
+          <Divider sx={{ my: 2 }} />
+
+          {/* Features */}
+          {features?.length > 0 && (
+            <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start' }}>
+              {features.map((feature, i) => (
+                <Stack key={i} direction="row" spacing={1} alignItems="center">
+                  <Iconify icon="eva:checkmark-fill" width={18} sx={{ color: 'success.main' }} />
+                  <Typography variant="body2" sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}>
+                    {feature}
+                  </Typography>
+                </Stack>
+              ))}
+            </Stack>
+          )}
+
+          {/* Key Outcomes */}
+          {Array.isArray(keyOutComes) && keyOutComes.length > 0 && (
+            <Box
+              sx={{
+                bgcolor: 'grey.200',
+                p: { xs: 1.5, sm: 2 },
+                borderRadius: 1,
+                mt: 2,
+              }}
+            >
+              <Typography variant="subtitle2" fontWeight={600} color="black">
+                Key Outcomes:
               </Typography>
-            ))}
-          </Stack>
+              <Divider sx={{ my: 1 }} />
+              <Stack spacing={0.5}>
+                {keyOutComes.map((outcome, idx) => (
+                  <Typography
+                    key={idx}
+                    variant="body2"
+                    sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}
+                  >
+                    • {outcome.heading}
+                  </Typography>
+                ))}
+              </Stack>
+            </Box>
+          )}
         </Box>
-      )}
+      </Box>
 
-
-      <Box sx={{ flexGrow: 1 }} />
-
-      {/* CTA Button */}
-      <Button
-        fullWidth
-        size="large"
-        variant="contained"
-        disabled={isCurrentPlan || access || isAlreadyPurchased || price === 0}
+      {/* 🔘 CTA Buttons Fixed at Bottom */}
+      <Stack
+        direction="row"
+        spacing={1.5}
         sx={{
-          fontSize: { xs: '0.85rem', sm: '1rem' },
-          bgcolor: isCurrentPlan ? 'success.main' : 'primary.main',
-          '&:hover': {
-            bgcolor: isCurrentPlan ? 'success.dark' : 'primary.dark',
-          },
-        }}
-        onClick={() => {
-          if (!user) {
-            navigate(paths.auth.jwt.login);
-          } else {
-            navigate('/payment')
-          }
+          mt: 2,
+          pt: 2,
+          borderTop: '1px solid',
+          borderColor: 'divider',
         }}
       >
-        {buttonLabel}
-      </Button>
+        <Button
+          fullWidth
+          size="large"
+          variant="contained"
+          disabled={isCurrentPlan || access || isAlreadyPurchased || price === 0}
+          sx={{
+            fontSize: { xs: '0.9rem', sm: '1rem' },
+            bgcolor: isCurrentPlan ? 'success.main' : 'primary.main',
+            '&:hover': { bgcolor: isCurrentPlan ? 'success.dark' : 'primary.dark' },
+          }}
+          onClick={() => {
+            if (!user) navigate(paths.auth.jwt.login);
+            else navigate('/payment');
+          }}
+        >
+          {buttonLabel}
+        </Button>
+
+        <Button
+          fullWidth
+          size="large"
+          variant="outlined"
+          sx={{
+            fontSize: { xs: '0.9rem', sm: '1rem' },
+            color: 'primary.main',
+            borderColor: 'primary.main',
+            bgcolor: 'common.white',
+            '&:hover': {
+              bgcolor: 'primary.lighter',
+              borderColor: 'primary.dark',
+            },
+          }}
+          onClick={() => navigate(`/pricing-detail/${id}`)}
+        >
+          Learn More
+        </Button>
+      </Stack>
     </Stack>
   );
-
-
 }
 
 PricingCard.propTypes = {

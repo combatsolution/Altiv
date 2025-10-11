@@ -9,6 +9,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import { MotionViewport } from 'src/components/animate';
+import Button from '@mui/material/Button';
+import PropTypes from 'prop-types';
 
 const FAQS = [
   {
@@ -25,7 +27,7 @@ const FAQS = [
   },
 ];
 
-export default function FAQSection() {
+export default function ListedJourney({price}) {
   const theme = useTheme();
 
   return (
@@ -97,13 +99,53 @@ export default function FAQSection() {
         <Typography
           sx={{
             color: theme.palette.primary.main,
-            fontSize: '1rem',
+            fontWeight: 300,
+            fontSize: '24px',
             mb: 2,
           }}
         >
           Future-proof your marketing career today
         </Typography>
+        <Box sx={{ mt: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
+          {/* Primary Button */}
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              px: 2,
+              py: 1,
+              fontWeight: 600,
+              fontSize: '12px',
+              borderRadius: 1,
+            }}
+          >
+            {/* Enroll & Pay ${price.toLocaleString()} */}
+            Enroll & Pay ${price?.toLocaleString() || '0'}
+
+          </Button>
+
+          {/* Secondary Link */}
+          <Button
+            color="primary"
+            sx={{
+              px: 1,
+              py: 1,
+              fontWeight: 600,
+              fontSize: '12px',
+              borderRadius: 2,
+
+            }}
+          >
+            Need more info
+          </Button>
+        </Box>
+
       </Box>
     </Container>
   );
 }
+
+
+ListedJourney.propTypes = {
+  price: PropTypes.number,
+};

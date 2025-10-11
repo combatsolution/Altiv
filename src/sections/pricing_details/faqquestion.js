@@ -125,12 +125,15 @@ export default function FAQSection({ programModules = [] }) {
     <Container
       component={MotionViewport}
       sx={{
-        py: { xs: 8, md: 12 },
+        my: { xs: 8, md: 3   },
+        py: { xs: 8, md: 5  },
         maxWidth: { xs: '100% !important', md: '1000px !important' },
+ backgroundColor: '#fff',
+    boxShadow: 'none', // remove possible shadows
       }}
     >
       {/* Section Header */}
-      <Box sx={{ textAlign: 'center', mb: 4 }}>
+      <Box sx={{ textAlign: 'center', mb: 2}}>
         <Typography
           variant="h3"
           sx={{
@@ -188,6 +191,8 @@ export default function FAQSection({ programModules = [] }) {
                     sx={{
                       color: theme.palette.text.secondary,
                       fontSize: '0.98rem',
+                      display:'flex',
+                      alignItems:'left',
                     }}
                   >
                     • {topic}
