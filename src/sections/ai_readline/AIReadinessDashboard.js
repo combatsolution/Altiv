@@ -1,10 +1,12 @@
+import { useEffect } from "react";
 import { Box, Container, Grid, Typography, Paper, Button, Avatar } from "@mui/material";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import BoltIcon from "@mui/icons-material/Bolt";
 import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
-import { m, useAnimation, useMotionValue, useTransform } from "framer-motion";
+import { m, animate, useMotionValue, useTransform } from "framer-motion";
+import PropTypes from "prop-types"; // ✅ add this at the top
 
 
 // Motion wrapper for Paper
@@ -46,7 +48,32 @@ const metrics = [
   },
 ];
 
-export default function AIReadinessDashboard() {
+
+// Component for animated number counter
+function AnimatedNumber({ value, suffix }) {
+  const motionValue = useMotionValue(0);
+  const rounded = useTransform(motionValue, (latest) => Math.floor(latest));
+  const displayedValue = useTransform(rounded, (val) => `${val}${suffix}`);
+
+  useEffect(() => {
+    motionValue.set(0);
+    const controls = animate(motionValue, value, {
+      duration: 2,
+      ease: "easeOut",
+    });
+    return () => controls.stop();
+  }, [value, motionValue]);
+
+  return (
+    <m.span style={{ display: "inline-block" }}>
+      <m.span style={{ display: "inline-block" }}>{displayedValue}</m.span>
+    </m.span>
+  );
+}
+
+
+export default function 
+AIReadinessDashboard() {
   return (
     <Box sx={{ bgcolor: "#f4f7fb", minHeight: "370px", 
     my: 5, mx:'auto', maxWidth: { xs: '100%', md: '1330px', lg: '1350px' }   }}>
@@ -186,7 +213,7 @@ export default function AIReadinessDashboard() {
                     sx={{ textAlign: "left" }}
                     color="primary.main"
                   >
-                    {metric.value}
+                   <AnimatedNumber value={metric.value} suffix={metric.suffix} />
                   </Typography>
 
                   <Typography
@@ -208,3 +235,14 @@ export default function AIReadinessDashboard() {
     </Box>
   );
 }
+
+
+// ✅ Add this below the component
+AnimatedNumber.propTypes = {
+  value: PropTypes.number.isRequired,
+  suffix: PropTypes.string,
+};
+
+AnimatedNumber.defaultProps = {
+  suffix: "",
+};

@@ -20,7 +20,7 @@ import { paths } from 'src/routes/paths';
 import { useAuthContext } from 'src/auth/hooks';
 import { varHover } from 'src/components/animate';
 import Altivlogo from 'src/images/Altivlogo.png';
-//  import SubHeader from 'src/components/subheader/subheader';
+ import SubHeader from 'src/components/subheader/subheader';
 import { trackEvent } from 'src/utils/google-analytics';
 import { HEADER } from '../config-layout';
 import { navConfig } from './config-navigation';
@@ -279,7 +279,7 @@ export default function Header() {
       </Toolbar>
 
       {offsetTop && <HeaderShadow /> }
-     {/* <SubHeader/>   */}
+      <SubHeader/>   
 
     </AppBar>
   );
