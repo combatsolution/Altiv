@@ -6,6 +6,8 @@ import { Box, Container, Typography, Button, Grid } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
+import { trackEvent } from 'src/utils/google-analytics';
+import { paths } from 'src/routes/paths';
 
 export default function SubHeader({ subtitle, showUploadResume }) {
   const navigate = useNavigate();
@@ -59,7 +61,7 @@ export default function SubHeader({ subtitle, showUploadResume }) {
         )}
 
         {/* ✅ Show Buttons only when resume is uploaded */}
-        {hasUploadedResume && (
+        {(subtitle === "FOBO" && hasUploadedResume) && (
           <Grid
             item
             xs={12}
@@ -71,7 +73,7 @@ export default function SubHeader({ subtitle, showUploadResume }) {
             <Button
               variant="contained"
               sx={{
-                width: '175px',
+                width: { xs: '180px', md: '175px' },
                 backgroundColor: '#2C47D3',
                 borderRadius: 10,
                 px: 4,
@@ -83,7 +85,16 @@ export default function SubHeader({ subtitle, showUploadResume }) {
                   boxShadow: 'none',
                 },
               }}
-              onClick={() => navigate('/pricing')}
+              onClick={() => {
+                trackEvent({
+                  category: 'CTA clicked',
+                  action: 'button clicked',
+                  label: 'Beat FOBO now',
+                  value: 'Navigate to pricing',
+                });
+                navigate(paths.pricing);
+              }}
+              aria-label="Navigate to pricing page"
             >
               Beat FOBO Now
             </Button>
@@ -91,7 +102,7 @@ export default function SubHeader({ subtitle, showUploadResume }) {
             <Button
               variant="contained"
               sx={{
-                width: '175px',
+                width: { xs: '180px', md: '175px' },
                 backgroundColor: '#2C47D3',
                 borderRadius: 10,
                 px: 4,
@@ -102,8 +113,18 @@ export default function SubHeader({ subtitle, showUploadResume }) {
                   boxShadow: 'none',
                 },
               }}
-              onClick={() => navigate('/aireadliness')}
+              onClick={() => {
+                trackEvent({
+                  category: 'CTA clicked',
+                  action: 'button clicked',
+                  label: 'Beat FOBO now',
+                  value: 'Navigate to pricing',
+                });
+                navigate(paths.aireadliness);
+              }}
+              aria-label="Navigate to pricing page"
             >
+
               FOBO Pro
             </Button>
           </Grid>

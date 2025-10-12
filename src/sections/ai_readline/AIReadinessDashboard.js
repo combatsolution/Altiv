@@ -4,7 +4,7 @@ import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import BoltIcon from "@mui/icons-material/Bolt";
 import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
-import { m } from "framer-motion";
+import { m, useAnimation, useMotionValue, useTransform } from "framer-motion";
 
 
 // Motion wrapper for Paper
@@ -14,28 +14,32 @@ const handleSectionChange = "Executive Summary"; // Placeholder for section chan
 const metrics = [
   {
     title: "AI-Readiness Score",
-    value: "75%",
+    value: 75,
+    suffix: "%",
     subtitle: "Above Average",
     color: "#3b82f6",
     icon: <TrackChangesIcon sx={{ fontSize: 28, color: "#3b82f6" }} />,
   },
   {
-    title: "Transformation Timeline ",   
-    value: "36",
+    title: "Transformation Timeline",
+    value: 36,
+    suffix: "",
     subtitle: "Months",
     color: "#f59e0b",
     icon: <BoltIcon sx={{ fontSize: 28, color: "#f59e0b" }} />,
   },
   {
     title: "Automation Potential",
-    value: "65%",
+    value: 65,
+    suffix: "%",
     subtitle: "High Impact",
     color: "#ec4899",
     icon: <RocketLaunchIcon sx={{ fontSize: 28, color: "#ec4899" }} />,
   },
   {
     title: "Strategic Objectives",
-    value: "6",
+    value: 6,
+    suffix: "",
     subtitle: "Key Goals",
     color: "#facc15",
     icon: <EmojiObjectsIcon sx={{ fontSize: 28, color: "#facc15" }} />,

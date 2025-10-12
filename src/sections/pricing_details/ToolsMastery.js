@@ -38,12 +38,12 @@ export default function ToolsMastery() {
 
   return (
 
-    <Box sx={{
+    <Box 
+    sx={{
       mx:'auto',
       maxWidth: '1200px',
       width: '100%',
-      
-      py: 1, px: { xs: 2, sm: 3 }
+      px: { xs: 2, sm: 3 }
     }}>
       <Divider sx={{ my: 3, width: '100%' }} />
       <Typography

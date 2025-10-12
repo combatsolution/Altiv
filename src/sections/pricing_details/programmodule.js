@@ -19,8 +19,8 @@ export default function ProgramModule({ programModules = [] }) {
       component={MotionViewport}
       
       sx={{
-        my: { xs: 2, md: 3 },
-        py: { xs: 2, md: 5 },
+        my: { xs: 2, md: 1 },
+        py: { xs: 2, md: 1 },
          maxWidth: '100%',
          width:'100%',
         backgroundColor: '#fff',
@@ -28,7 +28,7 @@ export default function ProgramModule({ programModules = [] }) {
       }}
     >
          
-         <Divider sx={{my:3, width:'100%'}}/>
+         <Divider sx={{mb:3, width:'100%'}}/>
       {/* Section Header */}
       <Box sx={{ textAlign: 'center', mb: 2 }}>
         <Typography

@@ -38,6 +38,7 @@ export default function AIMarketingBuilder() {
     const fetchPlanData = async () => {
       try {
         const response = await axiosInstance.get(`/plans/${id}`); // use id dynamically if needed
+        console.log("responses", response)
         setPlanData(response.data);
       } catch (error) {
         console.error("Error fetching plan data:", error);
@@ -60,7 +61,7 @@ export default function AIMarketingBuilder() {
 
   if (!planData) {
     return (
-      <Box sx={{ textAlign: "center", py: 10 }}>
+      <Box sx={{ textAlign: "center", py: 5 }}>
         <Typography variant="h6" color="error">
           ⚠️ No course data found.
         </Typography>
@@ -72,6 +73,7 @@ export default function AIMarketingBuilder() {
   const {
     price,
     isFreePlan,
+    batch,
     courses = {},
   } = planData;
 
@@ -91,24 +93,37 @@ export default function AIMarketingBuilder() {
   return (
     <Box
       sx={{
-
         bgcolor: "primary.main",
         color: "white",
-        py: 0,
         textAlign: "center",
-
       }}
     >
-      <Container maxWidth="md">
+      <Container
+        sx={{
+          my: { xs: 2, md: 1 },
+          py: { xs: 2, md: 1 },
+          maxWidth: '100%', 
+          width: '100%',
+        }}>
         {/* Title */}
-        <Typography variant="h3" fontWeight="bold" gutterBottom sx={{pt:4}}>
+        <Typography variant="h3" fontWeight="bold" gutterBottom sx={{ pt: 6 }}>
           {courseName}
         </Typography>
 
         {/* Subtitle */}
-        <Typography variant="subtitle1" sx={{ opacity: 0.85, mb: 1 }}>
-          {"4-month, hands-on cohort · No coding required" || heading}
-        </Typography>
+        <Typography variant="13px" sx={{ opacity: 0.85, }}>
+          {description ? (
+            <Typography
+              variant="13px"
+              sx={{ opacity: 0.85, }}
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
+          ) : (
+            <Typography variant="13px" sx={{ opacity: 0.85 }}>
+              4-month, hands-on cohort · No coding required
+            </Typography>
+          )}     
+         </Typography>
 
         {/* Price Button */}
         <Button
@@ -126,17 +141,28 @@ export default function AIMarketingBuilder() {
             mb: 2,
           }}
         >
-          {planData.isFreePlan ? "Free" : `$${price.toLocaleString()}`}
+          {planData.isFreePlan ? "Free" : `$${price.toLocaleString()} / month `}
         </Button>
 
         {/* Info Grid */}
         <Grid container spacing={3} justifyContent="center">
           {[
             { label: "Duration", value: courseDuration || "N/A" },
-            { label: "Format", value: format || "Live + Self-paced" },
+            { label: "Format", value: format || "Live + Self-paced " },
+            {
+              label: "Batch Start Date",
+              value: batch?.startDate
+                ? new Date(batch.startDate).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })
+                : "N/A",
+            },
             { label: "Effort", value: effort || "2-3 h / week" },
+
           ].map((item, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid item xs={12} sm={6} md={3} key={index}>
               <Paper
                 elevation={0}
                 sx={{

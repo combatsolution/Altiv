@@ -838,7 +838,7 @@ export default function FoboLevelTaskDistribution() {
           <Button
             variant="contained"
             sx={{
-              width:'20%',
+              width:{xs:'180px', md:'20%'},
               backgroundColor: '#2C47D3',
               borderRadius: 10,
               px: 4,
@@ -867,7 +867,7 @@ export default function FoboLevelTaskDistribution() {
           <Button
             variant="contained"
             sx={{
-              width:'20%',
+              width:{xs:'180px', md:'20%'},
               backgroundColor: '#2C47D3',
               borderRadius: 10,
               px: 4,

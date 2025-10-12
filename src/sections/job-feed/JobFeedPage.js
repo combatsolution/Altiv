@@ -556,7 +556,7 @@ export default function JobFeedPage() {
         Job Category
       </Typography>
       <FormGroup>
-        {['Product Management', 'Data Science'].map((cat) => (
+        {[ 'Data Science', 'Product Management'].map((cat) => (
           <FormControlLabel
             key={cat}
             control={

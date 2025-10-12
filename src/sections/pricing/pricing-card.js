@@ -69,18 +69,19 @@ export default function PricingCard({ card, sx, ...other }) {
     <Stack
       spacing={2}
       sx={{
+        px:30,
         position: 'relative',
-        p: { xs: 2.5, sm: 3 },
+        p: { xs: 2.5, sm: 3  },
         borderRadius: 3,
         // boxShadow: 4,
         bgcolor: 'background.paper',
-        width: { xs: '100%', sm: 360, md: 380 },
-        height: { xs: 'auto', sm: 560, md:590 }, // ✅ uniform card height
+        width: { xs: '100%', sm: 360, md: 365 },
+        height: { xs: 'auto', sm: 560, md:645 }, // ✅ uniform card height
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         overflow: 'hidden',
-        transition: 'transform 0.3s ease',
+        transition: 'transform 0.3s ease',  
         '&:hover': { transform: 'translateY(-2px)' },
         textAlign: { xs: 'center', md: 'left' },
         ...sx,
@@ -97,6 +98,7 @@ export default function PricingCard({ card, sx, ...other }) {
           height: '28%',
           bgcolor: 'primary.main',
           zIndex: 0,
+          
         }}
       />
 
@@ -109,7 +111,7 @@ export default function PricingCard({ card, sx, ...other }) {
             top: 8,
             right: 8,
             px: 2,
-            py: 0.5,
+            py: 1,
             borderRadius: '20px',
             bgcolor: 'success.main',
             color: 'common.white',
@@ -128,10 +130,12 @@ export default function PricingCard({ card, sx, ...other }) {
             </Typography>
           )}
           <Typography
+
             variant="h6"
             fontWeight={700}
             color="common.white"
-            sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem' } }}
+            sx={{ width:{xs:'600px', md:'300px'},
+              fontSize: { xs: '1.1rem', sm: '1.25rem' } }}
           >
             {courseName}
           </Typography>
@@ -150,14 +154,14 @@ export default function PricingCard({ card, sx, ...other }) {
           />
         )}
 
-        <Divider sx={{ my: 3 }} />
+        <Divider sx={{ my: 2, pb:1 }} />
 
-        {/* Features */}
+        {/* Features */}  
         {features?.length > 0 && (
           <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start' }}>
             {features.map((feature, i) => 
             (
-              <Stack key={i} direction="row" spacing={1} alignItems="center" sx={{}}>
+              <Stack key={i} direction="row" spacing={1} alignItems="center"  >
                 <Iconify icon="eva:checkmark-fill" width={18} sx={{ color: 'success.main' }} />
                 <Typography variant="body2" sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}>
                   {feature}
