@@ -279,7 +279,7 @@ export default function Header() {
       </Toolbar>
 
       {offsetTop && <HeaderShadow /> }
-      <SubHeader/>   
+      {/* <SubHeader/>    */}
 
     </AppBar>
   );

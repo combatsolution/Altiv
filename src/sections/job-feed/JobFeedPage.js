@@ -434,6 +434,43 @@ export default function JobFeedPage() {
 
   console.log('khdkjsdk->', dateFilter);
 
+  // 👇 Load saved filters or set defaults on mount
+  useEffect(() => {
+    const savedFilters = JSON.parse(localStorage.getItem('jobFilters')) || {};
+
+    if (savedFilters.dateFilter) {
+      dispatch(setDateFilter(savedFilters.dateFilter));
+    } else {
+      dispatch(setDateFilter('All time'));
+    }
+
+    if (savedFilters.jobCategories) {
+      savedFilters.jobCategories.forEach((cat) => dispatch(toggleCategory(cat)));
+    } else {
+      dispatch(toggleCategory('Data Science')); // default
+    }
+
+    if (savedFilters.locationFilter) {
+      dispatch(setLocationFilter(savedFilters.locationFilter));
+    } else {
+      dispatch(setLocationFilter('All')); // default
+    }
+  }, [dispatch]);
+
+  // 👇 Save filters to localStorage whenever they change
+  useEffect(() => {
+    const filtersToSave = {
+      dateFilter,
+      jobCategories,
+      locationFilter,
+      levelFilter,
+      companyStage,
+      classification,
+    };
+    localStorage.setItem('jobFilters', JSON.stringify(filtersToSave));
+  }, [dateFilter, jobCategories, locationFilter, levelFilter, companyStage, classification]);
+
+
   const formatPostedDate = (createdAt) => {
     const diffDays = Math.floor((Date.now() - new Date(createdAt)) / 86400000);
     console.log("agdjhdgas->", diffDays);
@@ -449,6 +486,7 @@ export default function JobFeedPage() {
         const res = await axiosInstance.get('/jobs');
         const apiJobs = res.data;
         console.log("hasdhasldkhalds->", apiJobs);
+
 
         // 🔹 Map API fields to match your UI
         const mappedJobs = apiJobs.map((job) => ({
@@ -556,7 +594,7 @@ export default function JobFeedPage() {
         Job Category
       </Typography>
       <FormGroup>
-        {[ 'Data Science', 'Product Management'].map((cat) => (
+        {['Data Science', 'Product Management'].map((cat) => (
           <FormControlLabel
             key={cat}
             control={
