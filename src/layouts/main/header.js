@@ -1,5 +1,3 @@
-
-
 import { m } from 'framer-motion';
 import { alpha, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -37,10 +35,13 @@ export default function Header() {
   const offsetTop = useOffSetTop(HEADER.H_DESKTOP);
   const navigate = useNavigate();
   const location = useLocation();
-
+  const subtitle = sessionStorage.getItem("subtitle");
+  const userStartedWith = sessionStorage.getItem("userStartedWith");
+  console.log("fffdfddff0",subtitle);
   if (loading) {
     return <div>Loading...</div>;
   }
+  const isJobFeedPage = location.pathname === "/analysis";
 
   // Check if the current path is paths.profile or the login page
   const isProfilePage = location.pathname === paths.Profile;
@@ -279,8 +280,9 @@ export default function Header() {
       </Toolbar>
 
       {offsetTop && <HeaderShadow /> }
-      {/* <SubHeader/>    */}
-
+      {isJobFeedPage && subtitle==='FOBO'&& (
+        <SubHeader subtitle={subtitle} showUploadResume={userStartedWith} />
+      )}
     </AppBar>
   );
 }

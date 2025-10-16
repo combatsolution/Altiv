@@ -68,6 +68,7 @@ export default function AIMarketingBuilder() {
       </Box>
     );
   }
+  console.log('aaaaaffff',planData)
 
   // ✅ Extract values
   const {
@@ -87,6 +88,7 @@ export default function AIMarketingBuilder() {
     thumbnail,
     keyOutComes = [],
     programModules = [], // ✅ Extract here
+    tools = [], // ✅ Extract here
 
   } = courses;
 
@@ -199,7 +201,7 @@ export default function AIMarketingBuilder() {
         <Program />
         <ListedInfo keyOutComes={keyOutComes} />
         <ProgramModule programModules={programModules} /> {/* Pass as prop */}
-        <ToolsMastery />
+        <ToolsMastery  tools={tools}/>
         <ListedJourney price={planData.price} />
 
       </Box>

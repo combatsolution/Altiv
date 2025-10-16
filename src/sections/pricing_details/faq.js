@@ -1,16 +1,20 @@
+import React, { useEffect, useState } from 'react';
 import { m } from 'framer-motion';
 import { useTheme } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
+import {
+  Container,
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Box,
+  Divider,
+  Button
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import { MotionViewport } from 'src/components/animate';
-import Button from '@mui/material/Button';
 import PropTypes from 'prop-types';
+import { MotionViewport } from 'src/components/animate';
+import axiosInstance from 'src/utils/axios';
 
 const FAQS = [
   {
@@ -27,21 +31,33 @@ const FAQS = [
   },
 ];
 
-export default function ListedJourney({ price }) {
+export default function Faq({ price }) {
   const theme = useTheme();
+  const [faqs, setFaqs] = useState([]);
+
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const response = await axiosInstance.get('/faqs');
+       const filteredFaq = response.data.filter((faq)=>[17,18,19].includes(faq.id));
+      
+        setFaqs(filteredFaq);
+        console.log('Fetched FAQs:', response.data);    
+      } catch (error) {
+        console.error('Error fetching FAQs:', error);
+      }
+    };
+
+    fetchFaqs();
+  }, []);
 
   return (
     <Container
       component={MotionViewport}
-      sx={{
-        maxWidth: '100%',
-        width: '100%',
-        py: { xs: 4, md: 4 },
-      }}
+      sx={{ maxWidth: '100%', width: '100%', py: { xs: 4, md: 4 } }}
     >
       <Box sx={{ textAlign: 'center', mb: 4 }}>
-         <Divider sx={{my:3, width:'100%'}}/>
-        
+        <Divider sx={{ my: 3, width: '100%' }} />
         <Typography
           variant="h2"
           sx={{
@@ -53,27 +69,24 @@ export default function ListedJourney({ price }) {
         >
           FAQs
         </Typography>
-
       </Box>
 
-      {FAQS.map((faq, idx) => (
-        <Box key={faq.question}>
+      {(faqs.length > 0 ? faqs : FAQS).map((faq, idx) => (
+        <Box key={faq.question || idx}>
           <Accordion
             sx={{
               boxShadow: 'none',
               border: 0,
               borderRadius: 0,
               '&:before': { display: 'none' },
-              width: '100%',
+              width: '100%',  
             }}
           >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls={`faq-content-${idx}`}
               id={`faq-header-${idx}`}
-              sx={{
-                '& .MuiAccordionSummary-content': { my: 0.5 },
-              }}
+              sx={{ '& .MuiAccordionSummary-content': { my: 0.5 } }}
             >
               <Typography sx={{ fontWeight: 500, fontSize: '1rem' }}>
                 {faq.question}
@@ -85,6 +98,7 @@ export default function ListedJourney({ price }) {
                 sx={{
                   color: theme.palette.text.secondary,
                   fontSize: '0.98rem',
+                  textAlign:'left'
                 }}
               >
                 {faq.answer}
@@ -92,13 +106,11 @@ export default function ListedJourney({ price }) {
             </AccordionDetails>
           </Accordion>
 
-          {/* ✅ Show divider only if not the last FAQ */}
-          {idx < FAQS.length && (
-            <Divider sx={{ bgcolor: 'grey.100', my: 1 }} />
-          )}
-        </Box>))}
-      <Box
-        sx={{ mt: 4, textAlign: 'center' }}>
+          {idx < FAQS.length && <Divider sx={{ bgcolor: 'grey.100', my: 1 }} />}
+        </Box>
+      ))}
+
+      <Box sx={{ mt: 4, textAlign: 'center' }}>
         <Typography
           variant="h2"
           sx={{
@@ -111,8 +123,16 @@ export default function ListedJourney({ price }) {
           Future-proof your marketing career today
         </Typography>
 
-        <Box sx={{ mt: 1, textAlign: 'center', display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
-          {/* Primary Button */}
+        <Box
+          sx={{
+            mt: 1,
+            textAlign: 'center',
+            display: 'flex',
+            justifyContent: 'center',
+            gap: 2,
+            flexWrap: 'wrap',
+          }}
+        >
           <Button
             variant="contained"
             color="primary"
@@ -124,12 +144,9 @@ export default function ListedJourney({ price }) {
               borderRadius: 1,
             }}
           >
-            {/* Enroll & Pay ${price.toLocaleString()} */}
             Enroll & Pay ${price?.toLocaleString() || '0'}
-
           </Button>
 
-          {/* Secondary Link */}
           <Button
             color="primary"
             sx={{
@@ -138,19 +155,16 @@ export default function ListedJourney({ price }) {
               fontWeight: 600,
               fontSize: '15px',
               borderRadius: 2,
-
             }}
           >
             Need more info
           </Button>
         </Box>
-
       </Box>
     </Container>
   );
 }
 
-
-ListedJourney.propTypes = {
+Faq.propTypes = {
   price: PropTypes.number,
 };

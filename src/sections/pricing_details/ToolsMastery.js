@@ -8,57 +8,48 @@ import {
   CardContent,
   useTheme,
   useMediaQuery,
+  Divider,
 } from "@mui/material";
-import Divider from '@mui/material/Divider';
-
-const toolsData = [
-  {
-    category: "Language & Content Generation",
-    tools: [
-      { name: "ChatGPT", desc: "Conversational AI for copy & ideas" },
-      { name: "Gemini", desc: "Google’s multimodal AI assistant" },
-    ],
-  },
-  {
-    category: "Visual Design & Imagery",
-    tools: [
-      { name: "MidJourney", desc: "High quality image generation" },
-      { name: "Canva", desc: "Design layouts & brand kits" },
-    ],
-  },
-  {
-    category: "Analytics & Reporting",
-    tools: [{ name: "Looker Studio", desc: "Interactive dashboards" }],
-  },
-];
-
-export default function ToolsMastery() {
+import PropTypes from "prop-types";
+  
+export default function ToolsMastery({ tools = [] }) {
+    console.log("sdsfgg", tools)
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  return (
+  // 🧠 Defensive check: handle if tools array is empty
+  if (!tools.length) {
+    return (
+      <Box sx={{ textAlign: "center", py: 5 }}>
+        <Typography variant="body1" color="text.secondary">
+          No tools data available.
+        </Typography>
+      </Box>
+    );
+  }
 
-    <Box 
-    sx={{
-      mx:'auto',
-      maxWidth: '1200px',
-      width: '100%',
-      px: { xs: 2, sm: 3 }
-    }}>
-      <Divider sx={{ my: 3, width: '100%' }} />
+  return (
+    <Box
+      sx={{
+        mx: "auto",
+        maxWidth: "1200px",
+        width: "100%",
+        px: { xs: 2, sm: 3 },
+      }}
+    >
+      <Divider sx={{ my: 3, width: "100%" }} />
+
       <Typography
         variant="h3"
         align="center"
         fontWeight="bold"
         sx={{ mb: 2, color: theme.palette.primary.dark }}
-
       >
         Tools you’ll master
       </Typography>
-
-      {toolsData.map((section, i) => (
+      {tools.map((section, i) => (
         <Box
-          key={i}
+          key={section.id || i}
           sx={{
             bgcolor: "#f4f6ff",
             borderRadius: 2,
@@ -66,17 +57,24 @@ export default function ToolsMastery() {
             mb: 4,
           }}
         >
+          {/* 🏷️ Category name */}
           <Typography
             variant="subtitle1"
             fontWeight="bold"
-            sx={{ mb: 2, color: '#000' }}
+            sx={{ mb: 2, color: "#000" }}
           >
             {section.category}
           </Typography>
+ 
 
           <Grid container spacing={2}>
             {section.tools.map((tool, idx) => (
-              <Grid item xs={12} sm={section.tools.length === 1 ? 12 : 6} key={idx}>
+              <Grid
+                item
+                xs={12}
+                sm={section.tools.length === 1 ? 12 : 6}
+                key={idx}
+              >
                 <Card
                   sx={{
                     height: "100%",
@@ -96,14 +94,14 @@ export default function ToolsMastery() {
                       gutterBottom
                       align={isMobile ? "center" : "center"}
                     >
-                      {tool.name}
+                      {tool.toolName}
                     </Typography>
                     <Typography
                       variant="body2"
                       color="text.secondary"
                       align={isMobile ? "center" : "center"}
                     >
-                      {tool.desc}
+                      {tool.description}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -115,3 +113,7 @@ export default function ToolsMastery() {
     </Box>
   );
 }
+
+ToolsMastery.propTypes ={
+  tools: PropTypes.string.isRequired,
+};

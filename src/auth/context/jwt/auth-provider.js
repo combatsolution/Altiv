@@ -59,7 +59,7 @@ export function AuthProvider({ children }) {
         console.log('Initialize API response:', response.data);
         console.log('Initialize API response_id:', response.data.id);
 
-        localStorage.setItem("User_id",response.data.id);
+        localStorage.setItem("User_id", response.data.id);
 
         dispatch({
           type: 'INITIAL',
@@ -86,7 +86,8 @@ export function AuthProvider({ children }) {
       setSession(null);
       dispatch({
         type: 'INITIAL',
-        payload: {
+        payload:
+        {
           user: null,
         },
       });
@@ -106,6 +107,9 @@ export function AuthProvider({ children }) {
       console.log('Login response:', response.data);
       const { accessToken, ...user } = response.data;
 
+      if (user.role === 'admin' || user.permissions?.includes('admin')) {
+        throw new Error('Admin login is restricted.');
+      }
       localStorage.setItem(STORAGE_KEY, accessToken);
       setSession(accessToken);
 
@@ -126,15 +130,15 @@ export function AuthProvider({ children }) {
   }, []);
 
   const register = useCallback(async (email, password, fullName, phone) => {
-      try {
-        const data = {
-          fullName,
-          email,
-          password,
-          phoneNumber: phone,
-          permissions: ['customer'],
-          isActive: true,
-          isDeleted: false,
+    try {
+      const data = {
+        fullName,
+        email,
+        password,
+        phoneNumber: phone,
+        permissions: ['customer'],
+        isActive: true,
+        isDeleted: false,
       };
 
       console.log('Register attempt with payload:', data);

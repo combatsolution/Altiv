@@ -60,6 +60,7 @@ export default function FoboLevelTaskDistribution() {
   const [decryptedLinkedinUrl, setDecryptedLinkedinUrl] = useState('');
   const { user } = useAuthContext();
   const [userStartedWith, setUserStartedWith] = useState(null);
+  
 
   // Generate 4 shades (lighter to darker)
   const shades = [0.4, 0.6, 0.8, 1].map((opacity) =>
@@ -850,6 +851,9 @@ export default function FoboLevelTaskDistribution() {
                 boxShadow: 'none',
               },
             }}
+            
+
+
             onClick={() => {
               trackEvent({
                 category: 'CTA clicked',
@@ -885,7 +889,11 @@ export default function FoboLevelTaskDistribution() {
                 label: 'Beat FOBO now',
                 value: 'Navigate to pricing',
               });
-             navigate(paths.aireadliness);
+               if (!user) {
+             navigate(paths.auth.jwt.register);
+               }else{
+                navigate(paths.aireadliness);
+               }
             }}
             aria-label="Navigate to pricing page"
           >

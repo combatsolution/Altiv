@@ -60,6 +60,9 @@ export default function FoboHeroPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
+
+
+     
     if (currentUser) {
       setExistingResumes(currentUser.resumes || []);
     }
@@ -380,13 +383,13 @@ export default function FoboHeroPage() {
             <Typography variant="h5" mb={1}>
               Magic happens many ways
             </Typography>
-            <Typography variant="body2" mb={3}>
+            <Typography variant="body2" mb={1}>
               Upload a resume, select an existing one, or add LinkedIn URL
             </Typography>
 
             {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-            <Typography variant="subtitle1" fontWeight={600} mb={1}>
+            <Typography variant="subtitle1" fontWeight={600} mb={1}>  
               Select or Upload Resume
             </Typography>
 
@@ -394,7 +397,8 @@ export default function FoboHeroPage() {
               <List sx={{
                 maxHeight: "100px", overflowY: 'auto', mb: 2,
                 border: '1px solid', borderColor: 'divider',
-                borderRadius: 1
+                borderRadius: 1,
+                fontSize:'14px'
               }}>
 
                 {existingResumes.map((r) => (
@@ -408,13 +412,13 @@ export default function FoboHeroPage() {
                       }}
                       secondaryAction={
                         <Box display="flex" alignItems="center">
-                          {selectedResumeId === r.id && <CheckCircleIcon sx={{ color: green[600], mr: 1 }} />}
+                          {selectedResumeId === r.id && <CheckCircleIcon sx={{ color: green[600], ml: 2 }} />}
                           <IconButton edge="end" onClick={() => handleDeleteResume(r.id)} size="small">
-                            <DeleteIcon sx={{ color: 'error.main', fontSize: '1rem' }} />
+                            <DeleteIcon sx={{ color: 'error.main', fontSize: '1rem', ml:1 }} />
                           </IconButton>
                         </Box>
                       }
-                      sx={{ py: 1 }}
+                      sx={{ py: 1 }}  
                     >
                       <ListItemText
                         primary={<a href="#" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -493,7 +497,7 @@ export default function FoboHeroPage() {
                 bgcolor: indigo[500],
                 '&:hover': { bgcolor: indigo[700] },
                 borderRadius: 50,
-                py: 1,
+                pt: 1,
                 textTransform: 'none',
                 fontWeight: 500,
               }}

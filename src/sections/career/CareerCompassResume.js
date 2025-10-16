@@ -7,16 +7,20 @@ import {
   Select,
   MenuItem,
   Button,
+  TextField,
   useTheme,
   useMediaQuery,
+  Autocomplete
 } from '@mui/material';
 import ReactFlow, { Background, Handle, Position, Controls } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { m } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from 'src/auth/hooks';
 import { paths } from 'src/routes/paths';
 import axiosInstance from 'src/utils/axios';
 import CareerCard from './CareerCard';
+
 
 const transformApiData = (apiData) => {
   if (!apiData) return null;
@@ -83,12 +87,16 @@ export default function CareerPathProjection({ isResume, job, experience }) {
   const [showReactFlow, setShowReactFlow] = useState(false);
   const [careerData, setCareerData] = useState(null);
   const [loading, setLoading] = useState(false);
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [expandedLevels, setExpandedLevels] = useState({});
   // Show React Flow if job and experience are provided or if isResume is true
 
-  const des =sessionStorage.getItem('designation')? sessionStorage.getItem('designation') :"Software developer";
-  const exp =sessionStorage.getItem('experience') ? sessionStorage.getItem('experience') : "5";
+  const [userData, setUserData] = useState(null);
+  const des = sessionStorage.getItem('designation') ? sessionStorage.getItem('designation') : "Software developer";
+  const exp = sessionStorage.getItem('experience') ? sessionStorage.getItem('experience') : "5";
+
+  const { fullName } = useAuthContext();
+
 
   useEffect(() => {
     if (isResume || (job && experience)) {
@@ -132,8 +140,8 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     };
   }, [showSwipeHint]);
 
-  const [jobTitle, setJobTitle] = useState (des);
-  const [expYears, setExpYears] =  useState (exp);
+  const [jobTitle, setJobTitle] = useState(des);
+  const [expYears, setExpYears] = useState(exp);
 
   const [errors, setErrors] = useState({
     jobTitle: '',
@@ -445,25 +453,25 @@ export default function CareerPathProjection({ isResume, job, experience }) {
 
   // Generate all nodes
   const generateAllNodes = useCallback(() => {
-  console.log("dfskjhkjsdhg" );
+    console.log("dfskjhkjsdhg");
     if (!careerData) return [];
     const handleNodeClick = (id) => {
       setSelectedNodes((prev) => {
         const currentSelected = id;
         const path = [];
         const allNextAndExec = [...careerData.next, ...careerData.executive];
-console.log("dfsg", allNextAndExec )
+        console.log("dfsg", allNextAndExec)
         while (currentSelected) {
           path.unshift(currentSelected);
           if (currentSelected === careerData.current.id) break;
-          console.log("AAAAAAA->",currentSelected);
-          console.log("BBBBBBB->",allNextAndExec);
+          console.log("AAAAAAA->", currentSelected);
+          console.log("BBBBBBB->", allNextAndExec);
           // const node = allNextAndExec.find((n) => n.id === currentSelected);
           // if (!node) break;
           // currentSelected = node.parent;
         }
 
-        const updated = 
+        const updated =
         {
           current: path[0] || null,
           next: path[1] || null,
@@ -475,8 +483,8 @@ console.log("dfsg", allNextAndExec )
         return updated;
       });
     };
-console.log("lkhlkhlaks",careerData);
-    const baseNodes = [ 
+    console.log("lkhlkhlaks", careerData);
+    const baseNodes = [
       {
         id: 'label-current',
         type: 'label',
@@ -527,7 +535,7 @@ console.log("lkhlkhlaks",careerData);
       if (!depths[d]) depths[d] = [];
       depths[d].push(role);
     });
-console.log("dskdjsdsd->",depths);
+    console.log("dskdjsdsd->", depths);
     Object.keys(depths)
       .sort((a, b) => a - b)
       .forEach((d, dIndex) => {
@@ -593,9 +601,9 @@ console.log("dskdjsdsd->",depths);
   }, [generateAllNodes, rebuildEdges, selectedNodes]);
 
   return (
-    <Box sx={{ bgcolor: 'white', p: { xs: 1, sm: 2, md: 3 } }}>
+    <Box sx={{ bgcolor: 'white', p: { xs: 1, sm: 2, md: 1 } }}>
       <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-        <Box sx={{ bgcolor: 'white', p: { xs: 1, sm: 2, md: 4 } }}>
+        <Box sx={{ bgcolor: 'white', p: { xs: 1, sm: 2, md: 1 } }}>
           <Grid container direction="column" spacing={2}>
             <Grid item container spacing={2} alignItems="center">
               <Grid item xs={12} sm>
@@ -607,64 +615,49 @@ console.log("dskdjsdsd->",depths);
                       width={24}
                       height={24}
                     />
+
                     <Box sx={{ width: '100%' }}>
-                      <Select
-                        fullWidth
-                        size="small"
-                        value={jobTitle}
-                        displayEmpty
-                        onChange={(e) => {
-                          setJobTitle(e.target.value);
+                      <Autocomplete
+                        freeSolo={false}
+                        options={jobTitles} // your jobTitles array
+                        value={jobTitle || null}
+                        onChange={(e, newValue) => {
+                          setJobTitle(newValue);
                           if (errors.jobTitle) {
                             setErrors((prev) => ({ ...prev, jobTitle: '' }));
                           }
                         }}
-                        variant="standard"
-                        error={!!errors.jobTitle}
-                        renderValue={(selected) => {
-                          if (!selected) {
-                            return <span style={{ color: '#7C8DB5' }}>Select job title</span>;
-                          }
-                          return selected;
-                        }}
-                        sx={{
-                          '&:before': {
-                            borderBottom: errors.jobTitle
-                              ? '1px solid #FF4D4F'
-                              : '1px solid #D6DDEB',
-                          },
-                          '&:after': {
-                            borderBottom: errors.jobTitle
-                              ? '1px solid #FF4D4F'
-                              : '1px solid #D6DDEB',
-                          },
-                          '& .MuiSelect-select': {
-                            fontWeight: 400,
-                            fontSize: '16px',
-                            lineHeight: '160%',
-                            letterSpacing: '0%',
-                            color: errors.jobTitle ? '#FF4D4F' : '#25324B',
-                            padding: '8px 0 4px',
-                          },
-                        }}
-                      >
-                        {jobTitles.map((title) => (
-                          <MenuItem key={title} value={title}>
-                            {title}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      {errors.jobTitle && (
-                        <Typography
-                          variant="caption"
-                          color="error"
-                          sx={{ display: 'block', mt: 0.5, fontSize: '12px' }}
-                        >
-                          {errors.jobTitle}
-                        </Typography>
-                      )}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            // label="Select job title"
+                            variant="standard"
+                            error={!!errors.jobTitle}
+                            helperText={errors.jobTitle || ''}
+                            InputLabelProps={{
+                              shrink: true,
+                            }}  
+                            sx={{
+                              '& .MuiInputBase-input': {
+                                fontWeight: 400,
+                                fontSize: '16px',
+                                lineHeight: '160%',
+                                color: errors.jobTitle ? '#2c2828ff' : '#25324B',
+                                padding: '8px 0 4px',
+                              },
+                              '& .MuiInput-underline:before': {
+                                borderBottomColor: errors.jobTitle ? '#FF4D4F' : '#D6DDEB',
+                              },
+                              '& .MuiInput-underline:after': {
+                                borderBottomColor: errors.jobTitle ? '#FF4D4F' : '#D6DDEB',
+                              },
+                            }}
+                          />
+                        )}
+                      />
                     </Box>
                   </Box>
+
                   <Typography
                     variant="caption"
                     sx={{
@@ -673,7 +666,7 @@ console.log("dskdjsdsd->",depths);
                       lineHeight: '160%',
                       color: '#202430',
                       opacity: 0.7,
-                      ml: '32px', // Align with the input field (24px icon + 8px gap)
+                      ml: '32px', // align with icon
                       mt: 0.5,
                     }}
                   >
@@ -726,6 +719,8 @@ console.log("dskdjsdsd->",depths);
                         },
                       }}
                     >
+                      <MenuItem value={1}>1 Years</MenuItem>
+                      <MenuItem value={2}>2 Years</MenuItem>
                       <MenuItem value={5}>5 Years</MenuItem>
                       <MenuItem value={10}>10 Years</MenuItem>
                       <MenuItem value={15}>15 Years</MenuItem>
@@ -772,11 +767,12 @@ console.log("dskdjsdsd->",depths);
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Box sx={{ textAlign: 'left', mt: '26px', mb: '36px' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', }}>
                 <Typography
                   sx={{
                     fontFamily: { xs: 'Inter', sm: 'Roboto' },
                     fontWeight: 400,
+                    textAlign: 'left', mt: '26px', mb: '36px',
                     fontSize: '18px',
                     lineHeight: '30px',
                     letterSpacing: { xs: '-1.14px', sm: '-1.14px' },
@@ -786,8 +782,27 @@ console.log("dskdjsdsd->",depths);
                     },
                   }}
                 >
-                  Personalized career path projection for
+                  Personalized <b>career path projection</b> for{" "}
+                  <Box component="span" sx={{ fontWeight: 600, color: "#3f51b5" }}>
+                    {fullName}
+                  </Box>
                 </Typography>
+
+                <Button
+                  onClick={() => navigate(paths.jobFeed)}
+                  size={isMdUp ? 'medium' : 'small'}
+                  sx={{
+                    borderRadius: 5,
+                    px: { xs: 3, sm: 4 },
+                    bgcolor: 'primary.main',
+                    color: '#fff',
+                    mb: { xs: 2, md: 4 },
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                    '&:hover': { bgcolor: 'primary.dark' },
+                  }}
+                >
+                  Show job match
+                </Button>
               </Box>
             </Grid>
           </Grid>
@@ -864,26 +879,13 @@ console.log("dskdjsdsd->",depths);
                 </Typography>
               </Box>
             )}
-            <Button
-              onClick={() => navigate(paths.jobFeed)}
-              size={isMdUp ? 'medium' : 'small'}
-              sx={{
-                borderRadius: 5,
-                px: { xs: 3, sm: 4 },
-                bgcolor: 'primary.main',
-                color: '#fff',
-                fontSize: { xs: '0.875rem', sm: '1rem' },
-                '&:hover': { bgcolor: 'primary.dark' },
-              }}
-            >
-              Show job match
-            </Button>
+
           </Box>
         </Box>
       </Box>
     </Box>
   );
-}
+} 
 
 CareerPathProjection.propTypes = {
   isResume: PropTypes.bool,

@@ -8,10 +8,11 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
 import { trackEvent } from 'src/utils/google-analytics';
 import { paths } from 'src/routes/paths';
+import { useAuthContext } from 'src/auth/hooks';
 
 export default function SubHeader({ subtitle, showUploadResume }) {
   const navigate = useNavigate();
-
+const {user} = useAuthContext();
   const hasUploadedResume = showUploadResume === 'resume'; // ✅ reactively tied to prop
 
   return (
@@ -120,7 +121,11 @@ export default function SubHeader({ subtitle, showUploadResume }) {
                   label: 'Beat FOBO now',
                   value: 'Navigate to pricing',
                 });
-                navigate(paths.aireadliness);
+                if (!user) {
+                  navigate(paths.auth.jwt.register);
+                } else {
+                  navigate(paths.aireadliness);
+                }
               }}
               aria-label="Navigate to pricing page"
             >

@@ -56,12 +56,12 @@ const JobCard = ({ job }) => {
       category: 'Job Interaction',
       action: 'Apply Clicked',
       label: "Job Title",
-      value: 66,
+      value: 66,  
     });
 
     try {
       // POST call to apply endpoint
-      const res = await axiosInstance.post(`jobs/apply-job/${job.id}`);
+       const res = await axiosInstance.post(`jobs/apply-job/${job.id}`);
       if (res.status === 200 || res.data?.success) {
         if (job.redirectUrl) {
           window.open(job.redirectUrl, '_blank'); // redirect link

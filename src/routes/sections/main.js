@@ -8,6 +8,7 @@ import CompactLayout from 'src/layouts/compact';
 import { SplashScreen } from 'src/components/loading-screen';
 import { element } from 'prop-types';
 import { RolesAuthRoute } from 'src/hooks/RolesAuthRoute';
+import { Section } from 'lucide-react';
 
 // ----------------------------------------------------------------------
 
@@ -61,7 +62,7 @@ const Paymentdetails = lazy(() => import('src/sections/payment/view/payment-view
 const ProductPricing = lazy(() => import('src/sections/pricing/view'));
 const Pricingdetailview = lazy(() => import('src/sections/pricing_details/view/pricingdetail-view'));
 const Aieadlinessview =lazy(()=> import ('src/sections/ai_readline/view/aireadliness-view'));
-
+const Aireadlinecompanyfoboview =lazy(() => import ('src/sections/ai_readline_company_fobo/view/aireadlinessfobo-view'));
 // ---------------------------- -----------------------------------------
 
 export const mainRoutes = [
@@ -76,6 +77,7 @@ export const mainRoutes = [
     children: [
        {path:'ai-readiness-analysis', element:<Aieadlinessview/>},
       //  <Route path="/plans/:id" element={<AIMarketingBuilder />} />
+      {path:'aireadlinecompanyfobo', element:<Aireadlinecompanyfoboview/>},
 
       {path:'pricing-detail', element:<Pricingdetailview/>},
       {path:'pricing-detail/:id', element:<Pricingdetailview/>},

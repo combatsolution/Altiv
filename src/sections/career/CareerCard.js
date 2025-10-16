@@ -1,4 +1,3 @@
-
 // src/sections/career/CareerCard.js
 import PropTypes from 'prop-types';
 import { Paper, Typography, Box, Button, IconButton } from '@mui/material';
@@ -213,4 +212,4 @@ CareerCard.propTypes = {
   showExpandButton: PropTypes.bool,
   isExpanded: PropTypes.bool,
   onExpandToggle: PropTypes.func,
-};
+};  

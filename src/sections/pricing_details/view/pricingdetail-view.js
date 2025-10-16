@@ -1,7 +1,7 @@
 
 import FAQSection from "../programmodule";
 import ListedInfo from "../keyoutcomes";
-import ListedJourney from "../faq";
+import FAq from "../faq";
 import AIMarketingBuilder from "../AIMarketingBuilder";
 import Program from "../programs";
 import ToolsMastery from "../ToolsMastery";
