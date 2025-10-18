@@ -32,34 +32,53 @@ const CompanyComprehensivePlan = () => {
             <Divider sx={{ borderColor: "#00A3FF", mb: 3 }} />
             <Card>
                 <CardContent>
-                    <Typography variant="h6" gutterBottom color='primary.main'>
+                    <Typography variant="h6" gutterBottom color='primary.main'sx={{
+                        mt:3,
+                    }}>
                         Company FOBO Comprehensive Plan - Accenture
                     </Typography>
                     <Divider sx={{ borderColor: "#00A3FF", mb: 2 }} />
                     <Typography variant="h6" gutterBottom color='primary.main'>
                         Company FOBO Summary
                     </Typography>
-                    <Typography variant="body2" mb={2} sx={{
-                        display: "flex",
-                        flexDirection: 'column',
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column", // each row (group) goes under the previous one
+                            gap: 0.5, // small space between rows
+                            mb: 2,
+                        }}
+                    >
+                        {[
+                            { label: "Automation Score", value: "12.66" },
+                            { label: "Augmentation Score", value: "46.88" },
+                            { label: "Human-Only Score", value: "41.39" },
+                            { label: "FOBO Score", value: "59.54" },
+                        ].map((item, idx) => (
+                            <Typography
+                                key={idx}
+                                variant="body2"
+                                sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+                            >
+                                <strong>{item.label}:</strong> {item.value}
+                                {idx !== 3 && " |"}
+                            </Typography>
+                        ))}
+                    </Box>
 
-                    }}>
-                        <strong>Automation Score:</strong> 12.66 |{" "}
-                        <strong>Augmentation Score:</strong> 46.88 |{" "}
-                        <strong>Human-Only Score:</strong> 41.39 |{" "}
-                        <strong>FOBO Score:</strong> 59.54
-                    </Typography>
+
 
                     <Typography variant="subtitle1" fontWeight={600} mb={1} color='primary.main'>
                         1. Executive Summary
                     </Typography>
                     <Divider sx={{ borderColor: "#00A3FF", mb: 1 }} />
                     <Typography variant="body2">
-                        Accenture's enterprise transformation is driven by a convergence of strengths across product management,
+                        Accenture&apos;s enterprise transformation is driven by a convergence of strengths across product management,
                         software engineering, marketing, and data science – united by a strategic emphasis on agile methodologies, cloud adoption, artificial intelligence (AI)/machine learning (ML) integration,
-                        and digital innovation. The company's FOBO (Fear of Better Options) score of 59.5 reflects high potential in human creativity (40.2%) and augmentation (46.9%) while revealing opportunities in automation (12.7%).
+                        and digital innovation. The company&apos;s FOBO (Fear of Better Options) score of 59.5 reflects high potential in human creativity (40.2%) and augmentation (46.9%) while revealing opportunities in automation (12.7%).
                         This unified strategy prioritizes incorporating advanced AI techniques, modernizing operational workflows, and fostering a culture of continuous upskilling and cross-domain collaboration.
                     </Typography>
+
                 </CardContent>
             </Card>
 

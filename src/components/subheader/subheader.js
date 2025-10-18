@@ -11,6 +11,7 @@ import { paths } from 'src/routes/paths';
 import { useAuthContext } from 'src/auth/hooks';
 
 export default function SubHeader({ subtitle, showUploadResume }) {
+  console.log("GGGGGGG->",showUploadResume);
   const navigate = useNavigate();
 const {user} = useAuthContext();
   const hasUploadedResume = showUploadResume === 'resume'; // ✅ reactively tied to prop

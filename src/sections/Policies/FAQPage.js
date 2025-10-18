@@ -1,6 +1,5 @@
-
-
 import React, { useState, useEffect } from 'react';
+import axiosInstance from 'src/utils/axios';
 import {
   Container,
   Typography,
@@ -19,7 +18,6 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SearchIcon from '@mui/icons-material/Search';
 import { m } from 'framer-motion';
-import axiosInstance from 'src/utils/axios';
 
 const MotionBox = m(Box);
 const MotionPaper = m(Paper);

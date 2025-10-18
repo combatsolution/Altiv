@@ -35,6 +35,7 @@ import { enqueueSnackbar } from 'notistack';
 
 export default function FoboLevelTaskDistribution() {
   const [showHandTap, setShowHandTap] = useState(true);
+
   const navigate = useNavigate();
   const params = useParams();
   const theme = useTheme();
@@ -60,7 +61,7 @@ export default function FoboLevelTaskDistribution() {
   const [decryptedLinkedinUrl, setDecryptedLinkedinUrl] = useState('');
   const { user } = useAuthContext();
   const [userStartedWith, setUserStartedWith] = useState(null);
-  
+
 
   // Generate 4 shades (lighter to darker)
   const shades = [0.4, 0.6, 0.8, 1].map((opacity) =>
@@ -282,13 +283,12 @@ export default function FoboLevelTaskDistribution() {
   };
 
   const handlePieClick = (index, item) => {
+    console.log("DDDDDD->", item);
     setSelectedSection(item);
-     setShowHandTap(false);
+    setShowHandTap(false);
   };
 
-  // const handleMouseLeave = () => {
-  //   setSelectedIndex(null);
-  // };
+
 
   const getLevelColor = () => {
     if (data?.FOBO_Score <= 39) return '#00C853';
@@ -428,6 +428,7 @@ export default function FoboLevelTaskDistribution() {
 
   const MemoizedGaugeChart = React.memo(
     ({ score }) => {
+      console.log("AAAAAA->", score);
       const percent = score / 100;
       const levelColor = useMemo(() => getLevelColor(score), [score]);
 
@@ -627,7 +628,7 @@ export default function FoboLevelTaskDistribution() {
     }),
   };
 
-  return !isLoading && !isError ? (
+  return !isLoading && !isError && data ? (
     <Box
       px={{ xs: 2, md: '12%' }}
       py={2}
@@ -671,28 +672,40 @@ export default function FoboLevelTaskDistribution() {
                   justifyContent: 'center',
                 }}
               >
+                {/* ✅ Pie chart that triggers hide on slice click */}
+                {/* Donut Chart */}
                 <CustomDonutChart
                   data={pieData}
                   size={isMobile ? 350 : 450}
                   innerRadius={isMobile ? 60 : 80}
                   outerRadius={isMobile ? 100 : 130}
-                  onSliceClick={handlePieClick}
+                  onSliceClick={(index, item) => {
+                    setShowHandTap(false); // ✅ hide only when user clicks
+                    handlePieClick(index, item);
+                  }}
                 />
 
-                {/* 👆 Add this overlay */}
-                {showHandTap  &&(
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: '38%',
-                    left: '40%',
-                    transform: 'translate(-50%, -50%)',
-                    zIndex: 2,
-                    pointerEvents: 'none',
-                  }}
-                >
-                  <img src={HandTapGif} alt="Tap to interact" width={60} height={60} />
-                </Box>
+
+                {/* ✅ HandTap GIF overlay */}
+                {showHandTap && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      zIndex: 20,
+                      pointerEvents: 'none',
+                      animation: 'pulse 1.5s infinite ease-in-out',
+                      '@keyframes pulse': {
+                        '0%': { transform: 'translate(-50%, -50%) scale(1)' },
+                        '50%': { transform: 'translate(-50%, -50%) scale(1.1)' },
+                        '100%': { transform: 'translate(-50%, -50%) scale(1)' },
+                      },
+                    }}
+                  >
+                    <img src={HandTapGif} alt="Tap to interact" width={70} height={70} />
+                  </Box>
                 )}
               </Box>
             </Box>
@@ -839,7 +852,7 @@ export default function FoboLevelTaskDistribution() {
           <Button
             variant="contained"
             sx={{
-              width:{xs:'180px', md:'20%'},
+              width: { xs: '180px', md: '20%' },
               backgroundColor: '#2C47D3',
               borderRadius: 10,
               px: 4,
@@ -851,9 +864,6 @@ export default function FoboLevelTaskDistribution() {
                 boxShadow: 'none',
               },
             }}
-            
-
-
             onClick={() => {
               trackEvent({
                 category: 'CTA clicked',
@@ -871,7 +881,7 @@ export default function FoboLevelTaskDistribution() {
           <Button
             variant="contained"
             sx={{
-              width:{xs:'180px', md:'20%'},
+              width: { xs: '180px', md: '20%' },
               backgroundColor: '#2C47D3',
               borderRadius: 10,
               px: 4,
@@ -889,11 +899,11 @@ export default function FoboLevelTaskDistribution() {
                 label: 'Beat FOBO now',
                 value: 'Navigate to pricing',
               });
-               if (!user) {
-             navigate(paths.auth.jwt.register);
-               }else{
+              if (!user) {
+                navigate(paths.auth.jwt.register);
+              } else {
                 navigate(paths.aireadliness);
-               }
+              }
             }}
             aria-label="Navigate to pricing page"
           >

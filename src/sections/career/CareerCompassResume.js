@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback ,useRef} from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -90,12 +90,32 @@ export default function CareerPathProjection({ isResume, job, experience }) {
   const navigate = useNavigate();
   const [expandedLevels, setExpandedLevels] = useState({});
   // Show React Flow if job and experience are provided or if isResume is true
-
+  const [filteredTitles, setFilteredTitles] = useState([]); 
   const [userData, setUserData] = useState(null);
   const des = sessionStorage.getItem('designation') ? sessionStorage.getItem('designation') : "Software developer";
   const exp = sessionStorage.getItem('experience') ? sessionStorage.getItem('experience') : "5";
+  const userStarted = sessionStorage.getItem("userStartedWith");
 
-  const { fullName } = useAuthContext();
+  const {user } = useAuthContext();
+  const [jobTitles, setJobTitles] = useState([]);
+  const [loadingJobTitles, setLoadingJobTitles] = useState(false);
+  const [userStartedWith, setUserStartedWith] = useState(userStarted);
+
+  useEffect(() => {
+    const fetchJobTitles = async () => {
+      try {
+        setLoadingJobTitles(true);
+        const res = await axiosInstance.get('/carrer-compass/roles');
+        setJobTitles(res.data?.roles || []); // ✅ fixed
+      } catch (error) {
+        console.error('Failed to fetch job titles:', error);
+      } finally {
+        setLoadingJobTitles(false);
+      }
+    };
+
+    fetchJobTitles();
+  }, []);
 
 
   useEffect(() => {
@@ -147,15 +167,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     jobTitle: '',
     expYears: '',
   });
-  const jobTitles = [
-    'Software Engineer',
-    'Senior Software Engineer',
-    'Lead Developer',
-    'Engineering Manager',
-    'Technical Lead',
-    'Data Scientist',
-  ];
-  const [userStartedWith, setUserStartedWith] = useState(null);
+
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [selectedNodes, setSelectedNodes] = useState({
@@ -177,34 +189,43 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       const newCollapsed = new Set(prev);
       if (newCollapsed.has(nodeId)) {
         newCollapsed.delete(nodeId);
-      } else {
+      } else {  
         newCollapsed.add(nodeId);
       }
       return newCollapsed;
     });
   };
-  useEffect(() => {
-    const fetchCareerData = async () => {
-      try {
-        const payload = {
-          designation: jobTitle,
-          experience: Number(expYears),
-        };
 
-        const res = await axiosInstance.post('/career-compass', payload);
-        const mapped = transformApiData(res.data?.data);
-        setCareerData(mapped);
-      } catch (error) {
-        console.error('Failed to load career data', error);
-      }
-    };
+// ✅ Define ref outside useEffect so it persists across re-renders
+const hasFetched = useRef(false);
 
-    if (jobTitle && expYears) {
-      fetchCareerData();
+useEffect(() => {
+  const fetchCareerData = async () => {
+    try {
+      const payload = {
+        designation: jobTitle,
+        experience: Number(expYears),
+      };
+
+      const res = await axiosInstance.post('/career-compass', payload);
+      const mapped = transformApiData(res.data?.data);
+      console.log("SSAAAFFFFFF->", mapped);
+      setCareerData(mapped);
+      setShowReactFlow(true);
+    } catch (error) {
+      console.error('Failed to load career data', error);
     }
-  }, [jobTitle, expYears]);
+  };
+
+  // ✅ Only call once
+  if (!hasFetched.current && jobTitle && expYears && userStartedWith) {
+    hasFetched.current = true;
+    fetchCareerData();
+  }
+}, [jobTitle, expYears, userStartedWith]);
 
   const handleModify = useCallback(async () => {
+    console.log("SSSSSSAAAS->");
     const newErrors = {
       jobTitle: !jobTitle ? 'Please select a job title' : '',
       expYears: !expYears ? 'Please select years of experience' : '',
@@ -220,6 +241,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
 
         const res = await axiosInstance.post('/career-compass', payload);
         const mapped = transformApiData(res.data?.data);
+        console.log("HHHHHH->",mapped);
         setCareerData(mapped);
 
         setShowReactFlow(true);
@@ -232,17 +254,17 @@ export default function CareerPathProjection({ isResume, job, experience }) {
 
   }, [jobTitle, expYears]);
 
-  useEffect(() => {
-    const storedJob = sessionStorage.getItem('designation');
-    const storedExp = sessionStorage.getItem('experience');
-    if (storedJob && storedExp) {
-      setJobTitle(storedJob);
-      setExpYears(storedExp);
-      sessionStorage.removeItem("designation");
-      sessionStorage.removeItem("experience");
-    }
-    handleModify();
-  }, [handleModify]);
+  // useEffect(() => {
+  //   const storedJob = sessionStorage.getItem('designation');
+  //   const storedExp = sessionStorage.getItem('experience');
+  //   if (storedJob && storedExp) {
+  //     setJobTitle(storedJob);
+  //     setExpYears(storedExp);
+  //     sessionStorage.removeItem("designation");
+  //     sessionStorage.removeItem("experience");
+  //   }
+  //   handleModify();
+  // }, [handleModify]);
 
   const rebuildEdges = useCallback(
     (selected) => {
@@ -348,6 +370,21 @@ export default function CareerPathProjection({ isResume, job, experience }) {
     [isNodeCollapsed, careerData]
   );
 
+  const filter_title = (newValue) => {
+    setJobTitle(newValue);
+
+    if (!newValue) {
+      setFilteredTitles(jobTitles.slice(0, 5));
+    } else {
+      const filtered = jobTitles
+        .filter((title) =>
+          title.toLowerCase().includes(newValue.toLowerCase())
+        )
+        .slice(0, 5);
+      setFilteredTitles(filtered);
+    }
+  };
+
   const nodeTypes = {
     career: ({ data, id }) => {
       const { isNew, onClick } = data;
@@ -361,57 +398,57 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       const isExpanded = !isNodeCollapsed(id);
 
       return (
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={() => onClick?.(id)}
-          onKeyDown={(e) => e.key === 'Enter' && onClick?.(id)}
-          style={{
-            width: isMdUp ? 360 : 260,
-            height: 127,
-            position: 'relative',
-            cursor: 'grab',
-            zIndex: 2,
-            opacity: isVisible ? 1 : 0,
-            transition: 'opacity 0.3s ease',
-            pointerEvents: isVisible ? 'auto' : 'none',
-          }}
-        >
-          <Handle type="target" position={Position.Top} style={{ background: '#1976d2' }} />
-          {isNew ? (
-            <m.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4 }}
-              style={{ pointerEvents: 'auto' }}
-            >
-              <CareerCard
-                {...data}
-                isSelected={isSelected}
-                showExpandButton={hasChildren}
-                isExpanded={isExpanded}
-                onExpandToggle={(e) => {
-                  e?.stopPropagation();
-                  toggleNodeExpansion(id);
-                }}
-              />
-            </m.div>
-          ) : (
-            <div style={{ pointerEvents: 'auto' }}>
-              <CareerCard
-                {...data}
-                isSelected={isSelected}
-                showExpandButton={hasChildren}
-                isExpanded={isExpanded}
-                onExpandToggle={(e) => {
-                  e?.stopPropagation();
-                  toggleNodeExpansion(id);
-                }}
-              />
-            </div>
-          )}
-          <Handle type="source" position={Position.Bottom} style={{ background: '#1976d2' }} />
-        </div>
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={() => onClick?.(id)}
+            onKeyDown={(e) => e.key === 'Enter' && onClick?.(id)}
+            style={{
+              width: isMdUp ? 360 : 260,
+              height: 127,
+              position: 'relative',
+              cursor: 'grab',
+              zIndex: 2,
+              opacity: isVisible ? 1 : 0,
+              transition: 'opacity 0.3s ease',
+              pointerEvents: isVisible ? 'auto' : 'none',
+            }}
+          >
+            <Handle type="target" position={Position.Top} style={{ background: '#1976d2' }} />
+            {isNew ? (
+              <m.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4 }}
+                style={{ pointerEvents: 'auto' }}
+              >
+                <CareerCard
+                  {...data}
+                  isSelected={isSelected}
+                  showExpandButton={hasChildren}
+                  isExpanded={isExpanded}
+                  onExpandToggle={(e) => {
+                    e?.stopPropagation();
+                    toggleNodeExpansion(id);
+                  }}
+                />
+              </m.div>
+            ) : (
+              <div style={{ pointerEvents: 'auto' }}>
+                <CareerCard
+                  {...data}
+                  isSelected={isSelected}
+                  showExpandButton={hasChildren}
+                  isExpanded={isExpanded}
+                  onExpandToggle={(e) => {
+                    e?.stopPropagation();
+                    toggleNodeExpansion(id);
+                  }}
+                />
+              </div>
+            )}
+            <Handle type="source" position={Position.Bottom} style={{ background: '#1976d2' }} />
+          </div>
       );
     },
     label: ({ data, id }) => {
@@ -618,43 +655,53 @@ export default function CareerPathProjection({ isResume, job, experience }) {
 
                     <Box sx={{ width: '100%' }}>
                       <Autocomplete
-                        freeSolo={false}
-                        options={jobTitles} // your jobTitles array
-                        value={jobTitle || null}
-                        onChange={(e, newValue) => {
-                          setJobTitle(newValue);
-                          if (errors.jobTitle) {
-                            setErrors((prev) => ({ ...prev, jobTitle: '' }));
-                          }
-                        }}
+                        freeSolo
+                        loading={loadingJobTitles}
+                        options={filteredTitles}
+                        value={jobTitle}
+                        onInputChange={(event, newValue) => filter_title(newValue)}
                         renderInput={(params) => (
                           <TextField
                             {...params}
-                            // label="Select job title"
+                            fullWidth
+                            placeholder="Search role..."
                             variant="standard"
-                            error={!!errors.jobTitle}
-                            helperText={errors.jobTitle || ''}
-                            InputLabelProps={{
-                              shrink: true,
-                            }}  
-                            sx={{
-                              '& .MuiInputBase-input': {
-                                fontWeight: 400,
+                            InputProps={{
+                              ...params.InputProps,
+                              disableUnderline: false,
+                              endAdornment: (
+                                <>
+                                  {loadingJobTitles ? (
+                                    <span style={{ paddingRight: 10, color: '#888' }}>Loading...</span>
+                                  ) : null}
+                                  {params.InputProps.endAdornment}
+                                </>
+                              ),
+                              sx: {
                                 fontSize: '16px',
                                 lineHeight: '160%',
-                                color: errors.jobTitle ? '#2c2828ff' : '#25324B',
-                                padding: '8px 0 4px',
+                                padding: '8px 0',
+                                '&:before': { borderBottom: '1px solid #D6DDEB' },
+                                '&:hover:not(.Mui-disabled):before': {
+                                  borderBottom: '1px solid #0040D8',
+                                },
+                                '&:after': { borderBottom: '2px solid #0040D8' },
                               },
-                              '& .MuiInput-underline:before': {
-                                borderBottomColor: errors.jobTitle ? '#FF4D4F' : '#D6DDEB',
-                              },
-                              '& .MuiInput-underline:after': {
-                                borderBottomColor: errors.jobTitle ? '#FF4D4F' : '#D6DDEB',
-                              },
+                            }}
+                            sx={{
+                              '& .MuiInputBase-root': { paddingLeft: 0, paddingRight: 0 },
+                              '& .MuiInputLabel-root': { fontSize: '14px' },
                             }}
                           />
                         )}
                       />
+
+
+                      {loading && (
+                        <Typography variant="caption" sx={{ ml: 1, mt: 0.5, display: 'block' }}>
+                          Loading job titles...
+                        </Typography>
+                      )}
                     </Box>
                   </Box>
 
@@ -735,7 +782,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
                         sx={{ display: 'block', mt: 0.5, fontSize: '12px' }}
                       >
                         {errors.expYears}
-                      </Typography>
+                      </Typography>   
                     )}
                   </Box>
                 </Box>
@@ -784,7 +831,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
                 >
                   Personalized <b>career path projection</b> for{" "}
                   <Box component="span" sx={{ fontWeight: 600, color: "#3f51b5" }}>
-                    {fullName}
+                    {user?.fullName}
                   </Box>
                 </Typography>
 
@@ -885,7 +932,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       </Box>
     </Box>
   );
-} 
+}
 
 CareerPathProjection.propTypes = {
   isResume: PropTypes.bool,

@@ -11,7 +11,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 
-import { useParams, } from 'react-router-dom';
+import { useNavigate, useParams, } from 'react-router-dom';
 import Program from './programs';
 import ListedInfo from "./keyoutcomes"; // ✅ import child component
 import ProgramModule from './programmodule';
@@ -21,8 +21,10 @@ import ToolsMastery from './ToolsMastery'
 export default function AIMarketingBuilder() {
   const [planData, setPlanData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { id } = useParams();
+  const navigate = useNavigate();
+   const { id } = useParams();
   console.log("ID_is->", id);
+ 
   const [currency, setCurrency] = useState('USD'); // or 'INR'
   const convertPrice = (price) => {
     const rate = 83; // 1 USD = 83 INR
@@ -111,41 +113,50 @@ export default function AIMarketingBuilder() {
         <Typography variant="h3" fontWeight="bold" gutterBottom sx={{ pt: 6 }}>
           {courseName}
         </Typography>
+       <Box sx={{
 
+        display:'flex',
+        flexDirection:'column',
+        justifyContent:'center',
+        alignItems:'center',
+
+       }} >
         {/* Subtitle */}
         <Typography variant="13px" sx={{ opacity: 0.85, }}>
-          {description ? (
-            <Typography
-              variant="13px"
-              sx={{ opacity: 0.85, }}
-              dangerouslySetInnerHTML={{ __html: description }}
-            />
-          ) : (
+          {heading ? (
             <Typography variant="13px" sx={{ opacity: 0.85 }}>
               4-month, hands-on cohort · No coding required
             </Typography>
-          )}     
+          ): (
+            <Typography
+              variant="13px"
+              sx={{ opacity: 0.85, }}
+              dangerouslySetInnerHTML={{ __html: heading }}
+            />
+          ) }     
          </Typography>
 
         {/* Price Button */}
         <Button
           variant="contained"
+          onClick={()=> navigate(`/payment/${id}`)}
           sx={{
+            width:'200px',
             bgcolor: "#00ff84",
             color: "black",
             fontWeight: "bold",
             fontSize: "1rem",
             px: 4,
-            py: 1.5,
+            py: 2,
             borderRadius: "50px",
             boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
             "&:hover": { bgcolor: "#00e676" },
-            mb: 2,
+            my: 2,
           }}
         >
           {planData.isFreePlan ? "Free" : `$${price.toLocaleString()} / month `}
         </Button>
-
+</Box>
         {/* Info Grid */}
         <Grid container spacing={3} justifyContent="center">
           {[

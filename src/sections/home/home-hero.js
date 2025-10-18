@@ -138,22 +138,27 @@ function HomeHero() {
       });
       return;
     }
+    console.log("rrrr", uploadType);
     // Save selected resume in sessionStorage
-    sessionStorage.setItem("selectedResume", JSON.stringify(resume));
+    sessionStorage.setItem("userStartedWith", uploadType);
     navigate("/career-compass/");
   };
 
-  const handleContinueWithJob = () => {
+  const handleContinueWithJob = (e) => {
+    console.log("adfgh", e);
+
     if (!designation.trim()) {
       setError("Please enter your designation");
       return;
     }
+
     setError("");
-    sessionStorage.setItem("userStartedWith", "job");
+    sessionStorage.setItem("userStartedWith", e);
     sessionStorage.setItem("designation", designation);
     sessionStorage.setItem("experience", experience);
     navigate("/career-compass/");
   };
+
 
   const handleOperation = (op) => {
     setExperience((prev) =>
@@ -161,7 +166,7 @@ function HomeHero() {
     );
   };
 
-  const getButtonLabel = () => "Continue";
+  // const getButtonLabel = (e) => "Continueee ";
 
   return (
     <Box
@@ -521,7 +526,7 @@ function HomeHero() {
                           variant="contained"
                           fullWidth
                           disabled={!uploadedFileDetails && !selectedResumeId}
-                          onClick={handleContinueWithResume}
+                          onClick={()=>{handleContinueWithResume(uploadType)}}
                           sx={{
                             backgroundColor: "#3f51b5",
                             borderRadius: 999,
@@ -531,7 +536,7 @@ function HomeHero() {
                             "&:hover": { backgroundColor: "#2f3da3" },
                           }}
                         >
-                          {getButtonLabel()}
+                          Continue
                         </Button>
 
                       </>
@@ -633,9 +638,9 @@ function HomeHero() {
                             fontWeight: 500,
                             "&:hover": { backgroundColor: "#2f3da3" },
                           }}
-                          onClick={handleContinueWithJob}
+                          onClick={()=>{handleContinueWithJob(uploadType)}}
                         >
-                          Continue
+                        Continue
                         </Button>
                       </>
                     )}

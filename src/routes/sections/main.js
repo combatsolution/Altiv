@@ -77,7 +77,7 @@ export const mainRoutes = [
     children: [
        {path:'ai-readiness-analysis', element:<Aieadlinessview/>},
       //  <Route path="/plans/:id" element={<AIMarketingBuilder />} />
-      {path:'aireadlinecompanyfobo', element:<Aireadlinecompanyfoboview/>},
+      {path:'ai-readiness-companyfobo', element:<Aireadlinecompanyfoboview/>},
 
       {path:'pricing-detail', element:<Pricingdetailview/>},
       {path:'pricing-detail/:id', element:<Pricingdetailview/>},
@@ -142,7 +142,8 @@ export const mainRoutes = [
       {
         children: [
            { path: 'payment', element: <Paymentdetails /> },
-           { path: 'payment/plan', element: <PaymentPage /> },   // ⬅︎ move it here
+           { path: 'payment/plan', element: <PaymentPage /> },
+            { path: 'payment/planId', element: <PaymentPage /> },   // ⬅︎ move it here
         ],
       },
 

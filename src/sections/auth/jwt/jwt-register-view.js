@@ -140,8 +140,8 @@ const { reset, watch, handleSubmit, formState: { errors, isSubmitting } } = meth
 
   return (
     <Box
-      sx={{
-        minHeight: '100vh',
+      sx={{ 
+        minHeight: '300px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

@@ -39,7 +39,7 @@ export default function PaymentView() {
             sx={{
               p: { md: 5 },
               borderRadius: 2,
-              border: (theme) => ({
+              border: (theme) => ({ 
                 md: `dashed 1px ${theme.palette.divider}`,
               }),
             }}

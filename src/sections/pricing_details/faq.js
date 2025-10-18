@@ -15,6 +15,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PropTypes from 'prop-types';
 import { MotionViewport } from 'src/components/animate';
 import axiosInstance from 'src/utils/axios';
+import { useNavigate, useParams } from 'react-router';
+
 
 const FAQS = [
   {
@@ -34,6 +36,8 @@ const FAQS = [
 export default function Faq({ price }) {
   const theme = useTheme();
   const [faqs, setFaqs] = useState([]);
+  const navigate = useNavigate();
+  const {id} = useParams();
 
   useEffect(() => {
     const fetchFaqs = async () => {
@@ -135,6 +139,7 @@ export default function Faq({ price }) {
         >
           <Button
             variant="contained"
+        onClick={()=> navigate(`/payment/${id}`)}
             color="primary"
             sx={{
               px: 2,

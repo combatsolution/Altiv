@@ -1,15 +1,12 @@
-// File: SkillErosionProjectionDark.jsx
-
-import React from "react";
-import { Card, CardContent, Typography } from "@mui/material";
+import React, { useState } from "react";
 import {
-  LineChart,
+  ComposedChart,
   Line,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 
@@ -23,89 +20,269 @@ const data = [
 ];
 
 const SkillErosionProjection = () => {
+  const [visibleLines, setVisibleLines] = useState({
+    baseline: true,
+    aiAugmented: true,
+  });
+  const [hoveredLegend, setHoveredLegend] = useState(null);
+
+  const toggleLine = (lineKey) => {
+    setVisibleLines((prev) => ({ ...prev, [lineKey]: !prev[lineKey] }));
+  };
+
+  const LegendButton = ({ label, color, lineKey }) => {
+    const isVisible = visibleLines[lineKey];
+    const isHovered = hoveredLegend === lineKey;
+
+    let bgColor = "transparent";
+    if (isHovered) {
+      if (color === "#FF8C00") bgColor = "rgba(255, 140, 0, 0.08)";
+      else if (color === "#00D98E") bgColor = "rgba(0, 217, 142, 0.08)";
+    }
+
+    return (
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => toggleLine(lineKey)}
+        onKeyDown={(e) =>
+          (e.key === "Enter" || e.key === " ") && toggleLine(lineKey)
+        }
+        onMouseEnter={() => setHoveredLegend(lineKey)}
+        onMouseLeave={() => setHoveredLegend(null)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+          cursor: "pointer",
+          opacity: isVisible ? 1 : 0.35,
+          transition: "all 0.3s ease",
+          transform: isHovered ? "scale(1.05)" : "scale(1)",
+          padding: "8px 14px",
+          borderRadius: "20px",
+          backgroundColor: bgColor,
+          userSelect: "none",
+        }}
+      >
+        <div
+          style={{
+            width: "16px",
+            height: "16px",
+            borderRadius: "50%",
+            backgroundColor: isVisible ? color : "#fff",
+            border: `3px solid ${isVisible ? color : "#d0d0d0"}`,
+            boxShadow:
+              isVisible && isHovered
+                ? `0 0 12px ${color}40`
+                : isVisible
+                  ? `0 2px 6px ${color}20`
+                  : "none",
+          }}
+        />
+        <span
+          style={{
+            fontSize: "14px",
+            color: "#555",
+            fontWeight: 500,
+            letterSpacing: "0.3px",
+          }}
+        >
+          {label}
+        </span>
+      </div>
+    );
+  };
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div
+          style={{
+            backgroundColor: "rgba(255, 255, 255, 0.98)",
+            border: "1px solid #e5e7eb",
+            borderRadius: "12px",
+            padding: "14px 18px",
+            boxShadow:
+              "0 10px 30px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.08)",
+            backdropFilter: "blur(8px)",
+          }}
+        >
+          <p
+            style={{
+              margin: "0 0 10px 0",
+              fontWeight: 600,
+              color: "#1f2937",
+              fontSize: "14px",
+              borderBottom: "2px solid #e5e7eb",
+              paddingBottom: "8px",
+            }}
+          >
+            {label}
+          </p>
+          {payload.map((entry, index) => (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                marginTop: "8px",
+              }}
+            >
+              <div
+                style={{
+                  width: "10px",
+                  height: "10px",
+                  borderRadius: "50%",
+                  backgroundColor: entry.color,
+                  boxShadow: `0 0 8px ${entry.color}40`,
+                }}
+              />
+              <span
+                style={{
+                  color: "#6b7280",
+                  fontSize: "13px",
+                  marginRight: "8px",
+                }}
+              >
+                {entry.name === "baseline" ? "Baseline" : "AI-Augmented"}:
+              </span>
+              <span
+                style={{
+                  fontWeight: 600,
+                  color: entry.color,
+                  fontSize: "14px",
+                }}
+              >
+                {entry.value}%
+              </span>
+            </div>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
-    <Card
-      sx={{
-        my:3,
-        mx: 'auto',
-        maxWidth: '1155px',
-        px: { xs: 3, md: 4 },
-        py: 4,
-        Width: '1200px',
-        borderRadius: 4,
-        boxShadow: "0 0 20px rgba(0,0,0,0.4)",
-        p: 3,
-        background: "linear-gradient(145deg, #fff, #c5c9d1ff)",
-        color: "#fff",
+    <div
+      style={{
+        margin: "24px auto",
+        maxWidth: "1155px",
+        width: "100%",
+        borderRadius: "12px",
+        boxShadow:
+          "0 4px 20px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06)",
+        padding: "32px 36px",
+        backgroundColor: "#fff",
+        border: "1px solid #f0f0f0",
+        transition: "box-shadow 0.3s ease",
       }}
     >
-      < Typography
-        variant="h6"
-        fontWeight="bold"
-        sx={{
-          mb: 1,
-          color: "#4DA6FF",
-          borderBottom: "2px solid #4DA6FF",
+      <h2
+        style={{
+          marginBottom: "16px",
+          color: "#2563eb",
+          borderBottom: "3px solid #2563eb",
           display: "inline-block",
-          pb: 0.5,
+          paddingBottom: "7px",
+          fontSize: "19px",
+          fontWeight: 600,
         }}
       >
         Skill-Erosion Projection (Company-wide)
-      </Typography>
+      </h2>
 
-      <CardContent sx={{ height: 360 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "32px",
+          marginBottom: "30px",
+        }}
+      >
+        <LegendButton label="Baseline Retention" color="#FF8C00" lineKey="baseline" />
+        <LegendButton
+          label="AI-Augmented Retention"
+          color="#00D98E"
+          lineKey="aiAugmented"
+        />
+      </div>
+
+      <div style={{ height: "390px", width: "100%", position: "relative" }}>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+          <ComposedChart data={data} margin={{ top: 15, right: 35, left: -5, bottom: 5 }}>
+            <defs>
+              <linearGradient id="baselineGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#FFD699" stopOpacity={0.6} />
+                <stop offset="30%" stopColor="#FFE4CC" stopOpacity={0.4} />
+                <stop offset="70%" stopColor="#FFF0E0" stopOpacity={0.2} />
+                <stop offset="100%" stopColor="#FFFAF5" stopOpacity={0.05} />
+              </linearGradient>
+              <linearGradient id="aiGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#80EDD5" stopOpacity={0.6} />
+                <stop offset="30%" stopColor="#B3F5E5" stopOpacity={0.4} />
+                <stop offset="70%" stopColor="#CCFAEF" stopOpacity={0.2} />
+                <stop offset="100%" stopColor="#E6FDF8" stopOpacity={0.05} />
+              </linearGradient>
+            </defs>
+
+            <CartesianGrid strokeDasharray="4 4" stroke="#e0e0e0" vertical={false} />
             <XAxis
               dataKey="year"
-              stroke="#ccc"
-              tick={{ fill: "#aaa" }}
+              stroke="#999"
+              tick={{ fill: "#666", fontSize: 13 }}
               tickLine={false}
+              axisLine={{ stroke: "#e0e0e0", strokeWidth: 1.5 }}
+              tickMargin={12}
             />
             <YAxis
               domain={[0, 100]}
+              ticks={[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
               tickFormatter={(v) => `${v}%`}
-              stroke="#ccc"
-              tick={{ fill: "#aaa" }}
+              stroke="#999"
+              tick={{ fill: "#666", fontSize: 13 }}
               tickLine={false}
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#2e3440",
-                border: "1px solid #444",
-                color: "#fff",
-              }}
-              formatter={(v) => `${v}%`}
-            />
-            <Legend
-              wrapperStyle={{ color: "#aaa" }}
-              iconType="circle"
-              verticalAlign="top"
+              axisLine={{ stroke: "#e0e0e0", strokeWidth: 1.5 }}
+              tickMargin={10}
             />
 
-            <Line
-              type="monotone"
-              dataKey="baseline"
-              name="Baseline Retention"
-              stroke="#FF8C00"
-              strokeWidth={3}
-              dot={{ r: 5, fill: "#FF8C00" }}
-              activeDot={{ r: 7 }}
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ stroke: "#d0d0d0", strokeWidth: 1.5, strokeDasharray: "5 5" }}
             />
-            <Line
-              type="monotone"
-              dataKey="aiAugmented"
-              name="AI-Augmented Retention"
-              stroke="#00FF99"
-              strokeWidth={3}
-              dot={{ r: 5, fill: "#00FF99" }}
-              activeDot={{ r: 7 }}
-            />
-          </LineChart>
+
+            {visibleLines.baseline && (
+              <>
+                <Area type="monotone" dataKey="baseline" fill="url(#baselineGradient)" stroke="none" />
+                <Line
+                  type="monotone"
+                  dataKey="baseline"
+                  stroke="#FF8C00"
+                  strokeWidth={3.5}
+                  dot={{ r: 6, fill: "#FF8C00", strokeWidth: 3, stroke: "#fff" }}
+                  activeDot={{ r: 9, fill: "#FF8C00", strokeWidth: 4, stroke: "#fff" }}
+                />
+              </>
+            )}
+
+            {visibleLines.aiAugmented && (
+              <>
+                <Area type="monotone" dataKey="aiAugmented" fill="url(#aiGradient)" stroke="none" />
+                <Line
+                  type="monotone"
+                  dataKey="aiAugmented"
+                  stroke="#00D98E"
+                  strokeWidth={3.5}
+                  dot={{ r: 6, fill: "#00D98E", strokeWidth: 3, stroke: "#fff" }}
+                  activeDot={{ r: 9, fill: "#00D98E", strokeWidth: 4, stroke: "#fff" }}
+                />
+              </>
+            )}
+          </ComposedChart>
         </ResponsiveContainer>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

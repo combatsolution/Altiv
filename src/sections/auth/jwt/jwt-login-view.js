@@ -113,14 +113,14 @@ export default function JwtLoginView() {
   return (
     <Box
       sx={{
-        minHeight: '80vh',
+        minHeight: '260px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         px: 2,
       }}
     >
-      <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center', mt: '0px' }}>
+      <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center' }}>
         <img src={altiv} alt="ALTIV Logo" style={{ marginBottom: 8 }} />
 
         <Typography variant="h6" mb={1}>

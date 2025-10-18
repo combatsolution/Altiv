@@ -6,6 +6,7 @@ import FAQPage from '../FAQPage';
 
 export default function FaqView() {
   const { scrollYProgress } = useScroll();
+
   return (
     <>
       <ScrollProgress scrollYProgress={scrollYProgress} />    

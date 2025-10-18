@@ -60,8 +60,7 @@ const getBadgeColor = (score) => {
 };
 
 
-const ProductManagementPage = () => {
-
+const ProductManagementPage = () => { 
   const { job_id: jobId } = useParams();   // ✅ get from URL params
   const [selectedFilter, setSelectedFilter] = useState("Everything");
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
@@ -78,10 +77,10 @@ const ProductManagementPage = () => {
   // Inside your component
   const [skills, setSkills] = useState([]);
 
- const COLORS = useMemo(() => ["#20C997", "#4285F4", "#F4A300", "#FFD43B"], []);
+  const COLORS = useMemo(() => ["#20C997", "#4285F4", "#F4A300", "#FFD43B"], []);
 
 
-    // ✅ Now it's safe to derive these
+  // ✅ Now it's safe to derive these
   const matchedItems = boostData?.matched?.category_wise || {};
   const closeMatchedItems = boostData?.close_matched?.category_wise || {};
   const notMatchedItems = boostData?.not_matched?.category_wise || {};
@@ -111,27 +110,26 @@ const ProductManagementPage = () => {
     title: { text: "" },
     series: [{
       type: "sunburst",
-      name: "Education",  
+      name: "Education",
       data: [],   // <-- will be filled after API fetch
       borderWidth: 2,/* eslint-disable react/no-this-in-sfc */
 
-  dataLabels: {
-    rotationMode: "circular",
-    formatter() {
-      const name = this.point?.name || "";
-      if (/^education$/i.test(name)) {
-        // root label
-        return `<span style="color:black;font-size:16px;font-weight:700">${name}</span>`;
-      }
-      return `${name}<br>${this.point.value}%`;
-    },
-    style: {
-      color: "#fff",       // default for other labels
-      fontSize: "11px",
-      textOutline: "none",
-    },
-  },
-
+      dataLabels: {
+        rotationMode: "circular",
+        formatter() {
+          const name = this.point?.name || "";
+          if (/^education$/i.test(name)) {
+            // root label
+            return `<span style="color:black;font-size:16px;font-weight:700">${name}</span>`;
+          }
+          return `${name}<br>${this.point.value}%`;
+        },
+        style: {
+          color: "#fff",       // default for other labels
+          fontSize: "11px",
+          textOutline: "none",
+        },
+      },
 
       /* eslint-disable react/no-this-in-sfc */
 
@@ -143,55 +141,79 @@ const ProductManagementPage = () => {
     tooltip: { pointFormat: "<b>{point.name}</b> {point.value}%" }
   });
 
+const transformEducationToSunburst = (educationData) => {
+  const sunburstData = [
+    {
+      id: "0.0",
+      parent: "",
+      textcolor: "black",
+      name: "Education",
+      color: "transparent",
+      dataLabels: { color: "#000" },
+    },
+  ];
 
-  const transformEducationToSunburst = (educationData) => {
-    const sunburstData = [
-      {
-        id: "0.0",
-        parent: " ",
-        textcolor:'black',
-        name: "Education",
-        color: "transparent",
-       dataLabels: { color: "#000" },
-      },   // root
-    ];
+  const mainColors = ["#1976D2", "#FF8800", "#0BA02C", "#9C27B0"]; // color set (last one for "Other")
+  const mainColor = ["#1BABFE", "#FBBC05", "#4CAF50", "#CE93D8"];
 
-      const mainColors = ["#1976D2", "#FF8800", "#0BA02C"];
-       const mainColor = ["#1BABFE", "#FBBC05", ];
+  let i = 1;
+  const tempData = [];
 
-  
-    let i = 1;
-    Object.entries(educationData).forEach(([field, details]) => {
-      const parentId = `1.${i}`;
-  const parentColor = mainColors[(i - 1) % mainColors.length];
-      sunburstData.push({
-        id: parentId,
-        parent: "0.0",
-        name: field,
-        value: details.percentage,
-         color: parentColor,
-      });
+  // Build main categories from backend data
+  Object.entries(educationData).forEach(([field, details]) => {
+    const parentId = `1.${i}`;
+    const parentColor = mainColors[(i - 1) % mainColors.length];
+    const parentObj = {
+      id: parentId,
+      parent: "0.0",
+      name: field,
+      value: details.percentage,
+      color: parentColor,
+    };
 
-
-      let j = 1;  
-      Object.entries(details.distribution).forEach(([tier, value]) => {
-       
-  const childColor = mainColor[(i - 1) % mainColor.length];
-        sunburstData.push({
-          id: `2.${i}.${j}`,
-          parent: parentId,
-          name: tier,
-          value,
+    const children = [];
+    let j = 1;
+    Object.entries(details.distribution).forEach(([tier, value]) => {
+      const childColor = mainColor[(i - 1) % mainColor.length];
+      children.push({
+        id: `2.${i}.${j}`,
+        parent: parentId,
+        name: tier,
+        value,
         color: childColor,
-        });
-        j += 1;
       });
-
-      i += 1;
+      j += 1;
     });
 
-    return sunburstData;
+    tempData.push({ parentObj, children });
+    i += 1;
+  });
+
+  // 🆕 Create and insert manual “Other” category (no children)
+  const otherIndex = 1; // place after Data Science (adjust if needed)
+  const otherParentId = `1.${i}`;
+  const otherColor = "#9C27B0"; // purple
+
+  const otherParentObj = {
+    id: otherParentId,
+    parent: "0.0",
+    name: "Other",
+    value: 15, // optional (can be dynamic)
+    color: otherColor,
   };
+
+  // Insert manually between Data Science and Computer Science
+  tempData.splice(otherIndex, 0, { parentObj: otherParentObj, children: [] });
+
+  // Merge all final data
+  tempData.forEach(({ parentObj, children }) => {
+    sunburstData.push(parentObj, ...children);
+  });
+
+  return sunburstData;
+};
+
+
 
   useEffect(() => {
     if (!jobId && !resumeId) return;
@@ -213,7 +235,7 @@ const ProductManagementPage = () => {
       }
     };
 
-  
+
     const fetchStatisticalData = async () => {
       try {
         const res = await axiosInstance.post(`/jobs/job-boost-statistical-data/${Number(jobId)}`);
@@ -222,14 +244,28 @@ const ProductManagementPage = () => {
         const companyBackground = res.data?.data?.company_benchmark?.previous_company_background;
         console.log("bsdkfb:", companyBackground);
 
-        // Transform education -> sunburst
+        
         if (educationData) {
           const sunburstData = transformEducationToSunburst(educationData);
-          setOptions((prev) => ({
-            ...prev,
-            series: [{ ...prev.series[0], data: sunburstData, allowDrillToNode: true, cursor: "pointer" }]
-          }));
+
+          setOptions((prev) => {
+            const updatedSeries = [...prev.series];
+            const existingData = [...(updatedSeries[0].data || [])];
+
+            // Append new dataset
+            existingData.push(...sunburstData);
+
+            updatedSeries[0] = {
+              ...updatedSeries[0],
+              data: existingData,
+              allowDrillToNode: true,
+              cursor: "pointer"
+            };
+
+            return { ...prev, series: updatedSeries };
+          });
         }
+
 
         // Transform experience -> bar chart
         if (experienceData) {
@@ -256,7 +292,7 @@ const ProductManagementPage = () => {
     };
     fetchBoostData();
     fetchStatisticalData();
-  }, [jobId ,COLORS , resumeId, user?.resumes]);
+  }, [jobId, COLORS, resumeId, user?.resumes]);
 
 
   const sliderSettings = {
@@ -271,7 +307,7 @@ const ProductManagementPage = () => {
   const [hoveredInner, setHoveredInner] = useState(null);
   const [hoveredOuter, setHoveredOuter] = useState(null);
   const navigate = useNavigate();
- // Filter change handler with tracking
+  // Filter change handler with tracking
   const handleFilterChange = (filterValue) => {
     setSelectedFilter(filterValue);
     trackEvent({
@@ -295,7 +331,7 @@ const ProductManagementPage = () => {
 
   // Clear All handler
   const handleClearAll = () => {
-    setSelectedFilter("Empty");
+    setSelectedFilter("everything");
     trackEvent({
       category: 'Job Detail',
       action: 'Clear All Clicked',
@@ -407,11 +443,11 @@ const ProductManagementPage = () => {
             {/* desktop Left Column */}
             <Grid item xs={12} lg={6} order={{ xs: 2, md: 1 }} sx={{ maxWidth: { xs: "100%", lg: "550px" } }}>
               <Grid sx={{ display: { xs: 'none', lg: 'block' }, mb: 2 }} >
-                <Typography  fontSize="30px"  fontWeight="700"  >
+                <Typography fontSize="30px" fontWeight="700"  >
                   Product Management at Mastercard
                 </Typography>
-                <Typography  fontSize="20px"  fontWeight="400" color="text.secondary"  >
-                  Match analysis and background 
+                <Typography fontSize="20px" fontWeight="400" color="text.secondary"  >
+                  Match analysis and background
                 </Typography>
               </Grid>
 
@@ -434,7 +470,6 @@ const ProductManagementPage = () => {
                     sx={{
                       mb: '7px',
                       width: { xs: '100%', sm: '250px', lg: '350px' }, // ⚠ probably meant 650px not 6550px
-
                     }}
                   >
                     <Paper
@@ -473,9 +508,9 @@ const ProductManagementPage = () => {
                         IconComponent={KeyboardArrowDownIcon}
                       >
                         <MenuItem value="Everything">Everything</MenuItem>
-                        <MenuItem value="Matching">Matching 75%</MenuItem>
-                        <MenuItem value="Close Matching">Close Matching 65%</MenuItem>
-                        <MenuItem value="Not Matching">Not Matching 65%</MenuItem>
+                        <MenuItem value="Matching">Matching 62%</MenuItem>
+                        <MenuItem value="Close Matching">Close Matching 24%</MenuItem>
+                        <MenuItem value="Not Matching">Not Matching 14%</MenuItem>
                         <MenuItem value="Improved">Things can be improved</MenuItem>
                       </Select>
                     </FormControl>
@@ -693,7 +728,7 @@ const ProductManagementPage = () => {
                     size="medium"
                     variant="outlined"
                     sx={{ color: 'grey.600', borderRadius: '100px', width: '85px', height: '35px', fontSize: '13px' }}
-                 onClick={handleSelectAll}
+                    onClick={handleSelectAll}
 
                   >
                     Select All
@@ -703,7 +738,7 @@ const ProductManagementPage = () => {
                     size="medium"
                     variant="outlined"
                     sx={{ color: 'grey.600', borderRadius: '100px', width: '80px', height: '35px', fontSize: '13px' }}
-onClick={handleClearAll}
+                    onClick={handleClearAll}
                   >
                     Clear All
                   </Button>
@@ -839,6 +874,8 @@ onClick={handleClearAll}
             </Grid>
 
 
+
+
             {/* Right Column mb+desk */}
             <Grid item xs={12} lg={6} order={{ xs: 1, md: 2 }}>
               <Box
@@ -961,7 +998,7 @@ onClick={handleClearAll}
                         {/* Chart */}
                         <ResponsiveContainer width="100%" height="100%">
                           <RadialBarChart
-                            cx="43%"
+                            cx="31%"
                             cy="57%"
                             innerRadius="51%"
                             outerRadius="112%"
@@ -982,8 +1019,8 @@ onClick={handleClearAll}
                         </ResponsiveContainer>
                       </Box>
                     </Paper>
-
                   </Slider>
+
                 ) : (
                   <>
                     {/* Desktop: All stacked */}
@@ -991,17 +1028,17 @@ onClick={handleClearAll}
 
                       <Grid style={{ maxWidth: '450px', width: "100%", marginBottom: '10px' }}>
                         <Typography variant="body2" fontWeight="800" mb={1} >
-                          Education Background of Directors
+                          Education Background of Directorsss
                         </Typography>
                         <Divider />
                         <HighchartsReact highcharts={Highcharts} options={options} />
                       </Grid>
                     </Box>
 
-                    <Paper sx={{ p: 2, mb: 2, width: "100%", maxWidth: '450px'  }}>
+                    <Paper sx={{ p: 2, mb: 2, width: "100%", maxWidth: '450px' }}>
                       <Typography variant="body2" fontWeight="800" mb={1}>
                         Years of Experience vs Percentage of Directors
-                      </Typography> 
+                      </Typography>
                       <Divider />
 
                       <Box sx={{ height: { xs: 200, md: 250 }, width: "100%", mt: 1 }}>
@@ -1023,7 +1060,7 @@ onClick={handleClearAll}
                             <Bar dataKey="percentage">
                               {graphdata.map((entry, index) => (
                                 <Cell
-                                  key={`cell-${index}`}
+                                  // key={`cell-${index}`}
                                   fill={COLORS[index % COLORS.length]}
                                 />
                               ))}
@@ -1129,30 +1166,30 @@ onClick={handleClearAll}
                   backgroundColor: 'primary.dark',
                 },
               }}
-            onClick={handleExploreJobs}
-a
+              onClick={handleExploreJobs}
+              a
             >
               Explore more jobs
             </Button>
-            
-           {!user && (
-            <Button
-              variant="outlined"
-              size="large"
-              sx={{
-                color: '#0040D8',
-                backgroundColor: '#fff',
-                borderRadius: '100px',
-                width: { xs: '100%', sm: '200px' },
-              }}
-              href={paths.auth.jwt.register}
-              onClick={handleSignUp}
 
-            >
-              Sign up
-            </Button>
+            {!user && (
+              <Button
+                variant="outlined"
+                size="large"
+                sx={{
+                  color: '#0040D8',
+                  backgroundColor: '#fff',
+                  borderRadius: '100px',
+                  width: { xs: '100%', sm: '200px' },
+                }}
+                href={paths.auth.jwt.register}
+                onClick={handleSignUp}
 
-           )} 
+              >
+                Sign up
+              </Button>
+
+            )}
 
           </CardActions>
         </Box>

@@ -48,6 +48,7 @@ export default function PricingCard({ card, sx, ...other }) {
     courses: {
       courseName,
       heading,
+      courseType,
       description,
       features = [],
       keyOutComes = [],
@@ -124,9 +125,10 @@ export default function PricingCard({ card, sx, ...other }) {
 
         {/* Title */}
         <Stack spacing={0.5} alignItems={{ xs: 'center', sm: 'flex-start' }} sx={{ mt: 1.5, mb: 1 }}>
-          {heading && (
+          {courseType && (
             <Typography variant="subtitle2" color="common.white">
-              {heading}
+              {/* {heading} */}
+              {courseType}
             </Typography>
           )}
           <Typography
@@ -142,7 +144,7 @@ export default function PricingCard({ card, sx, ...other }) {
         </Stack>
 
         {/* Description */}
-        {description && (
+        {heading && (
           <Box
             sx={{
               color: 'common.white',
@@ -150,7 +152,7 @@ export default function PricingCard({ card, sx, ...other }) {
               maxWidth: '90%',
               '& p': { margin: 0 },
             }}
-            dangerouslySetInnerHTML={{ __html: description }}
+            dangerouslySetInnerHTML={{ __html: heading }}
           />
         )}
 
@@ -218,7 +220,7 @@ export default function PricingCard({ card, sx, ...other }) {
           }}
           onClick={() => {
             if (!user) navigate(paths.auth.jwt.login);
-            else navigate('/payment');
+            else navigate(`/payment/${id}`);
           }}
         >
           {buttonLabel}

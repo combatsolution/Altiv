@@ -14,8 +14,8 @@ import planStarterIcon from 'src/assets/icons/plan-starter-icon';
 
 export default function PaymentSummary({ sx, ...other }) {
   const navigate = useNavigate();
-  const planId = sessionStorage.getItem('planId');
-  console.log(sessionStorage.getItem('planId'))
+ const {planId} = useParams();
+  console.log("fs", planId)
   const { user } = useAuthContext();
   const [planData, setPlanData] = useState(null);
   const [country, setCountry] = useState(null);
@@ -29,7 +29,7 @@ export default function PaymentSummary({ sx, ...other }) {
       try {
         // const response = await axiosInstance.get(`/plans/${planId}`);
          const response = await axiosInstance.get(`/plans/${planId}`);
-        
+        console.log("MD",response.planData);
         setPlanData(response.data);
       } catch (err) {
         console.error('Error fetching plan:', err);
@@ -151,6 +151,7 @@ export default function PaymentSummary({ sx, ...other }) {
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Subscription
           </Typography>
+          {console.log("dj",planData)}
           <Label color="error">  {planData?.courses?.courseName || 'Marketing-1199'}</Label>
         </Stack>
 

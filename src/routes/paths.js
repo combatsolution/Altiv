@@ -24,7 +24,7 @@ export const paths = {
   SubscriptionSuccess: '/payment/success',
   subscription: '/subscription',
   savejobs:'/savejobs',
-  appliedjobs:'/appliedjobs',
+  appliedjobs:'/appliedjobs',   
   pricingdetail:'/pricing-detail',
   aireadliness: '/ai-readiness-analysis',
   aireadlinecompanyfobo:'/ai-readiness-companyfobo',
