@@ -93,7 +93,7 @@ const FOBOByRoleLevel = () => {
         py: 4,
       }}
     >
-      <Typography variant="h5" mb={3} fontWeight={600} color="primary">
+      <Typography variant="h4" mb={1} fontWeight={600} color='primary.main'>
         FOBO by Role Level
       </Typography>
 

@@ -347,11 +347,11 @@ const JobCard = ({ job }) => {
             sx={{
               mt: { xs: 1, sm: 1 },
               color: '#fff',
-              backgroundColor: job.isApplied ? 'success.main' : 'primary.main',
+              backgroundColor: job.isApplied ? 'primary.dark' : 'primary.main',
               borderRadius: '100px',
               width: { xs: '100%', sm: '50%' },
               '&:hover': {
-                backgroundColor: job.isApplied ? 'success.dark' : 'primary.dark',
+                backgroundColor: job.isApplied ? 'primary.dark' : 'primary.dark',
               },
             }}
           >

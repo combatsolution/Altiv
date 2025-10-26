@@ -21,7 +21,7 @@ export default function AireadlinessView() {
        <AverageFOBOScores/>
        <SkillErosionProjection />   
       <CompanyComprehensivePlan />
-      <ProductManagementChart />
+      {/* <ProductManagementChart /> */}
 
 
     </>

@@ -19,18 +19,7 @@ export default function AireadlinessView() {
     <>
     <AIReadinessDashboard/>
     <ResponsiveNavbar/>
-    {/* <ExecutiveSummary/> */}
-    
-    
-    {/* <CurrentStateAnalysis/> */}
-    {/* <StrategicObjectives/> */}
-    {/* <QuickStartGuide/>
-    <ToolStack/>
-    <CapabilityBuilding/>   
-    <SkillErosionProjection/> */}
-    {/* <DetailNode/> */}
-     {/* <TopTasksExposureAnalysis/> */}
-    {/* <TransformationRoadmap/> */}
+   
   </>
 
   );

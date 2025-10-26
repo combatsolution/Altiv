@@ -1,3 +1,5 @@
+
+// DonutCard.js
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -33,7 +35,7 @@ export default function DonutCard({ title, data, foboScore }) {
                 textAnchor="middle"
                 dominantBaseline="central"
                 fontSize={12}
-                fontWeight="600"
+                fontWeight="600"    
             >
                 {`${value}%`}
             </text>
@@ -42,19 +44,19 @@ export default function DonutCard({ title, data, foboScore }) {
 
     return (
         <Box
-            sx={{
-                mx: 'auto',
-                maxWidth: '1155px',
-                px: { xs: 3, md: 4 },
-                Width: '1000px',
+            sx={{                
+              
+                px: { xs: 3, md: 0 },
+                py: 2,
+                Width: '1100px',
+                borderRadius: "10px",
             }}>
             <Card
                 sx={{
-
                     borderRadius: 3,
-                    width: 300,
-                    textAlign: 'left',
-                    p: 3,
+                    width: 350,
+                    textAlign: 'left',  
+                    p: 2,
                     boxShadow: '0px 2px 10px rgba(0,0,0,0.05)',
                     bgcolor: '#fff',
                 }}
@@ -141,11 +143,9 @@ export default function DonutCard({ title, data, foboScore }) {
                     </Typography>
                 </Box>
             </Card>
-
         </Box>
     );
 }
-
 
 // PropTypes validation
 DonutCard.propTypes = {

@@ -20,8 +20,6 @@ export default function
     borderRadius: "10px",
     bgcolor: "#2563eb",
     color: "white", 
-   
-   
     gap: 2, // ✅ vertical gap between elements
   }}
 >
@@ -35,7 +33,7 @@ export default function
       color: "primary.main",
       fontWeight: "bold",
       fontSize: 25,
-      maxWidth: "1175px",
+      maxWidth: "1175px", 
     }}
   >
     ALTIV.AI

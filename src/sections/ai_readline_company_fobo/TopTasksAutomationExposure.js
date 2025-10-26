@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import Divider from '@mui/material/Divider';
 import PropTypes from 'prop-types';
-import { Info } from 'lucide-react';
+import { Box, Info } from 'lucide-react';
+import { Grid } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import { padding } from '@mui/system';
 
 const TopTasksAutomationExposure = () => {
     const [hoveredRow, setHoveredRow] = useState(null);
@@ -13,7 +17,7 @@ const TopTasksAutomationExposure = () => {
     }, []);
 
     const tasks = [
-        { department: 'Data Science', task: 'Build machine learning models to predict them for analysis and modeling', present: 0.53, past: 0.60, future: 0.67, index: 89 },
+        { department: 'Data Science', task: 'Clean and preprocess raw datasets to prepare them for analysis and modeling.', present: 0.53, past: 0.60, future: 0.67, index: 89 },
         { department: 'Data Science', task: 'Implement train validation from creating models (e.g., hyperprm, classification, cluster regression)', present: 0.53, past: 0.59, future: 0.67, index: 87 },
         { department: 'Data Science', task: 'Visualize Data findings using charts, graphs, and dashboards for internal stakeholders', present: 0.54, past: 0.59, future: 0.67, index: 87 },
         { department: 'Marketing', task: 'Monitor and analyze digital using performance using analytics tools and report on key metrics', present: 0.51, past: 0.56, future: 0.64, index: 85 },
@@ -38,15 +42,20 @@ const TopTasksAutomationExposure = () => {
             margin: '0 auto',
             maxWidth: '1155px',
             padding: isMobile ? '24px' : '32px',
-            backgroundColor: '#fafafa',
+            backgroundColor: '#fff', // fixed typo (#FFf → #fff)
+            borderRadius: '12px', // optional, makes the container look smoother
             minHeight: '100vh',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+            fontFamily:
+                '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            // boxShadow: '0 2px 10px rgba(0, 0, 0, 0.05)', // subtle shadow for elevation
         },
+
         header: { marginBottom: '32px', animation: 'fadeIn 0.6s ease-in' },
         title: {
-            fontSize: isMobile ? '24px' : '32px',
+          
+            fontSize: isMobile ? '16px' : '24px',
             fontWeight: '700',
-            color: '#1a237e',
+            color: '#2A4DD0',
             marginBottom: '8px',
             display: 'flex',
             alignItems: 'center',
@@ -146,6 +155,8 @@ const TopTasksAutomationExposure = () => {
     };
 
     return (
+
+
         <div style={styles.container}>
             <style>{`
         @keyframes fadeIn {
@@ -157,96 +168,137 @@ const TopTasksAutomationExposure = () => {
           to { opacity: 1; transform: translateY(0); }
         }
         .table-row:hover {
-          background-color: #f5f8ff;
+ 
           transform: scale(1.005);
           box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
+        }   
       `}</style>
+
 
             <div style={styles.header}>
                 <div style={styles.title}>
-                    <Info size={28} />
+                    <Info size={28} sx={{ color: "primary.main" }} />
                     Top Tasks by Automation Exposure
                 </div>
-                <div style={styles.subtitle}>
-                    Analysis of automation probability across different departments and time periods
-                </div>
+                <Divider sx={{ borderColor: "#00A3FF", mb: 3, height: 2 }} />
             </div>
 
-            {isMobile ? (
-                <div>
-                    {tasks.map((task, index) => (
-                        <MobileCard key={index} task={task} index={index} />
-                    ))}
-                </div>
-            ) : (
-                <div style={styles.tableContainer}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <thead>
-                            <tr>
-                                <th style={styles.th}>Department</th>
-                                <th style={styles.th}>Task</th>
-                                <th style={{ ...styles.th, textAlign: 'center' }}>Present</th>
-                                <th style={{ ...styles.th, textAlign: 'center' }}>Past</th>
-                                <th style={{ ...styles.th, textAlign: 'center' }}>Future</th>
-                                <th style={{ ...styles.th, textAlign: 'center' }}>Index</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {tasks.map((task, index) => (
-                                <tr
-                                    key={index}
-                                    className="table-row"
-                                    style={{ transition: 'all 0.3s ease', cursor: 'pointer' }}
-                                    onMouseEnter={() => setHoveredRow(index)}
-                                    onMouseLeave={() => setHoveredRow(null)}
-                                >
-                                    <td style={styles.td}>
-                                        <span style={{ ...styles.chip, ...styles.deptChip }}>{task.department}</span>
-                                    </td>
-                                    <td style={{ ...styles.td, maxWidth: '500px' }}>{task.task}</td>
-                                    <td style={{ ...styles.td, textAlign: 'center', fontWeight: '600', color: '#1976d2' }}>
-                                        {task.present.toFixed(2)}
-                                    </td>
-                                    <td style={{ ...styles.td, textAlign: 'center', fontWeight: '600', color: '#388e3c' }}>
-                                        {task.past.toFixed(2)}
-                                    </td>
-                                    <td style={{ ...styles.td, textAlign: 'center', fontWeight: '600', color: '#f57c00' }}>
-                                        {task.future.toFixed(2)}
-                                    </td>
-                                    <td style={{ ...styles.td, textAlign: 'center' }}>
-                                        <span style={{ ...styles.chip, ...styles.indexChip, backgroundColor: getIndexColor(task.index) }}>
-                                            {task.index}
-                                        </span>
-                                    </td>
+            <Grid
+                sx={{
+                    backgroundColor: '#fff',
+                    border: '2px solid #0000',
+                    borderRadius: '12px',
+                    p: 3,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                    mt: 6,
+                }}
+            >
+                {isMobile ? (
+                    <div>
+                        {tasks.map((task, index) => (
+                            <MobileCard key={index} task={task} index={index} />
+                        ))}
+                    </div>
+                ) : (
+
+
+                    <div style={styles.tableContainer}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr>
+                                    <th style={styles.th}>DEPARTMENT</th>
+                                    <th style={styles.th}>TASK</th>
+                                    <th style={{ ...styles.th, textAlign: 'center' }}>PAUTO</th>
+                                    <th style={{ ...styles.th, textAlign: 'center' }}>PAUG</th>
+                                    <th style={{ ...styles.th, textAlign: 'center' }}>PHUM</th>
+                                    <th style={{ ...styles.th, textAlign: 'center' }}>FOBO</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+                            </thead>
+                            <tbody>
+                                {tasks.map((task, index) => (
+                                    <tr
+                                        key={index}
+                                        className="table-row"
+                                        style={{ transition: 'all 0.3s ease', cursor: 'pointer' }}
+                                        onMouseEnter={() => setHoveredRow(index)}
+                                        onMouseLeave={() => setHoveredRow(null)}
+                                    >
+                                        <td style={styles.td}>
+                                            <span style={{ ...styles.chip, ...styles.deptChip }}>{task.department}</span>
+                                        </td>
+                                        <td style={{ ...styles.td, maxWidth: '500px' }}>{task.task}</td>
+                                        <td style={{ ...styles.td, textAlign: 'center', fontWeight: '600', color: '#1976d2' }}>
+                                            {task.present.toFixed(2)}
+                                        </td>
+                                        <td style={{ ...styles.td, textAlign: 'center', fontWeight: '600', color: '#388e3c' }}>
+                                            {task.past.toFixed(2)}
+                                        </td>
+                                        <td style={{ ...styles.td, textAlign: 'center', fontWeight: '600', color: '#f57c00' }}>
+                                            {task.future.toFixed(2)}
+                                        </td>
+                                        <td style={{ ...styles.td, textAlign: 'center' }}>
+                                            <span style={{ ...styles.chip, ...styles.indexChip, backgroundColor: getIndexColor(task.index) }}>
+                                                {task.index}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
 
-            <div style={styles.legend}>
-                <div style={styles.legendTitle}>Legend:</div>
-                <div style={styles.legendItems}>
-                    <div style={styles.legendItem}>
-                        <div style={{ ...styles.colorBox, backgroundColor: '#1976d2' }} />
-                        <span>Probability of Automation (Present)</span>
-                    </div>
-                    <div style={styles.legendItem}>
-                        <div style={{ ...styles.colorBox, backgroundColor: '#388e3c' }} />
-                        <span>Probability of Automation (Past)</span>
-                    </div>
-                    <div style={styles.legendItem}>
-                        <div style={{ ...styles.colorBox, backgroundColor: '#f57c00' }} />
-                        <span>Probability of Automation (Future)</span>
-                    </div>
-                    <div style={styles.legendItem}>
-                        <div style={{ ...styles.colorBox, backgroundColor: '#4169E1' }} />
-                        <span>Index (AI Bottleneck Severity)</span>
-                    </div>
-                </div>
-            </div>
+                )}
+                <Grid
+                    container
+                    direction="column"
+                    sx={{
+                        mt: 2,
+                        p: 2,
+                        border: '1px solid #E0E0E0',
+                        borderRadius: 2,
+                        // backgroundColor: '#FAFCFF',
+                        maxWidth: '100%',
+                    }}
+                >
+                    <Typography
+                        variant="subtitle1"
+                        fontWeight={600}
+                        sx={{ mb: 1 }}
+                    >
+                        Legend:
+                    </Typography>
+
+                    <Grid
+                        container
+                        spacing={1.5}
+                        sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+                    >
+                        {[
+                            { name: 'Pauto', label: 'Probability of Automation ' },
+                            { name: 'Paug', label: ' Probability of Augmentation' },
+                            { name: 'Phum', label: 'Probability Human Only' },
+                            { name: 'FOBO', label: ' Fear of Skill Becoming Obsolete' },
+                        ].map((item, index) => (
+                            <Grid
+                                item
+                                key={index}
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1.2,
+                                }}
+                            >
+                                <Typography variant="body2" sx={{ color: "primary.main" }}>
+                                    {item.name} =
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: '#444' }}>
+                                    {item.label}
+                                </Typography>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Grid>
+            </Grid>
         </div>
     );
 };

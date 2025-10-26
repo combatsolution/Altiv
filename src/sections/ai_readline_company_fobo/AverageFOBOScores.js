@@ -22,7 +22,7 @@ const data = [
 
 // Custom colors for each department
 const colors = ["#3346FF", "#00A8FF", "#00FFB3", "#5567FF"];
-
+// eslint-disable-next-line arrow-body-style
 const AverageFOBOScores = () => {
   return (
     <Card
@@ -39,7 +39,7 @@ const AverageFOBOScores = () => {
       {/* Title with underline */}
       <Box sx={{ borderBottom: "3px solid #00A8FF", mb: 2 }}>
         <Typography
-          variant="h6"
+          variant="h4"
           fontWeight="bold"
           sx={{
             color: "#1A4DFF",

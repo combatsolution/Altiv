@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-else-return */
 import { useAuthContext } from 'src/auth/hooks';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState,useRef } from 'react';
 import CryptoJS from 'crypto-js';
 import { m } from 'framer-motion';
 import HandTapGif from 'src/assets/icons/Handtap.gif';
@@ -61,6 +61,7 @@ export default function FoboLevelTaskDistribution() {
   const [decryptedLinkedinUrl, setDecryptedLinkedinUrl] = useState('');
   const { user } = useAuthContext();
   const [userStartedWith, setUserStartedWith] = useState(null);
+  const isInitialLoad = useRef(true); // Flag to track first load
 
 
   // Generate 4 shades (lighter to darker)
@@ -285,7 +286,7 @@ export default function FoboLevelTaskDistribution() {
   const handlePieClick = (index, item) => {
     console.log("DDDDDD->", item);
     setSelectedSection(item);
-    setShowHandTap(false);
+    // setShowHandTap(false);
   };
 
 
@@ -674,16 +675,29 @@ export default function FoboLevelTaskDistribution() {
               >
                 {/* ✅ Pie chart that triggers hide on slice click */}
                 {/* Donut Chart */}
+
                 <CustomDonutChart
                   data={pieData}
                   size={isMobile ? 350 : 450}
                   innerRadius={isMobile ? 60 : 80}
                   outerRadius={isMobile ? 100 : 130}
                   onSliceClick={(index, item) => {
-                    setShowHandTap(false); // ✅ hide only when user clicks
-                    handlePieClick(index, item);
+                    console.log("Clicked slice:", item.label);
+
+                    if(item.label === "Augmentation") {
+                      if (isInitialLoad.current) {
+                        // Keep HandTap visible only for the first load
+                        setShowHandTap(true);
+                        isInitialLoad.current = false; // Disable for future clicks
+                      } else {
+                        setShowHandTap(false);
+                      }
+                    } else {
+                      setShowHandTap(false);
+                    }
                   }}
                 />
+
 
 
                 {/* ✅ HandTap GIF overlay */}
@@ -691,8 +705,8 @@ export default function FoboLevelTaskDistribution() {
                   <Box
                     sx={{
                       position: 'absolute',
-                      top: '50%',
-                      left: '50%',
+                      top: '40%',
+                      left: '40%',
                       transform: 'translate(-50%, -50%)',
                       zIndex: 20,
                       pointerEvents: 'none',

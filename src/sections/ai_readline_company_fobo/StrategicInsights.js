@@ -21,11 +21,11 @@ const StrategicInsights = () => {
       color: "#FAFFFD",
       borderColor: "#00FF88", // Green border
       items: [
-        "The Software Engineering (SE) domain exhibits a relatively lower FOBO score of 57.8, indicating resilience to automation risks.",
-        "The overall workforce shows a strong augmentation score of 46.9.",
-        "Product Management (PM) and Marketing domains display strong human-task components.",
-        "The human task score of 40.2 indicates substantial uniquely human skills.",
-        "The distribution of profiles provides a comprehensive base for transformation.",
+        "The Software Engineering (SE) domain exhibits a relatively lower FOBO score of 57.8 compared to other domains, indicating stronger resilience to automation risks.",
+        "The overall workforce shows a strong augmentation score of 46.9, reflecting a healthy balance of human-AI collaboration that can be leveraged for competitive advantage.",
+        "Product Management (PM) and Marketing domains, despite higher FOBO scores, demonstrate significant human task components (combined with augmentation), suggesting readiness for hybrid workflows.",
+        "The human task score of 40.2 across the company indicates a substantial portion of uniquely human skills that can be further developed to maintain differentiation.",
+        "The distribution of profiles analyzed (67 total, with a good spread across SE, DS, PM, and Marketing) provides a comprehensive base for targeted transformation initiatives.",
       ],
     },
     {
@@ -33,11 +33,11 @@ const StrategicInsights = () => {
       color: "#FFFDFA",
       borderColor: "#FF8A04", // Light cream border
       items: [
-        "Marketing holds the highest FOBO score at 62.7, indicating automation risk.",
-        "Product Management domain also shows a high FOBO score of 62.3.",
-        "Data Science, while critical, has a FOBO score of 57.1 with low automation leverage.",
-        "Automation score of 12.7 overall highlights potential risk if not managed proactively.",
-        "Imbalance between augmentation and human tasks shows need for capability strengthening.",
+        "Marketing titles have the highest FOBO score at 62.7, signaling elevated automation risk and urgent need for upskilling to mitigate task displacement.",
+        "Product Management domain also shows a high FOBO score of 62.3, indicating vulnerability to automation of routine PM tasks without strategic intervention.",
+        "Data Science (DS) domain, while critical, has a FOBO score of 57.1 with a relatively low automation score, suggesting potential under-leveraging of automation tools and risk of skill stagnation.",
+        "The automation score of 12.7 overall, though moderate, highlights pockets of tasks that can be fully automated, posing risk if not proactively addressed through reskilling.",
+        "The imbalance between augmentation (46.9) and human tasks (40.2) suggests a need to strengthen uniquely human capabilities to avoid over-reliance on AI augmentation, which may not fully replace human judgment.",
       ],
     },
     {
@@ -45,11 +45,11 @@ const StrategicInsights = () => {
       color: "#F8FCFF",
       borderColor: "#04A5FF", // Very light blue border
       items: [
-        "Initiate a 6-month AI upskilling program for PM and Marketing.",
-        "Deploy AI automation pilots in Data Science within 3 months.",
-        "Implement human skills development emphasizing creativity and problem-solving.",
-        "Establish AI collaboration task forces across domains.",
-        "Conduct quarterly FOBO monitoring and dynamic strategy adjustments.",
+        "Initiate a 6-month targeted upskilling program for Marketing and PM domains focusing on AI-augmented decision-making and creative problem-solving to reduce FOBO scores below 60.",
+        "Deploy AI-driven automation pilots in Data Science workflows within 3 months to enhance augmentation scores and free DS talent for higher-value uniquely human tasks.",
+        "Implement a company-wide human skills development framework over the next 12 months emphasizing emotional intelligence, strategic thinking, and complex problem-solving to increase the human task score above 45.",
+        "Establish cross-domain AI collaboration task forces by Q3 to share best practices and optimize augmentation opportunities, leveraging the current 46.9 augmentation score.",
+        "Conduct quarterly FOBO score monitoring and workforce segmentation reviews to dynamically adjust transformation strategies and mitigate emerging automation risks.",
       ],
     },
   ];
@@ -65,15 +65,14 @@ const StrategicInsights = () => {
       }}
     >
       <Typography
-        variant="h5"
-        mb={3}
+        variant="h4"
         fontWeight={600}
         sx={{ color: "primary.main" }}
       >
         Strategic Insights
       </Typography>
 
-      <Divider sx={{ borderColor: "#00A3FF", mb: 3 }} />
+      <Divider sx={{ borderColor: "#00A3FF", mb: 3, height:2}}/>
 
       <Grid container spacing={3}>
         {sections.map((sec, idx) => (
@@ -88,19 +87,47 @@ const StrategicInsights = () => {
               }}
             >
               <CardContent>
-                <Typography variant="h6" gutterBottom fontWeight={600}>
-                  {sec.title}
-                </Typography>
-                <ul style={{ paddingLeft: "20px", marginTop: "8px" }}>
+               <Box sx={{
+                 display:'flex',
+                  flexDirection:'row',
+                  alignItems:'center'
+               }}>
+                <Box sx={{  
+                  width: 10,
+                  height: 10,
+                  borderRadius: '50%',
+                  backgroundColor: sec.borderColor,
+                  mr: 1.2,
+                  mb:1,
+                 
+                }}/>
+
+                  <Typography variant="h6" gutterBottom fontWeight={600}>
+                    {sec.title}
+                  </Typography>
+                </Box>
+
+
+                <ul style={{ paddingLeft: '20px', marginTop: '8px' }}>
                   {sec.items.map((text, i) => (
-                    <li key={i}>
-                      <Typography variant="body2" mb={1}>
+                    <li key={i} style={{ listStyleType: 'disc' }}>
+                      <Typography variant="body2" mb={0.5}>
                         {text}
                       </Typography>
+                      <Box
+                        sx={{
+                          width: 30,
+                          height: 1,
+                          backgroundColor: 'grey.800',
+                          mt: 0.5,
+                          mb: 1,
+                        }}
+                      />
                     </li>
                   ))}
                 </ul>
               </CardContent>
+
             </Card>
           </Grid>
         ))}

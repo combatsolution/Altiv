@@ -52,15 +52,16 @@ const LEGENDS = [
   { label: "15+ years", color: "#FFD43B" }
 ];
 
-const getBadgeColor = (score) => {
-  if (score >= 70) return "green";
-  if (score >= 50) return "orange";
-  if (score >= 30) return "darkorange";
-  return "red";
+ const getBadgeColor = (score) => {
+  if (score >= 60) return "success.main"; // Matching
+  if (score >= 20 ) return "warning.main"; // Close Matching
+    if (score >= 1 && score <= 10 ) return "warning.main"; // Close Matching
+  return "error.main"; // Not Matching
 };
 
 
-const ProductManagementPage = () => { 
+
+const ProductManagementPage = () => {
   const { job_id: jobId } = useParams();   // ✅ get from URL params
   const [selectedFilter, setSelectedFilter] = useState("Everything");
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
@@ -74,8 +75,38 @@ const ProductManagementPage = () => {
   const [radialchartdata, setRadialchartdata] = useState([]);
   const [companyBackgroundData, setCompanyBackgroundData] = useState([]);
 
-  // Inside your component
-  const [skills, setSkills] = useState([]);
+
+// Booster base weights
+const boosterWeights = {
+  Everything: 100,
+  Matching: 62,
+  "Close Matching": 24,
+  "Not Matching": 14,
+  Improved: 100,
+};
+
+// Base skill data
+const baseSkills = [
+  { label: "Core Experience", base: 78 },
+  { label: "Technical Skills", base: 74 },
+  { label: "Domain Knowledge", base: 70 },
+];
+
+const [skills, setSkills] = useState(baseSkills.map(s => ({ ...s, score: s.base })));
+
+// Recalculation logic
+const calculateScores = (filterValue) => {
+  const weight = boosterWeights[filterValue] || 100;
+
+  const newSkills = baseSkills.map(skill => ({
+    ...skill,
+    score: ((skill.base * weight) / 100).toFixed(2),
+  }));
+
+  setSkills(newSkills);
+};
+
+
 
   const COLORS = useMemo(() => ["#20C997", "#4285F4", "#F4A300", "#FFD43B"], []);
 
@@ -141,77 +172,77 @@ const ProductManagementPage = () => {
     tooltip: { pointFormat: "<b>{point.name}</b> {point.value}%" }
   });
 
-const transformEducationToSunburst = (educationData) => {
-  const sunburstData = [
-    {
-      id: "0.0",
-      parent: "",
-      textcolor: "black",
-      name: "Education",
-      color: "transparent",
-      dataLabels: { color: "#000" },
-    },
-  ];
+  const transformEducationToSunburst = (educationData) => {
+    const sunburstData = [
+      {
+        id: "0.0",
+        parent: "",
+        textcolor: "black",
+        name: "Education",
+        color: "transparent",
+        dataLabels: { color: "#000" },
+      },
+    ];
 
-  const mainColors = ["#1976D2", "#FF8800", "#0BA02C", "#9C27B0"]; // color set (last one for "Other")
-  const mainColor = ["#1BABFE", "#FBBC05", "#4CAF50", "#CE93D8"];
+    const mainColors = ["#1976D2", "#FF8800", "#0BA02C", "#9C27B0"]; // color set (last one for "Other")
+    const mainColor = ["#1BABFE", "#FBBC05", "#4CAF50", "#CE93D8"];
 
-  let i = 1;
-  const tempData = [];
+    let i = 1;
+    const tempData = [];
 
-  // Build main categories from backend data
-  Object.entries(educationData).forEach(([field, details]) => {
-    const parentId = `1.${i}`;
-    const parentColor = mainColors[(i - 1) % mainColors.length];
-    const parentObj = {
-      id: parentId,
-      parent: "0.0",
-      name: field,
-      value: details.percentage,
-      color: parentColor,
-    };
+    // Build main categories from backend data
+    Object.entries(educationData).forEach(([field, details]) => {
+      const parentId = `1.${i}`;
+      const parentColor = mainColors[(i - 1) % mainColors.length];
+      const parentObj = {
+        id: parentId,
+        parent: "0.0",
+        name: field,
+        value: details.percentage,
+        color: parentColor,
+      };
 
-    const children = [];
-    let j = 1;
-    Object.entries(details.distribution).forEach(([tier, value]) => {
-      const childColor = mainColor[(i - 1) % mainColor.length];
-      children.push({
-        id: `2.${i}.${j}`,
-        parent: parentId,
-        name: tier,
-        value,
-        color: childColor,
+      const children = [];
+      let j = 1;
+      Object.entries(details.distribution).forEach(([tier, value]) => {
+        const childColor = mainColor[(i - 1) % mainColor.length];
+        children.push({
+          id: `2.${i}.${j}`,
+          parent: parentId,
+          name: tier,
+          value,
+          color: childColor,
+        });
+        j += 1;
       });
-      j += 1;
+
+      tempData.push({ parentObj, children });
+      i += 1;
     });
 
-    tempData.push({ parentObj, children });
-    i += 1;
-  });
+    // 🆕 Create and insert manual “Other” category (no children)
+    const otherIndex = 1; // place after Data Science (adjust if needed)
+    const otherParentId = `1.${i}`;
+    const otherColor = "#9C27B0"; // purple
 
-  // 🆕 Create and insert manual “Other” category (no children)
-  const otherIndex = 1; // place after Data Science (adjust if needed)
-  const otherParentId = `1.${i}`;
-  const otherColor = "#9C27B0"; // purple
+    const otherParentObj = {
+      id: otherParentId,
+      parent: "0.0",
+      name: "Other",
+      value: 15, // optional (can be dynamic)
+      color: otherColor,
+    };
 
-  const otherParentObj = {
-    id: otherParentId,
-    parent: "0.0",
-    name: "Other",
-    value: 15, // optional (can be dynamic)
-    color: otherColor,
+    // Insert manually between Data Science and Computer Science
+    tempData.splice(otherIndex, 0, { parentObj: otherParentObj, children: [] });
+
+    // Merge all final data
+    tempData.forEach(({ parentObj, children }) => {
+      sunburstData.push(parentObj, ...children);
+    });
+
+    return sunburstData;
   };
-
-  // Insert manually between Data Science and Computer Science
-  tempData.splice(otherIndex, 0, { parentObj: otherParentObj, children: [] });
-
-  // Merge all final data
-  tempData.forEach(({ parentObj, children }) => {
-    sunburstData.push(parentObj, ...children);
-  });
-
-  return sunburstData;
-};
 
 
 
@@ -244,7 +275,7 @@ const transformEducationToSunburst = (educationData) => {
         const companyBackground = res.data?.data?.company_benchmark?.previous_company_background;
         console.log("bsdkfb:", companyBackground);
 
-        
+
         if (educationData) {
           const sunburstData = transformEducationToSunburst(educationData);
 
@@ -307,15 +338,21 @@ const transformEducationToSunburst = (educationData) => {
   const [hoveredInner, setHoveredInner] = useState(null);
   const [hoveredOuter, setHoveredOuter] = useState(null);
   const navigate = useNavigate();
+
   // Filter change handler with tracking
   const handleFilterChange = (filterValue) => {
     setSelectedFilter(filterValue);
+
+    // ✅ Analytics tracking
     trackEvent({
       category: 'Job Detail',
       action: 'Filter Changed',
       label: `Filter: ${filterValue}`,
       value: 75,
     });
+
+    // ✅ Update skill scores dynamically
+    calculateScores(filterValue);
   };
 
   // Select All handler
@@ -555,7 +592,7 @@ const transformEducationToSunburst = (educationData) => {
                 </Stack>
 
                 {/* Chips BELOW the buttons */}
-                <Stack direction="row" spacing={1} flexWrap="wrap" mt={1} sx={{ width: "100%" }}>
+                <Stack direction="row" spacing={4} flexWrap="wrap" mt={1} sx={{ width: "100%" }}>
                   {skills.map((skill, index) => {
                     const badgeColor = getBadgeColor(skill.score);
                     return (
@@ -576,14 +613,14 @@ const transformEducationToSunburst = (educationData) => {
                           sx={{
                             position: "absolute",
                             top: -8,
-                            right: -8,
+                            right: -20,
                             bgcolor: badgeColor,
                             color: "white",
                             borderRadius: "50%",
                             fontSize: "0.5rem",
                             fontWeight: "bold",
-                            width: 25,
-                            height: 25,
+                            width: 35,
+                            height: 35,
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -746,7 +783,7 @@ const transformEducationToSunburst = (educationData) => {
                   {/* <Button
 
                   variant="contained"
-                  color="primary"
+                  color="primary" 
                   sx={{ borderRadius: '100px', width: '100px' }}
                 >
                   Update

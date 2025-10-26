@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from 'src/utils/axios';
+
 import {
   Container,
   Typography,
@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SearchIcon from '@mui/icons-material/Search';
+import axiosInstance from 'src/utils/axios';
 import { m } from 'framer-motion';
 
 const MotionBox = m(Box);
@@ -116,7 +117,7 @@ export default function FAQPage() {
               gutterBottom
               sx={{
                 color: theme.palette.primary.main,
-                fontSize: { xs: '1.8rem', md: '2.2rem' },
+                fontSize: { xs: '1.8rem', md: '2.2rem' }, 
               }}
             >
               Frequently Asked Questions

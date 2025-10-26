@@ -7,6 +7,7 @@ import {
   useTheme,
   CircularProgress,
 } from "@mui/material";
+import { useAuthContext } from 'src/auth/hooks';
 import axiosInstance from "src/utils/axios";
 import AIReadinessDashboard from "./AIReadinessDashboard";
 import StrategicObjectives from "./strategicobjectives";
@@ -39,21 +40,23 @@ export default function ResponsiveNavbar() {
   const [profileAnalytics, setProfileAnalytics] = useState(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+   const { user } = useAuthContext();
+    const resumeId = user?.resumes.at(-1).id;
+    console.log("resumeeeid:", resumeId);
 
   useEffect(() => {
     const payload = {
-      resumeId: 668,
-      linkedInUrl:
-        "https://www.linkedin.com/in/shubham-shahane-22552b186/",
-      viewDetails: true,
-      smartInsights: true,
-      isFoboPro: true,
-      isComprehensiveMode: true,
-    };
+  resumeId,
+  viewDetails: true,
+  smartInsights: true,
+  isFoboPro: true,
+  isComprehensiveMode: true,
+};
 
     const fetchProfileAnalytics = async () => {
       try {
         const response = await axiosInstance.post("/profile-analytics", payload);
+        console.log("MMMM",response )
         setProfileAnalytics(response.data);
         localStorage.setItem("profileAnalytics", JSON.stringify(response.data));
       } catch (error) {
@@ -64,7 +67,7 @@ export default function ResponsiveNavbar() {
     };
 
     fetchProfileAnalytics();
-  }, []);
+  }, [resumeId]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -98,7 +101,6 @@ export default function ResponsiveNavbar() {
           mt: 2,
           bgcolor: "#ffffff",
           mx: "auto",
-          
           px:2,
           py: { xs: 1.5, md: 1.5 },
           maxWidth: "1200px",
@@ -153,8 +155,9 @@ export default function ResponsiveNavbar() {
           mx: "auto",
         }}
       >
-        {/* <SelectedComponent data={profileAnalytics} /> */}
-        <SelectedComponent />
+
+        {/* <SelectedComponent /> */}
+        <SelectedComponent data={profileAnalytics} />
       </Box>
     </Box>
   );

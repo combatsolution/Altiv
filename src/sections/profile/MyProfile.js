@@ -30,7 +30,11 @@ import {
   Card,
   CardContent,
 } from '@mui/material';
-  import { trackEvent } from 'src/utils/google-analytics';
+import { trackEvent } from 'src/utils/google-analytics';
+import TrackChangesIcon from '@mui/icons-material/TrackChanges';
+import BoltIcon from '@mui/icons-material/Bolt';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 import { paths } from 'src/routes/paths';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -45,8 +49,50 @@ import { green } from '@mui/material/colors';
 import { useSnackbar } from 'notistack';
 import { SplashScreen } from 'src/components/loading-screen';
 import { format } from 'date-fns';
+import MetricsCards from './MetricsCards';
 import ProfileChangePassword from './profile-change-password-modal';
 import ProfileUpdateModal from './profile-update-modal';
+
+
+const metricsData = [
+  {
+    title: "AI-Readiness Score",
+    // value: 75 || lastFOBOData?.AI_Readiness ,
+    value:75,
+    suffix: "%",
+    subtitle: "Above Average",
+    color: "#3b82f6",
+    icon: <TrackChangesIcon sx={{ fontSize: 28, color: "#3b82f6" }} />,
+  },
+  {
+    title: "Transformation Timeline",
+    // value: 36 || lastFOBOData?.TransformationTimeline ,
+     value: 36  ,
+    suffix: "",
+    subtitle: "Months",
+    color: "#f59e0b",
+    icon: <BoltIcon sx={{ fontSize: 28, color: "#f59e0b" }} />,
+  },
+  {
+    title: "Automation Potential",
+    // value: lastFOBOData?.AutomationPotential || 65,
+      value:65,
+    suffix: "%",
+    subtitle: "High Impact",
+    color: "#ec4899",
+    icon: <RocketLaunchIcon sx={{ fontSize: 28, color: "#ec4899" }} />,
+  },
+  {
+    title: "Strategic Objectives",
+    // value: lastFOBOData?.StrategicObjectives || 6,
+      value:6,
+    suffix: "",
+    subtitle: "Key Goals",
+    color: "#facc15",
+    icon: <EmojiObjectsIcon sx={{ fontSize: 28, color: "#facc15" }} />,
+  },
+];
+
 
 const jobMatches = []; // You can populate this later
 
@@ -56,6 +102,8 @@ const planTypeToLabel = {
   2: 'Data Science',
   3: 'Product Management',
 };
+
+
 
 export default function MyProfile() {
   const { user, loading } = useAuthContext();
@@ -92,6 +140,9 @@ export default function MyProfile() {
   const hasCourses = subscriptions && subscriptions.length > 0;
   const [showResume, setShowResume] = useState(false);
   const [showCourses, setShowCourses] = useState(false);
+
+  // const lastFOBOData = JSON.parse(sessionStorage.getItem("lastFOBOData")) || {};
+
 
   useEffect(() => {
     setShowResume(hasResumes);
@@ -155,12 +206,12 @@ export default function MyProfile() {
       setProfileData(user);
       setExistingResumes(user?.resumes || []);
       setSelectedResumeId(null);
-        trackEvent({
-    category: 'Profile',
-    action: 'Viewed Profile Page',
-    label: user?.email || 'Anonymous',
-    value:79,
-  });
+      trackEvent({
+        category: 'Profile',
+        action: 'Viewed Profile Page',
+        label: user?.email || 'Anonymous',
+        value: 79,
+      });
 
     }
     setIsLoading(false);
@@ -296,7 +347,7 @@ export default function MyProfile() {
         category: 'Resume',
         action: 'Deleted Successfully',
         label: deleted?.fileDetails?.fileName || 'Unknown Resume',
-        value:81,
+        value: 81,
       });
     } catch (err) {
       console.error(err);
@@ -698,7 +749,7 @@ export default function MyProfile() {
                     category: 'Profile',
                     action: 'Edit Profile Clicked',
                     label: 'Edit Profile',
-                    value:86,
+                    value: 86,
                   });
                   setOpenEditDialog(true)
                 }}>
@@ -966,9 +1017,16 @@ export default function MyProfile() {
                 </Paper>
               </Grid>
             )}
-
           </Grid>
         </Grid>
+
+
+        {showCourses && (
+          <Box mt={2}>
+            <MetricsCards metrics={metricsData} />
+          </Box>
+        )}
+
 
 
       </Container>

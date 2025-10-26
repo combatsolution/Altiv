@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import {
   ComposedChart,
   Line,
@@ -9,6 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { Typography, Divider } from "@mui/material";
 
 const data = [
   { year: "Year 0", baseline: 100, aiAugmented: 100 },
@@ -38,6 +40,13 @@ const SkillErosionProjection = () => {
     if (isHovered) {
       if (color === "#FF8C00") bgColor = "rgba(255, 140, 0, 0.08)";
       else if (color === "#00D98E") bgColor = "rgba(0, 217, 142, 0.08)";
+    }
+
+    let boxShadow = "none";
+    if (isVisible && isHovered) {
+      boxShadow = `0 0 12px ${color}40`;
+    } else if (isVisible) {
+      boxShadow = `0 2px 6px ${color}20`;
     }
 
     return (
@@ -71,12 +80,7 @@ const SkillErosionProjection = () => {
             borderRadius: "50%",
             backgroundColor: isVisible ? color : "#fff",
             border: `3px solid ${isVisible ? color : "#d0d0d0"}`,
-            boxShadow:
-              isVisible && isHovered
-                ? `0 0 12px ${color}40`
-                : isVisible
-                  ? `0 2px 6px ${color}20`
-                  : "none",
+            boxShadow,
           }}
         />
         <span
@@ -91,6 +95,14 @@ const SkillErosionProjection = () => {
         </span>
       </div>
     );
+  };
+
+
+  // ✅ PropTypes for LegendButton
+  LegendButton.propTypes = {
+    label: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired,
+    lineKey: PropTypes.string.isRequired,
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
@@ -145,7 +157,10 @@ const SkillErosionProjection = () => {
                   marginRight: "8px",
                 }}
               >
-                {entry.name === "baseline" ? "Baseline" : "AI-Augmented"}:
+                {entry.name === "baseline"
+                  ? "Baseline"
+                  : "AI-Augmented"}
+                :
               </span>
               <span
                 style={{
@@ -164,6 +179,13 @@ const SkillErosionProjection = () => {
     return null;
   };
 
+  // ✅ PropTypes for CustomTooltip
+  CustomTooltip.propTypes = {
+    active: PropTypes.bool,
+    payload: PropTypes.array,
+    label: PropTypes.string,
+  };
+
   return (
     <div
       style={{
@@ -179,19 +201,15 @@ const SkillErosionProjection = () => {
         transition: "box-shadow 0.3s ease",
       }}
     >
-      <h2
-        style={{
-          marginBottom: "16px",
-          color: "#2563eb",
-          borderBottom: "3px solid #2563eb",
-          display: "inline-block",
-          paddingBottom: "7px",
-          fontSize: "19px",
-          fontWeight: 600,
-        }}
+      <Typography
+        variant="h4"
+        fontWeight={600}
+        sx={{ color: "primary.main" }}
       >
         Skill-Erosion Projection (Company-wide)
-      </h2>
+      </Typography>
+
+      <Divider sx={{ borderColor: "#00A3FF", mb: 3, height: 2 }} />
 
       <div
         style={{
@@ -201,7 +219,11 @@ const SkillErosionProjection = () => {
           marginBottom: "30px",
         }}
       >
-        <LegendButton label="Baseline Retention" color="#FF8C00" lineKey="baseline" />
+        <LegendButton
+          label="Baseline Retention"
+          color="#FF8C00"
+          lineKey="baseline"
+        />
         <LegendButton
           label="AI-Augmented Retention"
           color="#00D98E"
@@ -211,7 +233,10 @@ const SkillErosionProjection = () => {
 
       <div style={{ height: "390px", width: "100%", position: "relative" }}>
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={data} margin={{ top: 15, right: 35, left: -5, bottom: 5 }}>
+          <ComposedChart
+            data={data}
+            margin={{ top: 15, right: 35, left: -5, bottom: 5 }}
+          >
             <defs>
               <linearGradient id="baselineGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#FFD699" stopOpacity={0.6} />
@@ -227,7 +252,11 @@ const SkillErosionProjection = () => {
               </linearGradient>
             </defs>
 
-            <CartesianGrid strokeDasharray="4 4" stroke="#e0e0e0" vertical={false} />
+            <CartesianGrid
+              strokeDasharray="4 4"
+              stroke="#e0e0e0"
+              vertical={false}
+            />
             <XAxis
               dataKey="year"
               stroke="#999"
@@ -249,33 +278,57 @@ const SkillErosionProjection = () => {
 
             <Tooltip
               content={<CustomTooltip />}
-              cursor={{ stroke: "#d0d0d0", strokeWidth: 1.5, strokeDasharray: "5 5" }}
+              cursor={{
+                stroke: "#d0d0d0",
+                strokeWidth: 1.5,
+                strokeDasharray: "5 5",
+              }}
             />
 
             {visibleLines.baseline && (
               <>
-                <Area type="monotone" dataKey="baseline" fill="url(#baselineGradient)" stroke="none" />
+                <Area
+                  type="monotone"
+                  dataKey="baseline"
+                  fill="url(#baselineGradient)"
+                  stroke="none"
+                />
                 <Line
                   type="monotone"
                   dataKey="baseline"
                   stroke="#FF8C00"
                   strokeWidth={3.5}
                   dot={{ r: 6, fill: "#FF8C00", strokeWidth: 3, stroke: "#fff" }}
-                  activeDot={{ r: 9, fill: "#FF8C00", strokeWidth: 4, stroke: "#fff" }}
+                  activeDot={{
+                    r: 9,
+                    fill: "#FF8C00",
+                    strokeWidth: 4,
+                    stroke: "#fff",
+                  }}
                 />
               </>
             )}
 
             {visibleLines.aiAugmented && (
               <>
-                <Area type="monotone" dataKey="aiAugmented" fill="url(#aiGradient)" stroke="none" />
+                <Area
+                  type="monotone"
+                  dataKey="aiAugmented"
+                  fill="url(#aiGradient)"
+                  stroke="none"
+                />
                 <Line
                   type="monotone"
                   dataKey="aiAugmented"
                   stroke="#00D98E"
                   strokeWidth={3.5}
                   dot={{ r: 6, fill: "#00D98E", strokeWidth: 3, stroke: "#fff" }}
-                  activeDot={{ r: 9, fill: "#00D98E", strokeWidth: 4, stroke: "#fff" }}
+                  activeDot={{
+                    r: 9,
+                    fill: "#00D98E",
+                    strokeWidth: 4,
+                    stroke: "#fff",
+                  }}
                 />
               </>
             )}
