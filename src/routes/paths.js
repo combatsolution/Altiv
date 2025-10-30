@@ -25,6 +25,7 @@ export const paths = {
  
 
   // footer
+    Blogs: '/post',
   PolicyView:'/privacy-policy',
   attributions:'/attributions',
   AitrainingpolicyView:'/ai-training-policy',
