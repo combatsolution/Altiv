@@ -18,14 +18,16 @@ import SearchNotFound from 'src/components/search-not-found';
 export default function PostSearch({ query, results, onSearch, hrefItem, loading }) {
   const router = useRouter();
 
-  const handleClick = (title) => {
-    router.push(hrefItem(title));
+  const handleClick = (post) => {
+    router.push(hrefItem(post.slug || post.title));
   };
 
   const handleKeyUp = (event) => {
     if (query) {
       if (event.key === 'Enter') {
-        handleClick(query);
+if (results.length > 0) {
+          handleClick(results[0]);
+        }
       }
     }
   };
@@ -38,7 +40,7 @@ export default function PostSearch({ query, results, onSearch, hrefItem, loading
       popupIcon={null}
       options={results}
       onInputChange={(event, newValue) => onSearch(newValue)}
-      getOptionLabel={(option) => option.title}
+      getOptionLabel={(option) => typeof option === 'string' ? option : option.title}
       noOptionsText={<SearchNotFound query={query} sx={{ bgcolor: 'unset' }} />}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       slotProps={{
@@ -91,7 +93,7 @@ export default function PostSearch({ query, results, onSearch, hrefItem, loading
               sx={{ width: 48, height: 48, flexShrink: 0, mr: 1.5, borderRadius: 1 }}
             />
 
-            <Link key={inputValue} underline="none" onClick={() => handleClick(post.title)}>
+            <Link key={inputValue} underline="none" onClick={() => handleClick(post)}>
               {parts.map((part, index) => (
                 <Typography
                   key={index}

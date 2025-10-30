@@ -22,7 +22,7 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function PostDetailsHero({ title, author, coverUrl, createdAt }) {
+export default function PostDetailsHero({ title, author, coverUrl, createdAt, description }) {
   const theme = useTheme();
 
   const smUp = useResponsive('up', 'sm');
@@ -30,7 +30,7 @@ export default function PostDetailsHero({ title, author, coverUrl, createdAt }) 
   return (
     <Box
       sx={{
-        height: 480,
+        height: { md: 620, xs: 700 },
         overflow: 'hidden',
         ...bgGradient({
           imgUrl: coverUrl,
@@ -40,19 +40,34 @@ export default function PostDetailsHero({ title, author, coverUrl, createdAt }) 
       }}
     >
       <Container sx={{ height: 1, position: 'relative' }}>
-        <Typography
-          variant="h3"
-          component="h1"
+        <Stack
           sx={{
             zIndex: 9,
             color: 'common.white',
             position: 'absolute',
-            maxWidth: 480,
+            maxWidth: { xs: '90%', md: '60%' },
             pt: { xs: 2, md: 8 },
           }}
+          spacing={3}
         >
-          {title}
-        </Typography>
+          <Typography
+            variant="h3"
+            component="h1"
+            sx={{
+              fontSize: { xs: 32, md: 60 },
+              lineHeight: { xs: 1.2, md: 1.3 },
+            }}
+          >
+            {title}
+          </Typography>
+
+          <Typography
+            variant="subtitle1"
+            sx={{ fontSize: { xs: '16px', md: '20px' }, fontWeight: 400, lineHeight: 1.6 }}
+          >
+            {description}
+          </Typography>
+        </Stack>
 
         <Stack
           sx={{
@@ -86,7 +101,7 @@ export default function PostDetailsHero({ title, author, coverUrl, createdAt }) 
               />
             </Stack>
           )}
-
+          {/* 
           <SpeedDial
             direction={smUp ? 'left' : 'up'}
             ariaLabel="Share post"
@@ -107,7 +122,7 @@ export default function PostDetailsHero({ title, author, coverUrl, createdAt }) 
                 FabProps={{ color: 'default' }}
               />
             ))}
-          </SpeedDial>
+          </SpeedDial> */}
         </Stack>
       </Container>
     </Box>
@@ -119,4 +134,5 @@ PostDetailsHero.propTypes = {
   coverUrl: PropTypes.string,
   createdAt: PropTypes.string,
   title: PropTypes.string,
+  description: PropTypes.string,
 };
