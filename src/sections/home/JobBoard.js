@@ -479,7 +479,7 @@ const JobBoard = () => {
 
             <Box textAlign="center" pt={3}>
               <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
-
+{/* 
                 <Button
                   onClick={() => {
 
@@ -506,7 +506,7 @@ const JobBoard = () => {
                   }}
                 >
                   Show More
-                </Button>
+                </Button> */}
               </Stack>
             </Box>
           </Stack>

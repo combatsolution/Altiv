@@ -48,7 +48,9 @@ export default function PostListHomeView() {
   }, [searchParams]);
 
   // Add 'All' category at the beginning
-  const categories = [{ _id: 'all', name: 'All' }, ...fetchedCategories];
+  const categories = [{ _id: 'all', name: 'All' }, ...fetchedCategories, 
+    { _id: 'Ai-readiness', name: 'Ai-readiness', description: 'Ai-readiness Insights' },
+  ];
 
   const showArrows = categories.length > 3;
 
@@ -201,7 +203,7 @@ export default function PostListHomeView() {
                       px: 1.5,
                     },
                     ...(String(selectedCategory) === String(category._id || category.id) && {
-                      bgcolor: 'primary.main',
+                      bgcolor: 'success.main',
                       color: 'primary.contrastText',
                       '&:hover': {
                         bgcolor: 'primary.dark',

@@ -7,7 +7,42 @@ import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import { m, animate, useMotionValue, useTransform } from "framer-motion";
 import PropTypes from "prop-types"; // ✅ add this at the top
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 
+
+const handleExportPDF = async () => {
+  const input = document.getElementById("rnpm seport-contenat");
+  if (!input) return alert("Report content not found");
+
+  const canvas = await html2canvas(input, {
+    scale: 2,
+    useCORS: true,
+    scrollY: -window.scrollY,
+  });
+
+  const imgData = canvas.toDataURL("image/png");
+// eslint-disable-next-line new-cap
+const pdf = new jsPDF("p", "mm", "a4");
+
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+  let position = 0;
+  pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
+
+  let heightLeft = pdfHeight - pdf.internal.pageSize.getHeight();
+  while (heightLeft > 0) {
+    position = heightLeft - pdfHeight;
+    pdf.addPage();
+    pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
+    heightLeft -= pdf.internal.pageSize.getHeight();
+  }
+
+  pdf.save("AI_Readiness_Report.pdf");
+   // ✅ add this line to satisfy ESLint
+  return null;
+};
 
 // Motion wrapper for Paper
 const MotionPaper = m(Paper);
@@ -72,18 +107,19 @@ function AnimatedNumber({ value, suffix }) {
 }
 
 
-export default function 
-AIReadinessDashboard() {
+export default function AIReadinessDashboard({ onExportPDF }) {
   return (
-    <Box sx={{ bgcolor: "#f4f7fb", minHeight: "370px", 
-    my: 5, mx:'auto', maxWidth: { xs: '100%', md: '1330px', lg: '1350px' }   }}>
+    <Box sx={{
+      bgcolor: "#f4f7fb", minHeight: "370px",
+      my: 5, mx: 'auto', maxWidth: { xs: '100%', md: '1330px', lg: '1350px' }
+    }}>
       {/* Header */}
       <Box
         alignItems={{ xs: "center", md: "center" }}
         sx={{
-            
-        //   bgcolor: "linear-gradient(90deg, #2563eb 0%, #06b6d4 100%)",
-          bgcolor:"#2563eb",
+
+          //   bgcolor: "linear-gradient(90deg, #2563eb 0%, #06b6d4 100%)",
+          bgcolor: "#2563eb",
           color: "white",
           px: { xs: 3, md: 8 },
           py: 3,
@@ -93,14 +129,14 @@ AIReadinessDashboard() {
           flexDirection: { xs: "column", md: "row" },
           gap: 0,
           mb: 4,
-         
+
         }}
       >
         {/* Left Section */}
         <Box display="flex" alignItems="center" gap={2} >
           <Avatar
             sx={{
-              bgcolor: "white", 
+              bgcolor: "white",
               width: 90,
               height: 40,
               borderRadius: "8px",
@@ -140,9 +176,11 @@ AIReadinessDashboard() {
               borderColor: "white",
             },
           }}
+        onClick={onExportPDF}
         >
           Export PDF
         </Button>
+
       </Box>
 
       <Container maxWidth="lg">
@@ -178,7 +216,7 @@ AIReadinessDashboard() {
                   alignItems: "center",
                   justifyContent: "center",
                   p: 2,
-                  
+
                 }}
               >
                 {/* Icon */}
@@ -213,7 +251,7 @@ AIReadinessDashboard() {
                     sx={{ textAlign: "left" }}
                     color="primary.main"
                   >
-                   <AnimatedNumber value={metric.value} suffix={metric.suffix} />
+                    <AnimatedNumber value={metric.value} suffix={metric.suffix} />
                   </Typography>
 
                   <Typography
@@ -230,12 +268,12 @@ AIReadinessDashboard() {
         </Grid>
       </Container>
 
-
-    
     </Box>
   );
 }
-
+AIReadinessDashboard.propTypes = {
+  onExportPDF: PropTypes.func,
+};
 
 // ✅ Add this below the component
 AnimatedNumber.propTypes = {
@@ -246,3 +284,4 @@ AnimatedNumber.propTypes = {
 AnimatedNumber.defaultProps = {
   suffix: "",
 };
+

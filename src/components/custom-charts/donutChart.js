@@ -61,11 +61,11 @@ export default function CustomDonutChart({
 
   useEffect(() => {
     if (data.length > 0) {
-      // const timer = setTimeout(() => {
+      const timer = setTimeout(() => {
         setSelectedIndex(0);
         const item = data[0];
         onSliceClick(0, item);
-      // }, 1800);
+       }, 1800);
 
       return () => clearTimeout(timer);
     }

@@ -63,6 +63,7 @@ const ProductPricing = lazy(() => import('src/sections/pricing/view'));
 const Pricingdetailview = lazy(() => import('src/sections/pricing_details/view/pricingdetail-view'));
 const Aieadlinessview =lazy(()=> import ('src/sections/ai_readline/view/aireadliness-view'));
 const Aireadlinecompanyfoboview =lazy(() => import ('src/sections/ai_readline_company_fobo/view/aireadlinessfobo-view'));
+const Aireadlinecompanyfobopageview = lazy(()=> import ('src/sections/ai_readline_company_fobo_page/view/aireadlinessfobopage-view'));
 // ---------------------------- -----------------------------------------
 
 export const mainRoutes = [
@@ -70,7 +71,7 @@ export const mainRoutes = [
     element: (
       <MainLayout>
         <Suspense fallback={<SplashScreen />}>
-          <Outlet />
+          <Outlet />  
         </Suspense>
       </MainLayout>
     ),
@@ -78,10 +79,10 @@ export const mainRoutes = [
        {path:'ai-readiness-analysis', element:<Aieadlinessview/>},
       //  <Route path="/plans/:id" element={<AIMarketingBuilder />} />
       {path:'ai-readiness-companyfobo', element:<Aireadlinecompanyfoboview/>},
-
+      {path:'ai-readiness-companyfobopage', element:<Aireadlinecompanyfobopageview/>},
+      
       {path:'pricing-detail', element:<Pricingdetailview/>},
       {path:'pricing-detail/:id', element:<Pricingdetailview/>},
-
       { path: 'attributions', element: <AttributionsView /> },
       { path: 'ai-training-policy', element: <AitrainingpolicyView /> },
       { path: 'about-us', element: <AboutUsPage /> },

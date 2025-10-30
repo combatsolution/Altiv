@@ -24,9 +24,9 @@
 //   const { profile, key_achievements, summary } = summaryData;
 
 //   return (
-//     <Box sx={{ p: { xs: 2, md: 4 }, backgroundColor: "#fafafa" }}>
+//     <Box sx={{ pageBreakAfter: "always", p: { xs: 2, md: 4 }, backgroundColor: "#fafafa" }}>
 //       {/* Header */}
-//       <Box
+//       <Box  
 //         sx={{
 //           display: "flex",
 //           justifyContent: "space-between",

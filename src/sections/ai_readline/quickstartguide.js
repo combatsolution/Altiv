@@ -14,7 +14,7 @@ export default function QuickStartGuide({ data }) {
     data?.data?.json_schema_data?.first_30_days_quick_start_checklist?.checklist || [];
   const timePeriod =
     data?.data?.json_schema_data?.first_30_days_quick_start_checklist?.time_period_definition?.T ||
-    "30 Days: Quick-Start Implementation Period";
+    "30 Days: Quick-Start Implementation Period ";
 
   return (
     <Box

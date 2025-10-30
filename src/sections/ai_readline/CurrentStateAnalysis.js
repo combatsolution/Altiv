@@ -55,7 +55,8 @@
 //   return (
 //     <Box
 //       sx={{
-//         p: 3,
+//         pageBreakAfter: "always",
+//         p: 3, 
 //         mx: "auto",
 //         maxWidth: { xs: "100%", md: "400px", lg: "1200px" },
 //         width: "100%",

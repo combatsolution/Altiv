@@ -31,6 +31,7 @@
 //   return (
 //     <Box
 //       sx={{
+//          pageBreakAfter: "always",
 //         p: 3,
 //         mx: "auto",
 //         maxWidth: { xs: "100%", md: "1200px", lg: "1200px" },
@@ -160,7 +161,7 @@ const highlightPercentages = (text) => {
     )
   );
 };
-
+  
 export default function StrategicObjectives({ data }) {
   const { user } = useAuthContext();
   const isProUser = user?.isPro || false; // Replace with actual subscription check
@@ -258,7 +259,7 @@ export default function StrategicObjectives({ data }) {
         Time Period: {timePeriod}
       </Typography>
 
-      {/* Objectives List */}
+      {/* Objectives List */} 
       <Grid container spacing={2} sx={{ filter: !isProUser ? "blur(3px)" : "none" }}>
         {planList.map((text, index) => (
           <Grid item xs={12} key={index}>

@@ -28,6 +28,7 @@ export const paths = {
   pricingdetail:'/pricing-detail',
   aireadliness: '/ai-readiness-analysis',
   aireadlinecompanyfobo:'/ai-readiness-companyfobo',
+  aireadlinecompanypage: '/ai-readiness-companyfobopage',
 
   // footer
   Blogs: '/post',
