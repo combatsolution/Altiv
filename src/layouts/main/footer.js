@@ -48,7 +48,7 @@ const Recruiters = [
 ];
 
 const AboutAltiv = [
-    { name: 'Blogs', href: paths.Blogs },
+   { name: 'Blogs', href: paths.Blogs },
   { name: 'About Us', href: paths.about },
   { name: 'Contact Us', href: paths.contact },
   { name: 'Terms of Use', href: paths.TermsAndConditions },

@@ -11,7 +11,7 @@ import { PostItemSkeleton } from './post-skeleton';
 
 // ----------------------------------------------------------------------
 
-export default function PostList({ posts, loading, disabledIndex }) {
+export default function PostList({ posts, loading, disabledIndex, selectedCategory = 'all' }) {
   const renderSkeleton = (
     <>
       {[...Array(16)].map((_, index) => (
@@ -25,8 +25,12 @@ export default function PostList({ posts, loading, disabledIndex }) {
   const renderList = (
     <>
       {posts.map((post, index) => (
-        <Grid key={post.id} xs={12} sm={6} md={!disabledIndex && index === 0 ? 6 : 3}>
-          <PostItem post={post} index={!disabledIndex ? index : undefined} />
+        <Grid key={post.id} xs={12} sm={6} md={!disabledIndex && index === 0 ? 4 : 4}>
+          <PostItem 
+            post={post} 
+            index={!disabledIndex ? index : undefined} 
+            selectedCategory={selectedCategory} 
+          />
         </Grid>
       ))}
     </>
@@ -63,4 +67,5 @@ PostList.propTypes = {
   disabledIndex: PropTypes.bool,
   loading: PropTypes.bool,
   posts: PropTypes.array,
+  selectedCategory: PropTypes.string,
 };

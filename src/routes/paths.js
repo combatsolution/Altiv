@@ -25,6 +25,7 @@ export const paths = {
  
 
   // footer
+    Blogs: '/post',
   PolicyView:'/privacy-policy',
   attributions:'/attributions',
   AitrainingpolicyView:'/ai-training-policy',
@@ -67,7 +68,7 @@ export const paths = {
   },
   post: {
     root: `/post`,
-    details: (title) => `/post/${paramCase(title)}`,
+    details: (slug) => `/post/${slug}`,
     demo: {
       details: `/post/${paramCase(MOCK_TITLE)}`,
     },

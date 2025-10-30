@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-else-return */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import CryptoJS from 'crypto-js';
 import { m } from 'framer-motion';
 import { Box, Typography, Grid, Card, Button, Stack, useTheme, useMediaQuery, FormControlLabel, Switch } from '@mui/material';
@@ -12,7 +12,7 @@ import axiosInstance from 'src/utils/axios';
 import { SplashScreen } from 'src/components/loading-screen';
 import CustomDonutChart from 'src/components/custom-charts/donutChart';
 import PropTypes from 'prop-types';
-import tinycolor from 'tinycolor2';
+import tinycolor from 'tinycolor2'; 
 import CompactLayout from 'src/layouts/compact';
 import { MotionContainer, varBounce } from 'src/components/animate';
 import SeverErrorIllustration from 'src/assets/illustrations/sever-error-illustration';
@@ -80,18 +80,9 @@ export default function FoboLevelTaskDistribution() {
     } catch (error) {
       console.error("Decryption failed:", error);
     }
-  }, [encryptedId, encryptedLinkedInUrl]);
+  }, [encryptedId, encryptedLinkedInUrl, navigate]);
 
-
-  // API Call
-  useEffect(() => {
-    if (decryptedId || decryptedLinkedinUrl) {
-      fetchProfileAnalyticsData();
-    }
-  }, [decryptedId, decryptedLinkedinUrl]);
-
-  // API Function
-  const fetchProfileAnalyticsData = async () => {
+const fetchProfileAnalyticsData = useCallback(async () => {
     if (!decryptedId && !decryptedLinkedinUrl) {
       setIsError(true);
       setIsLoading(false);
@@ -166,7 +157,23 @@ export default function FoboLevelTaskDistribution() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [
+  decryptedId,
+  decryptedLinkedinUrl,
+  viewDetails,
+  smartInsights,
+  /* axiosInstance and setState functions are stable/identity safe */
+]);
+  // API Call
+  useEffect(() => {
+    if (decryptedId || decryptedLinkedinUrl) {
+      fetchProfileAnalyticsData();
+    }
+  }, [decryptedId, decryptedLinkedinUrl,  fetchProfileAnalyticsData]);
+
+  // API Function
+
+
 
   const handlePieClick = (index, item) => {
     setSelectedSection(item);
