@@ -67,7 +67,7 @@ export const paths = {
   },
   post: {
     root: `/post`,
-    details: (title) => `/post/${paramCase(title)}`,
+    details: (slug) => `/post/${slug}`,
     demo: {
       details: `/post/${paramCase(MOCK_TITLE)}`,
     },
