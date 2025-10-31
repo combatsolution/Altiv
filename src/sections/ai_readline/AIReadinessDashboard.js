@@ -113,7 +113,7 @@ export default function AIReadinessDashboard({ onExportPDF }) {
       bgcolor: "#f4f7fb", minHeight: "370px",
       my: 5, mx: 'auto', maxWidth: { xs: '100%', md: '1330px', lg: '1350px' }
     }}>
-      {/* Header */}
+      {/* Header */}  
       <Box
         alignItems={{ xs: "center", md: "center" }}
         sx={{
@@ -284,4 +284,5 @@ AnimatedNumber.propTypes = {
 AnimatedNumber.defaultProps = {
   suffix: "",
 };
+
 

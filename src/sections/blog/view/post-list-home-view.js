@@ -203,7 +203,7 @@ export default function PostListHomeView() {
                       px: 1.5,
                     },
                     ...(String(selectedCategory) === String(category._id || category.id) && {
-                      bgcolor: 'success.main',
+                      bgcolor: 'primary.main',
                       color: 'primary.contrastText',
                       '&:hover': {
                         bgcolor: 'primary.dark',

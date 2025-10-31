@@ -31,9 +31,9 @@ import { Box } from "@mui/material";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import AIReadinessDashboard from "../AIReadinessDashboard";
-import ResponsiveNavbar from "../responsivenavbar";
+import ResponsiveNavbar from "../ResponsiveNavbar";
 import ExecutiveSummary from "../executivesummary";
-import CurrentStateAnalysis from "../currentStateanalysis";
+import CurrentStateAnalysis from "../CurrentStateAnalysis"
 import StrategicObjectives from "../strategicobjectives";
 import QuickStartGuide from "../quickstartguide";
 import ToolStack from "../toolstack";
@@ -126,3 +126,4 @@ export default function AireadlinessView() {
     </>
   );
 }
+

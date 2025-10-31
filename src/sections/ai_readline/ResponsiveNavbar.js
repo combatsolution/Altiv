@@ -17,7 +17,7 @@
   import TopTasksExposureAnalysis from "./taskautomation";
   import SkillErosionProjection from "./skillerosionprojection";
   import DetailNotes from "./detailnote";
-  import CurrentStateAnalysis from "./currentStateanalysis";
+  import CurrentStateAnalysis from "./CurrentStateAnalysis";
   import TransformationRoadmap from "./transformationroadmap";
   import ExecutiveSummary from "./executivesummary";
 
@@ -80,7 +80,7 @@
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            height: "-10vh",
+            height: "10px",
           }}
         >
           <CircularProgress size={40} />
@@ -98,7 +98,6 @@
             borderRadius: 2,
             boxShadow: 1,
             mb: 1,
-            mt: 2,
             bgcolor: "#ffffff",
             mx: "auto",
             // px:2,
