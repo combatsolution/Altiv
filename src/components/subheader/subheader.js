@@ -11,9 +11,9 @@ import { paths } from 'src/routes/paths';
 import { useAuthContext } from 'src/auth/hooks';
 
 export default function SubHeader({ subtitle, showUploadResume }) {
-  console.log("GGGGGGG->",showUploadResume);
+  console.log("GGGGGGG->", showUploadResume);
   const navigate = useNavigate();
-const {user} = useAuthContext();
+  const { user } = useAuthContext();
   const hasUploadedResume = showUploadResume === 'resume'; // ✅ reactively tied to prop
 
   return (
@@ -132,6 +132,39 @@ const {user} = useAuthContext();
             >
 
               FOBO Pro
+            </Button>
+
+            <Button
+              variant="contained"
+              sx={{
+                width: { xs: '180px', md: '175px' },
+                backgroundColor: '#2C47D3',
+                borderRadius: 10,
+                px: 4,
+                ml: 1,
+                textTransform: 'none',
+                fontWeight: 'bold',
+                '&:hover': {
+                  backgroundColor: '#2C47D3',
+                  boxShadow: 'none',
+                },
+              }}
+              onClick={() => {
+                trackEvent({
+                  category: 'CTA clicked',
+                  action: 'button clicked',
+                  label: 'Beat FOBO now',
+                  value: 'Navigate to pricing',
+                });
+                if (!user) {
+                  navigate(paths.auth.jwt.register);
+                } else {
+                  navigate(paths.aireadlinecompanypage);
+                }
+              }}
+              aria-label="Navigate to pricing page"
+            >
+              COMPANY FOBO PRO
             </Button>
           </Grid>
         )}
