@@ -1,5 +1,6 @@
 import orderBy from 'lodash/orderBy';
 import { useCallback, useState, useRef, useEffect } from 'react';
+import {useNavigate} from 'react-router-dom';
 // @mui
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
@@ -27,14 +28,14 @@ import PostSearch from '../post-search';
 // ----------------------------------------------------------------------
 
 export default function PostListHomeView() {
-  const settings = useSettingsContext();
 
+  const settings = useSettingsContext();
   const [sortBy, setSortBy] = useState('latest');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const searchParams = useSearchParams();
   const scrollContainerRef = useRef(null);
-
+  const navigate = useNavigate();
   const { categories: fetchedCategories = [], categoriesLoading } = useGetCategories();
 
   // Set initial category from URL if present
@@ -74,6 +75,20 @@ export default function PostListHomeView() {
     },
   };
 
+  
+  const aiReadinessPost = {
+  id: 'ai-readiness-1',
+  title: 'AI Readiness: Transforming the Future of Work',
+  slug: 'ai-readiness',
+  description:
+    'Explore how AI Readiness empowers organizations to adapt, upskill, and thrive in the era of automation. Learn key steps to assess and improve your AI adoption maturity.',
+  coverUrl: '/assets/images/ai-readiness-banner.jpg', // Replace with your actual image path
+  createdAt: new Date().toISOString(),
+  tags: ['AI', 'Readiness', 'Future of Work'],
+   navigateTo: '/ai-readiness-companyfobopage', // 👈 custom path
+};
+
+
   const newFilterString = encodeURIComponent(JSON.stringify(filter));
   
   const { posts: allPosts, postsLoading: allPostsLoading } = useGetPostsByFilters(newFilterString);
@@ -86,8 +101,14 @@ export default function PostListHomeView() {
   const categoryPosts = selectedCategory === 'all' ? [] : categoryResult.posts || [];
   const categoryPostsLoading = selectedCategory === 'all' ? false : categoryResult.postsLoading;
 
-  const posts = selectedCategory === 'all' ? allPosts : categoryPosts;
-  const postsLoading = selectedCategory === 'all' ? allPostsLoading : categoryPostsLoading;
+  let posts = selectedCategory === 'all' ? allPosts : categoryPosts;
+  let postsLoading = selectedCategory === 'all' ? allPostsLoading : categoryPostsLoading;
+
+  // ✅ When AI-readiness chip is selected, show your new blog instead
+if (selectedCategory === 'Ai-readiness') {
+  posts = [aiReadinessPost];
+  postsLoading = false;
+}
 
   // Local search function
   const getSearchResults = useCallback(() => {
@@ -180,6 +201,7 @@ export default function PostListHomeView() {
                 scrollbarWidth: 'none',
               }}
             >
+              {console.log('GGGGG selectedCategory:', selectedCategory)}
               {categories.map((category) => (
                 <Chip
                   key={category._id || category.id}
@@ -237,7 +259,7 @@ export default function PostListHomeView() {
       </Stack>
 
       <PostList posts={dataFiltered} loading={postsLoading} selectedCategory={selectedCategory} />
-    </Container>
+    </Container>  
   );
 }
 

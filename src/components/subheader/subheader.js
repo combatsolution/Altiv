@@ -107,7 +107,7 @@ export default function SubHeader({ subtitle, showUploadResume }) {
                 width: { xs: '180px', md: '175px' },
                 backgroundColor: '#2C47D3',
                 borderRadius: 10,
-                px: 4,
+                px: 0,
                 textTransform: 'none',
                 fontWeight: 'bold',
                 '&:hover': {
@@ -134,13 +134,14 @@ export default function SubHeader({ subtitle, showUploadResume }) {
               FOBO Pro
             </Button>
 
+
             <Button
               variant="contained"
               sx={{
                 width: { xs: '180px', md: '175px' },
                 backgroundColor: '#2C47D3',
                 borderRadius: 10,
-                px: 4,
+                
                 ml: 1,
                 textTransform: 'none',
                 fontWeight: 'bold',

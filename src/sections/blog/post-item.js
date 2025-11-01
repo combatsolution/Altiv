@@ -9,7 +9,8 @@ import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 // routes
 import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { RouterLink} from 'src/routes/components';
+import { useNavigate } from 'react-router-dom';
 // utils
 import { fDate } from 'src/utils/format-time';
 // components
@@ -19,8 +20,16 @@ import TextMaxLine from 'src/components/text-max-line';
 // ----------------------------------------------------------------------
 
 export default function PostItem({ post, selectedCategory = 'all' }) {
-  const theme = useTheme();
+  const navigate = useNavigate();
+    const theme = useTheme();
   const { coverUrl, title, description, tags = [], createdAt, slug } = post;
+  const handleClick = (e) => {
+    // Special redirect for AI Readiness post
+    if (title?.trim() === 'AI Readiness: Transforming the Future of Work') {
+      e.preventDefault();
+      navigate('/ai-readiness-companyfobopage');
+    }
+  };
 
   return (
     <Card
@@ -64,13 +73,16 @@ export default function PostItem({ post, selectedCategory = 'all' }) {
           {fDate(createdAt)}
         </Typography>
 
-        <Link
+        <Link 
           component={RouterLink}
           href={`${paths.post.details(slug)}${
             selectedCategory !== 'all' ? `?category=${encodeURIComponent(selectedCategory)}` : ''
+
           }`}
+
           color="inherit"
           sx={{ flexGrow: 1 }}
+          onClick={handleClick}
         >
           <TextMaxLine variant="h6" sx={{ mb: 2, height: 60 }}>
             {title}

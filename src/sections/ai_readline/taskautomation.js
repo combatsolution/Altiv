@@ -142,7 +142,7 @@
 //       <TableCell
 //         key={i}
 //         sx={{
-          
+
 //            background: "linear-gradient(90deg, #4B69E9 5%, #00A3FF 100%)",
 //           color: "#fff",
 //           fontWeight: "bold",
@@ -273,17 +273,25 @@ export default function TopTasksExposureAnalysis({ data }) {
           overflowX: "auto",
         }}
       >
-        <Table>
+        <Table
+          sx={{
+            borderCollapse: "separate",
+            borderSpacing: "0 6px", // vertical & horizontal gap
+          }}
+        >
           <TableHead>
             <TableRow>
               {headers.map((header, i) => (
                 <TableCell
                   key={i}
                   sx={{
-                    background: "linear-gradient(90deg, #4B69E9 5%, #00A3FF 100%)",
+                    bgcolor: "primary.main",
                     color: "#fff",
                     fontWeight: "bold",
                     whiteSpace: "nowrap",
+                    borderRadius: "6px",
+                    textAlign: "center",
+                    borderLeft: i !== 0 ? "2px solid #f7f0f033" : "none", // subtle column separation
                   }}
                 >
                   {header}

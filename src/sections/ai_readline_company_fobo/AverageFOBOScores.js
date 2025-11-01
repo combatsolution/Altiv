@@ -26,7 +26,7 @@ const colors = ["#3346FF", "#00A8FF", "#00FFB3", "#5567FF"];
 const AverageFOBOScores = () => {
   return (
     <Card
-      sx={{
+      sx={{ 
         my: 3,
         mx: "auto",
         maxWidth: "1150px",
@@ -37,7 +37,7 @@ const AverageFOBOScores = () => {
       }}
     >
       {/* Title with underline */}
-      <Box sx={{ borderBottom: "3px solid #00A8FF", mb: 2 }}>
+      < Box sx={{ borderBottom: "3px solid #00A8FF", mb: 2 }}>
         <Typography
           variant="h4"
           fontWeight="bold"

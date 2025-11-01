@@ -23,7 +23,7 @@ export default function PostList({ posts, loading, disabledIndex, selectedCatego
   );
 
   const renderList = (
-    <>
+    <> 
       {posts.map((post, index) => (
         <Grid key={post.id} xs={12} sm={6} md={!disabledIndex && index === 0 ? 4 : 4}>
           <PostItem 

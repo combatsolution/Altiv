@@ -5,18 +5,26 @@ import { m } from 'framer-motion'; // For MotionPaper if needed
 
 const MetricsCards = ({ metrics }) => (
   <Box mt={2}>
-    <Grid container spacing={2} justifyContent='flex-start'>
+    <Grid container spacing={2} sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'right',
+  
+    }}
+      >
       {metrics.map((metric, index) => (
         <Grid
           item
           key={index}
-          xs={12}
+          xs={12} 
           sm={6}
-          md={2}
-          sx={{ maxWidth: 270, display: 'flex', justifyContent: 'center' }}
+          md={6 }
+          sx={{
+            ml:3
+          }}
         >
           <m.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: index * 0.2 }}
             whileHover={{
@@ -25,15 +33,15 @@ const MetricsCards = ({ metrics }) => (
             }}
           >
             <Paper
-              elevation={3}
+             
               sx={{
                 borderRadius: 3,
                 cursor: 'pointer',
                 background: 'white',
                 borderTop: `4px solid ${metric.color}`,
                 minHeight: 160,
-                width: '100%',
-                maxWidth: 270,
+                width: '353px',  
+                maxWidth: 300,
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',

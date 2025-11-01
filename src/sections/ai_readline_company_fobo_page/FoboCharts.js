@@ -329,8 +329,7 @@ function ChartCard({ title, data }) {
               <XAxis dataKey="name" />
               <YAxis
                 domain={[0, 100]}
-                              ticks={[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
-
+                 ticks={[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
                 interval={0}
               />
               <Tooltip />
@@ -394,7 +393,6 @@ function AvgRoleScoreChart({ data }) {
           <YAxis
             domain={[0, 100]}
             ticks={[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
-
             interval={0}
           />
           <Tooltip />
@@ -443,7 +441,7 @@ export default function FoboCharts() {
           </Grid>
         ))}
 
-        <Grid item xs={12}>
+        <Grid item xs={12} lg={12}>
           <AvgRoleScoreChart data={avgData} />
         </Grid>
       </Grid>
