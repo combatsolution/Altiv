@@ -223,9 +223,32 @@ import {
 } from "recharts";
 
 export default function SkillErosionProjection({ data, isProUser = false }) {
-  const skillErosionData =
-    data?.data?.json_schema_data?.skill_erosion_analysis || [];
+  // ✅ Step 1: Extract raw data
+  const rawErosionData = data?.data?.json_schema_data?.skill_erosion_analysis;
 
+  // ✅ Step 2: Safely parse and validate it
+  const skillErosionData = useMemo(() => {
+    if (!rawErosionData) return [];
+
+    // If backend sent JSON as string
+    if (typeof rawErosionData === "string") {
+      try {
+        const parsed = JSON.parse(rawErosionData);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (error) {
+        console.error("❌ Error parsing skill_erosion_analysis:", error);
+        return [];
+      }
+    }
+
+    // If already an array
+    if (Array.isArray(rawErosionData)) return rawErosionData;
+
+    console.warn("⚠️ skill_erosion_analysis is not an array:", rawErosionData);
+    return [];
+  }, [rawErosionData]);
+
+  // ✅ Step 3: Proceed safely
   const selectedSkill = skillErosionData[0];
 
   const chartData = useMemo(() => {
@@ -238,7 +261,9 @@ export default function SkillErosionProjection({ data, isProUser = false }) {
     }));
   }, [selectedSkill]);
 
+  // ✅ Step 4: This now runs safely
   const coreSkills = skillErosionData.map((s) => s.skill_name);
+
 
   return (
     <Box sx={{ position: "relative" }}>

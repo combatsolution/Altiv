@@ -639,7 +639,7 @@ export default function MyProfile() {
               <div style={{ textAlign: 'center', marginTop: 10 }}>
                 <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO SCORE</div>
                 <div style={{ fontWeight: 'bold', fontSize: 24, color: levelColor }}>{score}</div>
-              </div>
+              </div>  
             </Grid>
           </Grid>
         </div>

@@ -116,7 +116,7 @@ export default function CurrentStateAnalysis({ data }) {
         sx={{
           my: 3,
           borderBottom: (theme) => `2px solid ${theme.palette.grey[300]}`,
-          filter: !isProUser ? "blur(3px)" : "none",
+          filter: isProUser ? "blur(3px)" : "none",
           pointerEvents: !isProUser ? "none" : "auto",
           userSelect: !isProUser ? "none" : "auto",
         }}
