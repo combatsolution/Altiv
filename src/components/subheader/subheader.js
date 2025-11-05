@@ -123,6 +123,7 @@ export default function SubHeader({ subtitle, showUploadResume }) {
                   value: 'Navigate to pricing',
                 });
                 if (!user) {
+                  sessionStorage.setItem('redirectAfterLogin', '/ai-readiness-analysis');
                   navigate(paths.auth.jwt.register);
                 } else {
                   navigate(paths.aireadliness);

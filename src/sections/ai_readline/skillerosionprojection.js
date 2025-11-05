@@ -1,7 +1,5 @@
-
 // import React, { useMemo } from "react";
 // import PropTypes from "prop-types";
-
 // import {
 //   Box,
 //   Container,
@@ -28,23 +26,27 @@
 // } from "recharts";
 
 // export default function SkillErosionProjection({ data }) {
-//   const skillErosionData = data?.data?.json_schema_data?.skill_erosion_analysis || [];
+//   // ✅ Extract correct data paths
+// // ✅ Memoize erosionData so ESLint is happy
+// const erosionData = useMemo(
+//   () => data?.data?.json_schema_data?.skill_erosion_analysis || {},
+//   [data]
+// );
 
-//   // Pick first skill as default chart data (can later add skill selector)
-//   const selectedSkill = skillErosionData[0];
+// const coreSkills = erosionData.critical_skills_analyzed || [];
 
-//   // Prepare data for chart dynamically
-//   const chartData = useMemo(() => {
-//     if (!selectedSkill) return [];
-//     return selectedSkill.baseline_retention.map((b, index) => ({
-//       month: `${(b.year * 12)}M`,
-//       baseline: b.retention_percentage,
-//       upskill: selectedSkill.ai_augmented_retention[index]?.retention_percentage,
-//     }));
-//   }, [selectedSkill]);
+// // ✅ Prepare chart data from overall retention
+// const chartData = useMemo(() => { 
+//   const overall = erosionData.overall || {};
+//   if (!overall?.baseline_retention || !overall?.ai_augmented_retention)
+//     return [];
 
-//   // Core Skills list (from API)
-//   const coreSkills = skillErosionData.map((s) => s.skill_name);
+//   return overall.baseline_retention.map((b, index) => ({
+//     month: `${b.year * 12}M`,
+//     baseline: b.retention_percentage,
+//     upskill: overall.ai_augmented_retention[index]?.retention_percentage,
+//   }));
+// }, [erosionData]);
 
 //   return (
 //     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -83,30 +85,29 @@
 //               fontWeight={500}
 //               mb={2}
 //             >
-//               Skill Relevance Projection Over 48 Months
+//               Overall Skill Relevance Projection (48 Months)
 //             </Typography>
 
-//             {selectedSkill ? (
+//             {chartData.length > 0 ? (
 //               <ResponsiveContainer width="100%" height={350}>
 //                 <LineChart data={chartData}>
 //                   <CartesianGrid strokeDasharray="3 3" />
 //                   <XAxis dataKey="month" />
-//                   <YAxis domain={[30, 150]} />
+//                   <YAxis domain={[30, 100]} />
 //                   <Tooltip
 //                     formatter={(value, name) =>
-//                       `${value.toFixed(1)}% (${name === "baseline"
-//                         ? "Baseline Scenario (No Upskilling)"
-//                         : "Upskilling Scenario"
-//                       })`
+//                       `${value.toFixed(1)}% ${
+//                         name === "baseline"
+//                           ? "(Baseline Scenario)"
+//                           : "(AI-Augmented Scenario)"
+//                       }`
 //                     }
 //                   />
 //                   <Legend
 //                     verticalAlign="top"
 //                     align="center"
 //                     iconType="circle"
-//                     wrapperStyle={{
-//                       paddingBottom: 10,
-//                     }}
+//                     wrapperStyle={{ paddingBottom: 10 }}
 //                   />
 //                   <Line
 //                     type="monotone"
@@ -114,7 +115,7 @@
 //                     stroke="#b23c17"
 //                     strokeWidth={3}
 //                     dot={{ r: 4 }}
-//                     name="Baseline Scenario (No Upskilling)"
+//                     name="Baseline Scenario"
 //                   />
 //                   <Line
 //                     type="monotone"
@@ -122,17 +123,17 @@
 //                     stroke="#00bcd4"
 //                     strokeWidth={3}
 //                     dot={{ r: 4 }}
-//                     name="Upskilling Scenario"
+//                     name="AI-Augmented Scenario"
 //                   />
 //                 </LineChart>
 //               </ResponsiveContainer>
 //             ) : (
 //               <Typography
-//                 variant="body2" 
+//                 variant="body2"
 //                 textAlign="center"
 //                 color="text.secondary"
 //               >
-//                 No skill erosion data available.
+//                 No skill retention data available.
 //               </Typography>
 //             )}
 //           </Paper>
@@ -143,7 +144,7 @@
 //           <Paper
 //             sx={{
 //               p: 3,
-//                height: "auto", // ✅ expands based on content
+//               height: "auto",
 //               width: "100%",
 //               bgcolor: "#fff",
 //               border: "1px solid rgba(0,0,0,0.1)",
@@ -156,17 +157,23 @@
 //               color="primary"
 //               gutterBottom
 //             >
-//               Core Skills Analyzed:
+//               Critical Skills Analyzed:
 //             </Typography>
 //             <List>
-//               {coreSkills.map((skill, i) => (
-//                 <ListItem key={i} disablePadding divider sx={{ my: 2, py: 0.5 }}>
-//                   <ListItemIcon>
-//                     <Icon icon="mdi:circle" width="10" color="green" />
-//                   </ListItemIcon>
-//                   <ListItemText primary={skill} />
-//                 </ListItem>
-//               ))}
+//               {coreSkills.length > 0 ? (
+//                 coreSkills.map((skill, i) => (
+//                   <ListItem key={i} disablePadding divider sx={{ my: 1, py: 0.5 }}>
+//                     <ListItemIcon>
+//                       <Icon icon="mdi:circle" width="10" color="green" />
+//                     </ListItemIcon>
+//                     <ListItemText primary={skill} />
+//                   </ListItem>
+//                 ))
+//               ) : (
+//                 <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+//                   No critical skills available.
+//                 </Typography>
+//               )}
 //             </List>
 //           </Paper>
 //         </Grid>
@@ -175,24 +182,18 @@
 //   );
 // }
 
-
 // SkillErosionProjection.propTypes = {
 //   data: PropTypes.shape({
 //     data: PropTypes.shape({
 //       json_schema_data: PropTypes.shape({
-//         skill_erosion_analysis: PropTypes.arrayOf(
-//           PropTypes.shape({
-//             skill_name: PropTypes.string,
-//             current_score: PropTypes.number,
-//             projected_score: PropTypes.number,
-//           })
-//         ),
+//         skill_erosion_analysis: PropTypes.shape({
+//           overall: PropTypes.object,
+//           critical_skills_analyzed: PropTypes.array,
+//         }),
 //       }),
 //     }),
 //   }),
 // };
-
-
 
 import React, { useMemo } from "react";
 import PropTypes from "prop-types";
@@ -223,180 +224,172 @@ import {
 } from "recharts";
 
 export default function SkillErosionProjection({ data, isProUser = false }) {
-  // ✅ Step 1: Extract raw data
-  const rawErosionData = data?.data?.json_schema_data?.skill_erosion_analysis;
+  // ✅ Memoize erosionData to avoid ESLint warnings
+  const erosionData = useMemo(
+    () => data?.data?.json_schema_data?.skill_erosion_analysis || {},
+    [data]
+  );
 
-  // ✅ Step 2: Safely parse and validate it
-  const skillErosionData = useMemo(() => {
-    if (!rawErosionData) return [];
+  const coreSkills = erosionData.critical_skills_analyzed || [];
 
-    // If backend sent JSON as string
-    if (typeof rawErosionData === "string") {
-      try {
-        const parsed = JSON.parse(rawErosionData);
-        return Array.isArray(parsed) ? parsed : [];
-      } catch (error) {
-        console.error("❌ Error parsing skill_erosion_analysis:", error);
-        return [];
-      }
-    }
-
-    // If already an array
-    if (Array.isArray(rawErosionData)) return rawErosionData;
-
-    console.warn("⚠️ skill_erosion_analysis is not an array:", rawErosionData);
-    return [];
-  }, [rawErosionData]);
-
-  // ✅ Step 3: Proceed safely
-  const selectedSkill = skillErosionData[0];
-
+  // ✅ Prepare chart data
   const chartData = useMemo(() => {
-    if (!selectedSkill) return [];
-    return selectedSkill.baseline_retention.map((b, index) => ({
+    const overall = erosionData.overall || {};
+    if (!overall?.baseline_retention || !overall?.ai_augmented_retention)
+      return [];
+
+    return overall.baseline_retention.map((b, index) => ({
       month: `${b.year * 12}M`,
       baseline: b.retention_percentage,
-      upskill:
-        selectedSkill.ai_augmented_retention[index]?.retention_percentage,
+      upskill: overall.ai_augmented_retention[index]?.retention_percentage,
     }));
-  }, [selectedSkill]);
-
-  // ✅ Step 4: This now runs safely
-  const coreSkills = skillErosionData.map((s) => s.skill_name);
-
+  }, [erosionData]);
 
   return (
-    <Box sx={{ position: "relative" }}>
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        {/* Header */}
-        <Box display="flex" justifyContent="space-between" mb={3}>
-          <Typography variant="h5" fontWeight="bold" color="primary">
-            Skill Erosion Projection
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={
-              <Icon icon="ic:sharp-share" width="20" height="20" color="#fff" />
-            }
+    <Container maxWidth="lg" sx={{ py: 4, position: "relative" }}>
+      {/* Header */}
+      <Box display="flex" justifyContent="space-between" mb={3}>
+        <Typography variant="h5" fontWeight="bold" color="primary">
+          Skill Erosion Projection
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={
+            <Icon icon="ic:sharp-share" width="20" height="20" color="#fff" />
+          }
+        >
+          Share
+        </Button>
+      </Box>
+
+      <Divider sx={{ mb: 2 }} />
+
+      <Grid container spacing={3}>
+        {/* Chart Section */}
+        <Grid item xs={12} md={8}>
+          <Paper
+            sx={{
+              p: 3,
+              height: "100%",
+              borderRadius: 2,
+              border: "1px solid rgba(0,0,0,0.1)",
+              bgcolor: "background.paper",
+              position: "relative",
+            }}
           >
-            Share
-          </Button>
-        </Box>
-
-        <Divider sx={{ mb: 2 }} />
-
-        <Grid container spacing={3}>
-          {/* Chart Section */}
-          <Grid item xs={12} md={8}>
-            <Paper
-              sx={{
-                p: 3,
-                height: "100%",
-                borderRadius: 2,
-                border: "1px solid rgba(0,0,0,0.1)",
-                bgcolor: "background.paper",
-              }}
+            <Typography
+              variant="h6"
+              color="primary"
+              textAlign="center"
+              fontWeight={500}
+              mb={2}
             >
+              Overall Skill Relevance Projection (48 Months)
+            </Typography>
+
+            {chartData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={350}>
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis domain={[30, 100]} />
+                  <Tooltip
+                    formatter={(value, name) =>
+                      `${value.toFixed(1)}% ${
+                        name === "baseline"
+                          ? "(Baseline Scenario)"
+                          : "(AI-Augmented Scenario)"
+                      }`
+                    }
+                  />
+                  <Legend
+                    verticalAlign="top"
+                    align="center"
+                    iconType="circle"
+                    wrapperStyle={{ paddingBottom: 10 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="baseline"
+                    stroke="#b23c17"
+                    strokeWidth={3}
+                    dot={{ r: 4 }}
+                    name="Baseline Scenario"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="upskill"
+                    stroke="#00bcd4"
+                    strokeWidth={3}
+                    dot={{ r: 4 }}
+                    name="AI-Augmented Scenario"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
               <Typography
-                variant="h6"
-                color="primary"
+                variant="body2"
                 textAlign="center"
-                fontWeight={500}
-                mb={2}
+                color="text.secondary"
               >
-                Skill Relevance Projection Over 48 Months
+                No skill retention data available.
               </Typography>
+            )}
+          </Paper>
+        </Grid>
 
-              {selectedSkill ? (
-                <ResponsiveContainer width="100%" height={350}>
-                  <LineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis domain={[30, 150]} />
-                    <Tooltip
-                      formatter={(value, name) =>
-                        `${value.toFixed(1)}% (${
-                          name === "baseline"
-                            ? "Baseline Scenario (No Upskilling)"
-                            : "Upskilling Scenario"
-                        })`
-                      }
-                    />
-                    <Legend
-                      verticalAlign="top"
-                      align="center"
-                      iconType="circle"
-                      wrapperStyle={{
-                        paddingBottom: 10,
-                      }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="baseline"
-                      stroke="#b23c17"
-                      strokeWidth={3}
-                      dot={{ r: 4 }}
-                      name="Baseline Scenario (No Upskilling)"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="upskill"
-                      stroke="#00bcd4"
-                      strokeWidth={3}
-                      dot={{ r: 4 }}
-                      name="Upskilling Scenario"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              ) : (
-                <Typography
-                  variant="body2"
-                  textAlign="center"
-                  color="text.secondary"
-                >
-                  No skill erosion data available.
-                </Typography>
-              )}
-            </Paper>
-          </Grid>
-
-          {/* Skills List Section */}
-          <Grid item xs={12} md={4}>
-            <Paper
-              sx={{
-                p: 3,
-                height: "auto",
-                width: "100%",
-                bgcolor: "#fff",
-                border: "1px solid rgba(0,0,0,0.1)",
-                borderRadius: 2,
-              }}
+        {/* Skills List Section */}
+        <Grid item xs={12} md={4}>
+          <Paper
+            sx={{
+              p: 3,
+              height: "auto",
+              width: "100%",
+              bgcolor: "#fff",
+              border: "1px solid rgba(0,0,0,0.1)",
+              borderRadius: 2,
+              position: "relative",
+            }}
+          >
+            <Typography
+              variant="h6"
+              fontWeight={500}
+              color="primary"
+              gutterBottom
             >
-              <Typography
-                variant="h6"
-                fontWeight={500}
-                color="primary"
-                gutterBottom
-              >
-                Core Skills Analyzed:
-              </Typography>
-              <List>
-                {coreSkills.map((skill, i) => (
-                  <ListItem key={i} disablePadding divider sx={{ my: 2, py: 0.5 }}>
+              Critical Skills Analyzed:
+            </Typography>
+            <List>
+              {coreSkills.length > 0 ? (
+                coreSkills.map((skill, i) => (
+                  <ListItem
+                    key={i}
+                    disablePadding
+                    divider
+                    sx={{ my: 1, py: 0.5 }}
+                  >
                     <ListItemIcon>
                       <Icon icon="mdi:circle" width="10" color="green" />
                     </ListItemIcon>
                     <ListItemText primary={skill} />
                   </ListItem>
-                ))}
-              </List>
-            </Paper>
-          </Grid>
+                ))
+              ) : (
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mt: 1 }}
+                >
+                  No critical skills available.
+                </Typography>
+              )}
+            </List>
+          </Paper>
         </Grid>
-      </Container>
+      </Grid>
 
-      {/* 🔒 Blue Blur Overlay (Lock for Non-Pro Users) */}
+      {/* 🔒 Blue Blur Overlay Lock Effect */}
       {!isProUser && (
         <Box
           sx={{
@@ -415,30 +408,15 @@ export default function SkillErosionProjection({ data, isProUser = false }) {
         >
           <LockIcon sx={{ fontSize: 60, color: "#1565c0", mb: 2 }} />
           <Typography variant="h6" fontWeight={600}>
-            Skill Relevance Projection Locked
+            Skill Erosion Projection is Locked
           </Typography>
-          <Typography
-            variant="body2"
-            sx={{ mb: 2, color: "text.secondary", maxWidth: 400 }}
-          >
-            Upgrade to access full Skill Relevance Projection Roadmap
+          <Typography variant="body2" sx={{ mb: 2, color: "text.secondary" }}>
+            Upgrade to access Skill Erosion Projection Section
           </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{
-              borderRadius: 2,
-              px: 3,
-              textTransform: "none",
-              fontWeight: 600,
-            }}
-            onClick={() => window.open("/pricing", "_blank")}
-          >
-            Upgrade Now
-          </Button>
+          
         </Box>
       )}
-    </Box>
+    </Container>
   );
 }
 
@@ -446,16 +424,12 @@ SkillErosionProjection.propTypes = {
   data: PropTypes.shape({
     data: PropTypes.shape({
       json_schema_data: PropTypes.shape({
-        skill_erosion_analysis: PropTypes.arrayOf(
-          PropTypes.shape({
-            skill_name: PropTypes.string,
-            current_score: PropTypes.number,
-            projected_score: PropTypes.number,
-          })
-        ),
+        skill_erosion_analysis: PropTypes.shape({
+          overall: PropTypes.object,
+          critical_skills_analyzed: PropTypes.array,
+        }),
       }),
     }),
   }),
   isProUser: PropTypes.bool,
 };
-

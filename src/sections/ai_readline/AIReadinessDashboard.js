@@ -1,94 +1,34 @@
+
+
 // import { useEffect } from "react";
-// import { Box, Container, Grid, Typography, Paper, Button, Avatar } from "@mui/material";
+// import {
+//   Box,
+//   Container,
+//   Grid,
+//   Typography,
+//   Paper,
+//   Button,
+//   Avatar,
+// } from "@mui/material";
 // import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 // import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 // import BoltIcon from "@mui/icons-material/Bolt";
 // import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 // import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 // import { m, animate, useMotionValue, useTransform } from "framer-motion";
-// import PropTypes from "prop-types"; // ✅ add this at the top
+// import PropTypes from "prop-types";
 // import { jsPDF } from "jspdf";
 // import html2canvas from "html2canvas";
 
-
-// const handleExportPDF = async () => {
-//   const input = document.getElementById("rnpm seport-contenat");
-//   if (!input) return alert("Report content not found");
-
-//   const canvas = await html2canvas(input, {
-//     scale: 2,
-//     useCORS: true,
-//     scrollY: -window.scrollY,
-//   });
-
-//   const imgData = canvas.toDataURL("image/png");
-// // eslint-disable-next-line new-cap
-// const pdf = new jsPDF("p", "mm", "a4");
-
-//   const pdfWidth = pdf.internal.pageSize.getWidth();
-//   const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-//   let position = 0;
-//   pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
-
-//   let heightLeft = pdfHeight - pdf.internal.pageSize.getHeight();
-//   while (heightLeft > 0) {
-//     position = heightLeft - pdfHeight;
-//     pdf.addPage();
-//     pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
-//     heightLeft -= pdf.internal.pageSize.getHeight();
-//   }
-
-//   pdf.save("AI_Readiness_Report.pdf");
-//    // ✅ add this line to satisfy ESLint
-//   return null;
-// };
-
 // // Motion wrapper for Paper
 // const MotionPaper = m(Paper);
-// const handleSectionChange = "Executive Summary"; // Placeholder for section change handler
-// // Data for metric cards
-// const metrics = [
-//   {
-//     title: "AI-Readiness Score",
-//     value: 75,
-//     suffix: "%",
-//     subtitle: "Above Average",
-//     color: "#3b82f6",
-//     icon: <TrackChangesIcon sx={{ fontSize: 28, color: "#3b82f6" }} />,
-//   },
-//   {
-//     title: "Transformation Timeline",
-//     value: 36,
-//     suffix: "",
-//     subtitle: "Months",
-//     color: "#f59e0b",
-//     icon: <BoltIcon sx={{ fontSize: 28, color: "#f59e0b" }} />,
-//   },
-//   {
-//     title: "Automation Potential",
-//     value: 65,
-//     suffix: "%",
-//     subtitle: "High Impact",
-//     color: "#ec4899",
-//     icon: <RocketLaunchIcon sx={{ fontSize: 28, color: "#ec4899" }} />,
-//   },
-//   {
-//     title: "Strategic Objectives",
-//     value: 6,
-//     suffix: "",
-//     subtitle: "Key Goals",
-//     color: "#facc15",
-//     icon: <EmojiObjectsIcon sx={{ fontSize: 28, color: "#facc15" }} />,
-//   },
-// ];
-
 
 // // Component for animated number counter
 // function AnimatedNumber({ value, suffix }) {
 //   const motionValue = useMotionValue(0);
 //   const rounded = useTransform(motionValue, (latest) => Math.floor(latest));
 //   const displayedValue = useTransform(rounded, (val) => `${val}${suffix}`);
+  
 
 //   useEffect(() => {
 //     motionValue.set(0);
@@ -106,19 +46,66 @@
 //   );
 // }
 
+// AnimatedNumber.propTypes = {
+//   value: PropTypes.number.isRequired,
+//   suffix: PropTypes.string,
+// };
 
-// export default function AIReadinessDashboard({ onExportPDF }) {
+// AnimatedNumber.defaultProps = {
+//   suffix: "",
+// };
+
+// export default function AIReadinessDashboard({ data, onExportPDF }) {
+//   // Dynamically build metrics based on API data or fallback to defaults
+//   const metrics = [
+//     {
+//       title: "AI-Readiness Score",  
+//       value: data?.AI_Readiness_Score ?? 0, 
+//       suffix: "%",
+//       subtitle: data?.aiReadinessRating ?? "Above Average",
+//       color: "#3b82f6",
+//       icon: <TrackChangesIcon sx={{ fontSize: 28, color: "#3b82f6" }} />,
+//     },
+//     {
+//       title: "Transformation Timeline",
+//       value: data?.transformationTimeline ?? 0,
+//       suffix: " ",
+//       subtitle: "Months",
+//       color: "#f59e0b",
+//       icon: <BoltIcon sx={{ fontSize: 28, color: "#f59e0b" }} />,
+//     },
+//     {
+//       title: "Automation Potential",
+//       value: data?.Automated_Score ?? 0,
+//       suffix: "%",
+//       subtitle: data?.automationImpact ?? "High Impact",
+//       color: "#ec4899",
+//       icon: <RocketLaunchIcon sx={{ fontSize: 28, color: "#ec4899" }} />,
+//     },
+//     {
+//       title: "Strategic Objectives",
+//       value: data?.strategicObjectives ?? 0,
+//       suffix: "",
+//       subtitle: "Key Goals",
+//       color: "#facc15",
+//       icon: <EmojiObjectsIcon sx={{ fontSize: 28, color: "#facc15" }} />,
+//     },
+//   ];
+
 //   return (
-//     <Box sx={{
-//       bgcolor: "#f4f7fb", minHeight: "370px",
-//       my: 2, mx: 'auto', maxWidth: { xs: '100%', md: '1330px', lg: '1350px' }
-//     }}>
-//       {/* Header */}  
+//     <Box
+//       sx={{
+//         bgcolor: "#f4f7fb",
+//         minHeight: "370px",
+//         my: 2,
+//         mx: "auto",
+//         maxWidth: { xs: "100%", md: "1330px", lg: "1350px" },
+//       }}
+//     >
+//       {/* Header */}
 //       <Box
 //         alignItems={{ xs: "left", md: "center" }}
 //         sx={{
-
-//           //   bgcolor: "linear-gradient(90deg, #2563eb 0%, #06b6d4 100%)",
 //           bgcolor: "#2563eb",
 //           color: "white",
 //           px: { xs: 3, md: 8 },
@@ -127,13 +114,12 @@
 //           mx: "auto",
 //           justifyContent: "space-between",
 //           flexDirection: { xs: "column", md: "row" },
-//           gap: 0,
 //           mb: 4,
-
+//           gap: 2,
 //         }}
 //       >
 //         {/* Left Section */}
-//         <Box display="flex" alignItems="center" gap={2} >
+//         <Box display="flex" alignItems="center" gap={2}>
 //           <Avatar
 //             sx={{
 //               bgcolor: "white",
@@ -143,7 +129,6 @@
 //               color: "primary.main",
 //               fontWeight: "bold",
 //               fontSize: 16,
-//               maxWidth: "1175px ",
 //               ml: { xs: 0, md: 4.7 },
 //             }}
 //           >
@@ -154,15 +139,16 @@
 //               Personalized AI-Readiness Analysis
 //             </Typography>
 //             <Typography variant="subtitle2" sx={{ color: "#00FD8D" }}>
-//               Dr. Rishabh Gandhi
+//               {data?.userName ?? "N/A"}
 //             </Typography>
 //             <Typography variant="caption" sx={{ color: "#d1e9ff" }}>
-//               Report ID: AIR-2025-RG-001 &nbsp; | &nbsp; Generated: August 28, 2025
+//               Report ID: {data?.reportId ?? "N/A"} &nbsp; | &nbsp; Generated:{" "}
+//               {data?.generatedDate ?? "N/A"}
 //             </Typography>
 //           </Box>
 //         </Box>
 
-//         {/* Right Section */}
+//         {/* Right Section - Export PDF */}
 //         <Button
 //           variant="outlined"
 //           startIcon={<PictureAsPdfIcon />}
@@ -176,13 +162,13 @@
 //               borderColor: "white",
 //             },
 //           }}
-//         onClick={onExportPDF}
+//           onClick={onExportPDF}
 //         >
 //           Export PDF
 //         </Button>
-
 //       </Box>
 
+//       {/* Metrics Cards */}
 //       <Container maxWidth="lg">
 //         <Grid container spacing={2} justifyContent="center">
 //           {metrics.map((metric, index) => (
@@ -210,13 +196,12 @@
 //                   borderTop: `4px solid ${metric.color}`,
 //                   minHeight: 180,
 //                   width: "100%",
-//                   maxWidth: 270, // each card max width
+//                   maxWidth: 270,
 //                   display: "flex",
 //                   flexDirection: "row",
 //                   alignItems: "center",
 //                   justifyContent: "center",
 //                   p: 2,
-
 //                 }}
 //               >
 //                 {/* Icon */}
@@ -240,7 +225,11 @@
 //                   <Typography
 //                     variant="subtitle1"
 //                     fontWeight="600"
-//                     sx={{ textAlign: "left", wordBreak: "break-word", color: "text.secondary" }}
+//                     sx={{
+//                       textAlign: "left",
+//                       wordBreak: "break-word",
+//                       color: "text.secondary",
+//                     }}
 //                   >
 //                     {metric.title}
 //                   </Typography>
@@ -267,27 +256,17 @@
 //           ))}
 //         </Grid>
 //       </Container>
-
 //     </Box>
 //   );
 // }
+
 // AIReadinessDashboard.propTypes = {
+//   data: PropTypes.object,
 //   onExportPDF: PropTypes.func,
 // };
 
-// // ✅ Add this below the component
-// AnimatedNumber.propTypes = {
-//   value: PropTypes.number.isRequired,
-//   suffix: PropTypes.string,
-// };
 
-// AnimatedNumber.defaultProps = {
-//   suffix: "",
-// };
-
-
-
-import { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Container,
@@ -297,6 +276,7 @@ import {
   Button,
   Avatar,
 } from "@mui/material";
+
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import BoltIcon from "@mui/icons-material/Bolt";
@@ -304,13 +284,11 @@ import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import { m, animate, useMotionValue, useTransform } from "framer-motion";
 import PropTypes from "prop-types";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
 
 // Motion wrapper for Paper
 const MotionPaper = m(Paper);
 
-// Component for animated number counter
+// ✅ Animated number counter
 function AnimatedNumber({ value, suffix }) {
   const motionValue = useMotionValue(0);
   const rounded = useTransform(motionValue, (latest) => Math.floor(latest));
@@ -325,36 +303,38 @@ function AnimatedNumber({ value, suffix }) {
     return () => controls.stop();
   }, [value, motionValue]);
 
-  return (
-    <m.span style={{ display: "inline-block" }}>
-      <m.span style={{ display: "inline-block" }}>{displayedValue}</m.span>
-    </m.span>
-  );
+  return <m.span style={{ display: "inline-block" }}>{displayedValue}</m.span>;
 }
 
 AnimatedNumber.propTypes = {
   value: PropTypes.number.isRequired,
   suffix: PropTypes.string,
 };
+AnimatedNumber.defaultProps = { suffix: "" };
 
-AnimatedNumber.defaultProps = {
-  suffix: "",
-};
+// ✅ Main component
+function AIReadinessDashboard({ data, onExportPDF  }) 
+{
 
-export default function AIReadinessDashboard({ data, onExportPDF }) {
-  // Dynamically build metrics based on API data or fallback to defaults
-  const metrics = [
+  const Aireadline= data?.data;
+  console.log("AIReadiness data:", Aireadline);
+  const [showAllSections, setShowAllSections] = useState(false);
+  const pdfRef = useRef(null);
+
+  // ✅ Memoized metrics
+const metrics = React.useMemo(
+  () => [
     {
-      title: "AI-Readiness Score",  
-      value: data?.AI_Readiness_Score ?? 0, 
+      title: "AI-Readiness Score",
+      value: Aireadline?.AI_Readiness_Score ?? 0,
       suffix: "%",
-      subtitle: data?.aiReadinessRating ?? "Above Average",
+      subtitle: Aireadline?.aiReadinessRating ?? "Above Average",
       color: "#3b82f6",
       icon: <TrackChangesIcon sx={{ fontSize: 28, color: "#3b82f6" }} />,
     },
     {
       title: "Transformation Timeline",
-      value: data?.transformationTimeline ?? 0,
+      value: Aireadline?.Augmented_Score ?? 0,
       suffix: " ",
       subtitle: "Months",
       color: "#f59e0b",
@@ -362,7 +342,7 @@ export default function AIReadinessDashboard({ data, onExportPDF }) {
     },
     {
       title: "Automation Potential",
-      value: data?.Automated_Score ?? 0,
+      value: Aireadline?.Automated_Score ?? 0,
       suffix: "%",
       subtitle: data?.automationImpact ?? "High Impact",
       color: "#ec4899",
@@ -370,13 +350,15 @@ export default function AIReadinessDashboard({ data, onExportPDF }) {
     },
     {
       title: "Strategic Objectives",
-      value: data?.strategicObjectives ?? 0,
+      value: Aireadline?.strategicObjectives ?? 0,
       suffix: "",
       subtitle: "Key Goals",
       color: "#facc15",
       icon: <EmojiObjectsIcon sx={{ fontSize: 28, color: "#facc15" }} />,
     },
-  ];
+  ],
+  [Aireadline, data?.automationImpact]
+);
 
   return (
     <Box
@@ -404,7 +386,6 @@ export default function AIReadinessDashboard({ data, onExportPDF }) {
           gap: 2,
         }}
       >
-        {/* Left Section */}
         <Box display="flex" alignItems="center" gap={2}>
           <Avatar
             sx={{
@@ -425,7 +406,7 @@ export default function AIReadinessDashboard({ data, onExportPDF }) {
               Personalized AI-Readiness Analysis
             </Typography>
             <Typography variant="subtitle2" sx={{ color: "#00FD8D" }}>
-              {data?.userName ?? "N/A"}
+              {Aireadline?.json_schema_data?.executive_summary?.profile?.name ?? "N/A"}
             </Typography>
             <Typography variant="caption" sx={{ color: "#d1e9ff" }}>
               Report ID: {data?.reportId ?? "N/A"} &nbsp; | &nbsp; Generated:{" "}
@@ -434,7 +415,6 @@ export default function AIReadinessDashboard({ data, onExportPDF }) {
           </Box>
         </Box>
 
-        {/* Right Section - Export PDF */}
         <Button
           variant="outlined"
           startIcon={<PictureAsPdfIcon />}
@@ -450,7 +430,7 @@ export default function AIReadinessDashboard({ data, onExportPDF }) {
           }}
           onClick={onExportPDF}
         >
-          Export PDF
+          Export Full PDF
         </Button>
       </Box>
 
@@ -490,7 +470,6 @@ export default function AIReadinessDashboard({ data, onExportPDF }) {
                   p: 2,
                 }}
               >
-                {/* Icon */}
                 <Box
                   sx={{
                     display: "flex",
@@ -506,7 +485,6 @@ export default function AIReadinessDashboard({ data, onExportPDF }) {
                   {metric.icon}
                 </Box>
 
-                {/* Text */}
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   <Typography
                     variant="subtitle1"
@@ -542,11 +520,33 @@ export default function AIReadinessDashboard({ data, onExportPDF }) {
           ))}
         </Grid>
       </Container>
+
+      {/* Hidden PDF container */}
+      {showAllSections && (
+        <Box
+          ref={pdfRef}
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: "-9999px",
+            width: "1200px",
+            background: "white",
+          }}
+        >
+          {/* Add your report components here */}
+        </Box>
+      )}
     </Box>
   );
 }
 
+// ✅ Memoized export
+export default React.memo(AIReadinessDashboard, (prev, next) =>
+  JSON.stringify(prev.data) === JSON.stringify(next.data)
+);
+
 AIReadinessDashboard.propTypes = {
   data: PropTypes.object,
-  onExportPDF: PropTypes.func,
+    onExportPDF: PropTypes.func, // optional callback
+
 };

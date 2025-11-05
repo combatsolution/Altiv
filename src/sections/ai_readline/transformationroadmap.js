@@ -312,19 +312,7 @@ export default function TransformationRoadmap({ data }) {
           <Typography variant="body2" sx={{ mb: 2, color: "text.secondary" }}>
             Upgrade to access full Transformation Roadmap
           </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{
-              borderRadius: 2,
-              px: 3,
-              textTransform: "none",
-              fontWeight: 600,
-            }}
-            onClick={() => window.open("/pricing", "_blank")}
-          >
-            Upgrade Now
-          </Button>
+        
         </Box>
       )}
 

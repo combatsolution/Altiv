@@ -23,6 +23,7 @@ import { paths } from 'src/routes/paths';
 import { useSearchParams, useRouter } from 'src/routes/hook';
 
 import { useAuthContext } from 'src/auth/hooks';
+import { useNavigate } from 'react-router-dom';
 
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
@@ -42,6 +43,8 @@ export default function JwtRegisterView() {
   const returnTo = searchParams.get('returnTo');
   const password = useBoolean();
   const [checked, setChecked] = useState(false);
+const { user } = useAuthContext();
+const navigate = useNavigate();
 
   const handleCheckboxChange = (event) => {
     setChecked(event.target.checked);
@@ -98,6 +101,7 @@ export default function JwtRegisterView() {
   });
 const { reset, watch, handleSubmit, formState: { errors, isSubmitting } } = methods;
 
+
   // ✅ clear sessionStorage if user refreshed page
   useEffect(() => {
     if (performance.getEntriesByType('navigation')[0]?.type === 'reload') {
@@ -111,6 +115,19 @@ const { reset, watch, handleSubmit, formState: { errors, isSubmitting } } = meth
     });
     return () => subscription.unsubscribe();
   }, [watch]);
+
+
+  useEffect(() => {
+  if (user) {
+    const redirectPath = sessionStorage.getItem("redirectAfterAuth");
+    if (redirectPath) {
+      sessionStorage.removeItem("redirectAfterAuth"); // clean up
+      navigate(redirectPath);
+    } else {
+      navigate("/dashboard"); // or your default
+    }
+  }
+}, [user, navigate]);
 
 
    const onSubmit = handleSubmit(async (data) => {

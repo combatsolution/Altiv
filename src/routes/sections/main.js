@@ -61,7 +61,7 @@ const TermsCondition = lazy(() => import('src/pages/Policies/Terms&ConditionsPag
 const Paymentdetails = lazy(() => import('src/sections/payment/view/payment-view'));
 const ProductPricing = lazy(() => import('src/sections/pricing/view'));
 const Pricingdetailview = lazy(() => import('src/sections/pricing_details/view/pricingdetail-view'));
-const Aieadlinessview =lazy(()=> import ('src/sections/ai_readline/view/aireadliness-view'));
+const Aireadlinessview =lazy(()=> import ('src/sections/ai_readline/view/aireadliness-view'));
 const Aireadlinecompanyfoboview =lazy(() => import ('src/sections/ai_readline_company_fobo/view/aireadlinessfobo-view'));
 const Aireadlinecompanyfobopageview = lazy(()=> import ('src/sections/ai_readline_company_fobo_page/view/aireadlinessfobopage-view'));
 // ---------------------------- -----------------------------------------
@@ -76,7 +76,7 @@ export const mainRoutes = [
       </MainLayout>
     ),
     children: [
-       {path:'ai-readiness-analysis', element:<Aieadlinessview/>},
+       {path:'ai-readiness-analysis', element:<Aireadlinessview/>},
       //  <Route path="/plans/:id" element={<AIMarketingBuilder />} />
       {path:'ai-readiness-companyfobo', element:<Aireadlinecompanyfoboview/>},
       {path:'ai-readiness-companyfobopage', element:<Aireadlinecompanyfobopageview/>},

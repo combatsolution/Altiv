@@ -14,7 +14,7 @@ import planStarterIcon from 'src/assets/icons/plan-starter-icon';
 
 export default function PaymentSummary({ sx, ...other }) {
   const navigate = useNavigate();
- const {planId} = useParams();
+  const { planId } = useParams();
   console.log("fs", planId)
   const { user } = useAuthContext();
   const [planData, setPlanData] = useState(null);
@@ -28,8 +28,8 @@ export default function PaymentSummary({ sx, ...other }) {
     const fetchPlan = async () => {
       try {
         // const response = await axiosInstance.get(`/plans/${planId}`);
-         const response = await axiosInstance.get(`/plans/${planId}`);
-        console.log("MD",response.planData);
+        const response = await axiosInstance.get(`/plans/${planId}`);
+        console.log("MD", response.planData);
         setPlanData(response.data);
       } catch (err) {
         console.error('Error fetching plan:', err);
@@ -82,7 +82,7 @@ export default function PaymentSummary({ sx, ...other }) {
       }
     } catch (err) {
       console.error('Subscription failed', err);
-       navigate('/pricing');
+      navigate('/pricing');
     }
   };
 
@@ -109,9 +109,14 @@ export default function PaymentSummary({ sx, ...other }) {
           console.log('Verifying payment with data:', inputData);
           const verifyRes = await axiosInstance.post('/subscriptions/callback/verify', inputData);
           console.log('Verification response:', verifyRes.data);
+          
           if (verifyRes.data.success) {
+            // Store info about which service was paid
+            const paidServicePages = planData?.services?.page || [];
+            sessionStorage.setItem('paidServices', JSON.stringify(paidServicePages));
+
             sessionStorage.setItem('subscriptionId', payment.subscriptionId);
-            navigate(`/payment/success`,{replace: true});
+            navigate(`/payment/success`, { replace: true });
             window.location.reload();
           } else {
             navigate('/pricing');
@@ -151,7 +156,7 @@ export default function PaymentSummary({ sx, ...other }) {
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Subscription
           </Typography>
-          {console.log("dj",planData)}
+          {console.log("dj", planData)}
           <Label color="error">  {planData?.courses?.courseName || 'Marketing-1199'}</Label>
         </Stack>
 
@@ -160,14 +165,14 @@ export default function PaymentSummary({ sx, ...other }) {
           <Typography variant="h2" color="primary">{planData?.price}</Typography>
         </Stack>
 
-        <Divider sx={{ borderStyle:'dashed' }} />
+        <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="subtitle1">Total Billed</Typography>
           <Typography variant="subtitle1">₹{planData?.price}</Typography>
         </Stack>
 
-        <Divider sx={{ borderStyle:'dashed' }} />
+        <Divider sx={{ borderStyle: 'dashed' }} />
       </Stack>
 
       {error && (
@@ -180,7 +185,7 @@ export default function PaymentSummary({ sx, ...other }) {
         * Plus applicable taxes
       </Typography>
 
-      
+
 
       <Button
         fullWidth

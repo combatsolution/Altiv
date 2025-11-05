@@ -99,7 +99,7 @@
 //           height: '28%',
 //           bgcolor: 'primary.main',
 //           zIndex: 0,
-          
+
 //         }}
 //       />
 
@@ -331,7 +331,7 @@ export default function PricingCard({ card, sx, ...other }) {
         borderRadius: 3,
         bgcolor: 'background.paper',
         width: { xs: '100%', sm: 340, md: 365 },
-        height: 'auto',
+        minHeight: { xs: 550, sm: 600, md: 620 }, // ✅ consistent height across cards
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',

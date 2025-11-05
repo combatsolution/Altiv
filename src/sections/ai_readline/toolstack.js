@@ -141,19 +141,7 @@ export default function ToolStack({ data, isProUser }) {
           >
             Upgrade to access full toolstack Section
           </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{
-              borderRadius: 2,
-              px: 3,
-              textTransform: "none",
-              fontWeight: 600,
-            }}
-            onClick={() => window.open("/pricing", "_blank")}
-          >
-            Upgrade Now
-          </Button>
+         
         </Box>
       )}
     </Box>

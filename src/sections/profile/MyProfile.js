@@ -156,14 +156,18 @@ export default function MyProfile() {
       const response = await axiosInstance.get('/subscriptions/user');
       if (response && response.data) {
         const data = Array.isArray(response.data) ? response.data : [response.data];
-        console.log('dssdsd->', data);
+        console.log('Subscriptions ->', data);
+
         const formattedData = data.map((plan) => ({
           id: plan.id || `sub_${Date.now()}`,
           planType: plan.planData?.planType ?? 0,
           planname: plan.planData?.courses?.courseName || 'N/A',
           lmsId: plan.planData?.courses?.lmsId || 'N/A',
+          planGroup: plan.planData?.planGroup, // add this so we can filter
         }));
-        setSubscriptions(formattedData);
+          const filteredData = formattedData.filter((plan) => plan.planGroup === 0);
+
+        setSubscriptions(filteredData);
       } else {
         setSubscriptions([]);
       }

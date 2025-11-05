@@ -690,14 +690,13 @@
                           setShowHandTap(true);
                           isInitialLoad.current = false; // Disable for future clicks
                         } else {
-                          setShowHandTap(false);
+                          setShowHandTap(false);  
                         }
                       } else {
                         setShowHandTap(false);
                       }
                     }}
                   />
-
 
 
                   {/* ✅ HandTap GIF overlay */}
@@ -914,6 +913,7 @@
                   value: 'Navigate to pricing',
                 });
                 if (!user) {
+                    sessionStorage.setItem('redirectAfterLogin', '/ai-readiness-analysis');
                   navigate(paths.auth.jwt.register);
                 } else {
                   navigate(paths.aireadliness);
