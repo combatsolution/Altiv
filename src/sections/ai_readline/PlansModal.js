@@ -121,11 +121,13 @@ export default function PlansModal({ open, onClose, onPaymentSuccess, unlockedPa
             verifyPayload
           );
 
-          if (verifyRes.data.success) {
+          if (verifyRes.data.success) { 
             sessionStorage.setItem(
               "foboProSubscriptionId",
               payment.subscriptionId
             );
+            sessionStorage.setItem("foboProUnlocked", "true"); 
+
 
             if (onPaymentSuccess) onPaymentSuccess();
             navigate("/ai-readiness-analysis", { replace: true });

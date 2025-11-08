@@ -58,7 +58,7 @@ const metricsData = [
   {
     title: "AI-Readiness Score",
     // value: 75 || lastFOBOData?.AI_Readiness ,
-    value:75,
+    value: 75,
     suffix: "%",
     subtitle: "Above Average",
     color: "#3b82f6",
@@ -67,7 +67,7 @@ const metricsData = [
   {
     title: "Transformation Timeline",
     // value: 36 || lastFOBOData?.TransformationTimeline ,
-     value: 36  ,
+    value: 36,
     suffix: "",
     subtitle: "Months",
     color: "#f59e0b",
@@ -76,7 +76,7 @@ const metricsData = [
   {
     title: "Automation Potential",
     // value: lastFOBOData?.AutomationPotential || 65,
-      value:65,
+    value: 65,
     suffix: "%",
     subtitle: "High Impact",
     color: "#ec4899",
@@ -85,7 +85,7 @@ const metricsData = [
   {
     title: "Strategic Objectives",
     // value: lastFOBOData?.StrategicObjectives || 6,
-      value:6,
+    value: 6,
     suffix: "",
     subtitle: "Key Goals",
     color: "#facc15",
@@ -163,9 +163,9 @@ export default function MyProfile() {
           planType: plan.planData?.planType ?? 0,
           planname: plan.planData?.courses?.courseName || 'N/A',
           lmsId: plan.planData?.courses?.lmsId || 'N/A',
-          planGroup: plan.planData?.planGroup, 
+          planGroup: plan.planData?.planGroup,
         }));
-          const filteredData = formattedData.filter((plan) => plan.planGroup === 0);
+        const filteredData = formattedData.filter((plan) => plan.planGroup === 0);
 
         setSubscriptions(filteredData);
       } else {
@@ -643,7 +643,7 @@ export default function MyProfile() {
               <div style={{ textAlign: 'center', marginTop: 10 }}>
                 <div style={{ fontWeight: 600, fontSize: 18 }}>FOBO SCORE</div>
                 <div style={{ fontWeight: 'bold', fontSize: 24, color: levelColor }}>{score}</div>
-              </div>  
+              </div>
             </Grid>
           </Grid>
         </div>
@@ -1009,8 +1009,24 @@ export default function MyProfile() {
               <Grid item xs={12} lg={4}>
                 {/* Registered Courses Section */}
                 <Paper sx={{
-                  p: 4, h: { xs: 0, lg: '250px' }, borderRadius: 2, ml: { xs: 0, lg: 1 },
+                  p: 4, h: { xs: 0, lg: '250px' },
+                  borderRadius: 2, ml: { xs: 0, lg: 1 },
                   mt: { xs: 2, md: 0, lg: 1 },
+                  // Remove fixed height and handle it dynamically
+                  maxHeight: '440px', // optional limit for scrollable area
+                  overflowY: subscriptions?.length > 6 ? 'auto' : 'visible',
+                  '&::-webkit-scrollbar': {
+                    width: '8px',
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: '#bdbdbd',
+                    borderRadius: '4px',
+                  },
+                  '&::-webkit-scrollbar-thumb:hover': {
+                    backgroundColor: '#9e9e9e',
+                  },
+
+
                 }}>
                   <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                     <Typography variant="subtitle1" fontWeight="600">
@@ -1023,7 +1039,7 @@ export default function MyProfile() {
             )}
           </Grid>
 
-            <Grid sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
+          <Grid sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
             {/* Profile analytics section */}
             {lastFOBOData && (
               <Grid item xs={12} lg={8}>
@@ -1141,14 +1157,14 @@ export default function MyProfile() {
             )}
 
             {/* Right Column: Resume and Registered Courses */}
-              {showCourses && (
-               <Box >
-            <MetricsCards metrics={metricsData} />
-               </Box>
-                    )}
+            {showCourses && (
+              <Box >
+                <MetricsCards metrics={metricsData} />
+              </Box>
+            )}
           </Grid>
 
-          
+
         </Grid>
 
       </Container>
