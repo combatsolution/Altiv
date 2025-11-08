@@ -1,3 +1,5 @@
+
+// // AireadlinessView.jsx (update)
 // import { useRef, useState } from "react";
 // import { Box } from "@mui/material";
 // import { jsPDF } from "jspdf";
@@ -20,15 +22,33 @@
 
 // export default function AireadlinessView({ data }) {
 //   const [showAllSections, setShowAllSections] = useState(false);
+//   const [exportInProgress, setExportInProgress] = useState(false);
 //   const pdfRef = useRef(null);
 //   const { user } = useAuthContext();
-//   const isProUser = user?.planType === "pro"; // adjust based on your logic
+//   const isProUser = user?.planType === "pro";
+// const localData = JSON.parse(localStorage.getItem("profileAnalytics") || "{}");
 
-//   // ✅ Export PDF with ExecutiveSummary included
+
+//   // helper: check sessionStorage for paid services
+//   const hasPaidFobo = () => {
+//     try {
+//       const paid = JSON.parse(sessionStorage.getItem("paidServices") || "[]");
+//       return Array.isArray(paid) && paid.includes("fobo-pro");
+//     } catch {
+//       return false;
+//     }
+//   };
+
+//   // The visible overlay should be shown only if user is NOT pro and hasn't purchased fobo-pro
+//   const shouldShowOverlay = !(isProUser || hasPaidFobo());
+
 //   const handleExportPDF = async () => {
 //     try {
+//       setExportInProgress(true);
 //       setShowAllSections(true);
-//       await new Promise((resolve) => setTimeout(resolve, 1500)); // wait to fully render ExecutiveSummary & charts
+
+//       // give children a little time to mount and (if needed) read sessionStorage
+//       await new Promise((resolve) => setTimeout(resolve, 1500));
 
 //       const element = pdfRef.current;
 //       if (!element) {
@@ -36,12 +56,13 @@
 //         return;
 //       }
 
-//       // hide overlays if any
+//       // hide overlays inside the pdfRef
 //       const overlays = element.querySelectorAll("[data-overlay]");
 //       overlays.forEach((el) => {
 //         el.style.display = "none";
 //       });
 
+//       // scroll to top of hidden container just in case
 //       window.scrollTo(0, 0);
 
 //       const canvas = await html2canvas(element, {
@@ -54,6 +75,7 @@
 //         windowHeight: element.scrollHeight,
 //       });
 
+//       // restore overlay display inside pdfRef
 //       overlays.forEach((el) => {
 //         el.style.display = "";
 //       });
@@ -86,6 +108,7 @@
 //       alert("Failed to export PDF. Check console for details.");
 //     } finally {
 //       setShowAllSections(false);
+//       setExportInProgress(false);
 //     }
 //   };
 
@@ -93,14 +116,14 @@
 //     <>
 //       {/* Dashboard header + Export button */}
 //       <AIReadinessDashboard data={data} onExportPDF={handleExportPDF} />
-
 //       {/* Visible UI */}
-//       <Box id="report-content" sx={{ p: 3, mx: 6 }}>
+//       <Box id="report-content" sx={{ p: 0, mx: 6 }}>
 //         <Box sx={{ position: "relative" }}>
 //           <ResponsiveNavbar data={data} />
-//           <ExecutiveSummary data={data} />
 
-//           {!isProUser && (
+//           {/* <ExecutiveSummary data={data} /> */}
+
+//           {shouldShowOverlay && (
 //             <Box
 //               data-overlay
 //               sx={{
@@ -108,7 +131,7 @@
 //                 top: 0,
 //                 left: 0,
 //                 right: 0,
-//                 height: "100%", // covers both navbar + summary
+//                 height: "100%",
 //                 backdropFilter: "blur(8px)",
 //                 backgroundColor: "rgba(255,255,255,0.7)",
 //                 zIndex: 20,
@@ -116,11 +139,10 @@
 //             />
 //           )}
 //         </Box>
-
 //       </Box>
 
 //       {/* Hidden export container (for PDF) */}
-//       {showAllSections && (
+//       {showAllSections &&  (
 //         <Box
 //           ref={pdfRef}
 //           sx={{
@@ -132,19 +154,38 @@
 //             overflow: "visible",
 //           }}
 //         >
-//           {/* Include Dashboard header and summary too */}
-//           <AIReadinessDashboard data={data} />
-//           {/* <ExecutiveSummary data={data} /> */}
-//           <CurrentStateAnalysis data={data} />
-//           <StrategicObjectives data={data} />
-//           <CapabilityBuilding data={data} />
-//           <ToolStack data={data} />
-//           <QuickStartGuide data={data} />
-//           <SkillErosionProjection data={data} />
-//           <TopTasksExposureAnalysis data={data} />
-//           <AiRoadmap data={data} />
-//           <DetailNotes data={data} />
-//         </Box>
+//             {/* Include navbar and executive summary during export.
+//                 pass forceShow=true to ensure content renders for the PDF */}
+//             <AIReadinessDashboard data={data} /> 
+//             <ExecutiveSummary data={JSON.parse(localStorage.getItem("profileAnalytics") || "{}")} />
+//             <CurrentStateAnalysis  data={JSON.parse(localStorage.getItem("profileAnalytics") || "{}")} />
+// <StrategicObjectives data={JSON.parse(localStorage.getItem("profileAnalytics") || "{}")} />   
+//             <CapabilityBuilding data={JSON.parse(localStorage.getItem("profileAnalytics") || "{}")} />
+//             <ToolStack data={JSON.parse(localStorage.getItem("profileAnalytics") || "{}")} />
+//             <QuickStartGuide data={JSON.parse(localStorage.getItem("profileAnalytics") || "{}")} />
+//             <SkillErosionProjection data={JSON.parse(localStorage.getItem("profileAnalytics") || "{}")} />
+//             <TopTasksExposureAnalysis data={JSON.parse(localStorage.getItem("profileAnalytics") || "{}")} />
+//             <AiRoadmap data={JSON.parse(localStorage.getItem("profileAnalytics") || "{}")} />
+
+
+              
+
+
+
+
+
+//             {/* <ResponsiveNavbar data={data} /> */}
+//             {/* <ExecutiveSummary data={data} forceShow={true} /> */}
+//             {/* c
+//             <StrategicObjectives data={data} />   
+//             <CapabilityBuilding data={data} />
+//             <ToolStack data={data} />
+//             <QuickStartGuide data={data} />
+//             <SkillErosionProjection data={data} />
+//             <TopTasksExposureAnalysis data={data} />
+//             <AiRoadmap data={data} />
+//             <DetailNotes data={data} /> */}
+//           </Box>
 //       )}
 //     </>
 //   );
@@ -153,8 +194,6 @@
 // AireadlinessView.propTypes = {
 //   data: PropTypes.object,
 // };
-
-
 
 // AireadlinessView.jsx (update)
 import { useRef, useState } from "react";
@@ -313,15 +352,15 @@ export default function AireadlinessView({ data }) {
             <AIReadinessDashboard data={data} /> 
             <ResponsiveNavbar data={data} />
             {/* <ExecutiveSummary data={data} forceShow={true} /> */}
-            <CurrentStateAnalysis data={data} />
-            <StrategicObjectives data={data} /> 
+            {/* <CurrentStateAnalysis data={data} />
+            <StrategicObjectives data={data} />   
             <CapabilityBuilding data={data} />
             <ToolStack data={data} />
             <QuickStartGuide data={data} />
             <SkillErosionProjection data={data} />
             <TopTasksExposureAnalysis data={data} />
             <AiRoadmap data={data} />
-            <DetailNotes data={data} />
+            <DetailNotes data={data} /> */}
           </Box>
       )}
     </>

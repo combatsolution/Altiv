@@ -223,11 +223,10 @@ const sections = [
   { label: "Detailed Notes", component: DetailNotes },
 ];
 
-export default function ResponsiveNavbar({ data }) {
+export default function ResponsiveNavbar() {
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
   const [profileAnalytics, setProfileAnalytics] = useState(null);
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { user } = useAuthContext();
@@ -362,6 +361,3 @@ export default function ResponsiveNavbar({ data }) {
 }
 
 
-ResponsiveNavbar.propTypes={
-  data:PropTypes.object.isRequired,
-}
