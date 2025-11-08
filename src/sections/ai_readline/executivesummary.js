@@ -306,11 +306,11 @@
 //       sx={{
 //     top: !isContentVisible ? "-100px" : "0px", // ✅ dynamic top based on purchase
 //         p: { xs: 2, md: 4 },
-
+       
 //         backgroundColor: "rgba(255,255,255,0.8)",
 //         position: "relative",
 //         overflow: "hidden",
-
+       
 //       }}
 //     >
 //       {/* 🔒 Locked Overlay */}
@@ -492,16 +492,9 @@ export default function ExecutiveSummary({ data, forceShow = false }) {
 
   // ✅ Check if user purchased service or is Pro
   useEffect(() => {
-
+    
     const checkAccess = async () => {
-
-      // ✅ Instantly unlock if just purchased (no refresh required)
-      const justUnlocked = sessionStorage.getItem("foboProUnlocked") === "true";
-      if (justUnlocked) {
-        setServiceUnlocked(true);
-        setChecked(true);
-        return;
-      }
+      
       if (forceShow) {
         setServiceUnlocked(true);
         setChecked(true);
@@ -693,7 +686,7 @@ export default function ExecutiveSummary({ data, forceShow = false }) {
 
           <Paper
             sx={{
-
+        
               p: 2,
               borderRadius: 2,
               backgroundColor: "#e8f5e9",
