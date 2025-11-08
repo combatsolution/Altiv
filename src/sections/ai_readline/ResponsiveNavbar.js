@@ -193,8 +193,8 @@ import {
   Container,
 } from "@mui/material";
 import { useAuthContext } from "src/auth/hooks";
+import PropTypes from "prop-types";
 import axiosInstance from "src/utils/axios";
-
 import AIReadinessDashboard from "./AIReadinessDashboard";
 import StrategicObjectives from "./strategicobjectives";
 import CapabilityBuilding from "./capabilitybuilding";
@@ -207,7 +207,10 @@ import CurrentStateAnalysis from "./CurrentStateAnalysis";
 import TransformationRoadmap from "./transformationroadmap";
 import ExecutiveSummary from "./executivesummary";
 
+
+
 const sections = [
+  //  { label: "AI ReadinessDashboard", component: AIReadinessDashboard },
   { label: "Executive Summary", component: ExecutiveSummary },
   { label: "Current State", component: CurrentStateAnalysis },
   { label: "Strategic Objectives", component: StrategicObjectives },
@@ -220,7 +223,7 @@ const sections = [
   { label: "Detailed Notes", component: DetailNotes },
 ];
 
-export default function ResponsiveNavbar() {
+export default function ResponsiveNavbar({ data }) {
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(true);
   const [profileAnalytics, setProfileAnalytics] = useState(null);
@@ -295,7 +298,7 @@ export default function ResponsiveNavbar() {
             "& .MuiTab-root": {
               flex: 1,
               px: { xs: 1.5, md: 0 },
-              fontSize: { xs: "11px", sm: "12px", md: "10px" },
+              fontSize: { xs: "11px", sm: "12px", md: "9px" },
               fontWeight: 500,
               textTransform: "none",
               color: "#333",
@@ -347,8 +350,6 @@ export default function ResponsiveNavbar() {
           <Box
             sx={{
               position: "absolute",
-              inset: 0,
-              backdropFilter: "blur(8px)",
               backgroundColor: "rgba(255,255,255,0.7)",
               zIndex: 10,
               borderRadius: 2,
@@ -358,4 +359,9 @@ export default function ResponsiveNavbar() {
       </Container>
     </Box>
   );
+}
+
+
+ResponsiveNavbar.propTypes={
+  data:PropTypes.object.isRequired,
 }

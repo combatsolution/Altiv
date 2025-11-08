@@ -114,36 +114,7 @@ export default function ToolStack({ data, isProUser }) {
         </Stack>
       </Container>
 
-      {/* 🔒 Blue Lock Overlay */}
-      {!isProUser && (
-        <Box
-          sx={{
-            position: "absolute",
-            inset: 0,
-            backdropFilter: "blur(8px)",
-            backgroundColor: "rgba(255,255,255,0.7)",
-            zIndex: 10,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            px: 2,
-          }}
-        >
-          <LockIcon sx={{ fontSize: 60, color: "#1565c0", mb: 2 }} />
-          <Typography variant="h6" fontWeight={600}>
-            toolstack is Locked
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ mb: 2, color: "text.secondary" }}
-          >
-            Upgrade to access full toolstack Section
-          </Typography>
-         
-        </Box>
-      )}
+   
     </Box>
   );
 }

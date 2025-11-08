@@ -331,7 +331,8 @@ export default function PricingCard({ card, sx, ...other }) {
         borderRadius: 3,
         bgcolor: 'background.paper',
         width: { xs: '100%', sm: 340, md: 365 },
-        minHeight: { xs: 550, sm: 600, md: 620 }, // ✅ consistent height across cards
+        // minHeight: { xs: 550, sm: 600, md: 620 }, // ✅ consistent height across cards
+        Height: { xs: 550, sm: 600, md: 620 }, // ✅ consistent height across cards
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -387,7 +388,7 @@ export default function PricingCard({ card, sx, ...other }) {
         {/* Title */}
         <Stack spacing={0.5} alignItems={{ xs: 'center', sm: 'flex-start' }} sx={{ mt: 1.5, mb: 1 }}>
           {courseType && (
-            <Typography variant="subtitle2" color="common.white">
+            <Typography variant="subtitle1" color="common.white">
               {courseType}
             </Typography>
           )}
@@ -424,16 +425,27 @@ export default function PricingCard({ card, sx, ...other }) {
 
         {/* Features */}
         {features?.length > 0 && (
-          <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start' }}>
-            {features.map((feature, i) => (
-              <Stack key={i} direction="row" spacing={1} alignItems="center">
-                <Iconify icon="eva:checkmark-fill" width={18} sx={{ color: 'success.main' }} />
-                <Typography variant="body2" sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}>
-                  {feature}
-                </Typography>
-              </Stack>
-            ))}
-          </Stack>
+          <Box
+            sx={{
+              flexGrow: 1,
+              overFlowY: 'auto',
+              maxHeight: { xs: '150px', sm: '160px' },
+              pr: 0.5,
+              mb: 1,
+
+            }}
+          >
+            <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start' }}>
+              {features.map((feature, i) => (
+                <Stack key={i} direction="row" spacing={1} alignItems="center">
+                  <Iconify icon="eva:checkmark-fill" width={18} sx={{ color: 'success.main' }} />
+                  <Typography variant="body2" sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}>
+                    {feature}
+                  </Typography>
+                </Stack>
+              ))}
+            </Stack>
+          </Box>
         )}
 
         {/* Key Outcomes */}
@@ -443,7 +455,11 @@ export default function PricingCard({ card, sx, ...other }) {
               bgcolor: 'grey.200',
               p: { xs: 1.5, sm: 2 },
               borderRadius: 1,
-              mt: 2,
+              mt: 'auto',
+              minHeight: 110,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
             }}
           >
             <Typography variant="subtitle2" fontWeight={600} color="black">
@@ -479,7 +495,7 @@ export default function PricingCard({ card, sx, ...other }) {
           variant="contained"
           disabled={isCurrentPlan || access || isAlreadyPurchased || price === 0}
           sx={{
-            fontSize: { xs: '0.9rem', sm: '1rem' },
+            fontSize: { xs: '0.9rem', sm: '0.9rem' },
             bgcolor: isCurrentPlan ? 'success.main' : 'primary.main',
             '&:hover': { bgcolor: isCurrentPlan ? 'success.dark' : 'primary.dark' },
           }}

@@ -163,7 +163,7 @@ export default function MyProfile() {
           planType: plan.planData?.planType ?? 0,
           planname: plan.planData?.courses?.courseName || 'N/A',
           lmsId: plan.planData?.courses?.lmsId || 'N/A',
-          planGroup: plan.planData?.planGroup, // add this so we can filter
+          planGroup: plan.planData?.planGroup, 
         }));
           const filteredData = formattedData.filter((plan) => plan.planGroup === 0);
 

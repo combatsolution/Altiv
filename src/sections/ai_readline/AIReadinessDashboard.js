@@ -1,6 +1,4 @@
-
-
-// import { useEffect } from "react";
+// import React, { useEffect, useRef, useState } from "react";
 // import {
 //   Box,
 //   Container,
@@ -10,25 +8,26 @@
 //   Button,
 //   Avatar,
 // } from "@mui/material";
+
 // import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 // import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+// import axiosInstance from 'src/utils/axios';
 // import BoltIcon from "@mui/icons-material/Bolt";
 // import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 // import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 // import { m, animate, useMotionValue, useTransform } from "framer-motion";
 // import PropTypes from "prop-types";
-// import { jsPDF } from "jspdf";
-// import html2canvas from "html2canvas";
+// import { useAuthContext } from 'src/auth/hooks';
+
 
 // // Motion wrapper for Paper
 // const MotionPaper = m(Paper);
 
-// // Component for animated number counter
+// // ✅ Animated number counter
 // function AnimatedNumber({ value, suffix }) {
 //   const motionValue = useMotionValue(0);
 //   const rounded = useTransform(motionValue, (latest) => Math.floor(latest));
 //   const displayedValue = useTransform(rounded, (val) => `${val}${suffix}`);
-  
 
 //   useEffect(() => {
 //     motionValue.set(0);
@@ -39,36 +38,66 @@
 //     return () => controls.stop();
 //   }, [value, motionValue]);
 
-//   return (
-//     <m.span style={{ display: "inline-block" }}>
-//       <m.span style={{ display: "inline-block" }}>{displayedValue}</m.span>
-//     </m.span>
-//   );
+//   return <m.span style={{ display: "inline-block" }}>{displayedValue}</m.span>;
 // }
 
 // AnimatedNumber.propTypes = {
 //   value: PropTypes.number.isRequired,
 //   suffix: PropTypes.string,
 // };
+// AnimatedNumber.defaultProps = { suffix: "" };
 
-// AnimatedNumber.defaultProps = {
-//   suffix: "",
-// };
+// // ✅ Main component
+// function AIReadinessDashboard({ data, onExportPDF  }) 
+// {
+  
 
-// export default function AIReadinessDashboard({ data, onExportPDF }) {
-//   // Dynamically build metrics based on API data or fallback to defaults
-//   const metrics = [
+// // Inside AIReadinessDashboard component
+
+// // ✅ Determine if user can export PDF
+// const [serviceUnlocked, setServiceUnlocked] = useState(false);
+// const { user } = useAuthContext();
+
+// useEffect(() => {
+//   const checkAccess = async () => {
+//     if (!user?.id) return; // not logged in → cannot export
+//     try {
+//       const res = await axiosInstance.get(
+//         `/subscriptions/service-subscriptions-by-user/fobo-pro`
+//       );  
+//       if (res.data?.success || user?.planType === "pro") {
+//         setServiceUnlocked(true);
+//       } else {
+//         setServiceUnlocked(false);
+//       }
+//     } catch (err) {
+//       console.error("Error checking subscription:", err);
+//       setServiceUnlocked(false);
+//     }
+//   };
+//   checkAccess();
+// }, [user]);
+
+
+//   const Aireadline= data?.data;
+//   console.log("AIReadiness data:", Aireadline);
+//   const [showAllSections, setShowAllSections] = useState(false);
+//   const pdfRef = useRef(null);
+
+//   // ✅ Memoized metrics
+// const metrics = React.useMemo(
+//   () => [
 //     {
-//       title: "AI-Readiness Score",  
-//       value: data?.AI_Readiness_Score ?? 0, 
+//       title: "AI-Readiness Score",
+//       value: Aireadline?.AI_Readiness_Score ?? 32,
 //       suffix: "%",
-//       subtitle: data?.aiReadinessRating ?? "Above Average",
+//       subtitle: Aireadline?.aiReadinessRating ?? "Above Average",
 //       color: "#3b82f6",
 //       icon: <TrackChangesIcon sx={{ fontSize: 28, color: "#3b82f6" }} />,
 //     },
 //     {
 //       title: "Transformation Timeline",
-//       value: data?.transformationTimeline ?? 0,
+//       value: Aireadline?.Augmented_Score ?? 3,
 //       suffix: " ",
 //       subtitle: "Months",
 //       color: "#f59e0b",
@@ -76,7 +105,7 @@
 //     },
 //     {
 //       title: "Automation Potential",
-//       value: data?.Automated_Score ?? 0,
+//       value: Aireadline?.Automated_Score ?? 34,
 //       suffix: "%",
 //       subtitle: data?.automationImpact ?? "High Impact",
 //       color: "#ec4899",
@@ -84,15 +113,19 @@
 //     },
 //     {
 //       title: "Strategic Objectives",
-//       value: data?.strategicObjectives ?? 0,
+//       value: Aireadline?.strategicObjectives ?? 35,
 //       suffix: "",
 //       subtitle: "Key Goals",
 //       color: "#facc15",
 //       icon: <EmojiObjectsIcon sx={{ fontSize: 28, color: "#facc15" }} />,
 //     },
-//   ];
+//   ],
+//   [Aireadline, data?.automationImpact]
+// );
 
 //   return (
+
+    
 //     <Box
 //       sx={{
 //         bgcolor: "#f4f7fb",
@@ -118,7 +151,6 @@
 //           gap: 2,
 //         }}
 //       >
-//         {/* Left Section */}
 //         <Box display="flex" alignItems="center" gap={2}>
 //           <Avatar
 //             sx={{
@@ -139,7 +171,7 @@
 //               Personalized AI-Readiness Analysis
 //             </Typography>
 //             <Typography variant="subtitle2" sx={{ color: "#00FD8D" }}>
-//               {data?.userName ?? "N/A"}
+//               {Aireadline?.json_schema_data?.executive_summary?.profile?.name ?? "N/A"}
 //             </Typography>
 //             <Typography variant="caption" sx={{ color: "#d1e9ff" }}>
 //               Report ID: {data?.reportId ?? "N/A"} &nbsp; | &nbsp; Generated:{" "}
@@ -148,24 +180,26 @@
 //           </Box>
 //         </Box>
 
-//         {/* Right Section - Export PDF */}
-//         <Button
-//           variant="outlined"
-//           startIcon={<PictureAsPdfIcon />}
-//           sx={{
-//             bgcolor: "rgba(255,255,255,0.1)",
-//             color: "white",
-//             borderColor: "white",
-//             mr: { xs: 0, md: 4.7 },
-//             "&:hover": {
-//               bgcolor: "rgba(255,255,255,0.2)",
-//               borderColor: "white",
-//             },
-//           }}
-//           onClick={onExportPDF}
-//         >
-//           Export PDF
-//         </Button>
+//       <Button
+//   variant="outlined"
+//   startIcon={<PictureAsPdfIcon />}
+//   sx={{
+//     bgcolor: serviceUnlocked ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.05)",
+//     color: "white",
+//     borderColor: "white",
+//     mr: { xs: 0, md: 4.7 },
+//     cursor: serviceUnlocked ? "pointer" : "not-allowed",
+//     "&:hover": {
+//       bgcolor: serviceUnlocked ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.05)",
+//       borderColor: "white",
+//     },
+//   }}
+//   onClick={serviceUnlocked ? onExportPDF : undefined} // disable click if locked
+//   disabled={!serviceUnlocked} // visually disables button
+// >
+//   Export Full PDF
+// </Button>
+
 //       </Box>
 
 //       {/* Metrics Cards */}
@@ -204,7 +238,6 @@
 //                   p: 2,
 //                 }}
 //               >
-//                 {/* Icon */}
 //                 <Box
 //                   sx={{
 //                     display: "flex",
@@ -220,15 +253,14 @@
 //                   {metric.icon}
 //                 </Box>
 
-//                 {/* Text */}
 //                 <Box sx={{ display: "flex", flexDirection: "column" }}>
 //                   <Typography
-//                     variant="subtitle1"
 //                     fontWeight="600"
 //                     sx={{
 //                       textAlign: "left",
 //                       wordBreak: "break-word",
 //                       color: "text.secondary",
+//                       fontSize:14
 //                     }}
 //                   >
 //                     {metric.title}
@@ -256,13 +288,20 @@
 //           ))}
 //         </Grid>
 //       </Container>
+   
 //     </Box>
 //   );
 // }
 
+// // ✅ Memoized export
+// export default React.memo(AIReadinessDashboard, (prev, next) =>
+//   JSON.stringify(prev.data) === JSON.stringify(next.data)
+// );
+
 // AIReadinessDashboard.propTypes = {
 //   data: PropTypes.object,
-//   onExportPDF: PropTypes.func,
+//     onExportPDF: PropTypes.func, // optional callback
+
 // };
 
 
@@ -279,11 +318,14 @@ import {
 
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import axiosInstance from 'src/utils/axios';
 import BoltIcon from "@mui/icons-material/Bolt";
 import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import { m, animate, useMotionValue, useTransform } from "framer-motion";
 import PropTypes from "prop-types";
+import { useAuthContext } from 'src/auth/hooks';
+
 
 // Motion wrapper for Paper
 const MotionPaper = m(Paper);
@@ -315,6 +357,34 @@ AnimatedNumber.defaultProps = { suffix: "" };
 // ✅ Main component
 function AIReadinessDashboard({ data, onExportPDF  }) 
 {
+  useEffect(() => {
+  console.log("AIReadinessDashboard data:", data);
+}, [data]);
+
+// ✅ Determine if user can export PDF
+const [serviceUnlocked, setServiceUnlocked] = useState(false);
+const { user } = useAuthContext();
+
+useEffect(() => {
+  const checkAccess = async () => {
+    if (!user?.id) return; // not logged in → cannot export
+    try {
+      const res = await axiosInstance.get(
+        `/subscriptions/service-subscriptions-by-user/fobo-pro`
+      );  
+      if (res.data?.success || user?.planType === "pro") {
+        setServiceUnlocked(true);
+      } else {
+        setServiceUnlocked(false);
+      }
+    } catch (err) {
+      console.error("Error checking subscription:", err);
+      setServiceUnlocked(false);
+    }
+  };
+  checkAccess();
+}, [user]);
+
 
   const Aireadline= data?.data;
   console.log("AIReadiness data:", Aireadline);
@@ -326,7 +396,7 @@ const metrics = React.useMemo(
   () => [
     {
       title: "AI-Readiness Score",
-      value: Aireadline?.AI_Readiness_Score ?? 0,
+      value: Aireadline?.AI_Readiness_Score ?? 32,
       suffix: "%",
       subtitle: Aireadline?.aiReadinessRating ?? "Above Average",
       color: "#3b82f6",
@@ -334,7 +404,7 @@ const metrics = React.useMemo(
     },
     {
       title: "Transformation Timeline",
-      value: Aireadline?.Augmented_Score ?? 0,
+      value: Aireadline?.Augmented_Score ?? 3,
       suffix: " ",
       subtitle: "Months",
       color: "#f59e0b",
@@ -342,7 +412,7 @@ const metrics = React.useMemo(
     },
     {
       title: "Automation Potential",
-      value: Aireadline?.Automated_Score ?? 0,
+      value: Aireadline?.Automated_Score ?? 34,
       suffix: "%",
       subtitle: data?.automationImpact ?? "High Impact",
       color: "#ec4899",
@@ -350,7 +420,7 @@ const metrics = React.useMemo(
     },
     {
       title: "Strategic Objectives",
-      value: Aireadline?.strategicObjectives ?? 0,
+      value: Aireadline?.strategicObjectives ?? 35,
       suffix: "",
       subtitle: "Key Goals",
       color: "#facc15",
@@ -361,6 +431,8 @@ const metrics = React.useMemo(
 );
 
   return (
+
+    
     <Box
       sx={{
         bgcolor: "#f4f7fb",
@@ -406,7 +478,7 @@ const metrics = React.useMemo(
               Personalized AI-Readiness Analysis
             </Typography>
             <Typography variant="subtitle2" sx={{ color: "#00FD8D" }}>
-              {Aireadline?.json_schema_data?.executive_summary?.profile?.name ?? "N/A"}
+              {Aireadline?.json_schema_data?.executive_summary?.profile?.name ?? "Rahul Mishra"}
             </Typography>
             <Typography variant="caption" sx={{ color: "#d1e9ff" }}>
               Report ID: {data?.reportId ?? "N/A"} &nbsp; | &nbsp; Generated:{" "}
@@ -415,23 +487,26 @@ const metrics = React.useMemo(
           </Box>
         </Box>
 
-        <Button
-          variant="outlined"
-          startIcon={<PictureAsPdfIcon />}
-          sx={{
-            bgcolor: "rgba(255,255,255,0.1)",
-            color: "white",
-            borderColor: "white",
-            mr: { xs: 0, md: 4.7 },
-            "&:hover": {
-              bgcolor: "rgba(255,255,255,0.2)",
-              borderColor: "white",
-            },
-          }}
-          onClick={onExportPDF}
-        >
-          Export Full PDF
-        </Button>
+      <Button
+  variant="outlined"
+  startIcon={<PictureAsPdfIcon />}
+  sx={{
+    bgcolor: serviceUnlocked ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.05)",
+    color: "white",
+    borderColor: "white",
+    mr: { xs: 0, md: 4.7 },
+    cursor: serviceUnlocked ? "pointer" : "not-allowed",
+    "&:hover": {
+      bgcolor: serviceUnlocked ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.05)",
+      borderColor: "white",
+    },
+  }}
+  onClick={serviceUnlocked ? onExportPDF : undefined} // disable click if locked
+  disabled={!serviceUnlocked} // visually disables button
+>
+  Export Full PDF
+</Button>
+
       </Box>
 
       {/* Metrics Cards */}
@@ -487,12 +562,12 @@ const metrics = React.useMemo(
 
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   <Typography
-                    variant="subtitle1"
                     fontWeight="600"
                     sx={{
                       textAlign: "left",
                       wordBreak: "break-word",
                       color: "text.secondary",
+                      fontSize:14
                     }}
                   >
                     {metric.title}
@@ -520,22 +595,7 @@ const metrics = React.useMemo(
           ))}
         </Grid>
       </Container>
-
-      {/* Hidden PDF container */}
-      {showAllSections && (
-        <Box
-          ref={pdfRef}
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: "-9999px",
-            width: "1200px",
-            background: "white",
-          }}
-        >
-          {/* Add your report components here */}
-        </Box>
-      )}
+   
     </Box>
   );
 }

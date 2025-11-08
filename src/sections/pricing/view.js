@@ -628,7 +628,7 @@ export default function PricingView() {
         sx={{
           display: 'grid',
           justifyContent: 'center',
-          alignItems: 'center',
+          alignItems: 'stretch',
           gap: { xs: 3, md: 2 },
           gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
         }}
@@ -637,20 +637,18 @@ export default function PricingView() {
           plansData.map((card, index) => (
             <Paper
               key={card.id}
-              elevation={2}
+              elevation={3}
               sx={{
-                px: 1,
-                borderRadius: 2,
-                width: '100%',
-                height: '100%',
+                borderRadius: 3,               
                 display: 'flex',
                 flexDirection: 'column',
+                justifyContent:'stretch',
                 transition: 'all 0.3s ease',
                 cursor: 'pointer',
+                 overflow: 'hidden',
                 '&:hover': {
                   boxShadow: 6,
-                  transform: 'scale(1.03)',
-                  backgroundColor: '#f5f7ff',
+                  transform: 'scale(1.02)',
                 },
               }}
             >
@@ -660,6 +658,10 @@ export default function PricingView() {
                   price: convertPrice(card.price), // 💰 Pass converted price
                 }}
                 index={index}
+                sx={{
+                  flexGrow:1,
+                  height:'100%',
+                }}
               />
             </Paper>
           ))
