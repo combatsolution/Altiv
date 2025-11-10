@@ -143,7 +143,6 @@ export default function MyProfile() {
 
   // const lastFOBOData = JSON.parse(sessionStorage.getItem("lastFOBOData")) || {};
 
-
   useEffect(() => {
     setShowResume(hasResumes);
     setShowCourses(hasCourses);
@@ -418,71 +417,92 @@ export default function MyProfile() {
     };
 
     return (
-      <Stack spacing={1.5}>
-        {subscriptions.map((sub) => {
-          console.log('dsdsadsadasdd->', sub);
+   <Stack spacing={1.5}>
+  {subscriptions.map((sub) => {
+    const categoryLabel = planTypeToLabel[sub.planType];
+    const icon = categoryIcons[categoryLabel] || '🎓';
 
-          const categoryLabel = planTypeToLabel[sub.planType];
-          const icon = categoryIcons[categoryLabel] || '🎓';
+    return (
+      <Card
+        key={sub.id}
+        sx={{
+          borderRadius: 2,
+          px: 2,
+          py: 1.5,
+          bgcolor: categoryBgColors[categoryLabel] || 'grey.50',
+          display: 'flex',
+          alignItems: 'center',
+          cursor: 'pointer',
+          boxSizing: 'border-box',
+          minHeight: 56,
+        }}
+        onClick={() => {
+          trackEvent({
+            category: 'LMS',
+            action: 'Course Clicked',
+            label: sub.planname,
+            value: 85,
+          });
+          lmsredirect(sub.lmsId);
+        }}
+        elevation={0}
+      >
+        {/* Left: Icon + Category */}
+        <Box display="flex" alignItems="center" gap={1.5} sx={{ flexShrink: 0, width: 140 }}>
+          <Box
+            sx={{
+              width: 32,
+              height: 32,
+              bgcolor: categoryColors[categoryLabel] || 'grey.300',
+              color: 'common.white',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 18,
+              flexShrink: 0,
+            }}
+          >
+            {icon}
+          </Box>
+          <Typography
+            variant="body2"
+            sx={{
+              color: categoryColors[categoryLabel] || 'text.primary',
+              fontWeight: 600,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+            title={categoryLabel}
+          >
+            {categoryLabel}
+          </Typography>
+        </Box>
 
-          return (
-            <Card
-              key={sub.id}
-              sx={{
+        {/* Right: Plan Name */}
+        <Typography
+          variant="body2"
+          color="text.primary"
+          sx={{
+            fontWeight: 500,
+            ml: 2,
+            flexGrow: 1,
+            maxWidth: 'calc(100% - 160px)', // remaining width
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            textAlign: 'right',
+          }}
+          title={sub.planname}
+        >
+          {sub.planname}
+        </Typography>
+      </Card>
+    );
+  })}
+</Stack>
 
-                borderRadius: 2,
-                px: 2,
-                py: 1,
-                bgcolor: categoryBgColors[categoryLabel] || 'grey.50',
-                display: 'flex',
-                cursor: 'pointer',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-              onClick={() => {
-                trackEvent({
-                  category: 'LMS',
-                  action: 'Course Clicked',
-                  label: sub.planname,
-                  value: 85,
-                });
-
-                lmsredirect(sub.lmsId); // Pass lmsId directly
-              }}
-              elevation={0}
-            >
-              <Box display="flex" alignItems="center" gap={1}>
-                <Box
-                  sx={{
-
-                    width: 32,
-                    height: 32,
-                    bgcolor: categoryColors[categoryLabel] || 'grey.300',
-                    color: 'common.white',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: 18,
-                  }}
-                >
-                  {icon}
-                </Box>
-                <Typography
-                  variant="body2"
-                  sx={{ color: categoryColors[categoryLabel] || 'text.primary', fontWeight: 600 }}
-                >
-                  {categoryLabel}
-                </Typography>
-              </Box>
-
-              <Typography variant="body2" color="text.primary" sx={{ fontWeight: 500 }}>
-                {sub.planname}
-              </Typography>
-            </Card>
-          );
-        })}
-      </Stack>
     );
   };
 

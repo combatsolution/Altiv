@@ -19,6 +19,7 @@ import {
   FormControl,
   FormGroup,
   Drawer,
+  CircularProgress,
   IconButton,
 } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -46,7 +47,7 @@ import axiosInstance from 'src/utils/axios';
 // import { jobs } from './jobFeedData';
 
 const JobCard = ({ job }) => {
-
+  const [bookmarked, setbookmarked] = useState(false);
   console.log("GSHJSHKSH->", job);
   const navigate = useNavigate();
   const handleApply = async (e) => {
@@ -72,10 +73,17 @@ const JobCard = ({ job }) => {
     }
   };
 
+const [loadingSpinner, setLoadingSpinner]= useState(false);
 
-  const [bookmarked, setbookmarked] = useState(false);
+
+
   const handleClick = () => {
-    navigate(`/job-details/${job.id}`);
+    setLoadingSpinner(true);
+    setTimeout(()=>
+    {
+       navigate(`/job-details/${job.id}`);
+    },1000)
+   
   };
 
   const handlebookmark = async (e) => {
@@ -105,6 +113,7 @@ const JobCard = ({ job }) => {
     setExpanded(!expanded);
   };
 
+ 
   return (
     <Grid item lg={12}>
       <Paper
@@ -381,6 +390,8 @@ export default function JobFeedPage() {
   const [visibleJobs, setVisibleJobs] = useState(3);
   const [jobs, setJobs] = useState([]);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
+
   const onSubmit = async (data) => {
     setSubmitting(true);
     const email = data.email?.trim();

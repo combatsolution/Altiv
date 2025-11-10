@@ -355,35 +355,36 @@ AnimatedNumber.propTypes = {
 AnimatedNumber.defaultProps = { suffix: "" };
 
 // ✅ Main component
-function AIReadinessDashboard({ data, onExportPDF  }) 
-{
+function AIReadinessDashboard({ data, onExportPDF  }){
+  console.log("jshdkjadaks",data);
+
   useEffect(() => {
-  console.log("AIReadinessDashboard data:", data);
-}, [data]);
+    console.log("AIReadinessDashboard data:", data);
+  }, [data]);
 
-// ✅ Determine if user can export PDF
-const [serviceUnlocked, setServiceUnlocked] = useState(false);
-const { user } = useAuthContext();
+  // ✅ Determine if user can export PDF
+  const [serviceUnlocked, setServiceUnlocked] = useState(false);
+  const { user } = useAuthContext();
 
-useEffect(() => {
-  const checkAccess = async () => {
-    if (!user?.id) return; // not logged in → cannot export
-    try {
-      const res = await axiosInstance.get(
-        `/subscriptions/service-subscriptions-by-user/fobo-pro`
-      );  
-      if (res.data?.success || user?.planType === "pro") {
-        setServiceUnlocked(true);
-      } else {
+  useEffect(() => {
+    const checkAccess = async () => {
+      if (!user?.id) return; // not logged in → cannot export
+      try {
+        const res = await axiosInstance.get(
+          `/subscriptions/service-subscriptions-by-user/fobo-pro`
+        );  
+        if (res.data?.success || user?.planType === "pro") {
+          setServiceUnlocked(true);
+        } else {
+          setServiceUnlocked(false);
+        }
+      } catch (err) {
+        console.error("Error checking subscription:", err);
         setServiceUnlocked(false);
       }
-    } catch (err) {
-      console.error("Error checking subscription:", err);
-      setServiceUnlocked(false);
-    }
-  };
-  checkAccess();
-}, [user]);
+    };
+    checkAccess();
+  }, [user]);
 
 
   const Aireadline= data?.data;

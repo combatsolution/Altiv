@@ -20,7 +20,8 @@
     useTheme,
     useMediaQuery,
     Link,
-    IconButton
+    IconButton,
+    CircularProgress
   } from '@mui/material';
   import SearchIcon from '@mui/icons-material/Search';
   import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
@@ -43,6 +44,7 @@
     const [bookmarked, setbookmarked] = useState(false);
     const [similarJobs, setSimilarJobs] = useState([]);
     const [showAll, setShowAll] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handlebookmark = async (e) => {
       e.stopPropagation();
@@ -76,6 +78,7 @@
 
       const fetchJob = async () => {
         try {
+           setLoading(true);
           trackEvent({
             category: 'Job Detail',
             action: 'Viewed Job',
@@ -104,12 +107,14 @@
 
           console.log("Mapped Job:", mappedJob);
           setJobs([mappedJob]);
-
           fetchSimilarJobs(job.id);
 
         } catch (error) {
           console.error("Error fetching job:", error);
           enqueueSnackbar("Failed to load job", { variant: "error" });
+        }finally{
+            setLoading(false); 
+
         }
       };
 
@@ -143,6 +148,21 @@
       if (job_id) fetchJob();
     }, [job_id]); // include job_id so it refetches when param changes
 
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '80vh',
+          bgcolor: 'white',
+        }}
+      >
+        <CircularProgress size={70} thickness={5} color="primary" />
+      </Box>
+    );
+  }
 
     return (
       <Box sx={{ px: { xs: 2, md: 1 }, py: { xs: 4, md: 2 }, maxWidth: 1300, mx: 'auto' }}>

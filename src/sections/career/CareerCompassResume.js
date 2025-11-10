@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback ,useRef} from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -10,6 +10,7 @@ import {
   TextField,
   useTheme,
   useMediaQuery,
+  CircularProgress,
   Autocomplete
 } from '@mui/material';
 import ReactFlow, { Background, Handle, Position, Controls } from 'reactflow';
@@ -90,16 +91,23 @@ export default function CareerPathProjection({ isResume, job, experience }) {
   const navigate = useNavigate();
   const [expandedLevels, setExpandedLevels] = useState({});
   // Show React Flow if job and experience are provided or if isResume is true
-  const [filteredTitles, setFilteredTitles] = useState([]); 
+  const [filteredTitles, setFilteredTitles] = useState([]);
   const [userData, setUserData] = useState(null);
   const des = sessionStorage.getItem('designation') ? sessionStorage.getItem('designation') : "Software developer";
   const exp = sessionStorage.getItem('experience') ? sessionStorage.getItem('experience') : "5";
   const userStarted = sessionStorage.getItem("userStartedWith");
 
-  const {user } = useAuthContext();
+  const { user } = useAuthContext();
   const [jobTitles, setJobTitles] = useState([]);
   const [loadingJobTitles, setLoadingJobTitles] = useState(false);
   const [userStartedWith, setUserStartedWith] = useState(userStarted);
+  const [loadingSpinner, setLoadingSpinner] = useState(true); // 🌀 spinner state
+
+  // Show spinner for 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => setLoadingSpinner(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const fetchJobTitles = async () => {
@@ -189,51 +197,19 @@ export default function CareerPathProjection({ isResume, job, experience }) {
       const newCollapsed = new Set(prev);
       if (newCollapsed.has(nodeId)) {
         newCollapsed.delete(nodeId);
-      } else {  
+      } else {
         newCollapsed.add(nodeId);
       }
       return newCollapsed;
     });
   };
 
-// ✅ Define ref outside useEffect so it persists across re-renders
-const hasFetched = useRef(false);
+  // ✅ Define ref outside useEffect so it persists across re-renders
+  const hasFetched = useRef(false);
 
-useEffect(() => {
-  const fetchCareerData = async () => {
-    try {
-      const payload = {
-        designation: jobTitle,
-        experience: Number(expYears),
-      };
-
-      const res = await axiosInstance.post('/career-compass', payload);
-      const mapped = transformApiData(res.data?.data);
-      console.log("SSAAAFFFFFF->", mapped);
-      setCareerData(mapped);
-      setShowReactFlow(true);
-    } catch (error) {
-      console.error('Failed to load career data', error);
-    }
-  };
-
-  // ✅ Only call once
-  if (!hasFetched.current && jobTitle && expYears && userStartedWith) {
-    hasFetched.current = true;
-    fetchCareerData();
-  }
-}, [jobTitle, expYears, userStartedWith]);
-
-  const handleModify = useCallback(async () => {
-    console.log("SSSSSSAAAS->");
-    const newErrors = {
-      jobTitle: !jobTitle ? 'Please select a job title' : '',
-      expYears: !expYears ? 'Please select years of experience' : '',
-    };
-    setErrors(newErrors);
-    if (!newErrors.jobTitle && !newErrors.expYears) {
+  useEffect(() => {
+    const fetchCareerData = async () => {
       try {
-        setLoading(true);
         const payload = {
           designation: jobTitle,
           experience: Number(expYears),
@@ -241,30 +217,53 @@ useEffect(() => {
 
         const res = await axiosInstance.post('/career-compass', payload);
         const mapped = transformApiData(res.data?.data);
-        console.log("HHHHHH->",mapped);
+        console.log("SSAAAFFFFFF->", mapped);
         setCareerData(mapped);
+        setShowReactFlow(true);
+      } catch (error) {
+        console.error('Failed to load career data', error);
+      }
+    };
 
+    // ✅ Only call once
+    if (!hasFetched.current && jobTitle && expYears && userStartedWith) {
+      hasFetched.current = true;
+      fetchCareerData();
+    }
+  }, [jobTitle, expYears, userStartedWith]);
+
+  const handleModify = useCallback(async () => 
+    {
+    console.log("SSSSSSAAAS->");
+    const newErrors = {
+      jobTitle: !jobTitle ? 'Please select a job title' : '',
+      expYears: !expYears ? 'Please select years of experience' : '',
+    };
+    setErrors(newErrors);
+    if (!newErrors.jobTitle && !newErrors.expYears) {
+        setLoading(true);
+        setTimeout(async () => {
+      try {
+        const payload = {
+          designation: jobTitle,
+          experience: Number(expYears),
+        };
+
+        const res = await axiosInstance.post('/career-compass', payload);
+        const mapped = transformApiData(res.data?.data);
+        setCareerData(mapped);
         setShowReactFlow(true);
       } catch (err) {
         console.error('Error fetching career compass:', err);
       } finally {
         setLoading(false);
       }
+    }, 1000);
+      
     }
-
   }, [jobTitle, expYears]);
 
-  // useEffect(() => {
-  //   const storedJob = sessionStorage.getItem('designation');
-  //   const storedExp = sessionStorage.getItem('experience');
-  //   if (storedJob && storedExp) {
-  //     setJobTitle(storedJob);
-  //     setExpYears(storedExp);
-  //     sessionStorage.removeItem("designation");
-  //     sessionStorage.removeItem("experience");
-  //   }
-  //   handleModify();
-  // }, [handleModify]);
+
 
   const rebuildEdges = useCallback(
     (selected) => {
@@ -398,57 +397,57 @@ useEffect(() => {
       const isExpanded = !isNodeCollapsed(id);
 
       return (
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => onClick?.(id)}
-            onKeyDown={(e) => e.key === 'Enter' && onClick?.(id)}
-            style={{
-              width: isMdUp ? 360 : 260,
-              height: 127,
-              position: 'relative',
-              cursor: 'grab',
-              zIndex: 2,
-              opacity: isVisible ? 1 : 0,
-              transition: 'opacity 0.3s ease',
-              pointerEvents: isVisible ? 'auto' : 'none',
-            }}
-          >
-            <Handle type="target" position={Position.Top} style={{ background: '#1976d2' }} />
-            {isNew ? (
-              <m.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4 }}
-                style={{ pointerEvents: 'auto' }}
-              >
-                <CareerCard
-                  {...data}
-                  isSelected={isSelected}
-                  showExpandButton={hasChildren}
-                  isExpanded={isExpanded}
-                  onExpandToggle={(e) => {
-                    e?.stopPropagation();
-                    toggleNodeExpansion(id);
-                  }}
-                />
-              </m.div>
-            ) : (
-              <div style={{ pointerEvents: 'auto' }}>
-                <CareerCard
-                  {...data}
-                  isSelected={isSelected}
-                  showExpandButton={hasChildren}
-                  isExpanded={isExpanded}
-                  onExpandToggle={(e) => {
-                    e?.stopPropagation();
-                    toggleNodeExpansion(id);
-                  }}
-                />
-              </div>
-            )}
-            <Handle type="source" position={Position.Bottom} style={{ background: '#1976d2' }} />
-          </div>
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => onClick?.(id)}
+          onKeyDown={(e) => e.key === 'Enter' && onClick?.(id)}
+          style={{
+            width: isMdUp ? 360 : 260,
+            height: 127,
+            position: 'relative',
+            cursor: 'grab',
+            zIndex: 2,
+            opacity: isVisible ? 1 : 0,
+            transition: 'opacity 0.3s ease',
+            pointerEvents: isVisible ? 'auto' : 'none',
+          }}
+        >
+          <Handle type="target" position={Position.Top} style={{ background: '#1976d2' }} />
+          {isNew ? (
+            <m.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+              style={{ pointerEvents: 'auto' }}
+            >
+              <CareerCard
+                {...data}
+                isSelected={isSelected}
+                showExpandButton={hasChildren}
+                isExpanded={isExpanded}
+                onExpandToggle={(e) => {
+                  e?.stopPropagation();
+                  toggleNodeExpansion(id);
+                }}
+              />
+            </m.div>
+          ) : (
+            <div style={{ pointerEvents: 'auto' }}>
+              <CareerCard
+                {...data}
+                isSelected={isSelected}
+                showExpandButton={hasChildren}
+                isExpanded={isExpanded}
+                onExpandToggle={(e) => {
+                  e?.stopPropagation();
+                  toggleNodeExpansion(id);
+                }}
+              />
+            </div>
+          )}
+          <Handle type="source" position={Position.Bottom} style={{ background: '#1976d2' }} />
+        </div>
       );
     },
     label: ({ data, id }) => {
@@ -637,6 +636,28 @@ useEffect(() => {
     rebuildEdges(selectedNodes);
   }, [generateAllNodes, rebuildEdges, selectedNodes]);
 
+
+  if (loading || loadingSpinner) {
+    return (
+      <Box
+        sx={{
+          position: "fixed",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          bgcolor: "rgba(255,255,255,0.8)",
+          zIndex: 9999,
+        }}
+      >
+        <CircularProgress size={70} thickness={5} />
+        <Typography sx={{ mt: 2, fontWeight: 500, color: "primary.main" }}>
+          Loading, please wait...
+        </Typography>
+      </Box>
+    );
+  }
   return (
     <Box sx={{ bgcolor: 'white', p: { xs: 1, sm: 2, md: 1 } }}>
       <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
@@ -683,9 +704,9 @@ useEffect(() => {
                                 padding: '8px 0',
                                 '&:before': { borderBottom: '1px solid #D6DDEB' },
                                 '&:hover:not(.Mui-disabled):before': {
-                                  borderBottom: '1px solid #0040D8',
+                                  borderBottom: '1px solid #0e0e0fff',
                                 },
-                                '&:after': { borderBottom: '2px solid #0040D8' },
+                                '&:after': { borderBottom: '2px solid #0e0e0fff' },
                               },
                             }}
                             sx={{
@@ -782,7 +803,7 @@ useEffect(() => {
                         sx={{ display: 'block', mt: 0.5, fontSize: '12px' }}
                       >
                         {errors.expYears}
-                      </Typography>   
+                      </Typography>
                     )}
                   </Box>
                 </Box>

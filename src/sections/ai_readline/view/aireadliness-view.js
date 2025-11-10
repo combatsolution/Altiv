@@ -1,4 +1,3 @@
-
 // // AireadlinessView.jsx (update)
 // import { useRef, useState } from "react";
 // import { Box } from "@mui/material";
@@ -215,7 +214,7 @@ import DetailNotes from "../detailnote";
 import TopTasksExposureAnalysis from "../taskautomation";
 import AiRoadmap from "../transformationroadmap";
 
-export default function AireadlinessView({ data }) {
+export default function Aireadliness({ data }) {
   const [showAllSections, setShowAllSections] = useState(false);
   const [exportInProgress, setExportInProgress] = useState(false);
   const pdfRef = useRef(null);
@@ -308,7 +307,7 @@ export default function AireadlinessView({ data }) {
   return (
     <>
       {/* Dashboard header + Export button */}
-      <AIReadinessDashboard data={data} onExportPDF={handleExportPDF} />
+      {/* <AIReadinessDashboard data={data} onExportPDF={handleExportPDF} /> */}
       {/* Visible UI */}
       <Box id="report-content" sx={{ p: 0, mx: 6 }}>
         <Box sx={{ position: "relative" }}>
@@ -324,9 +323,9 @@ export default function AireadlinessView({ data }) {
                 top: 0,
                 left: 0,
                 right: 0,
-                height: "100%",
-                backdropFilter: "blur(8px)",
-                backgroundColor: "rgba(255,255,255,0.7)",
+                // height: "100%",
+                // backdropFilter: "blur(8px)",
+                // backgroundColor: "rgba(255,255,255,0.7)",
                 zIndex: 20,
               }}
             />
@@ -339,12 +338,8 @@ export default function AireadlinessView({ data }) {
         <Box
           ref={pdfRef}
           sx={{
-            position: "absolute",
-            top: 0,
-            left: "-9999px",
-            width: "1200px",
-            background: "white",
-            overflow: "visible",
+       
+         
           }}
         >
             {/* Include navbar and executive summary during export.
@@ -367,8 +362,6 @@ export default function AireadlinessView({ data }) {
   );
 }
 
-AireadlinessView.propTypes = {
+Aireadliness.propTypes = {
   data: PropTypes.object,
 };
-
-

@@ -9,7 +9,7 @@ const MetricsCards = ({ metrics }) => (
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'right',
-  
+
     }}
       >
       {metrics.map((metric, index) => (
@@ -33,15 +33,15 @@ const MetricsCards = ({ metrics }) => (
             }}
           >
             <Paper
-             
+
               sx={{
                 borderRadius: 3,
                 cursor: 'pointer',
                 background: 'white',
                 borderTop: `4px solid ${metric.color}`,
                 minHeight: 160,
-                width: '353px',  
-                maxWidth: 300,
+                width: '300px',  
+                maxWidth: 200,
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -106,3 +106,4 @@ MetricsCards.propTypes = {
 };
 
 export default MetricsCards;
+

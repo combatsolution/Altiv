@@ -52,13 +52,12 @@ const LEGENDS = [
   { label: "15+ years", color: "#FFD43B" }
 ];
 
- const getBadgeColor = (score) => {
+const getBadgeColor = (score) => {
   if (score >= 60) return "success.main"; // Matching
-  if (score >= 20 ) return "warning.main"; // Close Matching
-    if (score >= 1 && score <= 10 ) return "warning.main"; // Close Matching
+  if (score >= 20) return "warning.main"; // Close Matching
+  if (score >= 1 && score <= 10) return "warning.main"; // Close Matching
   return "error.main"; // Not Matching
 };
-
 
 
 const ProductManagementPage = () => {
@@ -76,36 +75,35 @@ const ProductManagementPage = () => {
   const [companyBackgroundData, setCompanyBackgroundData] = useState([]);
 
 
-// Booster base weights
-const boosterWeights = {
-  Everything: 100,
-  Matching: 62,
-  "Close Matching": 24,
-  "Not Matching": 14,
-  Improved: 100,
-};
+  // Booster base weights
+  const boosterWeights = {
+    Everything: 100,
+    Matching: 62,
+    "Close Matching": 24,
+    "Not Matching": 14,
+    Improved: 100,
+  };
 
-// Base skill data
-const baseSkills = [
-  { label: "Core Experience", base: 78 },
-  { label: "Technical Skills", base: 74 },
-  { label: "Domain Knowledge", base: 70 },
-];
+  // Base skill data
+  const baseSkills = [
+    { label: "Core Experience", base: 78 },
+    { label: "Technical Skills", base: 74 },
+    { label: "Domain Knowledge", base: 70 },
+  ];
 
-const [skills, setSkills] = useState(baseSkills.map(s => ({ ...s, score: s.base })));
+  const [skills, setSkills] = useState(baseSkills.map(s => ({ ...s, score: s.base })));
 
-// Recalculation logic
-const calculateScores = (filterValue) => {
-  const weight = boosterWeights[filterValue] || 100;
+  // Recalculation logic
+  const calculateScores = (filterValue) => {
+    const weight = boosterWeights[filterValue] || 100;
 
-  const newSkills = baseSkills.map(skill => ({
-    ...skill,
-    score: ((skill.base * weight) / 100).toFixed(2),
-  }));
+    const newSkills = baseSkills.map(skill => ({
+      ...skill,
+      score: ((skill.base * weight) / 100).toFixed(2),
+    }));
 
-  setSkills(newSkills);
-};
-
+    setSkills(newSkills);
+  };
 
 
   const COLORS = useMemo(() => ["#20C997", "#4285F4", "#F4A300", "#FFD43B"], []);
@@ -134,43 +132,77 @@ const calculateScores = (filterValue) => {
   }, [boostData]);
 
 
-  const [options, setOptions] = useState({
-    chart: { height: "80%", events: { /* ...same render logic... */ } },
-    credits: { enabled: false },
-    plotOptions: { sunburst: { allowDrillToNode: true, cursor: "pointer" } },
-    title: { text: "" },
-    series: [{
-      type: "sunburst",
-      name: "Education",
-      data: [],   // <-- will be filled after API fetch
-      borderWidth: 2,/* eslint-disable react/no-this-in-sfc */
+    const [options, setOptions] = useState({
+      chart: {
+        height: "80%",
+        spacingRight: 100,
+        events: { /* ...same render logic... */ 
+             render() {
+        const chart = this;
+        const series = chart.series?.[0];
+        if (!series) return;
 
-      dataLabels: {
-        rotationMode: "circular",
-        formatter() {
-          const name = this.point?.name || "";
-          if (/^education$/i.test(name)) {
-            // root label
-            return `<span style="color:black;font-size:16px;font-weight:700">${name}</span>`;
+        // Flip bottom labels upright
+        series.points.forEach((point) => {
+          const shape = point.shapeArgs;
+          if (!shape || !point.dataLabel) return;
+
+          const mid = shape.start + (shape.end - shape.start) / 2;
+          const midAngle = (mid * 180) / Math.PI;
+
+          const flip = midAngle > 90 && midAngle < 270;
+          point.dataLabel.attr({
+            rotation: flip ? 180 : 0,
+          });
+
+          // ✅ If point is "Data Science", force parallel mode
+          if (point.name === "Data Science") {
+            point.dataLabel.css({
+              transform: "rotate(0deg)", // ensure upright text
+              fontWeight: "bold",
+            });
           }
-          return `${name}<br>${this.point.value}%`;
-        },
-        style: {
-          color: "#fff",       // default for other labels
-          fontSize: "11px",
-          textOutline: "none",
-        },
+        });
       },
+        }
+      },
+      credits: { enabled: false },
+      plotOptions: { sunburst: { allowDrillToNode: true, cursor: "pointer" } },
+      title: { text: "" },
+      series: [{
+        type: "sunburst",
+        name: "Education",
+        data: [],
+        borderWidth: 2,  /* eslint-disable react/no-this-in-sfc */
+        startAngle: 295,
+        dataLabels: {
+          rotationMode: "parallel",
+          formatter() {
+            const name = this.point?.name || "";
+            if (/^education$/i.test(name)) {
+              // root label
+              return `<span style="color:black;font-size:16px;font-weight:700">${name}</span>`;
+            }
+       
+             return `${name}<br>${this.point.value}%`;
 
-      /* eslint-disable react/no-this-in-sfc */
+          },
+          style: {
+            color: "#fff",       // default for other labels
+            fontSize: "11px",
+            textOutline: "none",
+          },
+        },
 
-      levels: [
-        { level: 1, dataLabels: { rotationMode: "circular" } },
-        { level: 2, colorByPoint: true, dataLabels: { rotationMode: "circular" } }
-      ]
-    }],
-    tooltip: { pointFormat: "<b>{point.name}</b> {point.value}%" }
-  });
+        /* eslint-disable react/no-this-in-sfc */
+
+        levels: [
+          { level: 1, dataLabels: { rotationMode: "circular" } },
+          { level: 2, colorByPoint: true, dataLabels: { rotationMode: "circular" } }
+        ]
+      }],
+      tooltip: { pointFormat: "<b>{point.name}</b> {point.value}%" }
+    });
 
   const transformEducationToSunburst = (educationData) => {
     const sunburstData = [
@@ -907,10 +939,7 @@ const calculateScores = (filterValue) => {
                     </ul>
                   </Paper>
                 </Grid>)}
-
             </Grid>
-
-
 
 
             {/* Right Column mb+desk */}
@@ -941,7 +970,6 @@ const calculateScores = (filterValue) => {
                       </Typography>
 
                       <Divider />
-
                       <Grid sx={{
                         position: 'relative',
                         width: '350px',
@@ -1068,7 +1096,12 @@ const calculateScores = (filterValue) => {
                           Education Background of Directorsss
                         </Typography>
                         <Divider />
-                        <HighchartsReact highcharts={Highcharts} options={options} />
+                        <HighchartsReact
+                          highcharts={Highcharts}
+                          options={options}
+                          containerProps={{
+                            style: { transform: "translateY(10px)" }, // 👈 moves chart right by 20px
+                          }} />
                       </Grid>
                     </Box>
 
