@@ -948,6 +948,23 @@ export default function CareerPathProjection({ isResume, job, experience }) {
               </Box>
             )}
 
+            
+                <Button
+                  onClick={() => navigate(paths.jobFeed)}
+                  size={isMdUp ? 'medium' : 'small'}
+                  sx={{
+                    borderRadius: 5,
+                    px: { xs: 3, sm: 4 },
+                    bgcolor: 'primary.main',
+                    color: '#fff',
+                    mb: { xs: 2, md: 4 },
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                    '&:hover': { bgcolor: 'primary.dark' },
+                  }}
+                >
+                  Show job match
+                </Button>
+
           </Box>
         </Box>
       </Box>

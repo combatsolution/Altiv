@@ -92,7 +92,7 @@ export default function CareerCard({
       </Typography>
 
       <Box component="span" sx={badgeStyles}>
-        {rate} Transition rate
+        {/* {rate} Transition rate */}
       </Box>
       <br />
       <Typography

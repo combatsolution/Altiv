@@ -16,10 +16,11 @@ import { fDate } from 'src/utils/format-time';
 // components
 import Image from 'src/components/image';
 import TextMaxLine from 'src/components/text-max-line';
-
+import { Company_Fobo_Response } from "src/constants/company_fobo_response";
 // ----------------------------------------------------------------------
 
 export default function PostItem({ post, selectedCategory = 'all' }) {
+  const company_name = Company_Fobo_Response.data.company_name;
   const navigate = useNavigate();
     const theme = useTheme();
   const { coverUrl, title, description, tags = [], createdAt, slug } = post;
@@ -27,7 +28,7 @@ export default function PostItem({ post, selectedCategory = 'all' }) {
     // Special redirect for AI Readiness post
     if (title?.trim() === 'AI Readiness: Transforming the Future of Work') {
       e.preventDefault();
-      navigate('/ai-readiness-companyfobopage');
+      navigate(`/ai-readiness-companyfobopage/${company_name}`);
     }
   };
 
