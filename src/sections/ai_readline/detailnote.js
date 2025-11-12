@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -7,207 +7,401 @@ import {
   Button,
 } from "@mui/material";
 import ShareIcon from "@mui/icons-material/Share";
+import LockIcon from "@mui/icons-material/Lock";
+import { useAuthContext } from "src/auth/hooks";
+import PlansModal from "./PlansModal";
+import PropTypes from "prop-types";
 
-const objectives = [
-  {
-    id: 1,
-    head: "Methodology",
-    text: "This comprehensive AI-readiness analysis was conducted using a proprietary framework that evaluates current capabilities against industry benchmarks for healthcare operations leadership. The assessment incorporates multiple data points including professional experience, educational background, current role responsibilities, and strategic objectives alignment.",
-  },
-  {
-    id: 2,
-    head: "Industry Benchmarks",
-    text: "Dr. Gandhi's profile scores in the 75th percentile for healthcare operations leaders in similar roles. The analysis benchmarked against 500+ healthcare executives across India's top hospital networks. Key comparative metrics include operational efficiency, compliance management, stakeholder engagement, and technology adoption readiness.",
-  },
-  {
-    id: 3,
-    head: "Future Trend Predictions",
-    text: "Based on current healthcare AI adoption trends, we anticipate significant growth in automated compliance monitoring (85% adoption by 2027), predictive analytics for patient flow optimization (70% by 2026), and AI-driven financial modeling for healthcare operations (60% by 2026). Dr. Gandhi's transformation roadmap positions him ahead of these industry curves.",
-  },
-  {
-    id: 4,
-    head: "Personalized Recommendations",
-    text: "Given Dr. Gandhi's clinical background and current operational role, focus should be placed on healthcare-specific AI applications. His NABH coordination experience provides a strong foundation for implementing AI-driven compliance tools. The MBA in Healthcare Administration creates synergy opportunities with financial modeling and strategic analytics AI platforms.",
-  },
-];
+export default function DetailNotes({ data, serviceResp = false }) {
+  const { user } = useAuthContext();
+  const [openPlans, setOpenPlans] = useState(false);
+  const handleOpenPlans = () => setOpenPlans(true);
+  const handleClosePlans = () => setOpenPlans(false);
 
-const riskFactors = [
-  {
-    head: "Technology Adoption Resistance",
-    text: "Implement gradual rollout with comprehensive training programs and change management protocols.",
-  },
-  {
-    head: "Skill Obsolescence",
-    text: "Continuous learning pathways established to maintain relevance in rapidly evolving healthcare AI landscape.",
-  },
-  {
-    head: "Integration Complexity",
-    text: "Phased implementation approach with dedicated technical support and vendor partnerships.",
-  },
-];
+  const isContentVisible = user?.isPro || serviceResp;
 
-const successMetrics = [
-  { head: "Operational Efficiency", text: "30% improvement in process cycle times" },
-  { head: "Cost Reduction", text: "25% decrease in administrative overhead" },
-  { head: "Quality Improvement", text: "20% reduction in compliance incidents" },
-  { head: "Revenue Impact", text: "15% increase in strategic partnerships" },
-];
+  // ✅ Dummy fallback data
+  const dummyData = {
+    industry_benchmarks:
+      "Based on a sample readiness assessment, this profile ranks in the mid-tier AI adoption range. Improvement in AI literacy and integration practices is recommended.",
+    risk_factors_mitigation: [
+      {
+        risk_factor: "Adoption Resistance",
+        mitigation: "Start with small pilot projects to build confidence.",
+      },
+    ],
+    success_metrics_kpis: [
+      { metric: "Process Efficiency", target: "25% improvement in workflows" },
+      { metric: "Cost Optimization", target: "15% reduction in operational costs" },
+    ],
+    future_trend_predictions:
+      "AI adoption in similar industries is projected to exceed 70% by 2027.",
+    personalized_recommendations:
+      "Focus on upskilling in AI/ML tools and implementing small-scale automation within existing workflows.",
+  };
 
-export default function DetailNotes() {
+  // ✅ Extract API data
+  const realData = data?.data?.json_schema_data?.detailed_notes || {};
+  const detailData = isContentVisible ? realData : dummyData;
+
   return (
-    <Box sx={{ p: 3, mx: "auto", maxWidth: { xs: "100%", md: "1200px" } }}>
-      {/* Header */}
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        sx={{
-          py: 2,
-          mb: 2,
-          borderBottom: (theme) => `2px solid ${theme.palette.grey[300]}`,
-        }}
-      >
-        <Typography variant="h4" sx={{ fontWeight: "bold", color: "#1e40af" }}>
-       Detailed Analysis Notes
-
-        </Typography>
-        <Button 
-          size="small"
-          variant="contained"
-          startIcon={<ShareIcon />}
+    <Box sx={{ position: "relative" }}>
+      {/* 🔒 Locked Overlay */}
+      {!isContentVisible && (
+        <Box
           sx={{
-            textTransform: "none",
-            bgcolor: "#00e0ac",
-            "&:hover": { bgcolor: "#00c195" },
+            position: "absolute",
+            inset: 0,
+            zIndex: 10,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            px: 2,
+            backdropFilter: "blur(2px)",
           }}
         >
-          Share
-        </Button>
-      </Box>
+          <LockIcon sx={{ fontSize: 60, color: "#1565c0", mb: 2 }} />
+          <Typography variant="h6" fontWeight={600}>
+            Detailed Analysis Locked
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 2, color: "text.secondary" }}>
+            Upgrade to view full detailed insights and personalized recommendations.
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              borderRadius: 2,
+              px: 3,
+              textTransform: "none",
+              fontWeight: 600,
+            }}
+            onClick={handleOpenPlans}
+          >
+            Unlock to View
+          </Button>
+        </Box>
+      )}
 
-      {/* Objectives List */}
-      <Grid container spacing={2} mb={3}>
-        {objectives.map((obj) => (
-          <Grid item xs={12} key={obj.id}>
-            <Paper
-              sx={{
-                p: 2,
-                display: "flex",
-                alignItems: "top",
-                borderRadius: 2,
-                boxShadow: 3,
-              }}
-            >
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Typography
+      {/* ✅ Main Content */}
+      <Box
+        sx={{
+          p: 3,
+          mx: "auto",
+          maxWidth: { xs: "100%", md: "1200px" },
+          filter: !isContentVisible ? "blur(3px)" : "none",
+          pointerEvents: !isContentVisible ? "none" : "auto",
+        }}
+      >
+        {/* Header */}
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{
+            py: 2,
+            mb: 2,
+            borderBottom: (theme) => `2px solid ${theme.palette.grey[300]}`,
+          }}
+        >
+          <Typography variant="h4" sx={{ fontWeight: "bold", color: "#1e40af" }}>
+            Detailed Analysis Notes
+          </Typography>
+          <Button
+            size="small"
+            variant="contained"
+            startIcon={<ShareIcon />}
+            sx={{
+              textTransform: "none",
+              bgcolor: "#00e0ac",
+              "&:hover": { bgcolor: "#00c195" },
+            }}
+          >
+            Share
+          </Button>
+        </Box>
+
+        {/* Industry Benchmarks */}
+        <Paper
+          sx={{
+            p: 3,
+            mb: 3,
+            borderRadius: 2,
+            boxShadow: 3,
+            position: "relative",
+            overflow: "hidden",
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              left: "2%",
+              right: "2%",
+              top: "55px", // adjust for heading height
+              height: "0.5mm",
+              backgroundColor: "#E5E7EB", // light grayish-blue line
+              borderRadius: "1px",
+            },
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              color: "primary.main",
+              fontWeight: "bold",
+              mb: 1,
+              zIndex: 2,
+              position: "relative",
+            }}
+          >
+            Industry Benchmarks
+          </Typography>
+
+          <Typography
+            variant="body1"
+            sx={{
+              color: "#1e293b",
+              fontSize: "15px",
+              position: "relative",
+              zIndex: 2,
+              mt: 2,
+            }}
+          >
+            {detailData.industry_benchmarks}
+          </Typography>
+        </Paper>
+
+        {/* Risk Factors & Mitigation */}
+        <Paper sx={{ p: 3, mb: 3, borderRadius: 2, boxShadow: 3 }}>
+          <Typography
+            variant="h6"
+            sx={{ color: "primary.main", fontWeight: "bold", mb: 2 }}
+          >
+            Risk Factors & Mitigation
+          </Typography>
+          <Grid container spacing={2}>
+            {(detailData.risk_factors_mitigation || []).map((risk, idx) => (
+              <Grid item xs={12} key={idx}>
+                <Paper
                   sx={{
-                    borderBottom: (theme) =>
-                      `1px solid ${theme.palette.grey[300]}`,
-                    fontSize: "15px",
-                    mb: 1,
-                    color: "primary.main",
-                    fontWeight: "bold",
+                    p: 2,
+                    bgcolor: "#fee2e2",
+                    borderLeft: "5px solid #a84b2f",
+                    borderRadius: 2,
                   }}
                 >
-                  {obj.head}
-                </Typography>
-
-                <Typography sx={{ fontSize: "15px", color: "#1e293b" }}>
-                  {obj.text}
-                </Typography>
-              </Box>
-            </Paper>
-
-            {/* Insert new Risk Factors & KPIs after Industry Benchmarks */}
-            {obj.head === "Industry Benchmarks" && (
-              <>
-                {/* Risk Factors Section */}
-                <Paper sx={{ p: 2, mt: 3, borderRadius: 2, boxShadow: 3 }}>
                   <Typography
-                    variant="subtitle1"
-                    sx={{
-                      color: "primary.main",
-                      fontWeight: "bold",
-                      mb: 2,
-                    }}
+                    sx={{ fontWeight: "bold", color: "#b91c1c", mb: 0.5 }}
                   >
-                    Risk Factors & Mitigation
+                    {risk.risk_factor}
                   </Typography>
-                  <Grid container spacing={2}>
-                    {riskFactors.map((risk, idx) => (
-                      <Grid item xs={12} key={idx}>
-                        <Paper
-                          sx={{
-                            p: 2,
-                            bgcolor: "#fee2e2",
-                            borderLeft: "5px solid #ef4444",
-                            borderRadius: 2,
-                          }}
-                        >
-                          <Typography
-                            sx={{ fontWeight: "bold", color: "#b91c1c" }}
-                          >
-                            {risk.head}:
-                          </Typography>
-                          <Typography variant="body2" sx={{ color: "#1e293b" }}>
-                            {risk.text}
-                          </Typography>
-                        </Paper>
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Paper>
-
-                {/* Success Metrics Section */}
-                <Paper sx={{ p: 2, mt: 3, borderRadius: 2, boxShadow: 3 }}>
-                  <Typography
-                    variant="subtitle1"
-                    sx={{
-                      color: "primary.main",
-                      fontWeight: "bold",
-                      mb: 2,
-                    }}
-                  >
-                    Success Metrics & KPIs
+                  <Typography variant="body2" sx={{ color: "#1e293b" }}>
+                    {risk.mitigation}
                   </Typography>
-                  <Grid container spacing={2}>
-                    {successMetrics.map((metric, idx) => (
-                      <Grid item xs={12} md={3} key={idx}>
-                        <Paper
-                          sx={{
-                            p: 2,
-                            bgcolor: "#ecfdf5",
-                            border: "1px solid #34d399",
-                            borderRadius: 2,
-                            textAlign: "center",
-                            height: "100%",
-                          }}
-                        >
-                          <Typography
-                            sx={{
-                              fontWeight: "bold",
-                              color: "#047857",
-                              fontSize: "14px",
-                            }}
-                          >
-                            {metric.head}:
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: "#1e293b", fontSize: "13px" }}
-                          >
-                            {metric.text}
-                          </Typography>
-                        </Paper>
-                      </Grid>
-                    ))}
-                  </Grid>
                 </Paper>
-              </>
-            )}
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
+        </Paper>
+
+        {/* Success Metrics & KPIs */}
+        {/* Success Metrics & KPIs */}
+        <Paper
+          sx={{
+            p: 3,
+            mb: 3,
+            borderRadius: 2,
+            boxShadow: 3,
+            position: "relative",
+            overflow: "hidden",
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              left: "2%",
+              right: "2%",
+              top: "55px",
+              height: "0.5mm",
+              backgroundColor: "#E5E7EB",
+              borderRadius: "1px",
+            },
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{ color: "primary.main", fontWeight: "bold", mb: 2 }}
+          >
+            Success Metrics & KPIs
+          </Typography>
+
+          <Grid container spacing={2}>
+            {(detailData.success_metrics_kpis || []).map((metric, idx) => (
+              <Grid item xs={12} sm={6} md={4} key={idx}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    pl: 3,
+                    bgcolor: "#ecfdf5",
+                    border: "1px solid #34d399",
+                    borderLeft: "6px solid #10b981", // ✅ left side accent border (green)
+                    borderRadius: 2,
+                    height: "100%",
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      borderLeft: "6px solid #059669", // darker green on hover
+                      boxShadow: 4,
+                      transform: "translateY(-2px)",
+                    },
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontWeight: "bold",
+                      color: "#047857",
+                      fontSize: "14px",
+                      mb: 0.5,
+                    }}
+                  >
+                    {metric.metric}
+                  </Typography>
+
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "#1e293b", fontSize: "13px" }}
+                  >
+                    {metric.target}
+                  </Typography>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+        </Paper>
+
+        {/* Future Trend Predictions */}
+
+        <Paper
+          sx={{
+            p: 3,
+            mb: 3,
+            borderRadius: 2,
+            boxShadow: 3,
+            position: "relative",
+            overflow: "hidden",
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              left: "2%",
+              right: "2%",
+              top: "55px", // adjust for heading height
+              height: "0.5mm",
+              backgroundColor: "#E5E7EB", // light grayish-blue line
+              borderRadius: "1px",
+            },
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              color: "primary.main",
+              fontWeight: "bold",
+              mb: 1,
+              zIndex: 2,
+              position: "relative",
+            }}
+          >
+            Future Trend Predictions
+          </Typography>
+
+          <Typography
+            variant="body1"
+            sx={{
+              color: "#1e293b",
+              fontSize: "15px",
+              position: "relative",
+              zIndex: 2,
+              mt: 2,
+            }}
+          >
+            {detailData.future_trend_predictions}
+          </Typography>
+        </Paper>
+
+        <Paper
+          sx={{
+            p: 3,
+            borderRadius: 2,
+            boxShadow: 3,
+            position: "relative",
+            overflow: "hidden",
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              left: "2%",
+              right: "2%",
+              top: "55px", // adjust for heading height
+              height: "0.5mm",
+              backgroundColor: "#E5E7EB", // subtle gray divider
+              borderRadius: "1px",
+            },
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              color: "primary.main",
+              fontWeight: "bold",
+              mb: 1,
+              zIndex: 2,
+              position: "relative",
+            }}
+          >
+            Personalized Recommendations
+          </Typography>
+
+          <Typography
+            variant="body1"
+            sx={{
+              color: "#1e293b",
+              fontSize: "15px",
+              position: "relative",
+              zIndex: 2,
+              mt: 2,
+            }}
+          >
+            {detailData.personalized_recommendations}
+          </Typography>
+        </Paper>
+
+      </Box>
+
+      {/* 🔓 Upgrade Modal */}
+      <PlansModal open={openPlans} onClose={handleClosePlans} />
     </Box>
   );
 }
+
+DetailNotes.propTypes = {
+  data: PropTypes.shape({
+    data: PropTypes.shape({
+      json_schema_data: PropTypes.shape({
+        detailed_notes: PropTypes.shape({
+          industry_benchmarks: PropTypes.string,
+          risk_factors_mitigation: PropTypes.arrayOf(
+            PropTypes.shape({
+              risk_factor: PropTypes.string,
+              mitigation: PropTypes.string,
+            })
+          ),
+          success_metrics_kpis: PropTypes.arrayOf(
+            PropTypes.shape({
+              metric: PropTypes.string,
+              target: PropTypes.string,
+            })
+          ),
+          future_trend_predictions: PropTypes.string,
+          personalized_recommendations: PropTypes.string,
+        }),
+      }),
+    }),
+  }),
+  serviceResp: PropTypes.bool,
+};

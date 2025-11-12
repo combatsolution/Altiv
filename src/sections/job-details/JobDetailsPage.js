@@ -293,12 +293,13 @@ export default function JobDetailPage() {
                     </Grid>
 
                     <Divider sx={{ my: 2 }} />
-                    {/* Description */}
+
+
                     {/* <Typography
                       paragraph
                       sx={{
-                        textAlign:'justify',
-                        px:'70px',
+                        textAlign: 'justify',
+                        px: '70px',
                         display: '-webkit-box',
                         WebkitLineClamp: 10,
                         WebkitBoxOrient: 'vertical',
@@ -310,42 +311,39 @@ export default function JobDetailPage() {
                       {job.description}
                     </Typography> */}
 
-                    <Box sx={{ px: { xs: 2, md: 8 }, mt: 2 }}>
+                    {/* Job Description with Read More */}
+                    <Box sx={{ my: 2 }}>
                       <Typography
                         paragraph
                         sx={{
-                          textAlign: 'justify',
-                          color: 'text.primary',
-                          lineHeight: 1.6, // tighter, natural paragraph feel
+                          color:'hsla(0, 0%, 8%, 0.7)',
+                          fontFamily: 'dm-sans-regular',
+                          fontWeight: 400,
                           fontSize: '16px',
-                          whiteSpace: 'pre-line', // keeps paragraph breaks from API text
+                          px: { md: '60px', xs: 0 },
+                          textAlign: 'justify',
+                          display: '-webkit-box',
+                          WebkitLineClamp: showFullDescription ? 'none' : 10,
+                          WebkitBoxOrient: 'vertical',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
-                          display: '-webkit-box',
-                          WebkitBoxOrient: 'vertical',
-                          WebkitLineClamp: showFullDescription ? 'unset' : 10,
-                          transition: 'all 0.3s ease',
+                          whiteSpace: 'normal',
                         }}
                       >
                         {job.description}
                       </Typography>
 
-                      <Typography
-                        variant="body2"
-                        color="primary"
-                        sx={{
-                          cursor: 'pointer',
-                          fontWeight: 500,
-                          textAlign: 'right',
-                          mt: 1,
-                          pr: { xs: 1, md: 8 },
-                          userSelect: 'none',
-                          '&:hover': { textDecoration: 'underline' },
-                        }}
-                        onClick={() => setShowFullDescription((prev) => !prev)}
-                      >
-                        {showFullDescription ? 'Read less' : 'Read more'}
-                      </Typography>
+                      {/* Only show Read more if description is long */}
+                      {job.description && job.description.length > 800 && (
+                        <Link
+                          component="button"
+                          variant="body2"
+                          sx={{ mt: 0.5, display: 'inline-block', pl: { md: 7, xs: 0 } }}
+                          onClick={() => setShowFullDescription((prev) => !prev)}
+                        >
+                          {showFullDescription ? 'Read less' : 'Read more'}
+                        </Link>
+                      )}
                     </Box>
 
                   </CardContent>
@@ -480,8 +478,8 @@ export default function JobDetailPage() {
                           >
                             How is this match score?
                           </Typography>
-
-                          {/* <Typography
+                          {/* 
+                          <Typography
                             paragraph
                             sx={{
                               display: '-webkit-box',
@@ -493,46 +491,43 @@ export default function JobDetailPage() {
                             }}
                           >
                             {job.description}
-                          </Typography> */}
+                          </Typography>  */}
 
-                          <Box sx={{ px: { xs: 2, md: 8 }, mt: 2 }}>
+
+                          {/* Job Description with Read More */}
+                          <Box sx={{ my: 2 }}>
                             <Typography
                               paragraph
                               sx={{
-                                textAlign: 'justify',
-                                color: 'text.primary',
-                                lineHeight: 1.6, // tighter, natural paragraph feel
+                                color:'hsla(0, 0%, 8%, 0.7)',
+                                fontFamily: 'dm-sans-regular',
+                                fontWeight: 400,
                                 fontSize: '16px',
-                                whiteSpace: 'pre-line', // keeps paragraph breaks from API text
+                                px: { md: '60px', xs: 0 },
+                                textAlign: 'justify',
+                                display: '-webkit-box',
+                                WebkitLineClamp: showFullDescription ? 'none' : 10,
+                                WebkitBoxOrient: 'vertical',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
-                                display: '-webkit-box',
-                                WebkitBoxOrient: 'vertical',
-                                WebkitLineClamp: showFullDescription ? 'unset' : 10,
-                                transition: 'all 0.3s ease',
+                                whiteSpace: 'normal',
                               }}
                             >
                               {job.description}
                             </Typography>
 
-                            <Typography
-                              variant="body2"
-                              color="primary"
-                              sx={{
-                                cursor: 'pointer',
-                                fontWeight: 500,
-                                textAlign: 'right',
-                                mt: 1,
-                                pr: { xs: 1, md: 8 },
-                                userSelect: 'none',
-                                '&:hover': { textDecoration: 'underline' },
-                              }}
-                              onClick={() => setShowFullDescription((prev) => !prev)}
-                            >
-                              {showFullDescription ? 'Read less' : 'Read more'}
-                            </Typography>
+                            {/* Only show Read more if description is long */}
+                            {job.description && job.description.length > 800 && (
+                              <Link
+                                component="button"
+                                variant="body2"
+                                sx={{ mt: 0.5, display: 'inline-block', pl: { md: 8, xs: 0 } }}
+                                onClick={() => setShowFullDescription((prev) => !prev)}
+                              >
+                                {showFullDescription ? 'Read less' : 'Read more'}
+                              </Link>
+                            )}
                           </Box>
-
                         </Box>
                       </Box>
                     ))}

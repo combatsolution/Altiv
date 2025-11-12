@@ -1,6 +1,6 @@
 import orderBy from 'lodash/orderBy';
 import { useCallback, useState, useRef, useEffect } from 'react';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
@@ -33,6 +33,7 @@ export default function PostListHomeView() {
   const [sortBy, setSortBy] = useState('latest');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [blogType, setBlogType] = useState('blog');
   const searchParams = useSearchParams();
   const scrollContainerRef = useRef(null);
   const navigate = useNavigate();
@@ -49,8 +50,8 @@ export default function PostListHomeView() {
   }, [searchParams]);
 
   // Add 'All' category at the beginning
-  const categories = [{ _id: 'all', name: 'All' }, ...fetchedCategories, 
-    { _id: 'Ai-readiness', name: 'Ai-readiness', description: 'Ai-readiness Insights' },
+  const categories = [{ _id: 'all', name: 'All' }, ...fetchedCategories,
+  { _id: 'aiReadiness', name: 'aiReadiness', description: 'Ai-readiness Insights' },
   ];
 
   const showArrows = categories.length > 3;
@@ -69,35 +70,38 @@ export default function PostListHomeView() {
 
   const debouncedQuery = useDebounce(searchQuery);
 
-  const filter = {
+  const filter = {  
     where: {
-      publish: 'published',
+      and: [
+        { publish: 'published' },
+        { blogType: `${blogType}` }
+      ]
     },
   };
 
-  
+
   const aiReadinessPost = {
-  id: 'ai-readiness-1',
-  title: 'AI Readiness: Transforming the Future of Work',
-  slug: 'ai-readiness',
-  description:
-    'Explore how AI Readiness empowers organizations to adapt, upskill, and thrive in the era of automation. Learn key steps to assess and improve your AI adoption maturity.',
-  coverUrl: '/assets/images/ai-readiness-banner.jpg', // Replace with your actual image path
-  createdAt: new Date().toISOString(),
-  tags: ['AI', 'Readiness', 'Future of Work'],
-   navigateTo: '/ai-readiness-companyfobopage', // 👈 custom path
-};
+    id: 'ai-readiness-1',
+    title: 'AI Readiness: Transforming the Future of Work',
+    slug: 'ai-readiness',
+    description:
+      'Explore how AI Readiness empowers organizations to adapt, upskill, and thrive in the era of automation. Learn key steps to assess and improve your AI adoption maturity.',
+    coverUrl: '/assets/images/ai-readiness-banner.jpg', // Replace with your actual image path
+    createdAt: new Date().toISOString(),
+    tags: ['AI', 'Readiness', 'Future of Work'],
+    navigateTo: '/ai-readiness-companyfobopage', // 👈 custom path
+  };
 
 
   const newFilterString = encodeURIComponent(JSON.stringify(filter));
-  
+
   const { posts: allPosts, postsLoading: allPostsLoading } = useGetPostsByFilters(newFilterString);
-  
+
   const categoryResult = useGetCategoriesPost(
-    newFilterString,
+    newFilterString,    
     selectedCategory === 'all' ? null : selectedCategory
   );
-  
+
   const categoryPosts = selectedCategory === 'all' ? [] : categoryResult.posts || [];
   const categoryPostsLoading = selectedCategory === 'all' ? false : categoryResult.postsLoading;
 
@@ -105,15 +109,15 @@ export default function PostListHomeView() {
   let postsLoading = selectedCategory === 'all' ? allPostsLoading : categoryPostsLoading;
 
   // ✅ When AI-readiness chip is selected, show your new blog instead
-if (selectedCategory === 'Ai-readiness') {
-  posts = [aiReadinessPost];
-  postsLoading = false;
-}
+  if (selectedCategory === 'aiReadiness') {
+    posts = [aiReadinessPost];
+    postsLoading = false;
+  }
 
   // Local search function
   const getSearchResults = useCallback(() => {
     if (!debouncedQuery.trim()) return [];
-    
+
     const query = debouncedQuery.toLowerCase();
     return posts.filter(
       (post) =>
@@ -212,7 +216,13 @@ if (selectedCategory === 'Ai-readiness') {
                   color={String(selectedCategory) === String(category._id || category.id) ? 'primary' : 'default'}
                   onClick={() => {
                     const catId = String(category._id || category.id);
+                    if (catId === 'aiReadiness') {
+                      setBlogType('company-fobo');
+                    } else {
+                      setBlogType('blog');  
+                    }
                     setSelectedCategory(catId);
+                    
                     console.log('Category clicked:', catId, 'Current selected:', selectedCategory);
                   }}
                   sx={{
@@ -259,7 +269,7 @@ if (selectedCategory === 'Ai-readiness') {
       </Stack>
 
       <PostList posts={dataFiltered} loading={postsLoading} selectedCategory={selectedCategory} />
-    </Container>  
+    </Container>
   );
 }
 

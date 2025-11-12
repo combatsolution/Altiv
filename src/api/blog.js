@@ -175,8 +175,32 @@ export function useGetCategories() {
 
 // ----------------------------------------------------------------------
 
+// export function useGetCategoriesPost(filterString, categoryId) {
+//   const URL = categoryId !== null ? endpoints.post.byCategoryFilters(filterString, categoryId) : null;
+
+//   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+
+//   const memoizedValue = useMemo(
+//     () => ({
+//       posts: data?.blogs || [],
+//       postsLoading: URL ? isLoading : false,
+//       postsError: error,
+//       postsValidating: isValidating,
+//       postsEmpty: !isLoading && !data?.blogs?.length,
+//     }),
+//     [URL, data?.blogs, error, isLoading, isValidating]
+//   );
+
+//   return memoizedValue;
+// }
+
+
 export function useGetCategoriesPost(filterString, categoryId) {
-  const URL = categoryId !== null ? endpoints.post.byCategoryFilters(filterString, categoryId) : null;
+  // ✅ use the new unified endpoint
+  const URL =
+    categoryId !== null
+      ? endpoints.post.byFilters(filterString, categoryId)
+      : endpoints.post.byFilters(filterString);
 
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
 

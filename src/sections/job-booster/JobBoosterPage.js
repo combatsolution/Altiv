@@ -240,12 +240,13 @@ const ProductManagementPage = () => {
           },
           align: "center",
           formatter() {
-            // eslint-disable-next-line react/no-this-in-sfc, prefer-template
-            const name = this.point?.name || "";
-            const shortName = name.length > 10 ? name.slice(0, 5) + ".." : name; // truncate
-            // eslint-disable-next-line react/no-this-in-sfc
-            return `${shortName}<br>${this.point.value || ""}%`;
-          },
+  // eslint-disable-next-line react/no-this-in-sfc
+  const name = this.point?.name || "";
+  const shortName = name.length > 10 ? `${name.slice(0, 5)}..` : name; // ✅ fixed template literal
+  // eslint-disable-next-line react/no-this-in-sfc
+  return `${shortName}<br>${this.point.value || ""}%`;
+},
+
         },
 
 
@@ -353,7 +354,7 @@ const ProductManagementPage = () => {
       } catch (error) {
         console.error("Error fetching job boost data:", error);
       } finally {
-        setLoading(false);
+        setLoading(false);  
       }
     };
 

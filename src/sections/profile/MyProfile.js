@@ -417,91 +417,91 @@ export default function MyProfile() {
     };
 
     return (
-   <Stack spacing={1.5}>
-  {subscriptions.map((sub) => {
-    const categoryLabel = planTypeToLabel[sub.planType];
-    const icon = categoryIcons[categoryLabel] || '🎓';
+      <Stack spacing={1.5}>
+        {subscriptions.map((sub) => {
+          const categoryLabel = planTypeToLabel[sub.planType];
+          const icon = categoryIcons[categoryLabel] || '🎓';
 
-    return (
-      <Card
-        key={sub.id}
-        sx={{
-          borderRadius: 2,
-          px: 2,
-          py: 1.5,
-          bgcolor: categoryBgColors[categoryLabel] || 'grey.50',
-          display: 'flex',
-          alignItems: 'center',
-          cursor: 'pointer',
-          boxSizing: 'border-box',
-          minHeight: 56,
-        }}
-        onClick={() => {
-          trackEvent({
-            category: 'LMS',
-            action: 'Course Clicked',
-            label: sub.planname,
-            value: 85,
-          });
-          lmsredirect(sub.lmsId);
-        }}
-        elevation={0}
-      >
-        {/* Left: Icon + Category */}
-        <Box display="flex" alignItems="center" gap={1.5} sx={{ flexShrink: 0, width: 140 }}>
-          <Box
-            sx={{
-              width: 32,
-              height: 32,
-              bgcolor: categoryColors[categoryLabel] || 'grey.300',
-              color: 'common.white',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 18,
-              flexShrink: 0,
-            }}
-          >
-            {icon}
-          </Box>
-          <Typography
-            variant="body2"
-            sx={{
-              color: categoryColors[categoryLabel] || 'text.primary',
-              fontWeight: 600,
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-            title={categoryLabel}
-          >
-            {categoryLabel}
-          </Typography>
-        </Box>
+          return (
+            <Card
+              key={sub.id}
+              sx={{
+                borderRadius: 2,
+                px: 2,
+                py: 1.5,
+                bgcolor: categoryBgColors[categoryLabel] || 'grey.50',
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                boxSizing: 'border-box',
+                minHeight: 56,
+              }}
+              onClick={() => {
+                trackEvent({
+                  category: 'LMS',
+                  action: 'Course Clicked',
+                  label: sub.planname,
+                  value: 85,
+                });
+                lmsredirect(sub.lmsId);
+              }}
+              elevation={0}
+            >
+              {/* Left: Icon + Category */}
+              <Box display="flex" alignItems="center" gap={1.5} sx={{ flexShrink: 0, width: 140 }}>
+                <Box
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    bgcolor: categoryColors[categoryLabel] || 'grey.300',
+                    color: 'common.white',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 18,
+                    flexShrink: 0,
+                  }}
+                >
+                  {icon}
+                </Box>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: categoryColors[categoryLabel] || 'text.primary',
+                    fontWeight: 600,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                  title={categoryLabel}
+                >
+                  {categoryLabel}
+                </Typography>
+              </Box>
 
-        {/* Right: Plan Name */}
-        <Typography
-          variant="body2"
-          color="text.primary"
-          sx={{
-            fontWeight: 500,
-            ml: 2,
-            flexGrow: 1,
-            maxWidth: 'calc(100% - 160px)', // remaining width
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            textAlign: 'right',
-          }}
-          title={sub.planname}
-        >
-          {sub.planname}
-        </Typography>
-      </Card>
-    );
-  })}
-</Stack>
+              {/* Right: Plan Name */}
+              <Typography
+                variant="body2"
+                color="text.primary"
+                sx={{
+                  fontWeight: 500,
+                  ml: 2,
+                  flexGrow: 1,
+                  maxWidth: 'calc(100% - 160px)', // remaining width
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  textAlign: 'right',
+                }}
+                title={sub.planname}
+              >
+                {sub.planname}
+              </Typography>
+            </Card>
+          );
+        })}
+      </Stack>
 
     );
   };
@@ -1175,13 +1175,17 @@ export default function MyProfile() {
                 )}
               </Grid>
             )}
-
             {/* Right Column: Resume and Registered Courses */}
             {showCourses && (
               <Box >
                 <MetricsCards metrics={metricsData} />
               </Box>
             )}
+
+
+
+            
+
           </Grid>
 
 

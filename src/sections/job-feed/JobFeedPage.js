@@ -57,12 +57,12 @@ const JobCard = ({ job }) => {
       category: 'Job Interaction',
       action: 'Apply Clicked',
       label: "Job Title",
-      value: 66,  
+      value: 66,
     });
 
     try {
       // POST call to apply endpoint
-       const res = await axiosInstance.post(`jobs/apply-job/${job.id}`);
+      const res = await axiosInstance.post(`jobs/apply-job/${job.id}`);
       if (res.status === 200 || res.data?.success) {
         if (job.redirectUrl) {
           window.open(job.redirectUrl, '_blank'); // redirect link
@@ -73,17 +73,16 @@ const JobCard = ({ job }) => {
     }
   };
 
-const [loadingSpinner, setLoadingSpinner]= useState(false);
+  const [loadingSpinner, setLoadingSpinner] = useState(false);
 
 
 
   const handleClick = () => {
     setLoadingSpinner(true);
-    setTimeout(()=>
-    {
-       navigate(`/job-details/${job.id}`);
-    },1000)
-   
+    setTimeout(() => {
+      navigate(`/job-details/${job.id}`);
+    }, 1000)
+
   };
 
   const handlebookmark = async (e) => {
@@ -113,7 +112,7 @@ const [loadingSpinner, setLoadingSpinner]= useState(false);
     setExpanded(!expanded);
   };
 
- 
+
   return (
     <Grid item lg={12}>
       <Paper
@@ -179,9 +178,11 @@ const [loadingSpinner, setLoadingSpinner]= useState(false);
                 </Grid>
               </Stack>
 
-              <Stack direction="row" spacing={1} mt={1} alignItems="center">
+              <Stack direction="row" spacing={0.5} mt={1} alignItems="center">
                 <LocationOnIcon fontSize="small" />
-                <Typography variant="body2">{job.location}</Typography>
+                <Typography variant="body2" sx={{
+                  mr:2
+                }}>{job.location}</Typography>
                 <AccessTimeIcon fontSize="small" />
                 <Typography variant="body2">{job.applicants} applicants</Typography>
               </Stack>

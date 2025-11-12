@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import {
   Box,
@@ -12,18 +12,53 @@ import {
 import TwitterIcon from "@mui/icons-material/Twitter";
 import LockIcon from "@mui/icons-material/Lock";
 import { Icon } from "@iconify/react";
+import { useAuthContext } from "src/auth/hooks";
+import PlansModal from "./PlansModal";
 
-export default function ToolStack({ data, isProUser }) {
-  const toolData = data?.data?.json_schema_data?.tool_stack_overview || [];
+export default function ToolStack({ data, serviceResp = false }) {
+  const { user } = useAuthContext();
+  const [openPlans, setOpenPlans] = useState(false);
+  const handleOpenPlans = () => setOpenPlans(true);
+  const handleClosePlans = () => setOpenPlans(false);
 
-  // Optional: background color palette
+  // ✅ Unlock logic
+  const isContentVisible = user?.isPro || serviceResp;
+
+  // ✅ Dummy fallback data (for locked users)
+  const dummyToolData = [
+    {
+      Layer: "AI-Powered Forecasting Tools",
+      "Recommended Tools": "IBM Planning Analytics, Blue Yonder Luminate, PlanVisage AI Modules",
+      Rationale:
+        "For advanced demand forecasting and inventory optimization using predictive analytics.",
+    },
+    {
+      Layer: "Process Automation (RPA)",
+      "Recommended Tools": "UiPath, Automation Anywhere, Microsoft Power Automate",
+      Rationale:
+        "Enables automation of repetitive S&OP and supply chain processes for efficiency.",
+    },
+    {
+      Layer: "Collaboration & Workflow",
+      "Recommended Tools": "Notion AI, ClickUp, Jira with AI Assist",
+      Rationale:
+        "Facilitates team collaboration, tracking, and real-time reporting with smart suggestions.",
+    }
+  ];
+
+  // ✅ Use real data only when unlocked
+  const toolData = serviceResp
+    ? data?.data?.json_schema_data?.tool_stack_overview || []
+    : dummyToolData;
+
+  // Optional background colors & icons for variety
   const colors = ["#e8f0fe", "#fff7e6", "#f0fff4", "#f9ebff", "#e6fff9"];
   const icons = [
-    "twemoji:triangular-flag",
     "twemoji:gear",
     "twemoji:rocket",
     "twemoji:bar-chart",
     "twemoji:books",
+    "twemoji:triangular-flag",
   ];
 
   return (
@@ -34,6 +69,44 @@ export default function ToolStack({ data, isProUser }) {
           maxWidth: { xs: "100%", md: "400px", lg: "1200px" },
         }}
       >
+        {/* 🔒 Locked Overlay */}
+        {!isContentVisible && (
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 10,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+              px: 2,
+            }}
+          >
+            <LockIcon sx={{ fontSize: 60, color: "#1565c0", mb: 2 }} />
+            <Typography variant="h6" fontWeight={600}>
+              Tool Stack Locked
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 2, color: "text.secondary" }}>
+              Upgrade to unlock your personalized AI-enabled tool recommendations
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{
+                borderRadius: 2,
+                px: 3,
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+              onClick={handleOpenPlans}
+            >
+              Unlock to View
+            </Button>
+          </Box>
+        )}
+
         {/* Header */}
         <Box
           sx={{
@@ -41,6 +114,8 @@ export default function ToolStack({ data, isProUser }) {
             justifyContent: "space-between",
             alignItems: "center",
             mb: 2,
+            filter: !isContentVisible ? "blur(3px)" : "none",
+            pointerEvents: !isContentVisible ? "none" : "auto",
           }}
         >
           <Typography variant="h5" fontWeight={600} color="primary" gutterBottom>
@@ -60,10 +135,21 @@ export default function ToolStack({ data, isProUser }) {
           </Button>
         </Box>
 
-        <Divider sx={{ mb: 4 }} />
+        <Divider
+          sx={{
+            mb: 4,
+            filter: !isContentVisible ? "blur(3px)" : "none",
+          }}
+        />
 
         {/* Tool Cards */}
-        <Stack spacing={3}>
+        <Stack
+          spacing={3}
+          sx={{
+            filter: !isContentVisible ? "blur(2px)" : "none",
+            pointerEvents: !isContentVisible ? "none" : "auto",
+          }}
+        >
           {toolData.map((item, index) => (
             <Paper
               key={index}
@@ -112,9 +198,10 @@ export default function ToolStack({ data, isProUser }) {
             </Paper>
           ))}
         </Stack>
-      </Container>
 
-   
+        {/* Upgrade Modal */}
+        <PlansModal open={openPlans} onClose={handleClosePlans} />
+      </Container>
     </Box>
   );
 }
@@ -133,5 +220,5 @@ ToolStack.propTypes = {
       }),
     }),
   }),
-  isProUser: PropTypes.bool, // 🔹 Added to control overlay visibility
+  serviceResp: PropTypes.bool, // ✅ unlock control
 };

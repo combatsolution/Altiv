@@ -21,55 +21,44 @@ export default function CapabilityBuilding({ data, serviceResp = false }) {
   const handleOpenPlans = () => setOpenPlans(true);
   const handleClosePlans = () => setOpenPlans(false);
 
+
+    const DemoData_time_period_definition = {
+        "T": "90 Days: Micro-Credential Achievement Period"
+    };
+    const DemoData_learning_plan = [
+        {
+            "Skill Cluster": "Predictive Financial Analytics",
+            "T Micro-Credential": "Course on Forecasting & Predictive Analytics in Finance (LinkedIn Learning / Coursera)",
+            "Learning Mode": "Self-paced with guided exercises",
+            "Estimated Hrs/Week": "4 – 6 hrs"
+        },
+        {
+            "Skill Cluster": "Automation in Finance (RPA)",
+            "T Micro-Credential": "Beginner-to-Intermediate RPA certification using UiPath or Automation Anywhere",
+            "Learning Mode": "Hands-on projects with virtual labs",
+            "Estimated Hrs/Week": "3 – 4 hrs"
+        },
+        {
+            "Skill Cluster": "AI-Enhanced Decision Making",
+            "T Micro-Credential": "Executive program in Applied AI for Business Decisions (Harvard / INSEAD Online)",
+            "Learning Mode": "Live sessions + industry simulations",
+            "Estimated Hrs/Week": "3 – 5 hrs"
+        },
+        {
+            "Skill Cluster": "Data Visualization & Storytelling",
+            "T Micro-Credential": "Power BI Dashboard Design and Analytics for Financial Leaders",
+            "Learning Mode": "Interactive workshops + capstone presentation",
+            "Estimated Hrs/Week": "2 – 3 hrs"
+        }
+    ]
+
   // ✅ Unlock content if Pro user or service purchased
   const isContentVisible = user?.isPro || serviceResp;
 
-  // ✅ Default fallback demo data (for locked users)
-  const defaultTimePeriod = "90 Days: Micro-Credential Achievement Period";
-  const defaultLearningPlan = [
-    {
-      "Skill Cluster": "Predictive Financial Analytics",
-      "T Micro-Credential":
-        "Course on Forecasting & Predictive Analytics in Finance (LinkedIn Learning / Coursera)",
-      "Learning Mode": "Self-paced with guided exercises",
-      "Estimated Hrs/Week": "4 – 6",
-    },
-    {
-      "Skill Cluster": "Automation in Finance (RPA)",
-      "T Micro-Credential":
-        "Beginner-to-Intermediate RPA certification using UiPath or Automation Anywhere",
-      "Learning Mode": "Hands-on projects with virtual labs",
-      "Estimated Hrs/Week": "3 – 4",
-    },
-    {
-      "Skill Cluster": "AI-Enhanced Decision Making",
-      "T Micro-Credential":
-        "Executive program in Applied AI for Business Decisions (Harvard / INSEAD Online)",
-      "Learning Mode": "Live sessions + industry simulations",
-      "Estimated Hrs/Week": "3 – 5",
-    },
-    {
-      "Skill Cluster": "Data Visualization & Storytelling",
-      "T Micro-Credential":
-        "Power BI Dashboard Design and Analytics for Financial Leaders",
-      "Learning Mode": "Interactive workshops + capstone presentation",
-      "Estimated Hrs/Week": "2 – 3",
-    },
-  ];
-
-  // ✅ Extract data from backend (if available)
-  const capabilityData =
-    data?.data?.json_schema_data?.capability_building_plan || {};
-
-  // ✅ Final data selection
-  const capabilityPlan = serviceResp
-    ? capabilityData.learning_plan || []
-    : defaultLearningPlan;
-
-  const timePeriod = serviceResp
-    ? capabilityData?.time_period_definition?.T || "N/A"
-    : defaultTimePeriod;
-
+  // ✅ Extract capability building plan data
+  const capabilityPlan = serviceResp ? (data?.data?.json_schema_data?.capability_building_plan?.learning_plan) : DemoData_learning_plan || [];
+  
+  const timePeriod = serviceResp ? (data?.data?.json_schema_data?.capability_building_plan?.time_period_definition?.T) : DemoData_time_period_definition || [];
   return (
     <Container
       maxWidth="lg"
@@ -84,6 +73,8 @@ export default function CapabilityBuilding({ data, serviceResp = false }) {
           sx={{
             position: "absolute",
             inset: 0,
+            // backdropFilter: "blur(6px)",
+            // backgroundColor: "rgba(255,255,255,0.7)",
             zIndex: 10,
             display: "flex",
             flexDirection: "column",
@@ -123,7 +114,7 @@ export default function CapabilityBuilding({ data, serviceResp = false }) {
           justifyContent: "space-between",
           alignItems: "center",
           mb: 2,
-          filter: !isContentVisible ? "blur(3px)" : "none",
+          filter: !isContentVisible ? "blur(2px)" : "none",
           pointerEvents: !isContentVisible ? "none" : "auto",
         }}
       >
@@ -146,20 +137,27 @@ export default function CapabilityBuilding({ data, serviceResp = false }) {
           mb: 2,
           color: "text.secondary",
           fontWeight: 500,
-          filter: !isContentVisible ? "blur(3px)" : "none",
+          filter: !isContentVisible ? "blur(2px)" : "none",
+          pointerEvents: !isContentVisible ? "none" : "auto",
         }}
       >
         Time Period: {timePeriod}
       </Typography>
 
-      <Divider sx={{ mb: 3 }} />
+      <Divider
+        sx={{
+          mb: 3,
+          filter: !isContentVisible ? "blur(2px)" : "none",
+          pointerEvents: !isContentVisible ? "none" : "auto",
+        }}
+      />
 
       {/* Capability Cards */}
       <Grid
         container
         spacing={3}
         sx={{
-          filter: !isContentVisible ? "blur(3px)" : "none",
+          filter: !isContentVisible ? "blur(2px)" : "none",
           pointerEvents: !isContentVisible ? "none" : "auto",
         }}
       >
@@ -238,5 +236,5 @@ CapabilityBuilding.propTypes = {
       }),
     }),
   }),
-  serviceResp: PropTypes.bool,
+  serviceResp: PropTypes.bool, // ✅ new prop for unlock control
 };
