@@ -173,19 +173,23 @@ export default function PlansModal({ open, onClose, onPaymentSuccess, unlockedPa
         >
           <CloseIcon />
         </IconButton>
-
+        {console.log("DDDDDDDDDDD",plans)}
         {loading ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
             <CircularProgress />
           </Box>
         ) : (
           plans.map((plan) => {
-            const service = plan.services || {};
+            console.log("PLAN:", plan);
 
-            const isSubscribed = service.page?.some((p) =>
-              subscribedPages.includes(p)
-            );
+            const pages = plan.page || [];  // correct property
+            console.log("PAGES:", pages);
+            const service = plan.services || [];  // correct property
 
+
+            const isSubscribed = pages.some((p) => subscribedPages.includes(p));
+
+            console.log("isSubscribed:", isSubscribed);
             return (
               <Grid container spacing={4} key={plan.id}>
                 

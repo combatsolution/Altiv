@@ -133,11 +133,15 @@ export function useGetCommentReplies(commentId) {
 }
 // ----------------------------------------------------------------------
 
-export function useGetPostsByFilters(filterString) {
-  const URL = filterString ? endpoints.post.byFilters(filterString) : null;
-
+export function useGetPostsByFilters(filterString, categoryId) {
+  let URL = null;
+  if (filterString && categoryId) {
+    URL = endpoints.post.byCategoryFilters(filterString, categoryId);
+  } else {
+    URL = filterString ? endpoints.post.byFilters(filterString) : null;
+  }
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
-
+  console.log("SSSSSSSSSRRRRRSS", data);
   const memoizedValue = useMemo(
     () => ({
       posts: data?.blogs || [],
@@ -176,6 +180,7 @@ export function useGetCategories() {
 // ----------------------------------------------------------------------
 
 // export function useGetCategoriesPost(filterString, categoryId) {
+//   console.log("LLLLLLLLLLLLLL",filterString,categoryId);
 //   const URL = categoryId !== null ? endpoints.post.byCategoryFilters(filterString, categoryId) : null;
 
 //   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
@@ -193,7 +198,6 @@ export function useGetCategories() {
 
 //   return memoizedValue;
 // }
-
 
 export function useGetCategoriesPost(filterString, categoryId) {
   // ✅ use the new unified endpoint
