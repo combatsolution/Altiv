@@ -688,7 +688,7 @@ export default function MyProfile() {
         </Alert>
       )}
 
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Container maxWidth="lg" sx={{  py: { xs: 2, sm: 3, lg: 4 }}}>
         {/* Profile Banner */}
         <Box sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid transparent' }}>
           <Box
@@ -1026,9 +1026,9 @@ export default function MyProfile() {
 
             {/* Right Column: Resume and Registered Courses */}
             {showCourses && (
-              <Grid item xs={12} lg={4}>
+              <Grid item xs={10} lg={4}>
                 {/* Registered Courses Section */}
-                <Paper sx={{
+                <Paper sx={{  
                   p: 4, h: { xs: 0, lg: '250px' },
                   borderRadius: 2, ml: { xs: 0, lg: 1 },
                   mt: { xs: 2, md: 0, lg: 1 },

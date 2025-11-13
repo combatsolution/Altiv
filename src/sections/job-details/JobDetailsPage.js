@@ -202,13 +202,19 @@ export default function JobDetailPage() {
                         <Box display="flex" flexDirection='row' gap={2} flexWrap="wrap" alignItems="center">
                           <Avatar src={job.logo} sx={{ width: 56, height: 46 }} />
                           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <Grid sx={{ display: "flex", flexDirection: "row", gap: 15 }}>
-                              <Typography fontWeight={600} sx={{
-                                textAlign: "center", mt: 1,
+                            <Grid sx={{ display: "flex", flexDirection: "row", gap: 10 }}>
+
+                              <Typography sx={{
+                                display:'flex',
+                                alignItems:'center',
+                                fontFamily: 'dm-sans-regular',
+                                fontWeight: 400,
+                                fontSize: '18px',
                                 '&:hover': {
                                   color: 'primary.main',
                                   textDecoration: 'underline',
-                                },
+
+                                }
                               }}>{job.company}</Typography>
                               <IconButton onClick={handlebookmark}>
                                 {bookmarked ? (<BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />)
@@ -217,13 +223,14 @@ export default function JobDetailPage() {
                             </Grid>
 
                             <Grid container sx={{ display: "flex", flexDirection: "row", gap: 1 }} >
-                              <Typography fontWeight={600} fontSize='18px' sx={{
+                              <Typography fontSize="1rem" sx={{
+                                fontWeight: 600,
+                                fontSize: '20px',
                                 '&:hover': {
                                   color: 'primary.main',
                                   textDecoration: 'underline',
                                 },
-                              }}>
-                                {job.title}
+                              }} >{job.title}
                               </Typography>
                               <Typography
                                 variant="body2"
@@ -238,22 +245,35 @@ export default function JobDetailPage() {
                             </Grid>
 
 
-                            <Box display="flex" gap={4} flexWrap="wrap" mt={0.5}>
-                              <Typography variant="body2" color="text.secondary">
-                                📍 {job.location}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                • {job.applicants} applicants
-                              </Typography>
+                            <Box display="flex" gap={0} flexWrap="wrap" mt={0.5}>
+                              <Box
+                                component='img'
+                                src="/assets/images/location.svg"
+                                alt='location Icon'
+                                sx={{
+                                  width: '15px', height: '15px',
+                                  mt: 0.3, mr: 1
+                                }}
 
-                              {/* 
-                              <Typography
-                                variant="caption"
-                                color="primary"
-                                sx={{ cursor: "pointer" }}
-                              >
-                                Why this score?
-                              </Typography> */}
+                              />
+                              <Typography variant="body2" color="text.secondary" sx={{
+                                mr: 5
+                              }} >
+                                {job.location}
+                              </Typography>
+                              <Box
+                                component='img'
+                                src="/assets/images/clock.svg"
+                                alt='location Icon'
+                                sx={{
+                                  width: '15px', height: '15px',
+                                  mt: 0.3, mr: 1
+                                }}
+
+                              />
+                              <Typography variant="body2" color="text.secondary">
+                                 {job.applicants} applicants
+                              </Typography>
 
                             </Box>
                           </Box>
@@ -316,7 +336,7 @@ export default function JobDetailPage() {
                       <Typography
                         paragraph
                         sx={{
-                          color:'hsla(0, 0%, 8%, 0.7)',
+                          color: 'hsla(0, 0%, 8%, 0.7)',
                           fontFamily: 'dm-sans-regular',
                           fontWeight: 400,
                           fontSize: '16px',
@@ -499,7 +519,7 @@ export default function JobDetailPage() {
                             <Typography
                               paragraph
                               sx={{
-                                color:'hsla(0, 0%, 8%, 0.7)',
+                                color: 'hsla(0, 0%, 8%, 0.7)',
                                 fontFamily: 'dm-sans-regular',
                                 fontWeight: 400,
                                 fontSize: '16px',

@@ -35,7 +35,6 @@ import {
 } from 'src/store/jobSlice';
 import PropTypes from 'prop-types';
 import MenuIcon from '@mui/icons-material/Menu';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -137,29 +136,37 @@ const JobCard = ({ job }) => {
           <Stack direction={{ xs: 'column', md: 'row' }}
             justifyContent="space-between">
             <Box>
-              <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 4, alignItems: 'center' }}>
-                <Typography fontWeight={600}
+              <Grid sx={{ display: 'flex', flexDirection: 'row', gap: 7, alignItems: 'center' }}>
+                <Typography
                   sx={{
+                    fontFamily: 'dm-sans-regular',
+                    fontWeight: 400,
+                    fontSize: '18px',
                     '&:hover': {
                       color: 'primary.main',
                       textDecoration: 'underline',
+
                     }
                   }}>{job.company}</Typography>
 
                 <IconButton onClick={handlebookmark}>
                   {bookmarked || job.isSaved ? (<BookmarkIcon fontSize="medium" sx={{ color: 'primary.main', }} />)
                     :
-                    (<BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />)} </IconButton>
+                    (<BookmarkBorderIcon fontSize="medium" sx={{ color: 'text.secondary' }} />)}
+                </IconButton>
 
               </Grid>
 
-              <Stack direction="row" justifyContent="left" spacing={1}>
+              <Stack direction="row" justifyContent="left" spacing={2}>
                 <Typography fontSize="1rem" sx={{
+                  fontWeight: 600,
+                  fontSize: '20px',
                   '&:hover': {
                     color: 'primary.main',
                     textDecoration: 'underline',
                   },
-                }} >{job.title}</Typography>
+                }} >{job.title}
+                </Typography>
                 <Grid
                   sx={{
                     display: 'flex',
@@ -178,12 +185,27 @@ const JobCard = ({ job }) => {
                 </Grid>
               </Stack>
 
-              <Stack direction="row" spacing={0.5} mt={1} alignItems="center">
-                <LocationOnIcon fontSize="small" />
+              <Stack direction="row" spacing={0.1} mt={1} alignItems="center">
+                <Box
+                  component="img"
+                  src="/assets/images/location.svg"
+                  alt="location icon"
+                  sx={{ width: 18, height: 18, mr: 0.3 }}
+                />
                 <Typography variant="body2" sx={{
-                  mr:2
-                }}>{job.location}</Typography>
-                <AccessTimeIcon fontSize="small" />
+                  mr: 3
+                }}>{job.location}
+                </Typography>
+                <Box
+                  component='img'
+                  src="/assets/images/clock.svg"
+                  alt='clock'
+                  sx={{
+                    width: '15px',
+                    height: '15px',
+                    mr: 0.2,
+                  }}
+                />
                 <Typography variant="body2">{job.applicants} applicants</Typography>
               </Stack>
             </Box>
@@ -211,7 +233,7 @@ const JobCard = ({ job }) => {
           <Grid
             container
             sx={{
-              mt: 2,
+              mt: 0.5,
               display: 'flex',
               flexDirection: { xs: 'column', md: 'row' },
               justifyContent: 'space-between',
