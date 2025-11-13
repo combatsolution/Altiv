@@ -435,7 +435,8 @@
 
         return (
           <Box
-            sx={{
+            sx={{ 
+              mt:{xs:15, lg:5},
               position: 'relative',
               width: '100%',
               maxWidth: { xs: '350px', md: '470px', sm: '300px' },
@@ -849,7 +850,7 @@
             )}
             <Box mt={2} sx={{ backgroundColor: '#F5FAFF', borderRadius: 2, p: 2 }}>
               {data?.Strategy.length > 0 &&
-                data?.Strategy.map((rec, i) => (
+                data?.Strategy.map((rec, i) => (  
                   <Box key={i} mb={2}>
                     <Typography fontWeight="bold" gutterBottom>
                       {i + 1}. {rec.Heading}
@@ -861,11 +862,18 @@
           </Grid>
 
           {/* CTA Button */}
-          <Grid item xs={12} textAlign="left" display='flex' flexDirection='row' justifyContent='center'>
+          <Grid item xs={12} sx={{
+            gap:{xs:2, lg:0},
+             textAlign:"left",
+              display:'flex',
+              flexDirection:{xs:'column', lg:'row'},
+               justifyContent:'center'
+          }}>
             <Button
               variant="contained"
               sx={{
-                width: { xs: '180px', md: '20%' },
+                width: { xs: '300px', md: '20%',lg:'180px' },
+                fontSize:{xs:'10px',lg:'15px'},
                 backgroundColor: '#2C47D3',
                 borderRadius: 10,
                 px: 4,
@@ -894,12 +902,15 @@
             <Button
               variant="contained"
               sx={{
-                width: { xs: '180px', md: '20%' },
+               
+                width: { xs: '300px', md: '20%' },
+                fontSize:{xs:'10px',lg:'15px'},
                 backgroundColor: '#2C47D3',
                 borderRadius: 10,
                 px: 4,
+                mx: 1,
                 textTransform: 'none',
-                fontWeight: 'bold',
+                fontWeight: 'bold', 
                 '&:hover': {
                   backgroundColor: '#2C47D3',
                   boxShadow: 'none',
@@ -927,7 +938,8 @@
                 <Button
               variant="contained"
               sx={{
-                width: { xs: '180px', md: '25%' },
+                width: { xs: '300px', md: '25%' },
+                fontSize:{xs:'10px',lg:'15px'},
                 backgroundColor: '#2C47D3',
                 borderRadius: 10,
                 px: 4,

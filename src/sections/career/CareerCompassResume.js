@@ -949,7 +949,7 @@ export default function CareerPathProjection({ isResume, job, experience }) {
             )}
 
             
-                <Button
+                <Button 
                   onClick={() => navigate(paths.jobFeed)}
                   size={isMdUp ? 'medium' : 'small'}
                   sx={{

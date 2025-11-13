@@ -448,7 +448,7 @@ export default function MyProfile() {
               elevation={0}
             >
               {/* Left: Icon + Category */}
-              <Box display="flex" alignItems="center" gap={1.5} sx={{ flexShrink: 0, width: 140 }}>
+              <Box display="flex" alignItems="center" gap={1.5} sx={{ flexShrink: 0, width:{xs:'40px', lg:'140px'}, }}>
                 <Box
                   sx={{
                     width: 32,
@@ -1175,7 +1175,7 @@ export default function MyProfile() {
                 )}
               </Grid>
             )}
-{/* 
+          {/* 
             {showCourses && (
               <Box >
                 <MetricsCards metrics={metricsData} />
@@ -1200,8 +1200,6 @@ export default function MyProfile() {
                 </Box>
               </Grid>
             )}
-
-
           </Grid>
         </Grid>
 

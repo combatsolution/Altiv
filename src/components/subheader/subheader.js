@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 
-
 import { Box, Container, Typography, Button, Grid } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PropTypes from 'prop-types';
@@ -66,11 +65,17 @@ export default function SubHeader({ subtitle, showUploadResume }) {
         {(subtitle === "FOBO" && hasUploadedResume) && (
           <Grid
             item
-            xs={12}
-            textAlign="left"
-            display="flex"
-            flexDirection="row"
-            justifyContent="center"
+            xs={3}
+            sx={{
+              gap:{xs:1},   
+              textAlign: 'left',
+              display: "flex",
+               mr:{xs:2, lg:0},
+              flexDirection: { xs: 'column', lg: 'row' },
+              justifyContent: { xs: 'center', lg: 'left' },
+
+            }}
+
           >
             <Button
               variant="contained"
@@ -81,7 +86,6 @@ export default function SubHeader({ subtitle, showUploadResume }) {
                 px: 4,
                 mx: 1,
                 textTransform: 'none',
-                fontWeight: 'bold',
                 '&:hover': {
                   backgroundColor: '#2C47D3',
                   boxShadow: 'none',
@@ -107,9 +111,9 @@ export default function SubHeader({ subtitle, showUploadResume }) {
                 width: { xs: '180px', md: '175px' },
                 backgroundColor: '#2C47D3',
                 borderRadius: 10,
-                px: 0,
+                px: 4,
+                mx: 1,
                 textTransform: 'none',
-                fontWeight: 'bold',
                 '&:hover': {
                   backgroundColor: '#2C47D3',
                   boxShadow: 'none',
@@ -142,10 +146,9 @@ export default function SubHeader({ subtitle, showUploadResume }) {
                 width: { xs: '180px', md: '175px' },
                 backgroundColor: '#2C47D3',
                 borderRadius: 10,
-                
+            
                 ml: 1,
                 textTransform: 'none',
-                fontWeight: 'bold',
                 '&:hover': {
                   backgroundColor: '#2C47D3',
                   boxShadow: 'none',

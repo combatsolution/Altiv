@@ -74,7 +74,7 @@ export default function PostDetailsView() {
     />
   );
 
-  const renderPost = post && (  
+  const renderPost = post && (
     <>
       <PostDetailsToolbar
         backLink={paths.dashboard.post.root}

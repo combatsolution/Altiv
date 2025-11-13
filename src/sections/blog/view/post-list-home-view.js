@@ -1,274 +1,231 @@
-import orderBy from 'lodash/orderBy';
-import { useCallback, useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import orderBy from "lodash/orderBy";
+import { useCallback, useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 // @mui
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Chip from '@mui/material/Chip';
-import IconButton from '@mui/material/IconButton';
-import Iconify from 'src/components/iconify';
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
+import IconButton from "@mui/material/IconButton";
+import Iconify from "src/components/iconify";
+
 // routes
-import { paths } from 'src/routes/paths';
-import { useSearchParams } from 'src/routes/hook';
+import { paths } from "src/routes/paths";
+import { useSearchParams } from "src/routes/hook";
+
 // hooks
-import { useDebounce } from 'src/hooks/use-debounce';
+import { useDebounce } from "src/hooks/use-debounce";
+
 // _mock
-import { POST_SORT_OPTIONS } from 'src/_mock';
+import { POST_SORT_OPTIONS } from "src/_mock";
+
 // api
-import { useGetPostsByFilters, useGetCategories, useGetCategoriesPost } from 'src/api/blog';
+import { useGetPostsByFilters, useGetCategories } from "src/api/blog";
+
 // components
-import { useSettingsContext } from 'src/components/settings';
-//
-import PostList from '../post-list';
-import PostSort from '../post-sort';
-import PostSearch from '../post-search';
+import { useSettingsContext } from "src/components/settings";
+import PostList from "../post-list";
+import PostSort from "../post-sort";
+import PostSearch from "../post-search";
 
 // ----------------------------------------------------------------------
 
 export default function PostListHomeView() {
-
   const settings = useSettingsContext();
-  const [sortBy, setSortBy] = useState('latest');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [blogType, setBlogType] = useState('blog');
+  const [sortBy, setSortBy] = useState("latest");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
   const searchParams = useSearchParams();
   const scrollContainerRef = useRef(null);
-  const navigate = useNavigate();
-  const { categories: fetchedCategories = [], categoriesLoading } = useGetCategories();
 
-  // Set initial category from URL if present
+  const { categories: fetchedCategories = [], categoriesLoading } = useGetCategories();
+  const [blogType, setBlogType] = useState("blog");
+
+  // Load category from URL
   useEffect(() => {
-    const categoryFromUrl = searchParams.get('category');
-    if (categoryFromUrl) {
-      // Convert to string for consistent comparison
-      setSelectedCategory(String(categoryFromUrl));
-      console.log('Setting category from URL:', categoryFromUrl);
-    }
+    const categoryFromUrl = searchParams.get("category");
+    if (categoryFromUrl) setSelectedCategory(String(categoryFromUrl));
   }, [searchParams]);
 
-  // Add 'All' category at the beginning
-  const categories = [{ _id: 'all', name: 'All' }, ...fetchedCategories,
-  { _id: 'aiReadiness', name: 'aiReadiness', description: 'Ai-readiness Insights' },
+  // UI categories (All + fetched + AI-readiness)
+  const categories = [
+    { _id: "all", name: "All" },
+    ...fetchedCategories,
+    { _id: "Ai-readiness", name: "Ai-readiness" },
   ];
 
   const showArrows = categories.length > 3;
 
   const scroll = (direction) => {
-    if (!scrollContainerRef.current) return;
-
     const container = scrollContainerRef.current;
-    const scrollAmount = 200; // Adjust this value based on your needs
+    if (!container) return;
+    const scrollAmount = 200;
 
     container.scrollTo({
-      left: container.scrollLeft + (direction === 'left' ? -scrollAmount : scrollAmount),
-      behavior: 'smooth',
+      left: container.scrollLeft + (direction === "left" ? -scrollAmount : scrollAmount),
+      behavior: "smooth",
     });
   };
 
   const debouncedQuery = useDebounce(searchQuery);
 
-  const filter = {  
+  // ----------------------------------
+  // API FILTER
+  // ----------------------------------
+  // FILTER
+  const filter = {
     where: {
       and: [
-        { publish: 'published' },
-        { blogType: `${blogType}` }
+        { publish: "published" },
+        { blogType },
       ]
-    },
+    }
   };
+
+  const filterString = encodeURIComponent(JSON.stringify(filter));
+  const { posts: apiPosts = [], postsLoading } = useGetPostsByFilters(filterString, 
+    ((selectedCategory && selectedCategory !== 'all' && selectedCategory !== 'Ai-readiness') ?
+     selectedCategory : null));
+
+  // Now apiPosts is available for use below
+  const finalPosts = apiPosts;
+  const finalPostsLoading = postsLoading;
 
 
   const aiReadinessPost = {
-    id: 'ai-readiness-1',
-    title: 'AI Readiness: Transforming the Future of Work',
-    slug: 'ai-readiness',
+    id: "ai-readiness-1",
+    title: "AI Readiness: Transforming the Future of Work",
+    slug: "ai-readiness",
     description:
-      'Explore how AI Readiness empowers organizations to adapt, upskill, and thrive in the era of automation. Learn key steps to assess and improve your AI adoption maturity.',
-    coverUrl: '/assets/images/ai-readiness-banner.jpg', // Replace with your actual image path
+      "Explore how AI Readiness empowers organizations to adapt, upskill, and thrive in the era of automation. Learn key steps to assess and improve your AI adoption maturity.",
+    coverUrl: "/assets/images/ai-readiness-banner.jpg",
     createdAt: new Date().toISOString(),
-    tags: ['AI', 'Readiness', 'Future of Work'],
-    navigateTo: '/ai-readiness-companyfobopage', // 👈 custom path
+    tags: ["AI", "Readiness", "Future of Work"],
+    navigateTo: "/ai-readiness-companyfobopage",
   };
 
+  // ----------------------------------
+  // FINAL POSTS LOGIC
+  // ----------------------------------
 
-  const newFilterString = encodeURIComponent(JSON.stringify(filter));
+  // if (selectedCategory === "Ai-readiness") {
+  //   finalPosts = [aiReadinessPost];
+  //   finalPostsLoading = false;
+  // }
 
-  const { posts: allPosts, postsLoading: allPostsLoading } = useGetPostsByFilters(newFilterString);
+  // ----------------------------------
+  // SEARCH FILTER
+  // ----------------------------------
+  const searchResults = debouncedQuery
+    ? finalPosts.filter((post) => {
+      const q = debouncedQuery.toLowerCase();
+      return (
+        post.title.toLowerCase().includes(q) ||
+        post.description.toLowerCase().includes(q) ||
+        (post.tags || []).some((tag) => tag.toLowerCase().includes(q))
+      );
+    })
+    : finalPosts;
+  console.log("RRRRRRRRRRRRR", searchResults);
+  // ----------------------------------
+  // SORTING
+  // ----------------------------------
 
-  const categoryResult = useGetCategoriesPost(
-    newFilterString,    
-    selectedCategory === 'all' ? null : selectedCategory
-  );
-
-  const categoryPosts = selectedCategory === 'all' ? [] : categoryResult.posts || [];
-  const categoryPostsLoading = selectedCategory === 'all' ? false : categoryResult.postsLoading;
-
-  let posts = selectedCategory === 'all' ? allPosts : categoryPosts;
-  let postsLoading = selectedCategory === 'all' ? allPostsLoading : categoryPostsLoading;
-
-  // ✅ When AI-readiness chip is selected, show your new blog instead
-  if (selectedCategory === 'aiReadiness') {
-    posts = [aiReadinessPost];
-    postsLoading = false;
-  }
-
-  // Local search function
-  const getSearchResults = useCallback(() => {
-    if (!debouncedQuery.trim()) return [];
-
-    const query = debouncedQuery.toLowerCase();
-    return posts.filter(
-      (post) =>
-        post.title.toLowerCase().includes(query) ||
-        post.description.toLowerCase().includes(query) ||
-        (post.tags && post.tags.some((tag) => tag.toLowerCase().includes(query)))
-    );
-  }, [debouncedQuery, posts]);
-
-  const searchResults = getSearchResults();
-  const searchLoading = false; // No loading state needed for local search
-
-  // Use search results when there's a query, otherwise use the filtered posts
   const dataFiltered = applyFilter({
-    inputData: debouncedQuery ? searchResults : posts,
+    inputData: searchResults,
     sortBy,
   });
 
-  const handleSortBy = useCallback((newValue) => {
-    setSortBy(newValue);
-  }, []);
-
-  const handleSearch = useCallback((inputValue) => {
-    setSearchQuery(inputValue);
-  }, []);
-
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-      <Typography
-        variant="h4"
-        sx={{
-          my: { xs: 3, md: 5 },
-        }}
-      >
+    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+      <Typography variant="h4" sx={{ my: { xs: 3, md: 5 } }}>
         Blog
       </Typography>
 
+      {/* Search & Sort & Categories */}
       <Stack
         spacing={3}
         justifyContent="space-between"
-        alignItems={{ xs: 'flex-end', sm: 'center' }}
-        direction={{ xs: 'column', sm: 'row' }}
+        alignItems={{ xs: "flex-end", sm: "center" }}
+        direction={{ xs: "column", sm: "row" }}
         sx={{ mb: { xs: 3, md: 5 } }}
       >
-        <PostSearch
+        {/* <PostSearch
           query={debouncedQuery}
           results={searchResults}
-          onSearch={handleSearch}
-          loading={searchLoading}
+          onSearch={(v) => setSearchQuery(v)}
+          loading={false}
           hrefItem={(title) => paths.post.details(title)}
-        />
+        /> */}
 
+        {/* Categories */}
         {!categoriesLoading && categories.length > 0 && (
-          <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-            {showArrows && (
-              <IconButton
-                onClick={() => scroll('left')}
-                size="small"
-                sx={{
-                  position: 'absolute',
-                  left: -40,
-                  zIndex: 1,
-                  bgcolor: 'background.paper',
-                  boxShadow: 1,
-                  '&:hover': { bgcolor: 'action.hover' },
-                }}
-              >
-                <Iconify icon="eva:arrow-ios-back-fill" width={20} />
-              </IconButton>
-            )}
+        <Box
+          sx={{
+            width: "100%",
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
 
-            <Stack
-              ref={scrollContainerRef}
-              direction="row"
-              spacing={1}
-              sx={{
-                overflowX: 'auto',
-                maxWidth: { xs: '100%', sm: '400px' },
-                py: 1,
-                px: showArrows ? 0.5 : 0,
-                '&::-webkit-scrollbar': {
-                  display: 'none',
-                },
-                msOverflowStyle: 'none',
-                scrollbarWidth: 'none',
-              }}
-            >
-              {console.log('GGGGG selectedCategory:', selectedCategory)}
-              {categories.map((category) => (
+            mx: { xs: -2, sm: 0 },
+            px: { xs: 2, sm: 0 },
+          }}
+        >
+          <Stack
+            ref={scrollContainerRef}
+            direction="row"
+            spacing={1.2}
+            sx={{
+              width: "100%",
+              py: 1.5,
+
+              // 🔥 MOBILE: Wrap chips into multiple rows
+              flexWrap: { xs: "wrap", sm: "nowrap" },
+
+              // 🔥 DESKTOP: horizontal scroll
+              overflowX: { xs: "visible", sm: "auto" },
+              whiteSpace: { xs: "normal", sm: "nowrap" },
+
+              scrollBehavior: "smooth",
+              "&::-webkit-scrollbar": { display: "none" },
+            }}
+          >
+            {categories.map((cat) => {
+              const catId = String(cat._id || cat.id);
+              const selected = selectedCategory === catId;
+
+              return (
                 <Chip
-                  key={category._id || category.id}
-                  label={category.name}
-                  variant={
-                    String(selectedCategory) === String(category._id || category.id) ? 'filled' : 'outlined'
-                  }
-                  color={String(selectedCategory) === String(category._id || category.id) ? 'primary' : 'default'}
+                  key={catId}
+                  label={cat.name}
+                  variant={selected ? "filled" : "outlined"}
+                  color={selected ? "primary" : "default"}
                   onClick={() => {
-                    const catId = String(category._id || category.id);
-                    if (catId === 'aiReadiness') {
-                      setBlogType('company-fobo');
-                    } else {
-                      setBlogType('blog');  
-                    }
                     setSelectedCategory(catId);
-                    
-                    console.log('Category clicked:', catId, 'Current selected:', selectedCategory);
+                    setBlogType(catId === "Ai-readiness" ? "company-fobo" : "blog");
                   }}
                   sx={{
                     flexShrink: 0,
-                    cursor: 'pointer',
-                    '&:hover': {
-                      bgcolor: 'action.hover',
-                    },
-                    '& .MuiChip-label': {
-                      px: 1.5,
-                    },
-                    ...(String(selectedCategory) === String(category._id || category.id) && {
-                      bgcolor: 'primary.main',
-                      color: 'primary.contrastText',
-                      '&:hover': {
-                        bgcolor: 'primary.dark',
-                      },
-                    }),
+                    fontSize: { xs: "0.78rem", sm: "0.9rem" },
+                    height: { xs: 32, sm: 36 },
+                    px: { xs: 1.4, sm: 2 },
+                    borderRadius: "22px",
                   }}
                 />
-              ))}
-            </Stack>
-
-            {showArrows && (
-              <IconButton
-                onClick={() => scroll('right')}
-                size="small"
-                sx={{
-                  position: 'absolute',
-                  right: -40,
-                  zIndex: 1,
-                  bgcolor: 'background.paper',
-                  boxShadow: 1,
-                  '&:hover': { bgcolor: 'action.hover' },
-                }}
-              >
-                <Iconify icon="eva:arrow-ios-forward-fill" width={20} />
-              </IconButton>
-            )}
-          </Box>
+              );
+            })}
+          </Stack>
+        </Box>
         )}
 
-        <PostSort sort={sortBy} onSort={handleSortBy} sortOptions={POST_SORT_OPTIONS} />
+        <PostSort sort={sortBy} onSort={setSortBy} sortOptions={POST_SORT_OPTIONS} />
       </Stack>
 
-      <PostList posts={dataFiltered} loading={postsLoading} selectedCategory={selectedCategory} />
+      {/* Post List */}
+      <PostList posts={dataFiltered} loading={finalPostsLoading} selectedCategory={selectedCategory} />
     </Container>
   );
 }
@@ -276,17 +233,8 @@ export default function PostListHomeView() {
 // ----------------------------------------------------------------------
 
 const applyFilter = ({ inputData, sortBy }) => {
-  if (sortBy === 'latest') {
-    return orderBy(inputData, ['createdAt'], ['desc']);
-  }
-
-  if (sortBy === 'oldest') {
-    return orderBy(inputData, ['createdAt'], ['asc']);
-  }
-
-  if (sortBy === 'popular') {
-    return orderBy(inputData, ['totalViews'], ['desc']);
-  }
-
+  if (sortBy === "latest") return orderBy(inputData, ["createdAt"], ["desc"]);
+  if (sortBy === "oldest") return orderBy(inputData, ["createdAt"], ["asc"]);
+  if (sortBy === "popular") return orderBy(inputData, ["totalViews"], ["desc"]);
   return inputData;
 };

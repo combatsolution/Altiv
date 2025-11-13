@@ -76,11 +76,10 @@ export const mainRoutes = [
       </MainLayout>
     ),
     children: [
-       {path:'ai-readiness-analysis', element:<Aireadlinessview/>},
+      {path:'ai-readiness-analysis', element:<Aireadlinessview/>},
       //  <Route path="/plans/:id" element={<AIMarketingBuilder />} />
       {path:'ai-readiness-companyfobo', element:<Aireadlinecompanyfoboview/>},
-      {path:'ai-readiness-companyfobopage', element:<Aireadlinecompanyfobopageview/>},
-       {path:'ai-readiness-companyfobopage/:id', element:<Aireadlinecompanyfobopageview/>},
+      {path:'ai-readiness-companyfobopage/:company', element:<Aireadlinecompanyfobopageview/>},
       
       {path:'pricing-detail', element:<Pricingdetailview/>},
       {path:'pricing-detail/:id', element:<Pricingdetailview/>},

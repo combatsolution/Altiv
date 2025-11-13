@@ -23,10 +23,24 @@ export default function PostSort({ sort, sortOptions, onSort }) {
             icon={popover.open ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'}
           />
         }
-        sx={{ fontWeight: 'fontWeightSemiBold', textTransform: 'capitalize' }}
+        sx={{
+          textTransform: "none",
+          fontSize: { xs: "0.9rem", sm: "1rem" },
+          fontWeight: 600,
+          display: "flex",
+          alignItems: "center",
+          gap: 0.8,                // 🔥 spacing between text & value
+
+          whiteSpace: "nowrap",   // 🔥 prevents line break
+          px: 1.5,
+          py: 0.8,
+        }}
       >
-        Sort By:
-        <Box component="span" sx={{ ml: 0.5, fontWeight: 'fontWeightBold' }}>
+        <Box component="span" sx={{ opacity: 0.8 }}>
+          Sort By:
+        </Box>
+
+        <Box component="span" sx={{ fontWeight: 700 }}>
           {sort}
         </Box>
       </Button>
