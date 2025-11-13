@@ -72,10 +72,9 @@ export default function PostListHomeView() {
 
   const filter = {  
     where: {
-      and: [
-        { publish: 'published' },
-        { blogType: `${blogType}` }
-      ]
+        publish: 'published' 
+      
+      
     },
   };
 

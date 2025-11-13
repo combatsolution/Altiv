@@ -13,11 +13,12 @@ import {
   Button,
   Divider,
 } from "@mui/material";
+
 import { Icon } from "@iconify/react";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import LockIcon from "@mui/icons-material/Lock";
 import { useAuthContext } from "src/auth/hooks";
-import PlansModal from "./PlansModal";
+
 import {
   LineChart,
   Line,
@@ -28,6 +29,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+import PlansModal from "./PlansModal";
 
 export default function SkillErosionProjection({ data, serviceResp = false ,isExportMode = false }) {
   const { user } = useAuthContext();
@@ -39,7 +41,8 @@ export default function SkillErosionProjection({ data, serviceResp = false ,isEx
   const isContentVisible = user?.isPro || serviceResp;
 
   // ✅ Dummy fallback data (shown when locked)
-  const dummyErosionData = {
+const dummyErosionData = useMemo(
+  () => ({
     overall: {
       baseline_retention: [
         { year: 1, retention_percentage: 90 },
@@ -60,14 +63,20 @@ export default function SkillErosionProjection({ data, serviceResp = false ,isEx
       "Process Automation",
       "Decision Analytics",
     ],
-  };
+  }),
+  []
+);
+
 
   // ✅ Extract correct data paths
-  const erosionData = useMemo(() => {
-    return serviceResp
+const erosionData = useMemo(
+  () =>
+    serviceResp
       ? data?.data?.json_schema_data?.skill_erosion_analysis || {}
-      : dummyErosionData;
-  }, [data, serviceResp]);
+      : dummyErosionData,
+  [data, serviceResp, dummyErosionData]
+);
+
 
   const coreSkills = erosionData.critical_skills_analyzed || [];
 

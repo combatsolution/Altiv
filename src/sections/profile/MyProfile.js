@@ -1175,20 +1175,34 @@ export default function MyProfile() {
                 )}
               </Grid>
             )}
-            {/* Right Column: Resume and Registered Courses */}
+{/* 
             {showCourses && (
               <Box >
                 <MetricsCards metrics={metricsData} />
               </Box>
+            )} */}
+
+            {/* Right Column: Resume and Registered Courses */}
+            {showCourses && (
+              <Grid
+                item
+                xs={12}
+                lg={4}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'flex-start',
+                  p: { xs: 0, md: 2 },
+                }}
+              >
+                <Box sx={{ width: '100%', maxWidth: 400 }}>
+                  <MetricsCards metrics={metricsData} />
+                </Box>
+              </Grid>
             )}
 
 
-
-            
-
           </Grid>
-
-
         </Grid>
 
       </Container>
