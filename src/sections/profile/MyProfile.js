@@ -1026,7 +1026,7 @@ export default function MyProfile() {
 
             {/* Right Column: Resume and Registered Courses */}
             {showCourses && (
-              <Grid item xs={10} lg={4}>
+              <Grid item xs={12} lg={4}>
                 {/* Registered Courses Section */}
                 <Paper sx={{  
                   p: 4, h: { xs: 0, lg: '250px' },
