@@ -205,8 +205,8 @@ export default function JobDetailPage() {
                             <Grid sx={{ display: "flex", flexDirection: "row", gap: 10 }}>
 
                               <Typography sx={{
-                                display:'flex',
-                                alignItems:'center',
+                                display: 'flex',
+                                alignItems: 'center',
                                 fontFamily: 'dm-sans-regular',
                                 fontWeight: 400,
                                 fontSize: '18px',
@@ -272,7 +272,7 @@ export default function JobDetailPage() {
 
                               />
                               <Typography variant="body2" color="text.secondary">
-                                 {job.applicants} applicants
+                                {job.applicants} applicants
                               </Typography>
 
                             </Box>
@@ -337,8 +337,8 @@ export default function JobDetailPage() {
                         paragraph
                         sx={{
                           color: 'hsla(0, 0%, 8%, 0.7)',
-                          fontFamily: 'dm-sans-regular',
-                          fontWeight: 400,
+                          // fontFamily: 'dm-sans-regular',
+                          // fontWeight: 400,
                           fontSize: '16px',
                           px: { md: '60px', xs: 0 },
                           textAlign: 'justify',
@@ -427,13 +427,13 @@ export default function JobDetailPage() {
                                 {job.location}
                               </Typography>
                               <Box display="flex" alignItems="center" gap={1}>
-                                <Typography fontSize="12px" fontWeight={400} color="text.secondary">
+                                <Typography fontSize="11px" fontWeight={400} color="text.secondary">
                                   {job.applicants} applicants
                                 </Typography>
 
                                 <Divider orientation="vertical" flexItem sx={{ bgcolor: "grey.400" }} />
 
-                                <Typography fontSize="12px" fontWeight={400} color="text.secondary">
+                                <Typography fontSize="11px" fontWeight={400} color="text.secondary">
                                   {job.posted}
                                 </Typography>
                               </Box>
@@ -491,7 +491,7 @@ export default function JobDetailPage() {
                             sx={{
                               cursor: "pointer",
                               textDecoration: "underline",
-                              fontSize: "20px",
+                              fontSize: "16px",
                               fontWeight: "bold",
                               textAlign: "center",
                             }}
@@ -520,10 +520,11 @@ export default function JobDetailPage() {
                               paragraph
                               sx={{
                                 color: 'hsla(0, 0%, 8%, 0.7)',
-                                fontFamily: 'dm-sans-regular',
-                                fontWeight: 400,
-                                fontSize: '16px',
-                                px: { md: '60px', xs: 0 },
+                                // fontFamily: 'dm-sans-regular',
+                                // fontWeight: 400,
+                                // fontSize: '12px',
+                                px: { md: '100px', xs: 0 },
+
                                 textAlign: 'justify',
                                 display: '-webkit-box',
                                 WebkitLineClamp: showFullDescription ? 'none' : 10,
@@ -535,6 +536,7 @@ export default function JobDetailPage() {
                             >
                               {job.description}
                             </Typography>
+
 
                             {/* Only show Read more if description is long */}
                             {job.description && job.description.length > 800 && (
@@ -629,18 +631,23 @@ export default function JobDetailPage() {
                     fontWeight: 700,
                     fontSize: '20px',
                     display: 'flex',
-                    justifyContent: 'center',
-
+                    justifyContent: 'center'
 
                   }}>
                     Similar Jobs
                   </Typography>
-
                 </Box>
 
                 <List disablePadding>
                   {(showAll ? similarJobs : similarJobs.slice(0, 5)).map((job) => (
-                    <ListItem key={job.id} alignItems="flex-start" sx={{ mb: 1 }}>
+                    <ListItem key={job.id} alignItems="flex-start" sx={{
+                      border: '1px solid hsla(0, 0%, 88%, 1)',
+                      boxShadow: '0px 4px 6px hsla(0, 0%, 0%, 0.15)', // bottom shadow
+                      borderRadius: '8px',
+                      mb: 2,
+                      p: 1.5,
+
+                    }}>
                       <ListItemAvatar>
                         <Avatar src={job.logo} />
                       </ListItemAvatar>

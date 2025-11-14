@@ -60,8 +60,22 @@
   src: local('Roboto-Bold'), url('Roboto-Bold.ttf') format('opentype');
 }
 
+@font-face {
+  font-family: 'dm-sans-regular';
+  src: url('/fonts/DMSans-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'dm-sans-medium';
+  src: url('/fonts/DMSans-Regular.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
 .react-flow__handle.source {
   opacity: 0;
   visibility: hidden;
   /* or visibility: hidden; */
 }
+
