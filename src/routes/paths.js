@@ -1,8 +1,8 @@
 // utils
 import { paramCase } from 'src/utils/change-case';
 import { _id, _postTitles } from 'src/_mock/assets';
-import { ResumeView } from 'src/sections/resume/View';
-import { PolicyView } from 'src/sections/Policies/View';
+
+// import { PolicyView } from 'src/sections/Policies/View';
 
 // ----------------------------------------------------------------------
 

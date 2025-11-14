@@ -963,6 +963,8 @@
                 } else {
                   navigate(paths.aireadlinecompanypage);
                 }
+                     
+                
               }}
               aria-label="Navigate to pricing page"
             >

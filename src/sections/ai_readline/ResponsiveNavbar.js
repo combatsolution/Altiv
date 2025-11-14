@@ -7,6 +7,7 @@ import {
   useTheme,
   CircularProgress,
   Container,
+  Typography
 } from "@mui/material";
 import { useAuthContext } from "src/auth/hooks";
 import PropTypes from "prop-types";
@@ -43,7 +44,7 @@ const sections = [
 
 export default function ResponsiveNavbar() {
   const [value, setValue] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [profileAnalytics, setProfileAnalytics] = useState(null);
   const [exportInProgress, setExportInProgress] = useState(false);
   const [serviceUnlocked, setServiceUnlocked] = useState(false);
@@ -54,7 +55,7 @@ export default function ResponsiveNavbar() {
   const resumeId = user?.resumes?.at(-1)?.id;
   const isProUser = user?.subscription?.isPro ?? false;
   const pdfRef = useRef(null);
-console.log("AutoTable Loaded:", typeof jsPDF.API.autoTable);
+  console.log("AutoTable Loaded:", typeof jsPDF.API.autoTable);
   // ---------------------------------------------
   // ✅ Fetch Subscription
   useEffect(() => {
@@ -63,43 +64,111 @@ console.log("AutoTable Loaded:", typeof jsPDF.API.autoTable);
         const res = await axiosInstance.get(
           "/subscriptions/service-subscriptions-by-user/fobo-pro"
         );
-        setServiceUnlocked(res.data?.success);
+
+        setServiceUnlocked(res.data?.success === true);  // ALWAYS boolean TRUE/FALSE
       } catch (err) {
-        console.error("Error fetching subscription:", err);
         setServiceUnlocked(false);
       }
     };
+
     fetchSubscription();
   }, [user]);
 
+ useEffect(() => {
+      const updateServiceUnlocked = () => {
+        const rawValue = sessionStorage.getItem("foboProUnlocked");
+        const foboProUnlocked = rawValue === "true";
+
+        console.log("🔵 Session Storage Value (raw):", rawValue);
+        console.log("🟢 Converted Boolean:", foboProUnlocked);
+
+        // Update UI state
+        setServiceUnlocked(foboProUnlocked);
+
+        // ❗ Remove sessionStorage AFTER using it
+        if (rawValue !== null) {
+          sessionStorage.removeItem("foboProUnlocked");
+          console.log("🗑️ Removed foboProUnlocked from sessionStorage");
+        }
+      };
+
+      updateServiceUnlocked();
+
+      // Custom event listener for subscription updates
+      window.addEventListener("subscription-updated", updateServiceUnlocked);
+
+      return () => {
+        window.removeEventListener("subscription-updated", updateServiceUnlocked);
+      };
+    }, [resumeId]);
+
   // ---------------------------------------------
   // ✅ Fetch Profile Analytics Data
-  useEffect(() => {
-    const payload = {
-      resumeId,
-      viewDetails: true,
-      smartInsights: true,
-      isFoboPro: true,
-      isComprehensiveMode: true,
-    };
+  // useEffect(() => {
+  //   const payload = {
+  //     resumeId,
+  //     viewDetails: true,
+  //     smartInsights: true,
+  //     isFoboPro: true,
+  //     isComprehensiveMode: true,
+  //   };
 
-    const fetchProfileAnalytics = async () => {
+  //   const fetchProfileAnalytics = async () => {
+  //     try {
+  //       const response = await axiosInstance.post("/profile-analytics", payload);
+  //       setProfileAnalytics(response.data);
+  //       localStorage.setItem("profileAnalytics", JSON.stringify(response.data));
+  //     } catch (error) {
+  //       console.error("Error fetching profile analytics:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   if (resumeId) fetchProfileAnalytics();
+  // }, [resumeId]);
+
+  useEffect(() => {
+      const payload = {
+        resumeId,
+        viewDetails: true,
+        smartInsights: true,
+        isFoboPro: true,
+        isComprehensiveMode: true,
+      };
+
+      const fetchProfileAnalytics = async () => {
       try {
+        setLoading(true); // start loading
+
         const response = await axiosInstance.post("/profile-analytics", payload);
         setProfileAnalytics(response.data);
         localStorage.setItem("profileAnalytics", JSON.stringify(response.data));
+
+        // 🔥 keep loader ON for 1 minute
+        setTimeout(() => {
+          setLoading(false);  // STOP loading after 1 min
+        }, 2000);
+
       } catch (error) {
         console.error("Error fetching profile analytics:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    if (resumeId) fetchProfileAnalytics();
-  }, [resumeId]);
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
+      }
+
+      };
+
+      console.log("shdskjdsds", resumeId, serviceUnlocked);
+
+      if (resumeId && serviceUnlocked === true) fetchProfileAnalytics();
+    }, [resumeId, serviceUnlocked]);
+
+ 
+
   const dataSchema = profileAnalytics?.data?.json_schema_data || {};
-  console.log("SSSSSSSSSSSSSSSSSS",profileAnalytics);
-  console.log("AAAAAAAAAAAAAAAAAA",dataSchema);
+
 
   const handleExportPDF = async () => {
     try {
@@ -108,10 +177,9 @@ console.log("AutoTable Loaded:", typeof jsPDF.API.autoTable);
         return;
       }
 
-      const { jsPDF } = await import("jspdf");
       const autoTable = (await import("jspdf-autotable")).default;
       const html2canvas = (await import("html2canvas")).default;
-
+      // eslint-disable-next-line new-cap
       const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
@@ -137,7 +205,7 @@ console.log("AutoTable Loaded:", typeof jsPDF.API.autoTable);
       const addText = (text, fontSize = 9, spacing = 6, indent = 0) => {
         if (!text) return;
         pdf.setFontSize(fontSize);
-        const cleanText = text.replace(/[^\x00-\x7F]/g, "");
+        const cleanText = text.replace(/[^\x20-\x7E]/g, "");
         const lines = pdf.splitTextToSize(cleanText, pageWidth - margin * 2 - indent);
         lines.forEach((line) => {
           if (y > pageHeight - 20) {
@@ -173,8 +241,7 @@ console.log("AutoTable Loaded:", typeof jsPDF.API.autoTable);
       pdf.setFontSize(9);
       pdf.setTextColor(100);
       pdf.text(
-        `Report ID: ${dataSchema?.reportId || "N/A"} | Generated: ${
-          dataSchema?.generatedDate || new Date().toLocaleDateString()
+        `Report ID: ${dataSchema?.reportId || "N/A"} | Generated: ${dataSchema?.generatedDate || new Date().toLocaleDateString()
         }`,
         margin,
         y
@@ -343,17 +410,17 @@ console.log("AutoTable Loaded:", typeof jsPDF.API.autoTable);
 
       objectives.forEach((obj, i) => {
         const lines = pdf.splitTextToSize(`${i + 1}. ${obj}`, pageWidth - 2 * margin - 6);
-        const boxHeight = Math.max(15, lines.length * 5 + 6);
+        const boxHeight1 = Math.max(15, lines.length * 5 + 6);
         pdf.setDrawColor(200);
         pdf.setFillColor(245, 247, 255);
-        pdf.roundedRect(margin - 1, y - 4, pageWidth - 2 * margin + 2, boxHeight, 3, 3, "F");
+        pdf.roundedRect(margin - 1, y - 4, pageWidth - 2 * margin + 2, boxHeight1, 3, 3, "F");
         pdf.setFont("helvetica", "normal");
         pdf.setFontSize(9);
         pdf.text(lines, margin + 4, y + 2);
-        y += boxHeight + 5;
+        y += boxHeight1 + 5;
       });
 
-     // 🟩 4. TRANSFORMATION ROADMAP
+      // 🟩 4. TRANSFORMATION ROADMAP
       newPage("4. Transformation Roadmap"); // normal section with a page break
 
       autoTable(pdf, {
@@ -373,7 +440,7 @@ console.log("AutoTable Loaded:", typeof jsPDF.API.autoTable);
 
       // Add some spacing before the next section
       y = pdf.lastAutoTable.finalY + 10;
-      y = boxY + boxHeight+3;
+      y = boxY + boxHeight + 3;
       drawDivider();
 
       // 🟦 Capability Building Plan — blue heading (no new page)
@@ -417,7 +484,7 @@ console.log("AutoTable Loaded:", typeof jsPDF.API.autoTable);
 
       // Add space between sections
       y = pdf.lastAutoTable.finalY + 10;
-      y = boxY + boxHeight+3;
+      y = boxY + boxHeight + 3;
       drawDivider();
       // 🩷 7. FIRST 30 DAYS QUICK START — same page, with blue heading
       addSection("7. First 30 Days Quick Start"); // ✅ uses same blue bar heading style
@@ -439,7 +506,6 @@ console.log("AutoTable Loaded:", typeof jsPDF.API.autoTable);
         margin: { left: margin },
         theme: "grid",
       });
-
 
       // ❤️ 8. SKILL EROSION PROJECTION
       newPage("8. Skill Erosion Projection");
@@ -494,7 +560,7 @@ console.log("AutoTable Loaded:", typeof jsPDF.API.autoTable);
         margin: { left: margin },
         theme: "grid",
       });
-console.log("Dddddddddddddd",dataSchema.detailed_notes);
+      console.log("Dddddddddddddd", dataSchema);
       // 💚 10. DETAILED ANALYSIS NOTES
       newPage("10. Detailed Analysis Notes");
       pdf.setFont("helvetica", "bold");
@@ -519,7 +585,7 @@ console.log("Dddddddddddddd",dataSchema.detailed_notes);
 
       // 📄 FOOTER
       const totalPages = pdf.internal.getNumberOfPages();
-      for (let i = 1; i <= totalPages; i++) {
+      for (let i = 1; i <= totalPages; i += 1) {
         pdf.setPage(i);
         pdf.setFontSize(9);
         pdf.setTextColor(100);
@@ -538,23 +604,46 @@ console.log("Dddddddddddddd",dataSchema.detailed_notes);
 
 
   // ---------------------------------------------
-  if (loading)
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-        <CircularProgress size={40} />
-      </Box>
-    );
+  // if (loading)
+  //   return (
+  //     <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+  //       <CircularProgress size={40} />
+  //     </Box>
+  //   );
 
   const SelectedComponent = sections[value].component;
   const extraPrLabels = ["Strategic Objectives", "Transformation Roadmap", "Capability Building"];
 
   return (
     <>
+  {loading && (
+            <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backdropFilter: "blur(6px)",
+                backgroundColor: "rgba(255, 255, 255, 0.4)",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center", 
+                zIndex: 9999,
+                flexDirection: "column",
+              }}
+            >
+              <CircularProgress size={70} thickness={5} color="primary" />
+              <Typography sx={{ mt: 2, fontWeight: 500, color: "primary.main" }}>
+                Loading, please wait...
+              </Typography>
+            </Box>
+          )}
       {/* ✅ Dashboard Section */}
       <AIReadinessDashboard data={profileAnalytics} onExportPDF={handleExportPDF} />
 
       {/* ✅ Tab Navigation */}
-      <Box sx={{ py: { xs: 2, md: 1} }}>
+      <Box sx={{ py: { xs: 2, md: 1 } }}>
         <Container
           maxWidth={false}
           sx={{
@@ -614,8 +703,7 @@ console.log("Dddddddddddddd",dataSchema.detailed_notes);
             position: "relative",
           }}
         >
-                    {/* ✅ Hidden chart for PDF capture (off-screen) */}
-          {/* Always-mounted hidden chart for PDF capture */}
+
           <div
             id="skill-erosion-capture"
             style={{
@@ -632,11 +720,9 @@ console.log("Dddddddddddddd",dataSchema.detailed_notes);
             <SkillErosionProjection
               data={profileAnalytics}
               serviceResp={!!serviceUnlocked}
-              isExportMode={true} // ✅ Hide Share button for PDF
+              isExportMode
             />
           </div>
-
-
 
           {/* ✅ Visible tab content */}
           {sections[value].label === "Skill Erosion" ? (
@@ -652,6 +738,7 @@ console.log("Dddddddddddddd",dataSchema.detailed_notes);
               serviceResp={!!serviceUnlocked}
             />
           )}
+
         </Container>
 
       </Box>
@@ -659,6 +746,6 @@ console.log("Dddddddddddddd",dataSchema.detailed_notes);
   );
 }
 
-ResponsiveNavbar.propTypes = {
-  data: PropTypes.object,
-};
+// ResponsiveNavbar.propTypes = {
+//   data: PropTypes.object,
+// };
