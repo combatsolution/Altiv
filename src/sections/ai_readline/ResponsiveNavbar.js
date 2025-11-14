@@ -640,7 +640,7 @@ export default function ResponsiveNavbar() {
             </Box>
           )}
       {/* ✅ Dashboard Section */}
-      <AIReadinessDashboard data={profileAnalytics} onExportPDF={handleExportPDF} />
+       <AIReadinessDashboard data={profileAnalytics} onExportPDF={handleExportPDF} />
 
       {/* ✅ Tab Navigation */}
       <Box sx={{ py: { xs: 2, md: 1 } }}>
@@ -667,10 +667,11 @@ export default function ResponsiveNavbar() {
               },
               "& .MuiTab-root": {
                 flex: 1,
-                px: { xs: 1.5, md: 0 },
+                px: { xs: 0.5, md: 0 },
                 fontSize: { xs: "11px", sm: "12px", md: "10px" },
                 fontWeight: 500,
                 textTransform: "none",
+                borderRadius:'100px',
               },
               "& .Mui-selected": {
                 background: "#2A4DD0",

@@ -1,28 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Grid, Typography, Paper } from '@mui/material';
-import { m } from 'framer-motion'; // For MotionPaper if needed
+import { m } from 'framer-motion';
 
 const MetricsCards = ({ metrics }) => (
-
   <Box mt={2}>
-    <Grid
-      container
-      spacing={0}
-      sx={{
-        ml: 0,
-        mr: 3,
-        width: '100%',
-        '& .MuiGrid-item': {
-          // pl: 0,
-          // pr: '4px',
-          // ml: '-39px',
-          // mr: '-67px',
-          p: 0,
-        },
-
-      }}
-    >
+    <Grid container spacing={2}>
       {metrics.map((metric, index) => (
         <Grid
           item
@@ -30,96 +13,76 @@ const MetricsCards = ({ metrics }) => (
           xs={12}
           sm={6}
           md={6}
-          lg={6}
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-
-          }}
         >
           <m.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: index * 0.2 }}
-            whileHover={{ scale: 1 }}
-            style={{ width: '100%', maxWidth: 300 }}
-          > 
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+            whileHover={{
+              scale: 1.03,
+              boxShadow: '0px 6px 20px rgba(0,0,0,0.12)',
+            }}
+            style={{
+              height: '100%',
+              borderRadius: '15px', // 🔥 CRITICAL: Add borderRadius here
+              overflow: 'hidden',   // 🔥 CRITICAL: Clip rounded corners
+            }}
+          >
             <Paper
+              elevation={0}
               sx={{
-                borderRadius: 3,
-                cursor: 'pointer',
-                background: 'white',
+                borderRadius: 2,
                 borderTop: `4px solid ${metric.color}`,
-                height: '96%',
-                width: '97%',
-                display: 'flex',    
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                p: "20px",
-                mb:'30px',  
-                
-
-
+                p: 2,
+                height: 170,
+                backgroundColor: '#fff',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
               }}
             >
-              {/* Icon */}
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: 45,
-                  height: 40,
-                  borderRadius: '50%',
-                  bgcolor: `${metric.color}1A`,
-                  mr: 1,
-                }}
-              >
-                {metric.icon}
-              </Box>
 
-              {/* Text */}
-              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              {/* Top Row: Icon & Title */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box sx={{ fontSize: 28 }}>
+                  {metric.icon}
+                </Box>
+
                 <Typography
-                  fontWeight={600}
-                  sx={{
-                    fontSize: '12px',
-                    textAlign: 'left',
-                    color: 'text.secondary',
-                    wordBreak: 'break-word',
-                  }}
+                  variant="subtitle2"
+                  sx={{ fontWeight: 600, color: '#555' }}
                 >
                   {metric.title}
                 </Typography>
-
-                <Typography
-                  variant="h5"
-                  fontWeight="bold"
-                  sx={{ textAlign: 'left' }}
-                  color="primary.main"
-                >
-                  {metric.value}
-                  {metric.suffix || ''}
-                </Typography>
-
-                <Typography
-                  color="text.secondary"
-                  sx={{ fontSize: '10px', textAlign: 'left' }}
-                >
-                  {metric.subtitle}
-                </Typography>
               </Box>
+
+              {/* VALUE */}
+              <Typography
+                variant="h3"
+                sx={{
+                  fontWeight: 700,
+                  mt: 1,
+                  color: metric.color,
+                }}
+              >
+                {metric.value}{metric.suffix}
+              </Typography>
+
+              {/* Subtitle */}
+              <Typography
+                variant="body2"
+                sx={{ color: '#777', mt: 0.5 }}
+              >
+                {metric.subtitle}
+              </Typography>
+
             </Paper>
           </m.div>
         </Grid>
       ))}
     </Grid>
   </Box>
-
-
 );
-
 
 MetricsCards.propTypes = {
   metrics: PropTypes.arrayOf(
@@ -135,4 +98,3 @@ MetricsCards.propTypes = {
 };
 
 export default MetricsCards;
-

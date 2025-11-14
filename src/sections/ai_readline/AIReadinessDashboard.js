@@ -50,7 +50,7 @@
 // // ✅ Main component
 // function AIReadinessDashboard({ data, onExportPDF  }) 
 // {
-  
+
 
 // // Inside AIReadinessDashboard component
 
@@ -125,7 +125,7 @@
 
 //   return (
 
-    
+
 //     <Box
 //       sx={{
 //         bgcolor: "#f4f7fb",
@@ -288,7 +288,7 @@
 //           ))}
 //         </Grid>
 //       </Container>
-   
+
 //     </Box>
 //   );
 // }
@@ -355,8 +355,8 @@ AnimatedNumber.propTypes = {
 AnimatedNumber.defaultProps = { suffix: "" };
 
 // ✅ Main component
-function AIReadinessDashboard({ data, onExportPDF  }){
-  console.log("jshdkjadaks",data);
+function AIReadinessDashboard({ data, onExportPDF }) {
+  console.log("jshdkjadaks", data);
 
   useEffect(() => {
     console.log("AIReadinessDashboard data:", data);
@@ -366,13 +366,15 @@ function AIReadinessDashboard({ data, onExportPDF  }){
   const [serviceUnlocked, setServiceUnlocked] = useState(false);
   const { user } = useAuthContext();
 
+
+
   useEffect(() => {
     const checkAccess = async () => {
       if (!user?.id) return; // not logged in → cannot export
       try {
         const res = await axiosInstance.get(
           `/subscriptions/service-subscriptions-by-user/fobo-pro`
-        );  
+        );
         if (res.data?.success || user?.planType === "pro") {
           setServiceUnlocked(true);
         } else {
@@ -387,53 +389,55 @@ function AIReadinessDashboard({ data, onExportPDF  }){
   }, [user]);
 
 
-  const Aireadline= data?.data;
+  const Aireadline = data?.data;
   console.log("AIReadiness data:", Aireadline);
   const [showAllSections, setShowAllSections] = useState(false);
   const pdfRef = useRef(null);
 
   // ✅ Memoized metrics
-const metrics = React.useMemo(
-  () => [
-    {
-      title: "AI-Readiness Score",
-      value: Aireadline?.AI_Readiness_Score ?? 32,
-      suffix: "%",
-      subtitle: Aireadline?.aiReadinessRating ?? "Above Average",
-      color: "#3b82f6",
-      icon: <TrackChangesIcon sx={{ fontSize: 28, color: "#3b82f6" }} />,
-    },
-    {
-      title: "Transformation Timeline",
-      value: Aireadline?.Augmented_Score ?? 3,
-      suffix: " ",
-      subtitle: "Months",
-      color: "#f59e0b",
-      icon: <BoltIcon sx={{ fontSize: 28, color: "#f59e0b" }} />,
-    },
-    {
-      title: "Automation Potential",
-      value: Aireadline?.Automated_Score ?? 34,
-      suffix: "%",
-      subtitle: data?.automationImpact ?? "High Impact",
-      color: "#ec4899",
-      icon: <RocketLaunchIcon sx={{ fontSize: 28, color: "#ec4899" }} />,
-    },
-    {
-      title: "Strategic Objectives",
-      value: Aireadline?.strategicObjectives ?? 35,
-      suffix: "",
-      subtitle: "Key Goals",
-      color: "#facc15",
-      icon: <EmojiObjectsIcon sx={{ fontSize: 28, color: "#facc15" }} />,
-    },
-  ],
-  [Aireadline, data?.automationImpact]
-);
+  const metrics = React.useMemo(
+    () => [
+      {
+        title: "AI-Readiness Score",
+        value: Aireadline?.AI_Readiness_Score ?? 32,
+        suffix: "%",
+        subtitle: Aireadline?.aiReadinessRating ?? "Above Average",
+        color: "#3b82f6",
+        icon: <TrackChangesIcon sx={{ fontSize: 28, color: "#3b82f6" }} />,
+      },
+      {
+        title: "Transformation Timeline",
+        value: Aireadline?.transformation_timeline ?? 3,
+        suffix: " ",
+        subtitle: "Months",
+        color: "#f59e0b",
+        icon: <BoltIcon sx={{ fontSize: 28, color: "#f59e0b" }} />,
+      },
+      {
+        title: "Automation Potential",
+        value: Aireadline?.automation_potential ?? 34,
+        suffix: "%",
+        subtitle: data?.automationImpact ?? "High Impact",
+        color: "#ec4899",
+        icon: <RocketLaunchIcon sx={{ fontSize: 28, color: "#ec4899" }} />,
+      },
+      {
+        title: "Strategic Objectives",
+        value: Aireadline?.strategic_objective_count ?? 35,
+        suffix: "",
+        subtitle: "Key Goals",
+        color: "#facc15",
+        icon: <EmojiObjectsIcon sx={{ fontSize: 28, color: "#facc15" }} />,
+      },
+    ],
+    [Aireadline, data?.automationImpact]
+  );
+
+
 
   return (
 
-    
+
     <Box
       sx={{
         bgcolor: "#f4f7fb",
@@ -488,25 +492,25 @@ const metrics = React.useMemo(
           </Box>
         </Box>
 
-      <Button
-  variant="outlined"
-  startIcon={<PictureAsPdfIcon />}
-  sx={{
-    bgcolor: serviceUnlocked ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.05)",
-    color: "white",
-    borderColor: "white",
-    mr: { xs: 0, md: 4.7 },
-    cursor: serviceUnlocked ? "pointer" : "not-allowed",
-    "&:hover": {
-      bgcolor: serviceUnlocked ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.05)",
-      borderColor: "white",
-    },
-  }}
-  onClick={serviceUnlocked ? onExportPDF : undefined} // disable click if locked
-  disabled={!serviceUnlocked} // visually disables button
->
-  Export Full PDF
-</Button>
+        <Button
+          variant="outlined"
+          startIcon={<PictureAsPdfIcon />}
+          sx={{
+            bgcolor: serviceUnlocked ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.05)",
+            color: "white",
+            borderColor: "white",
+            mr: { xs: 0, md: 4.7 },
+            cursor: serviceUnlocked ? "pointer" : "not-allowed",
+            "&:hover": {
+              bgcolor: serviceUnlocked ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.05)",
+              borderColor: "white",
+            },
+          }}
+          onClick={serviceUnlocked ? onExportPDF : undefined} // disable click if locked
+          disabled={!serviceUnlocked} // visually disables button
+        >
+          Export Full PDF
+        </Button>
 
       </Box>
 
@@ -568,7 +572,7 @@ const metrics = React.useMemo(
                       textAlign: "left",
                       wordBreak: "break-word",
                       color: "text.secondary",
-                      fontSize:14
+                      fontSize: 14
                     }}
                   >
                     {metric.title}
@@ -596,7 +600,7 @@ const metrics = React.useMemo(
           ))}
         </Grid>
       </Container>
-   
+
     </Box>
   );
 }
@@ -608,6 +612,6 @@ export default React.memo(AIReadinessDashboard, (prev, next) =>
 
 AIReadinessDashboard.propTypes = {
   data: PropTypes.object,
-    onExportPDF: PropTypes.func, // optional callback
+  onExportPDF: PropTypes.func, // optional callback
 
 };

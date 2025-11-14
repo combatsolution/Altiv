@@ -54,45 +54,6 @@ import ProfileChangePassword from './profile-change-password-modal';
 import ProfileUpdateModal from './profile-update-modal';
 
 
-const metricsData = [
-  {
-    title: "AI-Readiness Score",
-    // value: 75 || lastFOBOData?.AI_Readiness ,
-    value: 75,
-    suffix: "%",
-    subtitle: "Above Average",
-    color: "#3b82f6",
-    icon: <TrackChangesIcon sx={{ fontSize: 28, color: "#3b82f6" }} />,
-  },
-  {
-    title: "Transformation Timeline",
-    // value: 36 || lastFOBOData?.TransformationTimeline ,
-    value: 36,
-    suffix: "",
-    subtitle: "Months",
-    color: "#f59e0b",
-    icon: <BoltIcon sx={{ fontSize: 28, color: "#f59e0b" }} />,
-  },
-  {
-    title: "Automation Potential",
-    // value: lastFOBOData?.AutomationPotential || 65,
-    value: 65,
-    suffix: "%",
-    subtitle: "High Impact",
-    color: "#ec4899",
-    icon: <RocketLaunchIcon sx={{ fontSize: 28, color: "#ec4899" }} />,
-  },
-  {
-    title: "Strategic Objectives",
-    // value: lastFOBOData?.StrategicObjectives || 6,
-    value: 6,
-    suffix: "",
-    subtitle: "Key Goals",
-    color: "#facc15",
-    icon: <EmojiObjectsIcon sx={{ fontSize: 28, color: "#facc15" }} />,
-  },
-];
-
 
 const jobMatches = []; // You can populate this later
 
@@ -115,7 +76,7 @@ export default function MyProfile() {
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const fileInputRef = useRef(null);
   const { enqueueSnackbar } = useSnackbar();
-
+  const [profileAnalytics, setProfileAnalytics] = useState(null);
   const [openPasswordModal, setOpenPasswordModal] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [error, setError] = useState(null);
@@ -135,12 +96,48 @@ export default function MyProfile() {
   const [isSubscriptionsLoading, setIsSubscriptionsLoading] = useState(false);
 
   const [reusmeId, setResumeId] = useState(sessionStorage.getItem("resumeId"));
-
   const hasResumes = existingResumes && existingResumes.length > 0;
   const hasCourses = subscriptions && subscriptions.length > 0;
   const [showResume, setShowResume] = useState(false);
   const [showCourses, setShowCourses] = useState(false);
+  const resumeId = user?.resumes?.at(-1)?.id;
 
+
+
+  const metricsData = [
+  {
+    title: "AI-Readiness Score",
+    value: profileAnalytics?.AI_Readiness_Score ?? 0,
+    suffix: "%",
+    subtitle: "Above Average",
+    color: "#3b82f6",
+    icon: <TrackChangesIcon sx={{ fontSize: 28, color: "#3b82f6" }} />,
+  },
+  {
+    title: "Transformation Timeline",
+    value: profileAnalytics?.transformation_timeline ?? 0,
+    suffix: "",
+    subtitle: "Months",
+    color: "#f59e0b",
+    icon: <BoltIcon sx={{ fontSize: 28, color: "#f59e0b" }} />,
+  },
+  {
+    title: "Automation Potential",
+    value: profileAnalytics?.automation_potential ?? 0,
+    suffix: "%",
+    subtitle: "High Impact",
+    color: "#ec4899",
+    icon: <RocketLaunchIcon sx={{ fontSize: 28, color: "#ec4899" }} />,
+  },
+  {
+    title: "Strategic Objectives",
+    value: profileAnalytics?.strategic_objective_count ?? 0,
+    suffix: "",
+    subtitle: "Key Goals",
+    color: "#facc15",
+    icon: <EmojiObjectsIcon sx={{ fontSize: 28, color: "#facc15" }} />,
+  },
+];
   // const lastFOBOData = JSON.parse(sessionStorage.getItem("lastFOBOData")) || {};
 
   useEffect(() => {
@@ -330,6 +327,45 @@ export default function MyProfile() {
 
     setError(null);
   };
+  const fetchProfileAnalytics = useCallback(async () => {
+    try {
+      const payload = {
+        resumeId,
+        viewDetails: true,
+        smartInsights: true,
+        isFoboPro: true,
+        isComprehensiveMode: true,
+      };
+      const response = await axiosInstance.post('/profile-analytics', payload);
+      if (response?.data) {
+        setProfileAnalytics(response.data.data || null);
+      }
+    } catch (err) {
+      console.error('Error fetching profile analytics:', err);
+      // don't set global error here — optional
+    }
+  }, [resumeId]);
+
+  useEffect(() => {
+    if (user) {
+      setProfileData(user);
+      setExistingResumes(user?.resumes || []);
+      setSelectedResumeId(null);
+      trackEvent({
+        category: 'Profile',
+        action: 'Viewed Profile Page',
+        label: user?.email || 'Anonymous',
+        value: 79,
+      });
+
+      // fetch subscriptions and analytics (non-blocking)
+      fetchSubscriptionHistory();
+      fetchProfileAnalytics();
+    }
+    setIsLoading(false);
+  }, [user, fetchSubscriptionHistory, fetchProfileAnalytics]);
+
+
 
   const handleDeleteResume = async (id) => {
 
@@ -448,7 +484,7 @@ export default function MyProfile() {
               elevation={0}
             >
               {/* Left: Icon + Category */}
-              <Box display="flex" alignItems="center" gap={1.5} sx={{ flexShrink: 0, width:{xs:'40px', lg:'140px'}, }}>
+              <Box display="flex" alignItems="center" gap={1.5} sx={{ flexShrink: 0, width: { xs: '40px', lg: '140px' }, }}>
                 <Box
                   sx={{
                     width: 32,
@@ -688,7 +724,7 @@ export default function MyProfile() {
         </Alert>
       )}
 
-      <Container maxWidth="lg" sx={{  py: { xs: 2, sm: 3, lg: 4 }}}>
+      <Container maxWidth="lg" sx={{ py: { xs: 2, sm: 3, lg: 4 } }}>
         {/* Profile Banner */}
         <Box sx={{ borderRadius: 2, overflow: 'hidden', border: '1px solid transparent' }}>
           <Box
@@ -1028,7 +1064,7 @@ export default function MyProfile() {
             {showCourses && (
               <Grid item xs={12} lg={4}>
                 {/* Registered Courses Section */}
-                <Paper sx={{  
+                <Paper sx={{
                   p: 4, h: { xs: 0, lg: '250px' },
                   borderRadius: 2, ml: { xs: 0, lg: 1 },
                   mt: { xs: 2, md: 0, lg: 1 },
@@ -1175,7 +1211,7 @@ export default function MyProfile() {
                 )}
               </Grid>
             )}
-          {/* 
+            {/* 
             {showCourses && (
               <Box >
                 <MetricsCards metrics={metricsData} />
@@ -1193,6 +1229,12 @@ export default function MyProfile() {
                   justifyContent: 'center',
                   alignItems: 'flex-start',
                   p: { xs: 0, md: 2 },
+                  bgcolor:'#fff',
+                  height:'100%',
+                  ml:1,
+                  mt:0.5,
+                  borderRadius:'20px'
+               
                 }}
               >
                 <Box sx={{ width: '100%', maxWidth: 400 }}>
