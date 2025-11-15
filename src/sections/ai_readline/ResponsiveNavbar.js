@@ -101,31 +101,7 @@ export default function ResponsiveNavbar() {
       };
     }, [resumeId]);
 
-  // ---------------------------------------------
-  // ✅ Fetch Profile Analytics Data
-  // useEffect(() => {
-  //   const payload = {
-  //     resumeId,
-  //     viewDetails: true,
-  //     smartInsights: true,
-  //     isFoboPro: true,
-  //     isComprehensiveMode: true,
-  //   };
-
-  //   const fetchProfileAnalytics = async () => {
-  //     try {
-  //       const response = await axiosInstance.post("/profile-analytics", payload);
-  //       setProfileAnalytics(response.data);
-  //       localStorage.setItem("profileAnalytics", JSON.stringify(response.data));
-  //     } catch (error) {
-  //       console.error("Error fetching profile analytics:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   if (resumeId) fetchProfileAnalytics();
-  // }, [resumeId]);
+ 
 
   useEffect(() => {
       const payload = {
@@ -635,13 +611,6 @@ export default function ResponsiveNavbar() {
   };
 
 
-  // ---------------------------------------------
-  // if (loading)
-  //   return (
-  //     <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-  //       <CircularProgress size={40} />
-  //     </Box>
-  //   );
 
   const SelectedComponent = sections[value].component;
   const extraPrLabels = ["Strategic Objectives", "Transformation Roadmap", "Capability Building"];
