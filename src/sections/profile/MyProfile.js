@@ -45,6 +45,7 @@ import bgImage from 'src/images/image.png';
 import Writelogo from 'src/images/write.svg';
 import axiosInstance, { endpoints } from 'src/utils/axios';
 import axios from 'axios';
+
 import { green } from '@mui/material/colors';
 import { useSnackbar } from 'notistack';
 import { SplashScreen } from 'src/components/loading-screen';
@@ -52,7 +53,7 @@ import { format } from 'date-fns';
 import MetricsCards from './MetricsCards';
 import ProfileChangePassword from './profile-change-password-modal';
 import ProfileUpdateModal from './profile-update-modal';
-
+import AIReadinessDashboard from '../ai_readline/AIReadinessDashboard';
 
 
 const jobMatches = []; // You can populate this later
@@ -101,43 +102,64 @@ export default function MyProfile() {
   const [showResume, setShowResume] = useState(false);
   const [showCourses, setShowCourses] = useState(false);
   const resumeId = user?.resumes?.at(-1)?.id;
+  const [serviceUnlocked, setServiceUnlocked] = useState(false);
+  const [metricsData, setMetricsData] = useState();
+  const [myprofile, setmyprofile] = useState(true);
 
+  useEffect(() => {
+    const fetchSubscription = async () => {
+      try {
+        const res = await axiosInstance.get(
+          "/subscriptions/service-subscriptions-by-user/fobo-pro"
+        );
+        setServiceUnlocked(res.data?.success === true);  // ALWAYS boolean TRUE/FALSE
+      } catch (err) {
+        setServiceUnlocked(false);
+      }
+    };
 
+    fetchSubscription();
+  }, [user]);
 
-  const metricsData = [
-  {
-    title: "AI-Readiness Score",
-    value: profileAnalytics?.AI_Readiness_Score ?? 0,
-    suffix: "%",
-    subtitle: "Above Average",
-    color: "#3b82f6",
-    icon: <TrackChangesIcon sx={{ fontSize: 28, color: "#3b82f6" }} />,
-  },
-  {
-    title: "Transformation Timeline",
-    value: profileAnalytics?.transformation_timeline ?? 0,
-    suffix: "",
-    subtitle: "Months",
-    color: "#f59e0b",
-    icon: <BoltIcon sx={{ fontSize: 28, color: "#f59e0b" }} />,
-  },
-  {
-    title: "Automation Potential",
-    value: profileAnalytics?.automation_potential ?? 0,
-    suffix: "%",
-    subtitle: "High Impact",
-    color: "#ec4899",
-    icon: <RocketLaunchIcon sx={{ fontSize: 28, color: "#ec4899" }} />,
-  },
-  {
-    title: "Strategic Objectives",
-    value: profileAnalytics?.strategic_objective_count ?? 0,
-    suffix: "",
-    subtitle: "Key Goals",
-    color: "#facc15",
-    icon: <EmojiObjectsIcon sx={{ fontSize: 28, color: "#facc15" }} />,
-  },
-];
+  useEffect(() => {
+    if (!profileAnalytics) return;
+
+    setMetricsData([
+      {
+        title: "AI-Readiness Score",
+        value: profileAnalytics?.AI_Readiness_Score ?? 0,
+        suffix: "%",
+        subtitle: "Above Average",
+        color: "#3b82f6",
+        icon: <TrackChangesIcon sx={{ fontSize: 28, color: "#3b82f6" }} />,
+      },
+      {
+        title: "Transformation Timeline",
+        value: profileAnalytics?.transformation_timeline ?? 0,
+        suffix: "",
+        subtitle: "Months",
+        color: "#f59e0b",
+        icon: <BoltIcon sx={{ fontSize: 28, color: "#f59e0b" }} />,
+      },
+      {
+        title: "Automation Potential",
+        value: profileAnalytics?.automation_potential ?? 0,
+        suffix: "%",
+        subtitle: "High Impact",
+        color: "#ec4899",
+        icon: <RocketLaunchIcon sx={{ fontSize: 28, color: "#ec4899" }} />,
+      },
+      {
+        title: "Strategic Objectives",
+        value: profileAnalytics?.strategic_objective_count ?? 0,
+        suffix: "",
+        subtitle: "Key Goals",
+        color: "#facc15",
+        icon: <EmojiObjectsIcon sx={{ fontSize: 28, color: "#facc15" }} />,
+      },
+    ]);
+  }, [profileAnalytics]);
+
   // const lastFOBOData = JSON.parse(sessionStorage.getItem("lastFOBOData")) || {};
 
   useEffect(() => {
@@ -327,24 +349,28 @@ export default function MyProfile() {
 
     setError(null);
   };
-  const fetchProfileAnalytics = useCallback(async () => {
-    try {
-      const payload = {
-        resumeId,
-        viewDetails: true,
-        smartInsights: true,
-        isFoboPro: true,
-        isComprehensiveMode: true,
-      };
-      const response = await axiosInstance.post('/profile-analytics', payload);
-      if (response?.data) {
-        setProfileAnalytics(response.data.data || null);
+  useEffect(() => {
+    const payload = {
+      resumeId,
+      viewDetails: true,
+      smartInsights: true,
+      isFoboPro: true,
+      isComprehensiveMode: true,
+    };
+
+    const fetchProfileAnalytics = async () => {
+      try {
+        const response = await axiosInstance.post("/profile-analytics", payload);
+        setProfileAnalytics(response.data.data);
+      } catch (err) {
+        console.error("Error fetching profile analytics:", err);
       }
-    } catch (err) {
-      console.error('Error fetching profile analytics:', err);
-      // don't set global error here — optional
-    }
-  }, [resumeId]);
+    };
+
+    console.log("shdskjdsds", resumeId, serviceUnlocked);
+
+    if (resumeId && serviceUnlocked === true) fetchProfileAnalytics();
+  }, [resumeId, serviceUnlocked]);
 
   useEffect(() => {
     if (user) {
@@ -360,10 +386,9 @@ export default function MyProfile() {
 
       // fetch subscriptions and analytics (non-blocking)
       fetchSubscriptionHistory();
-      fetchProfileAnalytics();
     }
     setIsLoading(false);
-  }, [user, fetchSubscriptionHistory, fetchProfileAnalytics]);
+  }, [user, fetchSubscriptionHistory]);
 
 
 
@@ -603,7 +628,7 @@ export default function MyProfile() {
       return (
         <div style={{ position: 'relative', width: '100%', margin: 'auto', marginTop: '20px' }}>
           <Grid container spacing={1} alignItems="center">
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={8} mt={2}>
               {/* Gauge Chart */}
               <GaugeChart
                 id="fobo-gauge"
@@ -1067,9 +1092,10 @@ export default function MyProfile() {
                 <Paper sx={{
                   p: 4, h: { xs: 0, lg: '250px' },
                   borderRadius: 2, ml: { xs: 0, lg: 1 },
-                  mt: { xs: 2, md: 0, lg: 1 },
+                  mt: 2,
                   // Remove fixed height and handle it dynamically
                   maxHeight: '440px', // optional limit for scrollable area
+                  height: '440px', // optional limit for scrollable area
                   overflowY: subscriptions?.length > 6 ? 'auto' : 'visible',
                   '&::-webkit-scrollbar': {
                     width: '8px',
@@ -1094,9 +1120,7 @@ export default function MyProfile() {
               </Grid>
             )}
           </Grid>
-
-          <Grid sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
-            {/* Profile analytics section */}
+          {/*   <Grid sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
             {lastFOBOData && (
               <Grid item xs={12} lg={8}>
                 {lastFOBOData ? (
@@ -1136,7 +1160,7 @@ export default function MyProfile() {
                         </span>
                       </Typography>
 
-                      {/* Optional blue glow lines */}
+                     
                       <Box
                         sx={{
                           position: 'absolute',
@@ -1151,7 +1175,7 @@ export default function MyProfile() {
                         }}
                       />
 
-                      {/* White faded overlay */}
+                     
                       <Box
                         sx={{
                           position: 'absolute',
@@ -1164,7 +1188,7 @@ export default function MyProfile() {
                         }}
                       />
 
-                      {/* Analyze Again Button */}
+                     
                       <Button
                         variant="contained"
                         color="primary"
@@ -1212,14 +1236,10 @@ export default function MyProfile() {
               </Grid>
             )}
             {/* 
-            {showCourses && (
-              <Box >
-                <MetricsCards metrics={metricsData} />
-              </Box>
-            )} */}
+            
 
-            {/* Right Column: Resume and Registered Courses */}
-            {showCourses && (
+          
+            {(showCourses && profileAnalytics && Array.isArray(metricsData) && metricsData.length > 0) && (
               <Grid
                 item
                 xs={12}
@@ -1229,20 +1249,22 @@ export default function MyProfile() {
                   justifyContent: 'center',
                   alignItems: 'flex-start',
                   p: { xs: 0, md: 2 },
-                  bgcolor:'#fff',
-                  height:'100%',
-                  ml:1,
-                  mt:0.5,
-                  borderRadius:'20px'
-               
+                  bgcolor: '#fff',
+                  height: '100%',
+                  ml: 1,
+                  mt: 0.5,
+                  borderRadius: '20px',
                 }}
               >
                 <Box sx={{ width: '100%', maxWidth: 400 }}>
+                  {console.log("OOOOOOOOOOOOOOO", metricsData)}
                   <MetricsCards metrics={metricsData} />
                 </Box>
               </Grid>
             )}
-          </Grid>
+
+          </Grid> */}
+          <AIReadinessDashboard data={profileAnalytics} myProfile={myprofile} />
         </Grid>
 
       </Container>

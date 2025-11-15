@@ -64,7 +64,6 @@ export default function ResponsiveNavbar() {
         const res = await axiosInstance.get(
           "/subscriptions/service-subscriptions-by-user/fobo-pro"
         );
-
         setServiceUnlocked(res.data?.success === true);  // ALWAYS boolean TRUE/FALSE
       } catch (err) {
         setServiceUnlocked(false);
@@ -165,7 +164,40 @@ export default function ResponsiveNavbar() {
       if (resumeId && serviceUnlocked === true) fetchProfileAnalytics();
     }, [resumeId, serviceUnlocked]);
 
- 
+ useEffect(() => {
+        const payload = {
+          resumeId,
+          viewDetails: true,
+          smartInsights: true,
+          isFoboPro: true,
+          isComprehensiveMode: true,
+          isSubscribe:false
+        };
+
+        const fetchProfileAnalytics = async () => {
+        try {
+          setLoading(true); // start loading
+
+          const response = await axiosInstance.post("/profile-analytics", payload);
+          setProfileAnalytics(response.data);
+          localStorage.setItem("profileAnalytics", JSON.stringify(response.data));
+
+          // 🔥 keep loader ON for 1 minute
+          setTimeout(() => {
+            setLoading(false);  // STOP loading after 1 min
+          }, 2000);
+          
+        } catch (error) {
+          console.error("Error fetching profile analytics:", error);
+          setTimeout(() => {
+            setLoading(false);
+          }, 2000);
+        }
+
+        };
+
+        if (resumeId && serviceUnlocked === false) fetchProfileAnalytics();
+      }, [resumeId, serviceUnlocked]);
 
   const dataSchema = profileAnalytics?.data?.json_schema_data || {};
 

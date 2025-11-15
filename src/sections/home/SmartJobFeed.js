@@ -51,6 +51,7 @@ function SmartJobFeed() {
                 src={SmartJoblogo}
                 alt="SmartJoblogo"
                 sx={{
+                    fontWeight:700,
                   display: { xs: 'none', sm: 'block' },
                   width: { sm: 35, md: 45 },
                   height: { sm: 35, md: 40 },
@@ -88,12 +89,13 @@ function SmartJobFeed() {
 
             <Typography
               sx={{
-                fontFamily: 'Roboto, sans-serif',
+               fontFamily: 'Roboto, sans-serif',
                 fontWeight: 400,
+                fontSize: { xs: '16px', md: '16px' },
                 lineHeight: 1.6,
-                textAlign: 'left',
                 color: 'text.secondary',
-                fontSize: { xs: '14px', sm: '16px', lg: '18px' },
+                textAlign: 'left',
+                mx: { xs: 1, md: 0 },
               }}
             >
               Say goodbye to endless scrolling. Meet your job match with AI-powered precision. Each

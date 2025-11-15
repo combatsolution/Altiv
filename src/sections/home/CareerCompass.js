@@ -67,7 +67,7 @@ function CareerCompass() {
               <Typography
                 sx={{
                   fontFamily: 'Inter, sans-serif',
-                  fontWeight: 600,
+                   fontWeight:700,
                   fontSize: {
                     xs: '34px',
                     lg: '54px',
@@ -89,7 +89,6 @@ function CareerCompass() {
               sx={{
                 fontFamily: 'Inter, sans-serif',
                 fontWeight: 400,
-
                 lineHeight: 'normal', // or '64px' if specific line-height is needed
                 letterSpacing: '0.64px',
                 justifyContent: { xs: 'left', md: 'flex-start' },
@@ -112,7 +111,7 @@ function CareerCompass() {
               sx={{
                 fontFamily: 'Roboto, sans-serif',
                 fontWeight: 400,
-                fontSize: { xs: '14px', md: '16px' },
+                fontSize: { xs: '16px', md: '16px' },
                 lineHeight: 1.6,
                 color: 'text.secondary',
                 textAlign: 'left',

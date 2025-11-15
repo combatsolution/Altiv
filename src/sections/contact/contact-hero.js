@@ -49,7 +49,7 @@ export default function ContactHero() {
       action: 'Clicked',
       label: platform,
       value: 52,
-    });
+    }); 
   };
 
   // ✅ Track email click
@@ -70,7 +70,7 @@ export default function ContactHero() {
           color: alpha(theme.palette.grey[900], 0.8),
           imgUrl: '/assets/images/contact/hero.jpg',
         }),
-        py: { xs: 10, md: 8 },
+        py: { xs: 2, md: 8 },
         overflow: 'hidden',
         position: 'relative',
       }}
@@ -82,13 +82,15 @@ export default function ContactHero() {
             textAlign: { xs: 'center', md: 'left' },
           }}
         >
-          {/* <TextAnimate
-            text="Contact Us"
-            sx={{ color: '#fff', letterSpacing: '0.1em' }}
-            variants={varFade().inRight}
-          /> */}
-
-          <Box display="flex" gap={2} color="#fff">
+          
+          <Box sx={{
+            display:'flex',
+            color:'white',
+            alignItems:'center',
+            gap:2,
+            justifyContent:{xs:'center', lg:'flex-start'}
+          }}
+          >
             <TextAnimate text="Contact" />
             <TextAnimate text="Us" />
           </Box>

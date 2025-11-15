@@ -142,38 +142,7 @@ const JobBoard = () => {
   const visibleJobs = jobs.slice(0, visibleJobsCount);
   console.log('dsd', visibleJobs);
 
-  if (!user) {
-    return (
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        minHeight="400px"
-        textAlign="center"
-        px={3}
-      >
-        <Typography variant="h6" gutterBottom>
-          Please log in to view job listings
-        </Typography>
-        <Button
-          variant="outlined"
-          onClick={() => {
-               trackEvent({
-              category: 'CTA clicked',
-              action: 'button clicked',
-              label: 'Login to view jobs',
-              value: 95,
-            });
-
-            navigate(paths.auth.jwt.login)}}
-          sx={{ borderRadius: 999, px: 4, mt: 2, color: 'primary.main', border: '2px solid primary.main' }}
-        >
-          Login
-        </Button>
-      </Box>
-    );
-  }
+  
 
   // Loading state
   if (loading) {

@@ -78,6 +78,7 @@ function JobMatchBooster() {
                 src={Jobmatchlogo}
                 alt="RocketLogo"
                 sx={{
+                  fontWeight:600,
                   display: { xs: "none", sm: "block" },
                   width: { sm: 35, md: 45 },
                   height: { sm: 35, md: 40 },
@@ -127,12 +128,13 @@ function JobMatchBooster() {
                 lineHeight: 1.6,
                 letterSpacing: "0%",
                 // color: "rgba(9, 8, 8, 0.5)",  
-                mx: { xs: "auto", md: 0 },
+               mx: { xs: 1, md: 0 },
                 textAlign: "left",
                 fontSize: {
                     xs: '16px',
                     lg: '20px',
                   },
+                  
               }}
             >
               Stand out in every application. Get actionable tips and

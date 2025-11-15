@@ -6,7 +6,7 @@ import {
   Button,
   Stack,
   Link,
-  useTheme, 
+  useTheme,
   useMediaQuery,
 } from '@mui/material';
 import Carousel, { useCarousel } from 'src/components/carousel';
@@ -174,14 +174,24 @@ function TestimonialSection() {
                       width: "60px",
                       height: "60px",
                       borderRadius: 15,
-                      ml:2,
-                    
+                      ml: 2,
                     }}
                   />
-                  <Grid sx={{ display: 'flex', flexDirection: 'column' }} >
+                  <Grid
+                    sx={{ display: 'flex', ml: 1, maxWidth: '200px', flexDirection: 'column' }} >
                     {/* Name + Title */}
                     <Typography
-                      sx={{ fontSize:'14px', width: '200px', fontWeight: 700, fontFamily: 'Inter, sans-serif' }}
+                      sx={{
+                        fontSize: 14,
+                        fontWeight: 700,
+                        fontFamily: 'Inter, sans-serif',
+                        maxWidth: '100%',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,   // max 2 lines
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}
                     >
                       {item.tags}
                     </Typography>
@@ -357,8 +367,8 @@ function TestimonialSection() {
                     onClick={() => {
                       setIndex(i);
                       goToIndex(thumbCarousel.carouselRef, i);
-                      goToIndex(rightCarousel.carouselRef, i);  
-                      trackEvent({  
+                      goToIndex(rightCarousel.carouselRef, i);
+                      trackEvent({
                         category: 'Testimonial Carousel',
                         action: 'Thumbnail Click',
                         label: visibleBlogs[i]?.title || 'Unknown',

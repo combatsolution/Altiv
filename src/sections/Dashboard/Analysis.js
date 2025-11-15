@@ -1,4 +1,4 @@
-  /* eslint-disable no-nested-ternary */
+/* eslint-disable no-nested-ternary */
   /* eslint-disable no-else-return */
   import { useAuthContext } from 'src/auth/hooks';
   import React, { useEffect, useMemo, useState,useRef } from 'react';
@@ -383,8 +383,8 @@
       if (isMobile) {
         return {
           good: { top: '20%', left: '11%', transform: 'rotate(-55deg)' },
-          moderate: { top: '-22%', right: '6%', transform: 'rotate(2deg)' },
-          bad: { top: '20%', right: '13%', transform: 'rotate(55deg)' },
+          moderate: { top: '-21%', left: '12%', transform: 'rotate(9deg)' },
+          bad: { top: '25%', right: '10%', transform: 'rotate(63deg)' },
         };
       } else if (isTablet) {
         const styles = {
@@ -395,9 +395,9 @@
         return styles;
       } else {
         return {
-          good: { top: '20%', left: '15%', transform: 'rotate(-50deg)' },
-          moderate: { top: '-17%', right: '16%', transform: 'rotate(4deg)' },
-          bad: { top: '25%', right: '14%', transform: 'rotate(60deg)' },
+          good: { top: '23%', left: '13%', transform: 'rotate(-55deg)' },
+          moderate: { top: '-17%', right: '13%', transform: 'rotate(9deg)' },
+          bad: { top: '28%', right: '13%', transform: 'rotate(63deg)' },
         };
       }
     };
@@ -406,20 +406,20 @@
       if (isMobile) {
         return {
           good: { top: '29%', left: '19%', transform: 'rotate(-61deg)' },
-          moderate: { top: '8%', right: '41%', transform: 'rotate(3deg)' },
+          moderate: { top: '8%', right: '40%', transform: 'rotate(6deg)' },
           bad: { top: '30%', right: '17%', transform: 'rotate(60deg)' },
         };
       } else if (isTablet) {
         return {
           good: { top: '35%', left: '21%', transform: 'rotate(-56deg)' },
           moderate: { top: '10%', right: '43%', transform: 'rotate(5deg)' },
-          bad: { top: '37%', right: '19%', transform: 'rotate(60deg)' },
+          bad: { top: '3%', right: '19%', transform: 'rotate(60deg)' },
         };
       } else {
         return {
-          good: { top: '28%', left: '22%', transform: 'rotate(-50deg)' },
-          moderate: { top: '10%', right: '42%', transform: 'rotate(4deg)' },
-          bad: { top: '32%', right: '19%', transform: 'rotate(57deg)' },
+          good: { top: '30%', left: '20%', transform: 'rotate(-55deg)' },
+          moderate: { top: '10%', right: '40%', transform: 'rotate(8deg)' },
+          bad: { top: '37%', right: '17%', transform: 'rotate(65deg)' },
         };
       }
     };
@@ -494,6 +494,33 @@
               <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
                 70 - 100
               </Typography>
+            </div>
+
+              
+          {/* <div style={{ position: 'absolute', ...countStyles.bad }}>
+            <svg width="300" height="150">
+              <defs>
+                <path id="curve-bad" d="M 50,150 A 100,100 0 0,1 250,150" fill="transparent" />
+              </defs>
+              <text fill="white" fontSize="16" fontWeight="bold" fontFamily="Arial">
+                <textPath href="#curve-bad" startOffset="50%" textAnchor="middle">
+                  70 - 100
+                </textPath>
+              </text>
+            </svg>
+          </div> */}
+          
+            <div style={{ position: 'absolute', ...labelStyles.moderate }}>
+              <svg width="300" height="150">
+                <defs>
+                  <path id="curve" d="M 50,150 A 100,100 0 0,1 250,150" fill="transparent" />
+                </defs>
+                <text fill="#000" fontSize="16" fontFamily="Arial">
+                  <textPath href="#curve" startOffset="50%" textAnchor="middle">
+                    Moderate
+                  </textPath>
+                </text>
+              </svg>
             </div>
 
             <div style={{ textAlign: 'center', marginTop: 10 }}>
@@ -861,25 +888,26 @@
             </Box>
           </Grid>
 
-          {/* CTA Button */}
-          <Grid item xs={12} sx={{
-            gap:{xs:2, lg:0},
-             textAlign:"left",
-              display:'flex',
-              flexDirection:{xs:'column', lg:'row'},
-               justifyContent:'center'
-          }}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              gap: { xs: 2, lg: 0 },
+              textAlign: { xs: 'center', lg: 'left' },
+              display: 'flex',
+              flexDirection: { xs: 'column', lg: 'row' },
+              justifyContent: 'center',
+              alignItems: 'center',      // 🔥 ensures perfect centering
+            }}
+          >
             <Button
               variant="contained"
               sx={{
-                width: { xs: '300px', md: '20%',lg:'180px' },
-                fontSize:{xs:'10px',lg:'15px'},
+                width: { xs: '180px', md: '150px' },
                 backgroundColor: '#2C47D3',
                 borderRadius: 10,
-                px: 4,
-                mx: 1,
+                ml: { xs: 0, lg: 1 },     // 🔥 NO margin on mobile, margin only on desktop
                 textTransform: 'none',
-                fontWeight: 'bold',
                 '&:hover': {
                   backgroundColor: '#2C47D3',
                   boxShadow: 'none',
@@ -894,7 +922,6 @@
                 });
                 navigate(paths.pricing);
               }}
-              aria-label="Navigate to pricing page"
             >
               Beat FOBO Now
             </Button>
@@ -902,75 +929,53 @@
             <Button
               variant="contained"
               sx={{
-               
-                width: { xs: '300px', md: '20%' },
-                fontSize:{xs:'10px',lg:'15px'},
+                width: { xs: '180px', md: '150px' },
                 backgroundColor: '#2C47D3',
                 borderRadius: 10,
-                px: 4,
-                mx: 1,
+                ml: { xs: 0, lg: 1 },     // 🔥 fixed here too
                 textTransform: 'none',
-                fontWeight: 'bold', 
                 '&:hover': {
                   backgroundColor: '#2C47D3',
                   boxShadow: 'none',
                 },
               }}
               onClick={() => {
-                trackEvent({
-                  category: 'CTA clicked',
-                  action: 'button clicked',
-                  label: 'Beat FOBO now',
-                  value: 'Navigate to pricing',
-                });
                 if (!user) {
-                    sessionStorage.setItem('redirectAfterLogin', '/ai-readiness-analysis');
+                  sessionStorage.setItem('redirectAfterLogin', '/ai-readiness-analysis');
                   navigate(paths.auth.jwt.register);
                 } else {
                   navigate(paths.aireadliness);
                 }
               }}
-              aria-label="Navigate to pricing page"
             >
               FOBO Pro
             </Button>
 
-                <Button
+            <Button
               variant="contained"
               sx={{
-                width: { xs: '300px', md: '25%' },
-                fontSize:{xs:'10px',lg:'15px'},
+                width: { xs: '180px', md: '175px' },
                 backgroundColor: '#2C47D3',
                 borderRadius: 10,
-                px: 4,
-                ml:1,
+                ml: { xs: 0, lg: 1 },      // 🔥 fixed here too
                 textTransform: 'none',
-                fontWeight: 'bold',
                 '&:hover': {
                   backgroundColor: '#2C47D3',
                   boxShadow: 'none',
                 },
               }}
               onClick={() => {
-                trackEvent({
-                  category: 'CTA clicked',
-                  action: 'button clicked',
-                  label: 'Beat FOBO now',
-                  value: 'Navigate to pricing',
-                });
                 if (!user) {
                   navigate(paths.auth.jwt.register);
                 } else {
                   navigate(paths.aireadlinecompanypage);
                 }
-                     
-                
               }}
-              aria-label="Navigate to pricing page"
             >
-            COMPANY FOBO PRO
+              COMPANY FOBO PRO
             </Button>
           </Grid>
+
         </Grid>
       </Box>
     ) : isLoading ? (

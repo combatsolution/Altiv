@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { m } from 'framer-motion';
 import axiosInstance from 'src/utils/axios';
 import { useSnackbar } from 'notistack';
@@ -12,23 +12,31 @@ import {
   Button,
   TextField,
   Typography,
-  Grid,
+  Grid, 
   Box,
 } from '@mui/material';
 import { MotionViewport, varFade } from 'src/components/animate';
 
 export default function ContactForm() {
+  //   useEffect(() => {
+  //   const mapCanvas = document.querySelector('.mapboxgl-canvas');
+  //   if (mapCanvas) {
+  //     mapCanvas.remove();
+  //   }
+  // }, []);
+  
+
   const { enqueueSnackbar } = useSnackbar();
-    const handlesubmitClick = () => {
+  const handlesubmitClick = () => {
     trackEvent({
       category: 'Submit  Click',
       action: 'button Clicked',
       label: 'Submitted Form',
-      Value:53,
+      Value: 53,
     });
   };
 
-  
+
 
   const [form, setForm] = useState({
     name: '',
@@ -75,11 +83,12 @@ export default function ContactForm() {
       container
       spacing={4}
       alignItems="center"
-      direction="row"
       justifyContent="space-between"
+
     >
       {/* Left Side: Form */}
-      <Grid item xs={12} md={7}>
+      <Grid item xs={12} md={7}
+         order={{ xs: 2, md: 1 }}>
         <Stack component={MotionViewport} spacing={5}>
           <m.div variants={varFade().inUp}>
             <Typography variant="h3">
@@ -127,7 +136,8 @@ export default function ContactForm() {
       </Grid>
 
       {/* Right Side: Image */}
-      <Grid item xs={12} md={5}>
+      <Grid item xs={12} md={5}
+       order={{ xs: 1, md: 2 }}>
         <m.div variants={varFade().inRight}>
           <Box
             component="img"
@@ -135,13 +145,12 @@ export default function ContactForm() {
             alt="Contact Illustration"
             onClick={handlesubmitClick}
             sx={{
-              display:{xs:'none', lg:'block'},
-              width: '750px',
+              display: 'block',
+              width: { xs: '100%', sm:'100%', md:'100%', lg: '750px' },
               // heigth: '800px', 
               maxWidth: 1000,
-              height: 'auto',
-            
-              mx: 'auto',
+              height: { xs: "50%", lg: 'auto' },  
+              mx: { xs: 'none', lg: 'auto' },
               borderRadius: 1,
             }}
           />

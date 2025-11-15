@@ -19,9 +19,9 @@ import axiosInstance, { endpoints} from 'src/utils/axios';
 import axios from 'axios';
 
 const statusColor = {
-  SUCCESS: 'success',
+  SUCCESS: 'primary',
   EXPIRED: 'warning',
-  PENDING: 'info',
+  PENDING: 'error',
 };
 
 // Component for loading state
@@ -257,7 +257,7 @@ export default function SubscriptionHistory() {
       </Box>
 
       {/* Table */}
-      <Paper variant="outlined">
+      {/* <Paper variant="outlined">
         <Table size="small">
           <TableHead>
             <TableRow>
@@ -266,12 +266,37 @@ export default function SubscriptionHistory() {
               <TableCell>Plan Name</TableCell>
               <TableCell>Payment Type</TableCell>
               <TableCell>Credit Status</TableCell>
-              {/* <TableCell>Invoice</TableCell>  */}
+              
             </TableRow>
           </TableHead>
           <TableBody>{renderTableContent()}</TableBody>
         </Table>
-      </Paper>
+      </Paper> */}
+      {/* Table */}
+<Paper variant="outlined" sx={{ overflow: 'hidden' }}>
+  <Box
+    sx={{
+      width: '100%',
+      overflowX: { xs: 'auto', sm: 'auto', md: 'visible' }, // mobile scroll enabled
+      WebkitOverflowScrolling: 'touch',
+    }}
+  >
+    <Table size="small" sx={{ minWidth: 700 }}> 
+      <TableHead>
+        <TableRow>
+          <TableCell>Date</TableCell>
+          <TableCell>Price</TableCell>
+          <TableCell>Plan Name</TableCell>
+          <TableCell>Payment Type</TableCell>
+          <TableCell>Credit Status</TableCell>
+        </TableRow>
+      </TableHead>
+
+      <TableBody>{renderTableContent()}</TableBody>
+    </Table>
+  </Box>
+</Paper>
+
     </Container>
   );
 }

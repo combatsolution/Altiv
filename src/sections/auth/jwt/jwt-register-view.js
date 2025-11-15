@@ -130,24 +130,48 @@ const { reset, watch, handleSubmit, formState: { errors, isSubmitting } } = meth
 }, [user, navigate]);
 
 
-   const onSubmit = handleSubmit(async (data) => {
-    try {
-      await register?.(data.email, data.password, data.name, data.phone);
-      enqueueSnackbar('Register success', { variant: 'success' });
-      const redirectPath = sessionStorage.getItem('redirectAfterLogin');
-      if (redirectPath) {
-        sessionStorage.removeItem('redirectAfterLogin');
-      }
-       router.replace(redirectPath || returnTo || PATH_AFTER_LOGIN);
-      // router.replace(redirectPath );
-      sessionStorage.removeItem(STORAGE_KEY); // clear after success
-      // router.push('/auth/jwt/login');
-    } catch (error) {
-      console.error(error);
-      reset();
-      setErrorMsg(typeof error === 'string' ? error : error.error.message);
+  //  const onSubmit = handleSubmit(async (data) => {  
+  //   try {
+  //     await register?.(data.email, data.password, data.name, data.phone);
+  //     enqueueSnackbar('Register success', { variant: 'success' });
+  //     const redirectPath = sessionStorage.getItem('redirectAfterLogin');
+  //     if (redirectPath) {
+  //       sessionStorage.removeItem('redirectAfterLogin');
+  //     }
+  //      router.replace(redirectPath || returnTo || PATH_AFTER_LOGIN);
+  //     // router.replace(redirectPath );
+  //     sessionStorage.removeItem(STORAGE_KEY); // clear after success
+  //     // router.push('/auth/jwt/login');
+  //   } catch (error) {
+  //     console.error(error);
+  //     reset();
+  //     setErrorMsg(typeof error === 'string' ? error : error.error.message);
+  //   }
+  // });
+
+  const onSubmit = handleSubmit(async (data) => {
+  try {
+    await register?.(data.email, data.password, data.name, data.phone);
+    enqueueSnackbar('Register success', { variant: 'success' });
+
+    // ✅ Get redirect path from sessionStorage (FOBO Pro logic)
+    const redirectPath = sessionStorage.getItem('redirectAfterLogin');
+
+    // ✅ Navigate to redirectPath if it exists, otherwise fallback
+    if (redirectPath) {
+      sessionStorage.removeItem('redirectAfterLogin'); // clean up
+      navigate(redirectPath); // go to /ai-readiness-analysis
+    } else {
+      navigate(returnTo || PATH_AFTER_LOGIN); // fallback
     }
-  });
+
+    sessionStorage.removeItem(STORAGE_KEY); // clear saved form
+  } catch (error) {
+    console.error(error);
+    reset();
+    setErrorMsg(typeof error === 'string' ? error : error?.error?.message);
+  }
+});
 
   const handleGoogleLogin = async () => {
     setIsGoogleLoading(true);

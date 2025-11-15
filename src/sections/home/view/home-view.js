@@ -2,6 +2,7 @@ import { useScroll } from 'framer-motion';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
+import { useAuthContext } from 'src/auth/hooks'; // ✅ import auth context
 
 // components
 import ScrollProgress from 'src/components/scroll-progress';
@@ -52,7 +53,7 @@ const StyledPolygon = styled('div')(({ anchor = 'top', theme }) => ({
 
 export default function HomeView() {
   const { scrollYProgress } = useScroll();
-
+  const { user } = useAuthContext();
   return (
     <>
       <ScrollProgress scrollYProgress={scrollYProgress} />
@@ -62,51 +63,51 @@ export default function HomeView() {
       <TestimonialSection />
       <CareerToolkitHero />
       {/* <Box
-        src="/assets/images/line.svg"
-        alt="img decorative"
-        sx={{
-       
+          src="/assets/images/line.svg"
+          alt="img decorative"
+          sx={{
         
-          display: { xs: 'none', sm: 'block' }, // Only show on desktop
-        }}
-      > */}
-        <CareerCompass />
-        <SmartJobFeed />
-        <JobMatchBooster />
+          
+            display: { xs: 'none', sm: 'block' }, // Only show on desktop
+          }}
+        > */}
+      <CareerCompass />
+      <SmartJobFeed />
+      <JobMatchBooster />
       {/* </Box> */}
 
       <WorkingProcessSection1 />
-      <JobBoard />
+      {user && <JobBoard />}
 
       {/* <Box
-        sx={{
-          overflow: 'hidden',
-          position: 'relative',
-          bgcolor: 'background.default',
-        }}
-      >
-        <HomeMinimal />
+          sx={{
+            overflow: 'hidden',
+            position: 'relative',
+            bgcolor: 'background.default',
+          }}
+        >
+          <HomeMinimal />
 
-        <HomeHugePackElements />
+          <HomeHugePackElements />
 
-        <Box sx={{ position: 'relative' }}>
-          <StyledPolygon />
-          <HomeForDesigner />
-          <StyledPolygon anchor="bottom" />
-        </Box>
+          <Box sx={{ position: 'relative' }}>
+            <StyledPolygon />
+            <HomeForDesigner />
+            <StyledPolygon anchor="bottom" />
+          </Box>
 
-        <HomeDarkMode />
+          <HomeDarkMode />
 
-        <HomeColorPresets />
+          <HomeColorPresets />
 
-        <HomeCleanInterfaces />
+          <HomeCleanInterfaces />
 
-        <HomePricing />
+          <HomePricing />
 
-        <HomeLookingFor />
+          <HomeLookingFor />
 
-        <HomeAdvertisement />
-      </Box> */}
+          <HomeAdvertisement />
+        </Box> */}
     </>
   );
 }

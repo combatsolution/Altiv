@@ -56,10 +56,7 @@ export default function JwtLoginView() {
     }
   }, [searchParams, enqueueSnackbar]);
 
-  const handleRedirect = useCallback((url) => {
-    window.location.href = url;
-  }, []);
-
+  
   const LoginSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string().required('Password is required'),
