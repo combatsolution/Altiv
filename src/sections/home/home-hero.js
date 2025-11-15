@@ -1,4 +1,4 @@
-import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useNavigate, Link as RouterLink, useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -36,6 +36,8 @@ function HomeHero() {
   const [error, setError] = useState("");
   const [resumes, setResumes] = useState([]);
   const fileInputRef = useRef();
+  const location = useLocation();
+
 
   // Load resumes from sessionStorage on modal open
   // ✅ Load resumes from sessionStorage when component mounts
@@ -97,6 +99,8 @@ function HomeHero() {
     setError("");
     setUploadType("resume");
     setOpen(false);
+    window.history.replaceState({}, "", "/");
+
   };
 
   const handleOpenModal = useCallback(() => setOpen(true), []);
@@ -165,6 +169,22 @@ function HomeHero() {
       Math.max(0, Math.min(op === "inc" ? prev + 1 : prev - 1, 30)),
     );
   };
+
+  // ⭐ Auto-handle retry logic from CareerCompass
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const retry = params.get("retry"); // resume | job | null
+    
+    if (retry === "resume") {
+      setUploadType("resume");
+      setOpen(true);            // auto open modal
+    }else if(retry === "job"){
+      setUploadType("job");
+      setOpen(true);        
+    }
+
+  }, [location.search]);
+
 
   // const getButtonLabel = (e) => "Continueee ";
 
@@ -280,10 +300,19 @@ function HomeHero() {
                     <Typography variant="body2" color="textSecondary" mb={3}>
                       You can choose to go with your updated resume or job title
                     </Typography>
+                    {console.log("LJKLKLKLKLKL",uploadType)}
                     <ToggleButtonGroup
                       value={uploadType}
                       exclusive
-                      onChange={(e, v) => v && setUploadType(v)}
+                      onChange={(e, v) => {
+                      if (v) {
+                        setUploadType(v);
+
+                        // ⭐ Update URL so retry logic works automatically
+                        const newUrl = `/?retry=${v}`;
+                        window.history.replaceState({}, "", newUrl);
+                      }
+                    }}
                       sx={{
                         mb: 2,
                         borderRadius: "26px",

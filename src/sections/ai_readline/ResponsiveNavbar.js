@@ -48,7 +48,7 @@ export default function ResponsiveNavbar() {
   const [profileAnalytics, setProfileAnalytics] = useState(null);
   const [exportInProgress, setExportInProgress] = useState(false);
   const [serviceUnlocked, setServiceUnlocked] = useState(false);
-
+  const [isExportMode, setisExportMode]= useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { user } = useAuthContext();
@@ -644,106 +644,102 @@ export default function ResponsiveNavbar() {
        <AIReadinessDashboard data={profileAnalytics} onExportPDF={handleExportPDF} />
 
       {/* ✅ Tab Navigation */}
-      <Box sx={{ py: { xs: 2, md: 1 } }}>
-        <Container
-          maxWidth={false}
-          sx={{
-            maxWidth: "1150px",
-            bgcolor: "#fff",
-            borderRadius: 2,
-            boxShadow: 1,
-            py: { xs: 1, md: 1.5 },
-            px: { xs: 1, md: 2 },
-          }}
-        >
-          <Tabs
-            value={value}
-            onChange={(e, newValue) => setValue(newValue)}
-            variant={isMobile ? "scrollable" : "fullWidth"}
-            scrollButtons={isMobile ? "auto" : false}
-            centered={!isMobile}
+     <Box sx={{ py: { xs: 2, md: 1} }}>
+          <Container
             sx={{
-              "& .MuiTabs-flexContainer": {
-                justifyContent: isMobile ? "flex-start" : "space-between",
-              },
-              "& .MuiTab-root": {
-                flex: 1,
-                px: { xs: 0.5, md: 0 },
-                fontSize: { xs: "11px", sm: "12px", md: "10px" },
-                fontWeight: 500,
-                textTransform: "none",
-                borderRadius:'100px',
-              },
-              "& .Mui-selected": {
-                background: "#2A4DD0",
-                color: "#fff !important",
-              },
-              "& .MuiTabs-indicator": { display: "none" },
+             
+              bgcolor: "#fff",
+              borderRadius: 2,
+              boxShadow: 1,
+              py: { xs: 1, md: 1.5 },
             }}
           >
-            {sections.map((section, index) => (
-              <Tab
-                key={index}
-                label={section.label}
-                disableRipple
-                sx={
-                  extraPrLabels.includes(section.label)
-                    ? { [theme.breakpoints.up("sm")]: { mr: "30px" } }
-                    : {}
-                }
-              />
-            ))}
-          </Tabs>
-        </Container>
+            <Tabs
+              value={value}
+              onChange={(e, newValue) => setValue(newValue)}
+              scrollButtons={isMobile ? "auto" : false}
+              centered={!isMobile}
+              sx={{
+              
+               
+                "& .MuiTab-root": {
+                  px: { xs: 1, md:0.1 },
+                  fontSize: { xs: "11px", sm: "12px", md: "10.5px" },
+                  fontWeight: 500,  
+                },
+                "& .Mui-selected": {
+                  background: "#2A4DD0",
+                  color: "#fff !important",
+                  borderRadius:"10px",
+                  px:0.5,
+                  py:'-10'
+                },
+                "& .MuiTabs-indicator": { display: "none" },
+              }}
+            >
+              {sections.map((section, index) => (
+                <Tab
+                  key={index}
+                  label={section.label}
+                  disableRipple
+                  sx={
+                    extraPrLabels.includes(section.label)
+                      ? { [theme.breakpoints.up("sm")]: { mr: "30px" } }
+                      : {}
+                  }
+                />
+              ))}
+            </Tabs>
+          </Container>
 
-        <Container
-          maxWidth={false}
-          sx={{
-            maxWidth: "1150px",
-            mt: { xs: 2, md: 2 },
-            px: { xs: 2, sm: 3, md: 0 },
-            position: "relative",
-          }}
-        >
-
-          <div
-            id="skill-erosion-capture"
-            style={{
-              position: "absolute",
-              top: "-9999px",
-              left: "-9999px",
-              visibility: "hidden",
-              background: "#fff",
-              padding: "1rem",
-              height: "400px",
-              width: "800px",
+          <Container
+            maxWidth={false}
+            sx={{
+              maxWidth: "1150px",
+              mt: { xs: 2, md: 2 },
+              px: { xs: 2, sm: 3, md: 0 },
+              position: "relative",
             }}
           >
-            <SkillErosionProjection
-              data={profileAnalytics}
-              serviceResp={!!serviceUnlocked}
-              isExportMode
-            />
-          </div>
-
-          {/* ✅ Visible tab content */}
-          {sections[value].label === "Skill Erosion" ? (
-            <div ref={pdfRef} style={{ background: "#fff", padding: "1rem" }}>
+    
+            <div
+              id="skill-erosion-capture"
+              style={{
+                position: "absolute",
+                top: "-9999px",
+                left: "-9999px",
+                visibility: "hidden",
+                background: "#fff",
+                padding: "1rem",
+                height: "400px",
+                width: "800px",
+              }}
+            >
               <SkillErosionProjection
                 data={profileAnalytics}
                 serviceResp={!!serviceUnlocked}
+                isExportMode={true} // ✅ Hide Share button for PDF
               />
             </div>
-          ) : (
-            <SelectedComponent
-              data={profileAnalytics}
-              serviceResp={!!serviceUnlocked}
-            />
-          )}
 
-        </Container>
+            {console.log("OOPPPIPOIPOIOPI",serviceUnlocked)}
+            {sections[value].label === "Skill Erosion" ? (
+              <div ref={pdfRef} style={{ background: "#fff", padding: "1rem" }}>
+                <SkillErosionProjection
+                  data={profileAnalytics}
+                  serviceResp={!!serviceUnlocked}
+                />
+              </div>
+            ) : (
+              <SelectedComponent
+                data={profileAnalytics}
+                serviceResp={!!serviceUnlocked}
+              />
+            )}
+            
+          </Container>
 
-      </Box>
+        </Box>
     </>
   );
 }
