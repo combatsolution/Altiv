@@ -662,7 +662,7 @@ export default function MyProfile() {
                 <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
                   0 - 39
                 </Typography>
-              </div>
+              </div>  
 
               <div
                 style={{
@@ -1270,7 +1270,6 @@ export default function MyProfile() {
                 width: "100%",
                 maxWidth: { xs: "100%", md: "1200px" }, // Desktop width
                 mx: "auto", // Center horizontally
-                mt: 3,
               }}
             >
               <AIReadinessDashboard data={profileAnalytics} myProfile={myprofile} />

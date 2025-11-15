@@ -302,7 +302,7 @@ export default function Aireadliness({ data }) {
       {/* Dashboard header + Export button */}
       {/* <AIReadinessDashboard data={data} onExportPDF={handleExportPDF} /> */}
       {/* Visible UI */}
-      <Box id="report-content" sx={{ p: 0, mx: 6 }}>
+      <Box id="report-content" sx={{ p: 0, mx: 0 }}>
         <Box sx={{ position: "relative" }}>
           <ResponsiveNavbar data={data} />
 

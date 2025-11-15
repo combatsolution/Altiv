@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import axiosInstance from 'src/utils/axios';
 import BoltIcon from "@mui/icons-material/Bolt";
@@ -133,15 +134,13 @@ function AIReadinessDashboard({ data, onExportPDF,myProfile }) {
 
 
   return (
-
-
-    <Box
+  <Box
       sx={{
-        bgcolor: "#f4f7fb",
+        bgcolor: "#2057a0ff",
         minHeight: "370px",
         my: 2,
-        mx: "auto",
-        maxWidth: { xs: "100%", md: "1330px", lg: "1350px" },
+        mx:{ xs:'0', lg:"auto"},
+        width: { xs: "100%", md: "1330px", lg: "1350px" },
       }}
     >
       {/* Header */}
@@ -154,13 +153,20 @@ function AIReadinessDashboard({ data, onExportPDF,myProfile }) {
           py: 3,
           display: "flex",
           mx: "auto",
-          justifyContent: "space-between",
-          flexDirection: { xs: "column", md: "row" },
+          justifyContent:{xs:'left', md:"space-between"},
+          flexDirection: {  xs: "column", md: "row" },
           mb: 4,
           gap: 2,
         }}
       >
-        <Box display="flex" alignItems="center" gap={2}>
+        <Box display="flex" alignItems="center" gap={2} 
+        sx={{
+          display:'flex',
+          flexDirection:{xs:'column', lg:'row'},
+          justifyContent:{xs:'left'},
+          alignItems:{xs:'left', lg:'center'}
+
+        }}>
           <Avatar
             sx={{
               bgcolor: "white",
@@ -192,7 +198,7 @@ function AIReadinessDashboard({ data, onExportPDF,myProfile }) {
 
         <Button
           variant="outlined"
-          startIcon={<PictureAsPdfIcon />}
+          startIcon={myProfile ? <VisibilityIcon/> : <PictureAsPdfIcon /> }
           sx={{
             bgcolor: serviceUnlocked ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.05)",
             color: "white",
