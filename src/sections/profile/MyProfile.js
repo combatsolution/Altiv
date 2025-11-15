@@ -1264,7 +1264,19 @@ export default function MyProfile() {
             )}
 
           </Grid> */}
-          <AIReadinessDashboard data={profileAnalytics} myProfile={myprofile} />
+          {serviceUnlocked && (
+            <Box
+              sx={{
+                width: "100%",
+                maxWidth: { xs: "100%", md: "1200px" }, // Desktop width
+                mx: "auto", // Center horizontally
+                mt: 3,
+              }}
+            >
+              <AIReadinessDashboard data={profileAnalytics} myProfile={myprofile} />
+            </Box>
+          )}
+
         </Grid>
 
       </Container>
