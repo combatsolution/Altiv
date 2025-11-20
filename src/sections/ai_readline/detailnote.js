@@ -6,11 +6,11 @@ import {
   Grid,
   Button,
 } from "@mui/material";
+import PropTypes from "prop-types";
 import ShareIcon from "@mui/icons-material/Share";
 import LockIcon from "@mui/icons-material/Lock";
 import { useAuthContext } from "src/auth/hooks";
 import PlansModal from "./PlansModal";
-import PropTypes from "prop-types";
 
 export default function DetailNotes({ data, serviceResp = false }) {
   const { user } = useAuthContext();
@@ -62,37 +62,37 @@ export default function DetailNotes({ data, serviceResp = false }) {
             backdropFilter: "blur(2px)",
           }}
         >
-            <Box
-                      sx={{
-                        mx: "auto",
-                        bgcolor: "white",
-                        p: { xs: 2, sm: 3, md: 4 },          // Responsive padding
-                        borderRadius: 3,
-                        textAlign: "center",                 // Center content on all screens
-                        width: { xs: "90%", sm: "70%", md: "50%", lg: "40%" },  // Adaptive width
-                        boxShadow: 3,
-                      }}
-                    >
-          <LockIcon sx={{ fontSize: 60, color: "#1565c0", mb: 2 }} />
-          <Typography variant="h6" fontWeight={600}>
-            Detailed Analysis Locked
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 2, color: "text.secondary" }}>
-            Upgrade to view full detailed insights and personalized recommendations.
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
+          <Box
             sx={{
-              borderRadius: 2,
-              px: 3,
-              textTransform: "none",
-              fontWeight: 600,
+              mx: "auto",
+              bgcolor: "white",
+              p: { xs: 2, sm: 3, md: 4 },          // Responsive padding
+              borderRadius: 3,
+              textAlign: "center",                 // Center content on all screens
+              width: { xs: "90%", sm: "70%", md: "50%", lg: "40%" },  // Adaptive width
+              boxShadow: 3,
             }}
-            onClick={handleOpenPlans}
           >
-            Unlock to View
-          </Button>
+            <LockIcon sx={{ fontSize: 60, color: "#1565c0", mb: 2 }} />
+            <Typography variant="h6" fontWeight={600}>
+              Detailed Analysis Locked
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 2, color: "text.secondary" }}>
+              Upgrade to view full detailed insights and personalized recommendations.
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{
+                borderRadius: 2,
+                px: 3,
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+              onClick={handleOpenPlans}
+            >
+              Unlock to View
+            </Button>
           </Box>
         </Box>
       )}

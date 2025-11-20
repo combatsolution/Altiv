@@ -9,17 +9,32 @@ import {
   Button,
   CircularProgress,
   IconButton,
+  ToggleButton, 
+  ToggleButtonGroup,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import axiosInstance from "src/utils/axios";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "src/auth/hooks";
+import usFlag from 'src/assets/icons/us-flag.png';
+import inFlag from 'src/assets/icons/in-flag.png';
 
 export default function PlansModal({ open, onClose, onPaymentSuccess, unlockedPages = [] }) {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(false);
   const subscribedPages = unlockedPages || [];
+  const [currency, setCurrency] = useState("USD");
+
+  
+  const getDisplayPrice = () => {
+    return currency === "USD" ? 15 : 1000;
+  };
+  const handleCurrencyChange = (event, newCurrency) => {
+    if (newCurrency !== null) setCurrency(newCurrency);
+  };
+
+
 
   const navigate = useNavigate();
   const { user } = useAuthContext();
@@ -173,7 +188,7 @@ export default function PlansModal({ open, onClose, onPaymentSuccess, unlockedPa
         >
           <CloseIcon />
         </IconButton>
-        {console.log("DDDDDDDDDDD",plans)}
+        {console.log("DDDDDDDDDDD", plans)}
         {loading ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
             <CircularProgress />
@@ -192,14 +207,14 @@ export default function PlansModal({ open, onClose, onPaymentSuccess, unlockedPa
             console.log("isSubscribed:", isSubscribed);
             return (
               <Grid container spacing={4} key={plan.id}>
-                
+
                 {/* LEFT SECTION (SERVICE DETAILS) */}
                 <Grid item xs={12} md={7}>
                   <Box
                     sx={{
                       p: { xs: 2, md: 3 },
                       borderRadius: 3,
-                    
+
                     }}
                   >
                     <Typography
@@ -244,6 +259,7 @@ export default function PlansModal({ open, onClose, onPaymentSuccess, unlockedPa
                   </Box>
                 </Grid>
 
+
                 {/* RIGHT SECTION (SUBSCRIPTION SUMMARY) */}
                 <Grid item xs={12} md={5}>
                   <Card
@@ -254,10 +270,33 @@ export default function PlansModal({ open, onClose, onPaymentSuccess, unlockedPa
                       boxShadow: 6,
                     }}
                   >
+                    {/* 🌍 Currency Toggle */}
+                    <ToggleButtonGroup
+                      value={currency}
+                      exclusive
+                      onChange={handleCurrencyChange}
+                      sx={{ mb: 2 }}
+                    >
+                      <ToggleButton value="USD" sx={{ px: 2 }}>
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <img src={usFlag} alt="US" width={22} />
+                          <Typography fontWeight={600}>USD</Typography>
+                        </Box>
+                      </ToggleButton>
+
+                      <ToggleButton value="INR" sx={{ px: 2 }}>
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <img src={inFlag} alt="IN" width={22} />
+                          <Typography fontWeight={600}>INR</Typography>
+                        </Box>
+                      </ToggleButton>
+                    </ToggleButtonGroup>
+
                     <Typography variant="subtitle2" fontWeight={600}>
-                      Subscription Summary
+                      Price Summary
                     </Typography>
 
+                    {/* ⭐ Currency-Based Pricing */}
                     <Box
                       sx={{
                         mt: 2,
@@ -272,14 +311,18 @@ export default function PlansModal({ open, onClose, onPaymentSuccess, unlockedPa
                         fontWeight: 700,
                       }}
                     >
-                      ₹{plan.price}
+                      {currency === "USD"
+                        ? `$${getDisplayPrice()}`
+                        : `₹${getDisplayPrice()}`}
                     </Box>
 
                     <Divider sx={{ my: 2 }} />
 
                     <Typography variant="subtitle2">Total Billed</Typography>
                     <Typography variant="h6" fontWeight={700}>
-                      ₹{plan.price}
+                      {currency === "USD"
+                        ? `$${getDisplayPrice()}`
+                        : `₹${getDisplayPrice()}`}
                     </Typography>
 
                     <Typography variant="caption" color="text.secondary">
@@ -304,11 +347,10 @@ export default function PlansModal({ open, onClose, onPaymentSuccess, unlockedPa
                       {isSubscribed ? "Already Purchased" : "Buy Now"}
                     </Button>
 
-                    <Typography variant="caption" color="text.secondary" mt={2}>
-                      🔐 Secure 128-bit encrypted payment
-                    </Typography>
+              
                   </Card>
                 </Grid>
+
               </Grid>
             );
           })
