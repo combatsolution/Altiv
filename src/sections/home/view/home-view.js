@@ -77,7 +77,8 @@ export default function HomeView() {
       {/* </Box> */}
 
       <WorkingProcessSection1 />
-      {user && <JobBoard />}
+      {/* {user && <JobBoard />} */}
+      <JobBoard />
 
       {/* <Box
           sx={{

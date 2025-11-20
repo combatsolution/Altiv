@@ -152,7 +152,7 @@ export default function Faq({ price }) {
             Enroll & Pay ${price?.toLocaleString() || '0'}
           </Button>
 
-          <Button
+          {/* <Button
             color="primary"
             sx={{
               px: 1,
@@ -163,7 +163,7 @@ export default function Faq({ price }) {
             }}
           >
             Need more info
-          </Button>
+          </Button> */}
         </Box>
       </Box>
     </Container>

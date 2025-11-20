@@ -381,10 +381,10 @@ export default function FoboHeroPage() {
             </IconButton>
 
             <Typography variant="h5" mb={1}>
-              Magic happens many ways
+              Double your chances
             </Typography>
             <Typography variant="body2" mb={1}>
-              Upload a resume, select an existing one, or add LinkedIn URL
+             Upload resume or LinkedIn Profile URL. Either works, both work better.
             </Typography>
 
             {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}

@@ -84,7 +84,7 @@ function SmartJobFeed() {
                 },
               }}
             >
-              Jobs that just click Job Feed
+              Find Jobs That Fit, Fast
             </Typography>
 
             <Typography

@@ -165,12 +165,11 @@ export default function AIMarketingBuilder() {
             {
               label: "Batch Start Date",
               value: batch?.startDate
-                ? new Date(batch.startDate).toLocaleDateString("en-GB", {
+                ?  "Coming Soon.." :new Date(batch.startDate).toLocaleDateString("en-GB", {
                   day: "2-digit",
                   month: "short",
                   year: "numeric",
-                })
-                : "N/A",
+                }),
             },
             { label: "Effort", value: effort || "2-3 h / week" },
 

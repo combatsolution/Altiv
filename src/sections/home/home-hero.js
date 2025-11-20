@@ -204,19 +204,20 @@ function HomeHero() {
         sx={{ minHeight: { xs: "auto", md: "515px" } }}
       >
         <Grid xs={12} md={6} order={{ xs: 2, md: 1 }}>
-          <Stack spacing={2}>
+          <Stack spacing={2}> 
             <Typography
               variant="body2"
               component="h1"
               fontWeight="bold"
               sx={{
-                fontSize: { xs: "44px", sm: "40px", md: "32px", lg: "54px" },
+                fontSize: { xs: "44px", sm: "40px", md: "32px", lg: "45px" },
                 fontWeight: 400,
                 lineHeight: 1.2,
                 mt: 4,
               }}
             >
-              Your career&apos;s secret weapon
+             
+              Beat FOBO: Thrive in the AI Era
             </Typography>
             <Typography
               variant="body1"
@@ -229,9 +230,7 @@ function HomeHero() {
                 height: { xs: "auto", sm: "auto", md: "130px" },
               }}
             >
-              Tired of career uncertainty and endless job searches? Our AI coach
-              guides your next move with data-driven insights while matching you
-              to roles you&apos;re truly qualified for — all in one place.
+              Don’t let AI leave you behind. Fear Of Being Obsolete (FOBO) Scan shows which tasks are AI-Automated, AI-Augmented, or Human-Only, helping you adapt, upskill, and thrive in an AI-driven world.
             </Typography>
             <Stack
               direction={{ xs: "column", sm: "row" }}
@@ -608,7 +607,7 @@ function HomeHero() {
                             sx={{ color: "#0040D8" }}
                             ml={1}
                           >
-                            Experience
+                            Experience (in years)
                           </Typography>
                           <Box
                             display="flex"

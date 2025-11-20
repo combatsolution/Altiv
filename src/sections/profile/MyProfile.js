@@ -662,7 +662,7 @@ export default function MyProfile() {
                 <Typography sx={{ color: 'white', fontWeight: 'bolder' }} variant="body1">
                   0 - 39
                 </Typography>
-              </div>  
+              </div>
 
               <div
                 style={{
@@ -968,7 +968,11 @@ export default function MyProfile() {
               </Paper>
             </Grid>)}
 
-          <Grid sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
+          <Grid sx={{ 
+            width:'100%',
+            display: 'flex',
+             flexDirection: { xs: 'column', md: 'row' } 
+             }}>
             {/* Profile analytics section */}
             {lastFOBOData && (
               <Grid item xs={12} lg={8}>
@@ -976,7 +980,7 @@ export default function MyProfile() {
                   <Paper
                     elevation={3}
                     sx={{
-                      mt: 1,
+                      mt: 1,  
                       position: 'relative',
                       p: 2,
                       bgcolor: 'rgba(255,255,255,0.9)',
@@ -1016,6 +1020,7 @@ export default function MyProfile() {
                           bottom: isMobile ? '90px' : '80px',
                           left: '10%',
                           width: '80%',
+                        
                           height: 4,
                           bgcolor: 'primary.main',
                           borderRadius: 2,
@@ -1110,7 +1115,8 @@ export default function MyProfile() {
 
 
                 }}>
-                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                  <Box  width='100%'
+                  display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                     <Typography variant="subtitle1" fontWeight="600">
                       Registered Courses
                     </Typography>
@@ -1120,160 +1126,15 @@ export default function MyProfile() {
               </Grid>
             )}
           </Grid>
-          {/*   <Grid sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
-            {lastFOBOData && (
-              <Grid item xs={12} lg={8}>
-                {lastFOBOData ? (
-                  <Paper
-                    elevation={3}
-                    sx={{
-                      mt: 1,
-                      position: 'relative',
-                      p: 2,
-                      bgcolor: 'rgba(255,255,255,0.9)',
-                      backdropFilter: 'blur(6px)',
-                      borderRadius: 2,
-                    }}
-                  >
-                    <Box sx={{ width: '100%' }}>
-                      <MemoizedGaugeChart score={lastFOBOData?.FOBO_Score} />
-                    </Box>
-                    <Box sx={{ width: '100%', position: 'relative', p: 2 }}>
-                      <Typography
-                        sx={{ textAlign: 'center' }}
-                        variant="h6"
-                        fontWeight="bold"
-                        gutterBottom
-                      >
-                        Strategies to Improve FOBOPRO
-                      </Typography>
+         
 
-                      <Typography sx={{ textAlign: 'center' }} variant="body2" gutterBottom>
-                        Reduce your hesitation by practicing mindful decision-making, limiting
-                        options, and focusing on long-term satisfaction instead of perfect outcomes.{' '}
-                        <span style={{ filter: 'blur(2px)' }}>
-                          Reduce your hesitation by practicing mindful decision-making, limiting
-                          options, and focusing on long-term satisfaction instead of perfect
-                          outcomes. Reduce your hesitation by practicing mindful decision-making,
-                          limiting options, and focusing on long-term satisfaction instead of
-                          perfect outcomes.
-                        </span>
-                      </Typography>
 
-                     
-                      <Box
-                        sx={{
-                          position: 'absolute',
-                          bottom: isMobile ? '90px' : '80px',
-                          left: '10%',
-                          width: '80%',
-                          height: 4,
-                          bgcolor: 'primary.main',
-                          borderRadius: 2,
-                          boxShadow: '0 0 15px rgba(33,150,243,0.8)',
-                          animation: 'pulse 2s infinite ease-in-out',
-                        }}
-                      />
 
-                     
-                      <Box
-                        sx={{
-                          position: 'absolute',
-                          bottom: 0,
-                          width: '100%',
-                          height: isMobile ? '200px' : '110px',
-                          bgcolor: 'white',
-                          opacity: 0.85,
-                          zIndex: 1,
-                        }}
-                      />
-
-                     
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                          const key = process.env.REACT_APP_ENCRYPTION_KEY;
-                          if (!key) {
-                            console.error('Encryption key is missing');
-                            return;
-                          }
-
-                          // Clear old values first
-                          sessionStorage.removeItem('xbszya');
-                          sessionStorage.removeItem('xbszyaef');
-
-                          // Encrypt and store the appropriate value
-                          if (lastFOBOData?.resumeId) {
-                            const encryptedId = encodeURIComponent(
-                              CryptoJS.AES.encrypt(String(lastFOBOData.resumeId), key).toString()
-                            );
-                            sessionStorage.setItem('xbszya', encryptedId);
-                          } else if (lastFOBOData?.linkedInUrl) {
-                            const encryptedUrl = encodeURIComponent(
-                              CryptoJS.AES.encrypt(lastFOBOData.linkedInUrl.trim(), key).toString()
-                            );
-                            sessionStorage.setItem('xbszyaef', encryptedUrl);
-                          }
-
-                          navigate(paths.Analysis);
-                        }}
-                        sx={{
-                          position: 'absolute',
-                          bottom: isMobile ? '40px' : '30px',
-                          left: '50%',
-                          transform: 'translateX(-50%)',
-                          zIndex: 2,
-                        }}
-                      >
-                        Analyze Again
-                      </Button>
-                    </Box>
-                  </Paper>
-                ) : (
-                  <Typography variant="body1"> No Data</Typography>
-                )}
-              </Grid>
-            )}
-            {/* 
-            
-
-          
-            {(showCourses && profileAnalytics && Array.isArray(metricsData) && metricsData.length > 0) && (
-              <Grid
-                item
-                xs={12}
-                lg={4}
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'flex-start',
-                  p: { xs: 0, md: 2 },
-                  bgcolor: '#fff',
-                  height: '100%',
-                  ml: 1,
-                  mt: 0.5,
-                  borderRadius: '20px',
-                }}
-              >
-                <Box sx={{ width: '100%', maxWidth: 400 }}>
-                  {console.log("OOOOOOOOOOOOOOO", metricsData)}
-                  <MetricsCards metrics={metricsData} />
-                </Box>
-              </Grid>
-            )}
-
-          </Grid> */}
           {serviceUnlocked && (
-            <Box
-              sx={{
-                width: "100%",
-                maxWidth: { xs: "100%", md: "1200px" }, // Desktop width
-                mx: "auto", // Center horizontally
-              }}
-            >
-              <AIReadinessDashboard data={profileAnalytics} myProfile={myprofile} />
-            </Box>
+              <AIReadinessDashboard
+                data={profileAnalytics}
+                myProfile={myprofile}
+              />  
           )}
 
         </Grid>

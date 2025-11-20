@@ -177,7 +177,7 @@ function CareerCompass() {
                   textTransform: 'none',
                 }}
               >
-                Start without Resumes
+                Start without Resume
               </Button>
             </Stack>
           </Stack>

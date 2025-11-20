@@ -316,7 +316,7 @@ export default function PricingCard({ card, sx, ...other }) {
   const isCurrentPlan = activePlan === id;
   const isAlreadyPurchased = courseData.includes(courseName);
 
-  let buttonLabel = 'Pay Now';
+  let buttonLabel = 'Register Interest';
   if (isCurrentPlan) buttonLabel = 'Current Plan';
   else if (access || price === 0) buttonLabel = 'Free';
   else if (isAlreadyPurchased) buttonLabel = 'Already Purchased';
@@ -330,8 +330,7 @@ export default function PricingCard({ card, sx, ...other }) {
         position: 'relative',
         borderRadius: 3,
         bgcolor: 'background.paper',
-        width: { xs: '100%', sm: 340, md: 365 },
-        // minHeight: { xs: 550, sm: 600, md: 620 }, // ✅ consistent height across cards
+        width: { xs: '100%', sm: '100%', md: "100%" },
         Height: { xs: 550, sm: 600, md: 620 }, // ✅ consistent height across cards
         display: 'flex',
         flexDirection: 'column',
@@ -495,7 +494,7 @@ export default function PricingCard({ card, sx, ...other }) {
           variant="contained"
           disabled={isCurrentPlan || access || isAlreadyPurchased || price === 0}
           sx={{
-            fontSize: { xs: '0.9rem', sm: '0.9rem' },
+            fontSize: { xs: '0.9rem', sm: '0.9rem', lg:'12px' },
             bgcolor: isCurrentPlan ? 'success.main' : 'primary.main',
             '&:hover': { bgcolor: isCurrentPlan ? 'success.dark' : 'primary.dark' },
           }}

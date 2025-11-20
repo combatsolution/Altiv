@@ -80,12 +80,12 @@ export default function JwtLoginView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const res =await login?.(data.email, data.password);
-      const{permissions=[]} = res ||{};
-      if( permissions.includes ('admin')){
+      if( data.email.includes ('admin')){
         setErrorMsg("admin not allowed to login");
         return;
       }
+      await login?.(data.email, data.password);
+
         enqueueSnackbar('Login success', { variant: 'success' }); 
       const redirectAfterLogin = sessionStorage.getItem('redirectAfterLogin');
       if (redirectAfterLogin) {

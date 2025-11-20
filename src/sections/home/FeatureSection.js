@@ -144,9 +144,8 @@ const FeatureSection = () => {
                 },
                 {
                   title: 'Master Your Career Journey',
-                  body: `Transform uncertainty into opportunity with your AI career
-                       partner. Get personalized guidance for everything from skill
-                       development to salary negotiations.`,
+                  body: `Transform uncertainty into opportunity with your AI career partner.
+                   Get personalized guidance for everything from skill development to career advancement.`,
                 },
               ].map((item, index) => (
                 <Box key={index} marginTop={1}>

@@ -282,14 +282,22 @@
         setIsLoading(false);
       }
     };
-
-    const handlePieClick = (index, item) => {
-      console.log("DDDDDD->", item);
-      setSelectedSection(item);
-      // setShowHandTap(false);
-    };
-
-
+const handlePieClick = (index, item) => {
+    console.log("DDDDDD->", item);
+    setSelectedSection(item);
+    console.log("Clicked slice:", item.label);
+    if(item.label === "Augmentation") {
+      if (isInitialLoad.current) {
+        // Keep HandTap visible only for the first load
+        setShowHandTap(true);
+        isInitialLoad.current = false; // Disable for future clicks
+      } else {
+        setShowHandTap(false);  
+      }
+    } else {
+      setShowHandTap(false);
+    }
+  };
 
     const getLevelColor = () => {
       if (data?.FOBO_Score <= 39) return '#00C853';
@@ -709,21 +717,8 @@
                     size={isMobile ? 350 : 450}
                     innerRadius={isMobile ? 60 : 80}
                     outerRadius={isMobile ? 100 : 130}
-                    onSliceClick={(index, item) => {
-                      console.log("Clicked slice:", item.label);
-
-                      if(item.label === "Augmentation") {
-                        if (isInitialLoad.current) {
-                          // Keep HandTap visible only for the first load
-                          setShowHandTap(true);
-                          isInitialLoad.current = false; // Disable for future clicks
-                        } else {
-                          setShowHandTap(false);  
-                        }
-                      } else {
-                        setShowHandTap(false);
-                      }
-                    }}
+                     onSliceClick={handlePieClick}
+                   
                   />
 
 
