@@ -108,6 +108,18 @@ export default function TopTasksExposureAnalysis({ data, serviceResp = false }) 
             px: 2,
           }}
         >
+          <Box
+            sx={{
+              mx: "auto",
+              bgcolor: "white",
+              p: { xs: 2, sm: 3, md: 4 },          // Responsive padding
+              borderRadius: 3,
+              textAlign: "center",                 // Center content on all screens
+              width: { xs: "90%", sm: "70%", md: "50%", lg: "40%" },  // Adaptive width
+              boxShadow: 3,
+            }}
+          >
+            
           <LockIcon sx={{ fontSize: 60, color: "#1565c0", mb: 2 }} />
           <Typography variant="h6" fontWeight={600}>
             Task Automation Insights Locked
@@ -128,6 +140,7 @@ export default function TopTasksExposureAnalysis({ data, serviceResp = false }) 
           >
             Unlock to View
           </Button>
+          </Box>
         </Box>
       )}
 

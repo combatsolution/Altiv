@@ -283,7 +283,7 @@ export default function PlansModal({ open, onClose, onPaymentSuccess, unlockedPa
                     </Typography>
 
                     <Typography variant="caption" color="text.secondary">
-                      *Plus applicable taxes
+                      *Plus any applicable taxes
                     </Typography>
 
                     <Button
