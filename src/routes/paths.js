@@ -27,7 +27,7 @@ export const paths = {
   appliedjobs:'/appliedjobs',   
   pricingdetail:'/pricing-detail',
   aireadliness: '/ai-readiness-analysis',
-  aireadlinecompanyfobo:'/ai-readiness-companyfobo',
+  aireadlinecompanyfobo:'/ai-readiness/accenture',  
   aireadlinecompanypage: '/ai-readiness-companyfobopage',
 
   // footer

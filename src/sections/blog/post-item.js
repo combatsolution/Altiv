@@ -26,9 +26,9 @@
     console.log("JJJJJJJJJJJJ",post);
     const handleClick = (e) => {
       // Special redirect for AI Readiness post
-      if (title?.trim() === 'AI Readiness: Transforming the Future of Work') {
-        e.preventDefault();
-        navigate('/ai-readiness-companyfobopage');
+      if (title?.trim() === 'Accenture'){
+        e.preventDefault(); 
+        navigate('/ai-readiness');
       }
     };
 
@@ -83,7 +83,7 @@
                       ? `?category=${encodeURIComponent(selectedCategory)}`
                       : ''
                   }`
-                : companyUrl
+                : `${companyUrl}${slug}`
             }
             color="inherit"
             sx={{ flexGrow: 1 }}
