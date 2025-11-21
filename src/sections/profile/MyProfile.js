@@ -968,11 +968,11 @@ export default function MyProfile() {
               </Paper>
             </Grid>)}
 
-          <Grid sx={{ 
-            width:'100%',
+          <Grid sx={{
+            width: '100%',
             display: 'flex',
-             flexDirection: { xs: 'column', md: 'row' } 
-             }}>
+            flexDirection: { xs: 'column', md: 'row' }
+          }}>
             {/* Profile analytics section */}
             {lastFOBOData && (
               <Grid item xs={12} lg={8}>
@@ -980,7 +980,7 @@ export default function MyProfile() {
                   <Paper
                     elevation={3}
                     sx={{
-                      mt: 1,  
+                      mt: 1,
                       position: 'relative',
                       p: 2,
                       bgcolor: 'rgba(255,255,255,0.9)',
@@ -1020,7 +1020,7 @@ export default function MyProfile() {
                           bottom: isMobile ? '90px' : '80px',
                           left: '10%',
                           width: '80%',
-                        
+
                           height: 4,
                           bgcolor: 'primary.main',
                           borderRadius: 2,
@@ -1115,8 +1115,8 @@ export default function MyProfile() {
 
 
                 }}>
-                  <Box  width='100%'
-                  display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                  <Box width='100%'
+                    display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                     <Typography variant="subtitle1" fontWeight="600">
                       Registered Courses
                     </Typography>
@@ -1126,16 +1126,14 @@ export default function MyProfile() {
               </Grid>
             )}
           </Grid>
-         
 
-
-
-          {serviceUnlocked && (
-              <AIReadinessDashboard
-                data={profileAnalytics}
-                myProfile={myprofile}
-              />  
+          {(serviceUnlocked && profileAnalytics) && (
+            <AIReadinessDashboard
+              data={profileAnalytics}
+              myProfile={myprofile}
+            />
           )}
+
 
         </Grid>
 

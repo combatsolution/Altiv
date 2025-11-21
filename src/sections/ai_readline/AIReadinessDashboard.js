@@ -83,7 +83,7 @@
     }, [user,data]);
 
 
-    const Aireadline = data?.data;
+    const Aireadline = data?.data ? data?.data:data;
     console.log("AIReadiness data:", Aireadline);
     const [showAllSections, setShowAllSections] = useState(false);
     const pdfRef = useRef(null);

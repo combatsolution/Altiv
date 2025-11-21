@@ -201,12 +201,11 @@ export default function PlansModal({ open, onClose, onPaymentSuccess, unlockedPa
             console.log("PAGES:", pages);
             const service = plan.services || [];  // correct property
 
-
             const isSubscribed = pages.some((p) => subscribedPages.includes(p));
 
             console.log("isSubscribed:", isSubscribed);
             return (
-              <Grid container spacing={4} key={plan.id}>
+              <Grid container spacing={3} key={plan.id}>
 
                 {/* LEFT SECTION (SERVICE DETAILS) */}
                 <Grid item xs={12} md={7}>
