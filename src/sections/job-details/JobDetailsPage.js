@@ -21,7 +21,11 @@ import {
   useMediaQuery,
   Link,
   IconButton,
-  CircularProgress
+  CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
@@ -31,6 +35,7 @@ import axiosInstance from 'src/utils/axios';
 import { enqueueSnackbar } from 'notistack';
 import { isFriday } from 'date-fns';
 import { trackEvent } from 'src/utils/google-analytics';
+import { useAuthContext } from 'src/auth/hooks';
 // import axios from 'axios';
 
 export default function JobDetailPage() {
@@ -44,9 +49,12 @@ export default function JobDetailPage() {
   const [bookmarked, setbookmarked] = useState(false);
   const [similarJobs, setSimilarJobs] = useState([]);
   const [showAll, setShowAll] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const [openLoginPopup, setOpenLoginPopup] = useState(false);
 
+  const {user} = useAuthContext();
   const handlebookmark = async (e) => {
     e.stopPropagation();
     trackEvent({
@@ -64,6 +72,23 @@ export default function JobDetailPage() {
     } catch (error) {
       console.error('Failed to save Jobs', error)
     }
+  };
+
+  const boostApplication = () => {
+    if (!user) {
+      setOpenLoginPopup(true);
+      return;
+    }
+
+    // If user exists → redirect to Boost Application
+    trackEvent({
+      category: 'Job Interaction',
+      action: 'Boost Application Clicked',
+      label: 'Boost Application',
+      value: 73,
+    });
+
+    navigate(`/job-booster/${job_id}`);
   };
 
   // const similarJobs = jobs.filter(j => j.id !== job.id);
@@ -598,7 +623,7 @@ export default function JobDetailPage() {
                         borderRadius: '10px',
                         width: { xs: '100%', sm: '200px' },
                       }}
-                      onClick={() => navigate(`/job-booster/${job_id}`)}
+                      onClick={boostApplication}
                     >
                       Boost my application
                     </Button>
@@ -733,21 +758,54 @@ export default function JobDetailPage() {
                 borderRadius: '100px',
                 width: { xs: '100%', sm: '200px' },
               }}
-              onClick={() => {
-                trackEvent({
-                  category: 'Job Interaction',
-                  action: 'Boost Application Clicked',
-                  label: 'To Checked Boost data on jobooster page',
-                  value: 73,
-                });
+              // onClick={() => {
+              //   trackEvent({
+              //     category: 'Job Interaction',
+              //     action: 'Boost Application Clicked',
+              //     label: 'To Checked Boost data on jobooster page',
+              //     value: 73,
+              //   });
 
-                navigate(`/job-booster/${job_id}`)
-              }}
+              //   navigate(`/job-booster/${job_id}`)
+              // }}
+              onClick={boostApplication}
             >
               Boost my application
 
             </Button>
           </CardActions>
+
+
+        <Dialog open={openLoginPopup} onClose={() => setOpenLoginPopup(false)}>
+          <DialogTitle>Login Required</DialogTitle>
+          <DialogContent>
+            <Typography>You need to log in to boost your application.</Typography>
+          </DialogContent>
+
+          <DialogActions>
+            <Button onClick={() => setOpenLoginPopup(false)}>Cancel</Button>
+
+            <Button
+            sx={
+              {
+                bgcolor:"primary.main",
+                color : "white",
+                "&:hover":{
+                   bgcolor:"primary.dark",
+                color : "white",
+                  
+                }
+              }
+            }
+              onClick={() => {
+                navigate('/auth/jwt/login');
+              }}
+            >
+              Login
+            </Button>
+          </DialogActions>
+        </Dialog>
+
         </Container>
       </Box>
     </Box>
