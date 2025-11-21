@@ -72,7 +72,7 @@ const StrategicInsights = () => {
         Strategic Insights
       </Typography>
 
-      <Divider sx={{ borderColor: "#00A3FF", mb: 3, height:2}}/>
+      <Divider sx={{ borderColor: "#00A3FF", mb: 3, height: 2 }} />
 
       <Grid container spacing={3}>
         {sections.map((sec, idx) => (
@@ -87,44 +87,44 @@ const StrategicInsights = () => {
               }}
             >
               <CardContent>
-               <Box sx={{
-                 display:'flex',
-                  flexDirection:'row',
-                  alignItems:'center'
-               }}>
-                <Box sx={{  
-                  width: 10,
-                  height: 10,
-                  borderRadius: '50%',
-                  backgroundColor: sec.borderColor,
-                  mr: 1.2,
-                  mb:1,
-                 
-                }}/>
+                <Box sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center'
+                }}>
+                  <Box sx={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: '50%',
+                    backgroundColor: sec.borderColor,
+                    mr: 1.2,
+                    mb: 1,
+
+                  }} />
 
                   <Typography variant="h6" gutterBottom fontWeight={600}>
                     {sec.title}
                   </Typography>
                 </Box>
 
-<ul style={{ paddingLeft: '20px', marginTop: '8px' }}>
-  {sec.items.map((text, i) => (
-    <React.Fragment key={i}>
-      <li style={{ listStyleType: 'disc' }}>
-        <Typography variant="body2" mb={1}>
-          {text}
-        </Typography>
-      </li>
+                <ul style={{ paddingLeft: '20px', marginTop: '8px' }}>
+                  {sec.items.map((text, i) => (
+                    <React.Fragment key={i}>
+                      <li style={{ listStyleType: 'disc' }}>
+                        <Typography variant="body2" mb={1}>
+                          {text}
+                        </Typography>
+                      </li>
 
-      {/* Divider between list items */}
-      {i !== sec.items.length - 1 && (
-        <Divider sx={{ my: 1, borderColor: "grey.300" }} />
-      )}
-    </React.Fragment>
-  ))}
-</ul>
+                      {/* Divider between list items */}
+                      {i !== sec.items.length - 1 && (
+                        <Divider sx={{ my: 1, borderColor: "grey.300" }} />
+                      )}
+                    </React.Fragment>
+                  ))}
+                </ul>
 
-              
+
               </CardContent>
 
             </Card>

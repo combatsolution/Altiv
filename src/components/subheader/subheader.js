@@ -164,7 +164,7 @@ export default function SubHeader({ subtitle, showUploadResume }) {
                 if (!user) {
                   navigate(paths.auth.jwt.register);
                 } else {
-                  navigate(paths.aireadlinecompanyfobo)
+                  navigate(paths.aireadlinecompanyfobo);
                 }
               }}
               aria-label="Navigate to pricing page"
