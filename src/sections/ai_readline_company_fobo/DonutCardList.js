@@ -74,9 +74,9 @@ export default function DonutCardList() {
 
       {/* Vertical cards below */}
       <Stack
-        spacing={3}
+        spacing={0}
         alignItems="flex-start"
-        sx={{ mt: 2, mx: "auto", width: "100%", maxWidth: 1000 }}
+        sx={{ mt: 1, mx: "1px", width: "100%", maxWidth: 1000 }}
       >
         {cardsData.slice(3).map((card, index) => (
           <DonutCard

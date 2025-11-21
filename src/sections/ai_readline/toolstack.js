@@ -136,14 +136,14 @@ export default function ToolStack({ data, serviceResp = false }) {
           <Button
             size="small"
             variant="contained"
-            startIcon={<TwitterIcon />}
+            // startIcon={<TwitterIcon />}
             sx={{
               bgcolor: "#1DA1F2",
               textTransform: "none",
               "&:hover": { bgcolor: "#0d8ddb" },
             }}
           >
-            Tweet
+            Share
           </Button>
         </Box>
 

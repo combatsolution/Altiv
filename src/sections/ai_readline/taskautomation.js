@@ -182,7 +182,7 @@ export default function TopTasksExposureAnalysis({ data, serviceResp = false }) 
               "&:hover": { bgcolor: "#00c195" },
             }}
           >
-            Tweet
+            Share
           </Button>
         </Box>
 

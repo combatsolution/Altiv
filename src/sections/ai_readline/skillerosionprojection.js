@@ -162,7 +162,7 @@ const erosionData = useMemo(
             <Button
               variant="contained"
               color="primary"
-              startIcon={<TwitterIcon />}
+              // startIcon={<TwitterIcon />}
               sx={{
                 textTransform: "none",
                 bgcolor: "#1DA1F2",

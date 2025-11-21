@@ -35,11 +35,11 @@ export default function FoboHeatmapCard() {
           mt:3, 
           maxHeight: 300,
           overflowY: "auto",
-          "&::-webkit-scrollbar": { width: 6 },
+          "&::-webkit-scrollbar": { width: 5 },
           "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "#bbb",
-            borderRadius: 3,
-          },
+            backgroundColor: "#535151ff",
+            borderRadius: 30,
+          },  
         }}
       >
         <Table size="small">

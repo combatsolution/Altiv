@@ -963,7 +963,7 @@ const handlePieClick = (index, item) => {
                 if (!user) {
                   navigate(paths.auth.jwt.register);
                 } else {
-                  navigate(paths.aireadlinecompanypage);
+                  navigate(paths.aireadlinecompanyfobo);
                 }
               }}
             >

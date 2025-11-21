@@ -23,7 +23,7 @@ import { SplashScreen } from 'src/components/loading-screen';
 const JwtLoginPage = lazy(() => import('src/pages/auth/jwt/login'));
 const JwtRegisterPage = lazy(() => import('src/pages/auth/jwt/register'));
 const GoogleLoginPage = lazy(() => import('src/pages/auth/jwt/googleLogin'));
-const NewPassword  = lazy(() => import('src/pages/auth/admin/newPassword'));
+const NewPassword = lazy(() => import('src/pages/auth/admin/newPassword'));
 // eslint-disable-next-line react-hooks/rules-of-hooks
 
 
@@ -90,9 +90,9 @@ const authJwt = {
       </Suspense>
     </GuestGuard>
   ),
-  children: [ 
+  children: [
     {
-      path: 'login',  
+      path: 'login',
       element: (
         <AuthClassicLayout subtitle='Login'>
           <JwtLoginPage />
@@ -104,6 +104,14 @@ const authJwt = {
       element: (
         <AuthClassicLayout title="Manage the job more effectively with Minimal" subtitle="Register">
           <JwtRegisterPage />
+        </AuthClassicLayout>
+      ),
+    },
+    {
+      path: 'new-password',
+      element: (
+        <AuthClassicLayout subtitle="new-password"> 
+          <NewPassword />
         </AuthClassicLayout>
       ),
     },
@@ -123,7 +131,7 @@ const authresetPassword = {
       path: 'new-password',
       element: (
         <AuthClassicLayout subtitle="new-password">
-          <NewPassword/>
+          <NewPassword />
         </AuthClassicLayout>
       ),
     },
@@ -143,5 +151,5 @@ const authGoogle = {
 };
 
 export const authRoutes = [
-  { path: 'auth', children: [authJwt, authGoogle,authresetPassword] },
+  { path: 'auth', children: [authJwt, authGoogle, authresetPassword] },
 ];

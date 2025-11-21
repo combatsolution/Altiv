@@ -107,25 +107,24 @@ const StrategicInsights = () => {
                   </Typography>
                 </Box>
 
+<ul style={{ paddingLeft: '20px', marginTop: '8px' }}>
+  {sec.items.map((text, i) => (
+    <React.Fragment key={i}>
+      <li style={{ listStyleType: 'disc' }}>
+        <Typography variant="body2" mb={1}>
+          {text}
+        </Typography>
+      </li>
 
-                <ul style={{ paddingLeft: '20px', marginTop: '8px' }}>
-                  {sec.items.map((text, i) => (
-                    <li key={i} style={{ listStyleType: 'disc' }}>
-                      <Typography variant="body2" mb={0.5}>
-                        {text}
-                      </Typography>
-                      <Box
-                        sx={{
-                          width: 30,
-                          height: 1,
-                          backgroundColor: 'grey.800',
-                          mt: 0.5,
-                          mb: 1,
-                        }}
-                      />
-                    </li>
-                  ))}
-                </ul>
+      {/* Divider between list items */}
+      {i !== sec.items.length - 1 && (
+        <Divider sx={{ my: 1, borderColor: "grey.300" }} />
+      )}
+    </React.Fragment>
+  ))}
+</ul>
+
+              
               </CardContent>
 
             </Card>
