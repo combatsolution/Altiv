@@ -1,153 +1,161 @@
-import PropTypes from 'prop-types';
-  // @mui
-  import { alpha, useTheme } from '@mui/material/styles';
-  import Box from '@mui/material/Box';
-  import Link from '@mui/material/Link';
-  import Card from '@mui/material/Card';
-  import Stack from '@mui/material/Stack';
-  import Typography from '@mui/material/Typography';
-  import CardContent from '@mui/material/CardContent';
-  // routes
-  import { paths } from 'src/routes/paths';
-  import { RouterLink } from 'src/routes/components';
-  import { useNavigate } from 'react-router-dom';
-  // utils
-  import { fDate } from 'src/utils/format-time';
-  // components
-  import Image from 'src/components/image';
-  import TextMaxLine from 'src/components/text-max-line';
+import React, { useState } from "react";
+import {
+  Card,
+  Typography,
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Modal,
+  Paper,
+} from "@mui/material";
 
-  // ----------------------------------------------------------------------
+const data = [
+  { domain: "Product Management", accenture: 62, capgemini: 58, ibm: 60, cognizant: 57 },
+  { domain: "Software Engineering", accenture: 58, capgemini: 52, ibm: 55, cognizant: 53 },
+  { domain: "Marketing", accenture: 63, capgemini: 60, ibm: 61, cognizant: 59 },
+  { domain: "Data Science", accenture: 57, capgemini: 51, ibm: 54, cognizant: 52 },
+  { domain: "Finance", accenture: 61, capgemini: 55, ibm: 58, cognizant: 56 },
+  { domain: "Operations", accenture: 64, capgemini: 59, ibm: 62, cognizant: 60 },
+  { domain: "Design", accenture: 56, capgemini: 53, ibm: 54, cognizant: 52 },
+];
 
-  export default function PostItem({ post, selectedCategory = 'all' }) {
-    const navigate = useNavigate();
-    const theme = useTheme();
-    const { coverUrl, title, description, tags = [], createdAt, blogType,companyUrl, slug } = post;
-    console.log("JJJJJJJJJJJJ",post);
-    const handleClick = (e) => {
-      // Special redirect for AI Readiness post
-      if (title?.trim() === 'AI Readiness: Transforming the Future of Work') {
-        e.preventDefault();
-        navigate('/ai-readiness-companyfobopage');
-      }
-    };
+export default function FoboHeatmapCard() {
 
-    return (
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      {/* MAIN CARD */}
       <Card
         sx={{
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          transition: 'transform 0.3s, box-shadow 0.3s',
-          '&:hover': {
-            transform: 'translateY(-4px)',
-            boxShadow: theme.shadows[16],
-          },
+          width: 400,
+          height: 460,
+          mt: 2,
+          p: 2,
+          borderRadius: 3,
+          bgcolor: "#fff",
         }}
       >
-        <Box sx={{ position: 'relative', height: 0, pb: '50%' }}>
-          <Image
-            alt={title}
-            src={coverUrl}
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
-          />
+        <Typography variant="subtitle1" sx={{ fontWeight: 600, color: "#2A4C94", mb: 1 }}>
+          FOBO Heat-Map vs. Industry
+        </Typography>
+
+        {/* TABLE WITHOUT SCROLL + ONLY 2 COLUMNS */}
+        <Box sx={{ mt: 3 }}>
+          <Table size="small">
+          <TableHead>
+  <TableRow>
+    {["Domain", "ACCENTURE", "CAPGEMINI"].map((text) => (
+      <TableCell
+        key={text}
+        align={text === "Domain" ? "left" : "center"}
+        sx={{
+          fontWeight: 600,
+          color: "#fff",
+          background: "linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%)", // fallback colors
+        }}
+      >
+        {text}
+      </TableCell>
+    ))}
+  </TableRow>
+</TableHead>
+
+            <TableBody>
+              {data.slice(0, 5).map((row, i) => (
+                <TableRow key={i}>
+                  <TableCell>{row.domain}</TableCell>
+                  <TableCell align="center" sx={{ color: "#FF914D", fontWeight: 600 }}>
+                    {row.accenture}
+                  </TableCell>
+                  <TableCell align="center" sx={{ color: "#1BABFE", fontWeight: 600 }}>
+                    {row.capgemini}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </Box>
 
-        <CardContent
-          sx={{ p: 3, flexGrow: 1, display: 'flex', flexDirection: 'column', minHeight: '50%' }}
+        {/* VIEW MORE TEXT */}
+        <Typography
+          onClick={() => setOpen(true)}
+          sx={{
+            mt: 2,
+            color: "primary.dark",
+            cursor: "pointer",
+            fontWeight: 600,
+            textAlign: "right",
+            pr: 3,
+          }}
         >
-          <Typography
-            variant="overline"
-            sx={{
-              mb: 2,
-              color: 'text.disabled',
-              display: 'block',
-            }}
-          >
-            {fDate(createdAt)}
-          </Typography>
-          {console.log("KKKKKKKKKKKKK",companyUrl,slug)}
-
-          <Link
-            component={RouterLink}
-            href={
-              blogType === 'blog'
-                ? `${paths.post.details(slug)}${
-                    selectedCategory !== 'all'
-                      ? `?category=${encodeURIComponent(selectedCategory)}`
-                      : ''
-                  }`
-                : `${companyUrl}${slug}`
-            }
-            color="inherit"
-            sx={{ flexGrow: 1 }}
-            onClick={handleClick}
-          >
-            <TextMaxLine variant="h6" sx={{ mb: 2, height: 60 }}>
-              {title}
-            </TextMaxLine>
-          </Link>
-
-          <TextMaxLine variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
-            {description}
-          </TextMaxLine>
-
-          {tags.length > 0 && (
-            <Box
-              sx={{
-                mt: 'auto',
-                pt: 2,
-                width: '100%',
-                overflowX: 'auto',
-                '&::-webkit-scrollbar': { display: 'none' },
-                msOverflowStyle: 'none',
-                scrollbarWidth: 'none',
-              }}
-            >
-              <Stack direction="row" spacing={1} sx={{ width: 'max-content', pb: 1 }}>
-                {tags.map((tag) => (
-                  <Typography
-                    key={tag}
-                    variant="caption"
-                    sx={{
-                      px: 1,
-                      py: 0.5,
-                      borderRadius: 0.5,
-                      bgcolor: alpha(theme.palette.primary.main, 0.08),
-                      color: 'primary.main',
-                      flexShrink: 0,
-                      fontSize: '10px',
-                      fontWeight: 700,
-                    }}
-                  >
-                    {tag}
-                  </Typography>
-                ))}
-              </Stack>
-            </Box>
-          )}
-        </CardContent>
+          View More
+        </Typography>
       </Card>
-    );
-  }
 
-  PostItem.propTypes = {
-    post: PropTypes.shape({
-      coverUrl: PropTypes.string,
-      title: PropTypes.string,
-      slug: PropTypes.string,
-      description: PropTypes.string,
-      tags: PropTypes.arrayOf(PropTypes.string),
-      createdAt: PropTypes.string,
-      blogType:PropTypes.string,
-      companyUrl:PropTypes.string,
-    }),
-    selectedCategory: PropTypes.string,
-  };
+      {/* POPUP MODAL WITH FULL TABLE */}
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Paper
+          sx={{
+            width: 700,
+            maxHeight: "80vh",
+            overflowY: "auto",
+            p: 3,
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            borderRadius: 2,
+          }}
+        >
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+            Full FOBO Heat-Map
+          </Typography>
+
+          <Table size="small">
+            <TableHead>
+               <TableRow
+    sx={{
+      "& > th": {
+        fontWeight: 600,
+        color: "#fff",
+        background: "linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%)",
+      },
+    }}
+  >
+                <TableCell >Domain</TableCell>
+                <TableCell >ACCENTURE</TableCell>
+                <TableCell >CAPGEMINI</TableCell>
+                <TableCell >IBM</TableCell>
+                <TableCell >COGNIZANT</TableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {data.map((row, i) => (
+                <TableRow key={i}>
+                  <TableCell>{row.domain}</TableCell>
+                  <TableCell align="center" sx={{ color: "#FF914D", fontWeight: 600 }}>
+                    {row.accenture}
+                  </TableCell>
+                  <TableCell align="center" sx={{ color: "#1BABFE", fontWeight: 600 }}>
+                    {row.capgemini}
+                  </TableCell>
+                  <TableCell align="center" sx={{ color: "#4CAF50", fontWeight: 600 }}>
+                    {row.ibm}
+                  </TableCell>
+                  <TableCell align="center" sx={{ color: "#9C27B0", fontWeight: 600 }}>
+                    {row.cognizant}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Paper>
+      </Modal>
+    </>
+  );
+}

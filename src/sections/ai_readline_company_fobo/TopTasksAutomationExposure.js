@@ -70,7 +70,7 @@ const TopTasksAutomationExposure = () => {
             animation: 'slideUp 0.5s ease-out'
         },
         th: {
-            backgroundColor: '#4169E1',
+              background: "linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%)",
             color: 'white',
             padding: '16px 12px',
             textAlign: 'left',
@@ -219,7 +219,7 @@ const TopTasksAutomationExposure = () => {
                                     <tr
                                         key={index}
                                         className="table-row"
-                                        style={{ transition: 'all 0.3s ease', cursor: 'pointer' }}
+                                        style={{ transition: 'all 0.3s ease' }}
                                         onMouseEnter={() => setHoveredRow(index)}
                                         onMouseLeave={() => setHoveredRow(null)}
                                     >

@@ -18,7 +18,7 @@ export default function
     py: 4,  
     Width:'1000px',
     borderRadius: "10px",
-    bgcolor: "#2563eb",
+  background: "linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%)",
     color: "white", 
     gap: 2, // ✅ vertical gap between elements
   }}

@@ -80,8 +80,9 @@ export const mainRoutes = [
       {path:'ai-readiness-analysis', element:<Aireadlinessview/>},
       //  <Route path="/plans/:id" element={<AIMarketingBuilder />} />
       {path:'ai-readiness-companyfobopage', element:<Aireadlinecompanyfobopage/>},
-      {path:'ai-readiness', element:<Aireadlinecompanyfoboview/>},
+      {path:'ai-readiness/accenture', element:<Aireadlinecompanyfoboview/>},
       {path:'ai-readiness/:company', element:<Aireadlinecompanyfobopageview/>},
+
       {path:'pricing-detail', element:<Pricingdetailview/>},
       {path:'pricing-detail/:id', element:<Pricingdetailview/>},
       { path: 'attributions', element: <AttributionsView /> },

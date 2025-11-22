@@ -244,7 +244,7 @@
                   }}
                   sx={{
                     borderRadius: 3,
-                    cursor: "pointer",
+                    // cursor: "pointer",
                     background: "white",
                     borderTop: `4px solid ${metric.color}`,
                     minHeight: 180,

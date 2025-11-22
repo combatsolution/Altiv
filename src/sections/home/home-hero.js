@@ -174,13 +174,13 @@ function HomeHero() {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const retry = params.get("retry"); // resume | job | null
-    
+
     if (retry === "resume") {
       setUploadType("resume");
       setOpen(true);            // auto open modal
-    }else if(retry === "job"){
+    } else if (retry === "job") {
       setUploadType("job");
-      setOpen(true);        
+      setOpen(true);
     }
 
   }, [location.search]);
@@ -204,7 +204,7 @@ function HomeHero() {
         sx={{ minHeight: { xs: "auto", md: "515px" } }}
       >
         <Grid xs={12} md={6} order={{ xs: 2, md: 1 }}>
-          <Stack spacing={2}> 
+          <Stack spacing={2}>
             <Typography
               variant="body2"
               component="h1"
@@ -216,8 +216,10 @@ function HomeHero() {
                 mt: 4,
               }}
             >
-             
-              Beat FOBO: Thrive in the AI Era
+
+              {/* Beat FOBO: Thrive in the AI Era */}
+
+            Your career&apos;s secret weapon
             </Typography>
             <Typography
               variant="body1"
@@ -230,7 +232,9 @@ function HomeHero() {
                 height: { xs: "auto", sm: "auto", md: "130px" },
               }}
             >
-              Don’t let AI leave you behind. Fear Of Being Obsolete (FOBO) Scan shows which tasks are AI-Automated, AI-Augmented, or Human-Only, helping you adapt, upskill, and thrive in an AI-driven world.
+              Tired of career uncertainty and endless job searches? Our AI coach guides your
+               next move with data-driven insights while matching you to roles 
+               you&apos;re truly qualified for — all in one place.
             </Typography>
             <Stack
               direction={{ xs: "column", sm: "row" }}
@@ -299,19 +303,19 @@ function HomeHero() {
                     <Typography variant="body2" color="textSecondary" mb={3}>
                       You can choose to go with your updated resume or job title
                     </Typography>
-                    {console.log("LJKLKLKLKLKL",uploadType)}
+                    {console.log("LJKLKLKLKLKL", uploadType)}
                     <ToggleButtonGroup
                       value={uploadType}
                       exclusive
                       onChange={(e, v) => {
-                      if (v) {
-                        setUploadType(v);
+                        if (v) {
+                          setUploadType(v);
 
-                        // ⭐ Update URL so retry logic works automatically
-                        const newUrl = `/?retry=${v}`;
-                        window.history.replaceState({}, "", newUrl);
-                      }
-                    }}
+                          // ⭐ Update URL so retry logic works automatically
+                          const newUrl = `/?retry=${v}`;
+                          window.history.replaceState({}, "", newUrl);
+                        }
+                      }}
                       sx={{
                         mb: 2,
                         borderRadius: "26px",
@@ -554,7 +558,7 @@ function HomeHero() {
                           variant="contained"
                           fullWidth
                           disabled={!uploadedFileDetails && !selectedResumeId}
-                          onClick={()=>{handleContinueWithResume(uploadType)}}
+                          onClick={() => { handleContinueWithResume(uploadType) }}
                           sx={{
                             backgroundColor: "#3f51b5",
                             borderRadius: 999,
@@ -666,9 +670,9 @@ function HomeHero() {
                             fontWeight: 500,
                             "&:hover": { backgroundColor: "#2f3da3" },
                           }}
-                          onClick={()=>{handleContinueWithJob(uploadType)}}
+                          onClick={() => { handleContinueWithJob(uploadType) }}
                         >
-                        Continue
+                          Continue
                         </Button>
                       </>
                     )}

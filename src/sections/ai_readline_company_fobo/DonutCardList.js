@@ -1,10 +1,10 @@
-
-
 import React from 'react';
 import { Stack, Box } from '@mui/material';
+import PropTypes from 'prop-types';
 import DonutCard from "./DonutCard";
 import FoboHeatmapCard from "./FoboHeatmapCard";
 import FoboHalfGaugeCard from "./FoboGaugeCard";
+
 
 const cardsData = [
   {
@@ -55,38 +55,66 @@ const cardsData = [
   },
 ];
 
+// Hover wrapper
+const HoverWrapper = ({ children }) => (
+  <Box
+    sx={{
+      transition: "all 0.25s ease",
+      cursor: "pointer",
+      borderRadius: "20px",
+      "&:hover": {
+        transform: "scale(1.03)",
+        boxShadow: "0px 8px 24px rgba(0,0,0,0.15)",
+      },
+    }}
+  >
+    {children}
+  </Box>
+);
+
+// Function to split cards into chunks of 3
+const chunkArray = (arr, chunkSize) => {
+  const result = [];
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    result.push(arr.slice(i, i + chunkSize));
+  }
+  return result;
+};
 
 export default function DonutCardList() {
+  const cardRows = chunkArray(cardsData, 3);
+
   return (
-    <Box sx={{ mt: 3, mx: "auto", width: "100%", maxWidth: 1100 }}>
-      {/* First row with 3 special cards */}
-      <Stack direction="row" spacing={3} alignItems="flex-start" justifyContent="center">
-        {cardsData.slice(0, 3).map((card, index) => {
-          const renderCard = () => {
-            if (card.type === "heatmap") return <FoboHeatmapCard />;
-            if (card.type === "halfGauge") return <FoboHalfGaugeCard score={card.foboScore} />;
-            return <DonutCard title={card.title} data={card.data} foboScore={card.foboScore} />;
-          };
-
-          return <React.Fragment key={index}>{renderCard()}</React.Fragment>;
-        })}
-      </Stack>
-
-      {/* Vertical cards below */}
-      <Stack
-        spacing={0}
-        alignItems="flex-start"
-        sx={{ mt: 1, mx: "1px", width: "100%", maxWidth: 1000 }}
-      >
-        {cardsData.slice(3).map((card, index) => (
-          <DonutCard
-            key={index + 3}
-            title={card.title}
-            data={card.data}
-            foboScore={card.foboScore}
-          />
-        ))}
-      </Stack>
+    <Box sx={{ mt: 0, mx: "auto", width: "100%", maxWidth: 1100 }}>
+      {cardRows.map((row, rowIndex) => (
+        <Stack
+          key={rowIndex}
+          direction="row"
+          spacing={3}
+          alignItems="flex-start"
+          justifyContent="left"
+          sx={{ mt: rowIndex === 0 ? 0 : 2 }}
+        >
+          {row.map((card, index) => {
+            const renderCard = () => {
+              if (card.type === "heatmap") return <FoboHeatmapCard />;
+              if (card.type === "halfGauge") return <FoboHalfGaugeCard score={card.foboScore} />;
+              return (
+                <DonutCard
+                  title={card.title}
+                  data={card.data}
+                  foboScore={card.foboScore}
+                />
+              );
+            };
+            return <HoverWrapper key={index}>{renderCard()}</HoverWrapper>;
+          })}
+        </Stack>
+      ))}
     </Box>
   );
+}
+
+HoverWrapper.propTypes={
+  children:PropTypes.node.isRequired,
 }

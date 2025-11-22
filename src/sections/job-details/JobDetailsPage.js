@@ -629,11 +629,8 @@ export default function JobDetailPage() {
                     </Button>
                   </CardActions>
                 </CardContent>
-
-
               </Card>
             </Grid>
-
 
             {/* Right Panel */}
             <Grid item xs={12} md={4}>

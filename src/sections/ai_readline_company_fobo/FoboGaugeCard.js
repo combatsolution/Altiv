@@ -23,8 +23,8 @@ export default function FoboHalfGaugeCard({ score = 60 }) {
         width: 350,
         height:460,
          mt:2,
-        p: 2,
-        borderRadius: 3,
+      
+        borderRadius: 3,  
         boxShadow: "0px 2px 10px rgba(0,0,0,0.05)",
         bgcolor: "#fff",
         textAlign: "left",

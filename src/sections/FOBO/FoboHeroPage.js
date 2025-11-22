@@ -91,7 +91,7 @@ export default function FoboHeroPage() {
       setSelectedResumeId(null);
       setError('');
     }
-  };
+  };  
 
   const handleSelectResume = (id) => {
     setSelectedResumeId(id);

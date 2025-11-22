@@ -22,9 +22,9 @@ export default function AIMarketingBuilder() {
   const [planData, setPlanData] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-   const { id } = useParams();
+  const { id } = useParams();
   console.log("ID_is->", id);
- 
+
   const [currency, setCurrency] = useState('USD'); // or 'INR'
   const convertPrice = (price) => {
     const rate = 83; // 1 USD = 83 INR
@@ -70,7 +70,7 @@ export default function AIMarketingBuilder() {
       </Box>
     );
   }
-  console.log('aaaaaffff',planData)
+  console.log('aaaaaffff', planData)
 
   // ✅ Extract values
   const {
@@ -106,57 +106,77 @@ export default function AIMarketingBuilder() {
         sx={{
           my: { xs: 2, md: 1 },
           py: { xs: 2, md: 1 },
-          maxWidth: '100%', 
+          maxWidth: '100%',
           width: '100%',
         }}>
         {/* Title */}
         <Typography variant="h3" fontWeight="bold" gutterBottom sx={{ pt: 6 }}>
           {courseName}
         </Typography>
-       <Box sx={{
+        <Box sx={{
 
-        display:'flex',
-        flexDirection:'column',
-        justifyContent:'center',
-        alignItems:'center',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
 
-       }} >
-        {/* Subtitle */}
-        <Typography variant="13px" sx={{ opacity: 0.85, }}>
-          {heading ? (
-            <Typography variant="13px" sx={{ opacity: 0.85 }}>
-              4-month, hands-on cohort · No coding required
-            </Typography>
-          ): (
-            <Typography
-              variant="13px"
-              sx={{ opacity: 0.85, }}
-              dangerouslySetInnerHTML={{ __html: heading }}
-            />
-          ) }     
-         </Typography>
+        }} >
+          {/* Subtitle */}
+          <Typography variant="13px" sx={{ opacity: 0.85, }}>
+            {heading ? (
+              <Typography variant="13px" sx={{ opacity: 0.85 }}>
+                4-month, hands-on cohort · No coding required
+              </Typography>
+            ) : (
+              <Typography
+                variant="13px"
+                sx={{ opacity: 0.85, }}
+                dangerouslySetInnerHTML={{ __html: heading }}
+              />
+            )}
+          </Typography>
+         <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, my: 2 }}>
+  {/* Price Button */}
+  <Button
+    variant="contained"
+    onClick={() => navigate(`/payment/${id}`)}
+    sx={{
+      width: '200px',
+      bgcolor: "#00ff84",
+      color: "black",
+      fontWeight: "bold",
+      fontSize: "1rem",
+      px: 4,
+      py: 1.5,
+      borderRadius: "50px",
+      boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
+      "&:hover": { bgcolor: "#00e676" },
+    }}
+  >
+    {planData.isFreePlan ? "Free" : `$${price.toLocaleString()} / month`}
+  </Button>
 
-        {/* Price Button */}
-        <Button
-          variant="contained"
-          onClick={()=> navigate(`/payment/${id}`)}
-          sx={{
-            width:'200px',
-            bgcolor: "#00ff84",
-            color: "black",
-            fontWeight: "bold",
-            fontSize: "1rem",
-            px: 4,
-            py: 2,
-            borderRadius: "50px",
-            boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
-            "&:hover": { bgcolor: "#00e676" },
-            my: 2,
-          }}
-        >
-          {planData.isFreePlan ? "Free" : `$${price.toLocaleString()} / month `}
-        </Button>
+  {/* Enroll & Pay Button */}
+  <Button
+    variant="contained"
+    onClick={() => navigate(`/payment/${id}`)}
+    sx={{
+      bgcolor: "primary.dark",
+      color: "#fff",
+      fontWeight: 600,  
+      fontSize: '1rem',
+      px: 2,
+      py: 1,
+      borderRadius: "10px",
+      boxShadow: "0px 4px 12px rgba(0,0,0,0.3)",
+      "&:hover": { bgcolor: "#00e676" },
+    }}
+  >
+    Enroll & Pay ${price?.toLocaleString() || '0'}
+  </Button>
 </Box>
+
+        </Box>
         {/* Info Grid */}
         <Grid container spacing={3} justifyContent="center">
           {[
@@ -165,7 +185,7 @@ export default function AIMarketingBuilder() {
             {
               label: "Batch Start Date",
               value: batch?.startDate
-                ?  "Coming Soon.." :new Date(batch.startDate).toLocaleDateString("en-GB", {
+                ? "Coming Soon.." : new Date(batch.startDate).toLocaleDateString("en-GB", {
                   day: "2-digit",
                   month: "short",
                   year: "numeric",
@@ -197,13 +217,6 @@ export default function AIMarketingBuilder() {
           ))}
         </Grid>
 
-        {/* Description */}
-
-        {/* <Box sx={{ my: 1, textAlign: 'center' }}>
-          <div
-            dangerouslySetInnerHTML={{ __html: description || "<p>No description available</p>" }}
-          />
-        </Box> */}
       </Container>
 
 
@@ -211,7 +224,7 @@ export default function AIMarketingBuilder() {
         <Program />
         <ListedInfo keyOutComes={keyOutComes} />
         <ProgramModule programModules={programModules} /> {/* Pass as prop */}
-        <ToolsMastery  tools={tools}/>
+        <ToolsMastery tools={tools} />
         <ListedJourney price={planData.price} />
 
       </Box>

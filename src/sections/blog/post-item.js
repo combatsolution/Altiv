@@ -26,7 +26,7 @@
     console.log("JJJJJJJJJJJJ",post);
     const handleClick = (e) => {
       // Special redirect for AI Readiness post
-      if (title?.trim() === 'Accenture'){
+      if (title?.trim() === 'accenture'){
         e.preventDefault(); 
         navigate('/ai-readiness');
       }

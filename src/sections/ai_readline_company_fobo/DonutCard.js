@@ -12,7 +12,7 @@ import {
 import {
     PieChart,
     Pie,
-    Cell,
+    Cell,   
     ResponsiveContainer,
     Tooltip,
 } from 'recharts';
@@ -54,7 +54,7 @@ export default function DonutCard({ title, data, foboScore }) {
             <Card
                 sx={{
                     borderRadius: 3,
-                    width: 350,
+                    width: 325,
                     textAlign: 'left',  
                     p: 2,
                     boxShadow: '0px 2px 10px rgba(0,0,0,0.05)',
@@ -63,7 +63,7 @@ export default function DonutCard({ title, data, foboScore }) {
             >
                 <Typography
                     variant="subtitle1"
-                    sx={{ fontWeight: 600, color: '#2A4C94', mb: 1 }}
+                    sx={{ fontWeight: 600, color: '#2A4C94',  }}
                 >
                     {title}
                 </Typography>
